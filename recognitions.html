@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recognitions | ChemSus Technologies Pvt Ltd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0074c7;
+      --primary-dark: #00508a;
+      --accent: #00b8b0;
+      --bg: #F3F7FB;
+      --ink: #1f2933;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Open Sans", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* NAVBAR */
+    .navbar {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 12px 0;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .nav-container {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 0 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-family: "Montserrat", sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      font-size: 15px;
+    }
+
+    .nav-menu a {
+      color: #ffffff;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-menu a.active,
+    .nav-menu a:hover {
+      border-color: #ffffff;
+    }
+
+    /* HERO – same frame */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, #052b3f, #031521);
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffffff;
+      border-top: 3px solid var(--accent);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 12% 25%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
+        radial-gradient(circle at 82% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
+      background-size: 160px 160px;
+      opacity: 0.7;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      padding: 0 20px;
+    }
+
+    .hero-kicker {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #b9e6ff;
+    }
+
+    .hero-title {
+      font-family: "Montserrat", sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: #e2f3ff;
+      margin-top: 8px;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 40px 18px;
+    }
+
+    .section {
+      background: #ffffff;
+      padding: 34px;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(15,23,42,0.12);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 26px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .section-header p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* RECOGNITION CARD */
+    .recognition-card {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 30px;
+      align-items: center;
+      background: #f9fbff;
+      padding: 26px;
+      border-radius: 14px;
+      border-top: 4px solid var(--accent);
+    }
+
+    .recognition-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .recognition-card h3 {
+      font-family: "Montserrat", sans-serif;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .recognition-card p {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 10px;
+    }
+
+    .recognition-meta {
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 10px;
+    }
+
+    footer {
+      background-color: #06121f;
+      color: #cbd5f5;
+      font-size: 13px;
+      text-align: center;
+      padding: 14px 0;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .recognition-card {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">ChemSus Technologies Pvt Ltd</div>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="recognitions.html" class="active">Recognitions</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="contact.html">Contact us</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-kicker">GOVERNMENT & ECOSYSTEM SUPPORT</div>
+    <h1 class="hero-title">Recognitions</h1>
+    <p class="hero-subtitle">
+      National-level recognition supporting innovation in sustainable specialty chemicals
+    </p>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Startup India – DPIIT Recognition</h2>
+      <p>Government of India</p>
+    </div>
+
+    <div class="recognition-card">
+      <!-- Certificate Image -->
+      <img src="assets/certificate.jpeg" alt="Startup India DPIIT Certificate">
+
+      <!-- Text -->
+      <div>
+        <h3>Certificate of Recognition</h3>
+
+        <p>
+          ChemSus Technologies Private Limited is officially recognized as a startup by the
+          <strong>Department for Promotion of Industry and Internal Trade (DPIIT),
+          Government of India</strong>, under the <strong>Startup India</strong> initiative.
+        </p>
+
+        <p>
+          The recognition acknowledges ChemSus’ innovation in the
+          <strong>specialty chemicals sector</strong>, with a focus on
+          <strong>sustainable and green chemical processes</strong> using renewable
+          <strong>lignocellulosic biomass</strong>.
+        </p>
+
+        <p>
+          This recognition strengthens ChemSus Technologies’ credibility with investors,
+          partners, and customers, and supports its mission to scale environmentally
+          responsible chemical technologies.
+        </p>
+
+        <div class="recognition-meta">
+          <strong>Date of Issue:</strong> 04 September 2023<br>
+          <strong>Valid Upto:</strong> 28 May 2033
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+</footer>
+
+</body>
+</html>
