@@ -5,9 +5,6 @@
   <title>Contact Us | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/logo.png">
-
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
@@ -31,7 +28,7 @@
 
     a { text-decoration: none; color: inherit; }
 
-    /* NAVBAR (same as other pages) */
+    /* NAVBAR */
     .navbar {
       background: var(--primary);
       color: #fff;
@@ -46,31 +43,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
     }
 
     .nav-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       font-family: "Montserrat", sans-serif;
       font-size: 20px;
       font-weight: 700;
-      letter-spacing: 0.03em;
-      color: #ffffff;
-    }
-
-    .nav-logo-img {
-      height: 34px;
-      width: auto;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
     }
 
     .nav-menu {
@@ -78,7 +56,6 @@
       display: flex;
       gap: 20px;
       font-size: 15px;
-      flex-wrap: wrap;
     }
 
     .nav-menu a {
@@ -92,39 +69,7 @@
       border-color: #fff;
     }
 
-    /* SEARCH (with icon) */
-    .search-form {
-      position: relative;
-    }
-
-    .search-input {
-      padding: 6px 28px 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.75);
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-      font-size: 13px;
-      min-width: 170px;
-      outline: none;
-    }
-
-    .search-input::placeholder {
-      color: #d1d5db;
-      font-size: 12px;
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      color: #ffffff;
-      pointer-events: none;
-    }
-
-    /* HERO – chemical / molecule frame */
+    /* HERO */
     .hero {
       position: relative;
       background: radial-gradient(circle at top left, #052b3f, #031521);
@@ -135,30 +80,6 @@
       text-align: center;
       color: #fff;
       border-top: 3px solid var(--accent);
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
-      background-size: 150px 150px;
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(135deg, rgba(0,184,176,0.18) 0, transparent 40%, transparent 60%, rgba(0,116,199,0.2) 100%);
-      mix-blend-mode: screen;
-      opacity: 0.5;
-      pointer-events: none;
     }
 
     .hero-content {
@@ -166,14 +87,6 @@
       z-index: 1;
       max-width: 900px;
       padding: 0 20px;
-    }
-
-    .hero-kicker {
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      color: #b9e6ff;
     }
 
     .hero-title {
@@ -196,26 +109,10 @@
     }
 
     .section {
-      position: relative;
       background: #fff;
       padding: 34px;
       border-radius: 14px;
       box-shadow: 0 12px 28px rgba(15,23,42,0.12);
-      overflow: hidden;
-    }
-
-    .section::before {
-      content: "";
-      position: absolute;
-      right: -40px;
-      top: -40px;
-      width: 180px;
-      height: 180px;
-      border-radius: 40% 40% 60% 60%;
-      border: 2px dashed rgba(0,116,199,0.25);
-      transform: rotate(18deg);
-      opacity: 0.4;
-      pointer-events: none;
     }
 
     .section-header {
@@ -229,17 +126,11 @@
       color: var(--primary-dark);
     }
 
-    .section-tagline {
-      font-size: 14px;
-      color: #6b7280;
-      margin-top: 4px;
-    }
-
+    /* CONTACT CARD */
     .contact-card {
       display: grid;
-      grid-template-columns: 1.1fr 1.1fr;
+      grid-template-columns: 1fr 1.2fr;
       gap: 30px;
-      align-items: stretch;
       background: #f9fbff;
       padding: 26px;
       border-radius: 14px;
@@ -251,7 +142,7 @@
       height: 320px;
       border-radius: 10px;
       border: none;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
     }
 
     .contact-info h3 {
@@ -263,23 +154,28 @@
     .contact-info p {
       font-size: 14px;
       color: #374151;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .contact-chips {
-      display: flex;
-      flex-wrap: wrap;
+    /* HIGHLIGHT BUTTONS */
+    .highlight-btn {
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
-      margin-top: 10px;
-      font-size: 12px;
-      color: #4b5563;
+      padding: 8px 16px;
+      margin-top: 6px;
+      background: linear-gradient(135deg, #00b8b0, #0074c7);
+      color: #ffffff !important;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 6px 16px rgba(0, 116, 199, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .chip {
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #edf2ff;
-      border: 1px solid #c7d2fe;
+    .highlight-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0, 116, 199, 0.45);
     }
 
     footer {
@@ -292,22 +188,12 @@
     }
 
     @media (max-width: 900px) {
-      .contact-card { grid-template-columns: 1fr; }
-      .hero-title { font-size: 32px; }
-    }
-
-    @media (max-width: 580px) {
-      .nav-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
+      .contact-card {
+        grid-template-columns: 1fr;
       }
-      .nav-menu {
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 14px;
+      .hero-title {
+        font-size: 32px;
       }
-      .hero-title { font-size: 28px; }
     }
   </style>
 </head>
@@ -316,42 +202,23 @@
 <!-- NAVBAR -->
 <header class="navbar">
   <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
-      <span>ChemSus Technologies Pvt Ltd</span>
-    </a>
-
-    <div class="nav-actions">
-      <ul class="nav-menu">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="recognitions.html">Recognitions</a></li>
-        <li><a href="investors.html">Investors</a></li>
-        <li><a href="contact.html" class="active">Contact us</a></li>
-      </ul>
-
-      <!-- Search box with icon -->
-      <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages: home, products...">
-        <span class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 
-                     1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 
-                     5.5 5.5 0 0 1 11 0"></path>
-          </svg>
-        </span>
-      </form>
-    </div>
+    <div class="nav-logo">ChemSus Technologies Pvt Ltd</div>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="recognitions.html">Recognitions</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="contact.html" class="active">Contact us</a></li>
+    </ul>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-kicker">LAB TO INDUSTRY CONNECTIONS</div>
-    <h1 class="hero-title" style="font-size: 50px;">Contact Us</h1>
+    <h1 class="hero-title">Contact Us</h1>
     <p class="hero-subtitle">
-      Connect with ChemSus Technologies for enquiries, collaborations and partnerships in sustainable chemistry.
+      Connect with ChemSus Technologies for enquiries, collaborations, and partnerships
     </p>
   </div>
 </section>
@@ -362,9 +229,6 @@
   <section class="section">
     <div class="section-header">
       <h2>Technical Services</h2>
-      <p class="section-tagline">
-        Reach our team for project discussions, technology transfer and pilot‑scale collaborations.
-      </p>
     </div>
 
     <div class="contact-card">
@@ -392,15 +256,18 @@
         </p>
 
         <p>
-          <strong>Phone:</strong> +91 84868 77575<br>
-          <strong>Email:</strong> <a href="mailto:chemsustech@gmail.com">chemsustech@gmail.com</a>
+          <strong>Phone:</strong><br>
+          <a href="tel:+918486877575" class="highlight-btn">
+            📞 +91 84868 77575
+          </a>
         </p>
 
-        <div class="contact-chips">
-          <span class="chip">Process development</span>
-          <span class="chip">Pilot trials</span>
-          <span class="chip">Technology partnerships</span>
-        </div>
+        <p>
+          <strong>Email:</strong><br>
+          <a href="mailto:chemsustech@gmail.com" class="highlight-btn">
+            ✉️ chemsustech@gmail.com
+          </a>
+        </p>
       </div>
 
     </div>
@@ -411,29 +278,6 @@
 <footer>
   © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
 </footer>
-
-<!-- SIMPLE PAGE SEARCH / REDIRECT SCRIPT -->
-<script>
-  document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-    if (!query) return;
-
-    if (query.includes('product')) {
-      window.location.href = 'products.html';
-    } else if (query.includes('recognition') || query.includes('award')) {
-      window.location.href = 'recognitions.html';
-    } else if (query.includes('investor') || query.includes('funding')) {
-      window.location.href = 'investors.html';
-    } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
-      window.location.href = 'contact.html';
-    } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
-      window.location.href = 'index.html';
-    } else {
-      alert('No matching page. Try: home, products, recognitions, investors, contact.');
-    }
-  });
-</script>
 
 </body>
 </html>
