@@ -57,6 +57,7 @@
       font-family: "Montserrat", sans-serif;
       font-size: 20px;
       font-weight: 700;
+      letter-spacing: 0.03em;
       color: #ffffff;
     }
 
@@ -80,14 +81,14 @@
       flex-wrap: wrap;
     }
 
-    .nav-menu a {
+    .nav-menu li a {
       color: #ffffff;
       border-bottom: 2px solid transparent;
       padding-bottom: 4px;
     }
 
-    .nav-menu a.active,
-    .nav-menu a:hover {
+    .nav-menu li a.active,
+    .nav-menu li a:hover {
       border-color: #ffffff;
     }
 
@@ -127,7 +128,9 @@
     .hero {
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at top left, #052b3f, #031521);
+      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+                  #041424;
       height: 260px;
       display: flex;
       align-items: center;
@@ -146,6 +149,7 @@
         radial-gradient(circle at 82% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
       background-size: 160px 160px;
       opacity: 0.7;
+      pointer-events: none;
     }
 
     .hero-content {
@@ -165,7 +169,7 @@
 
     .hero-title {
       font-family: "Montserrat", sans-serif;
-      font-size: 40px;
+      font-size: 50px;
       font-weight: 700;
     }
 
@@ -187,6 +191,7 @@
       padding: 34px;
       border-radius: 14px;
       box-shadow: 0 12px 28px rgba(15,23,42,0.12);
+      border-top: 4px solid var(--accent);
     }
 
     .section-header {
@@ -201,9 +206,21 @@
       margin-bottom: 6px;
     }
 
+    .section-chip {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: #e0f7f6;
+      color: #04726d;
+      padding: 4px 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
     .section-header p {
       font-size: 14px;
       color: #6b7280;
+      margin-top: 8px;
     }
 
     .recognition-card {
@@ -214,7 +231,6 @@
       background: #f9fbff;
       padding: 26px;
       border-radius: 14px;
-      border-top: 4px solid var(--accent);
     }
 
     .recognition-card img {
@@ -270,6 +286,7 @@
         gap: 12px;
         font-size: 14px;
       }
+      .hero-title { font-size: 28px; }
     }
   </style>
 </head>
@@ -286,10 +303,15 @@
     <div class="nav-actions">
       <ul class="nav-menu">
         <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
         <li><a href="products.html">Products</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="collaboration.html">Collaboration</a></li>
         <li><a href="recognitions.html" class="active">Recognitions</a></li>
         <li><a href="investors.html">Investors</a></li>
         <li><a href="contact.html">Contact us</a></li>
+        <li><a href="request-sample.html">Request for Sample</a></li>
+        <li><a href="orders.html">Orders</a></li>
       </ul>
 
       <!-- Search box with icon -->
@@ -311,7 +333,7 @@
 <section class="hero">
   <div class="hero-content">
     <div class="hero-kicker">GOVERNMENT & ECOSYSTEM SUPPORT</div>
-    <h1 class="hero-title" style="font-size: 50px;">Recognitions</h1>
+    <h1 class="hero-title">Recognitions</h1>
     <p class="hero-subtitle">
       National-level recognition supporting innovation in sustainable specialty chemicals
     </p>
@@ -320,11 +342,11 @@
 
 <!-- MAIN -->
 <main>
-
   <section class="section">
     <div class="section-header">
       <h2>Startup India – DPIIT Recognition</h2>
-      <p>Government of India</p>
+      <span class="section-chip">Government of India</span>
+      <p>Official startup certification for innovative chemical technologies</p>
     </div>
 
     <div class="recognition-card">
@@ -340,14 +362,14 @@
         </p>
 
         <p>
-          The recognition acknowledges ChemSus’ innovation in the
+          The recognition acknowledges ChemSus' innovation in the
           <strong>specialty chemicals sector</strong>, with a focus on
           <strong>sustainable and green chemical processes</strong> using renewable
           <strong>lignocellulosic biomass</strong>.
         </p>
 
         <p>
-          This recognition strengthens ChemSus Technologies’ credibility with investors,
+          This recognition strengthens ChemSus Technologies' credibility with investors,
           partners, and customers, and supports its mission to scale environmentally
           responsible chemical technologies.
         </p>
@@ -358,23 +380,21 @@
         </div>
       </div>
     </div>
-
   </section>
-
 </main>
 
 <footer>
   © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
 </footer>
 
-<!-- SIMPLE PAGE SEARCH / REDIRECT SCRIPT -->
+<!-- UPDATED PAGE SEARCH / REDIRECT SCRIPT -->
 <script>
   document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
     e.preventDefault();
     const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
     if (!query) return;
 
-    if (query.includes('product')) {
+    if (query.includes('product') || query.includes('shop')) {
       window.location.href = 'products.html';
     } else if (query.includes('recognition') || query.includes('award')) {
       window.location.href = 'recognitions.html';
@@ -384,8 +404,16 @@
       window.location.href = 'contact.html';
     } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
       window.location.href = 'index.html';
+    } else if (query.includes('about') || query.includes('company')) {
+      window.location.href = 'about.html';
+    } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+      window.location.href = 'collaboration.html';
+    } else if (query.includes('sample') || query.includes('request')) {
+      window.location.href = 'request-sample.html';
+    } else if (query.includes('order') || query.includes('orders')) {
+      window.location.href = 'orders.html';
     } else {
-      alert('No matching page. Try: home, products, recognitions, investors, contact.');
+      alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
     }
   });
 </script>

@@ -329,6 +329,16 @@
       .search-input {
         width: 100%;
       }
+      .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .nav-menu {
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -345,10 +355,15 @@
       <div class="nav-actions">
         <ul class="nav-menu">
           <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
           <li><a href="products.html">Products</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="collaboration.html">Collaboration</a></li>
           <li><a href="recognitions.html">Recognitions</a></li>
           <li><a href="investors.html">Investors</a></li>
           <li><a href="contact.html">Contact us</a></li>
+          <li><a href="request-sample.html">Request for Sample</a></li>
+          <li><a href="orders.html">Orders</a></li>
         </ul>
 
         <!-- Search box with icon -->
@@ -460,14 +475,14 @@
     © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
   </footer>
 
-  <!-- SIMPLE PAGE SEARCH / REDIRECT SCRIPT -->
+  <!-- UPDATED PAGE SEARCH / REDIRECT SCRIPT -->
   <script>
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
       if (!query) return;
 
-      if (query.includes('product')) {
+      if (query.includes('product') || query.includes('shop')) {
         window.location.href = 'products.html';
       } else if (query.includes('recognition') || query.includes('award')) {
         window.location.href = 'recognitions.html';
@@ -477,8 +492,16 @@
         window.location.href = 'contact.html';
       } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
         window.location.href = 'index.html';
+      } else if (query.includes('about') || query.includes('company')) {
+        window.location.href = 'about.html';
+      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+        window.location.href = 'collaboration.html';
+      } else if (query.includes('sample') || query.includes('request')) {
+        window.location.href = 'request-sample.html';
+      } else if (query.includes('order') || query.includes('orders')) {
+        window.location.href = 'orders.html';
       } else {
-        alert('No matching page. Try: home, products, recognitions, investors, contact.');
+        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
       }
     });
   </script>

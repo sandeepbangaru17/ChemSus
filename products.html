@@ -5,10 +5,8 @@
   <title>Products | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/logo.png">
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -31,7 +29,7 @@
 
     a { text-decoration: none; color: inherit; }
 
-    /* NAVBAR (same family as other pages) */
+    /* NAVBAR */
     .navbar {
       background: var(--primary);
       color: #fff;
@@ -46,8 +44,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 12px;
     }
 
     .nav-logo {
@@ -58,12 +56,11 @@
       font-size: 20px;
       font-weight: 700;
       letter-spacing: 0.03em;
-      white-space: nowrap;
-      color: #ffffff;
+      color: #fff;
     }
 
-    .nav-logo-img {
-      height: 34px;
+    .nav-logo-img { 
+      height: 34px; 
       width: auto;
     }
 
@@ -82,18 +79,18 @@
       flex-wrap: wrap;
     }
 
-    .nav-menu a {
+    .nav-menu li a {
       color: #fff;
       border-bottom: 2px solid transparent;
       padding-bottom: 4px;
     }
 
-    .nav-menu a.active,
-    .nav-menu a:hover {
-      border-color: #fff;
+    .nav-menu li a.active,
+    .nav-menu li a:hover { 
+      border-color: #fff; 
     }
 
-    /* SEARCH (with icon) – same as index */
+    /* SEARCH */
     .search-form {
       position: relative;
     }
@@ -125,17 +122,19 @@
       pointer-events: none;
     }
 
-    /* HERO – same frame style as index/investors */
+    /* HERO */
     .hero {
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at top left, #052b3f, #031521);
+      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+                  #041424;
       height: 260px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: #ffffff;
+      color: #fff;
       border-top: 3px solid var(--accent);
     }
 
@@ -144,17 +143,17 @@
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(circle at 12% 25%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
-        radial-gradient(circle at 82% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
-      background-size: 160px 160px;
-      opacity: 0.7;
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
+      background-size: 140px 140px;
+      opacity: 0.6;
       pointer-events: none;
     }
 
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 850px;
+      max-width: 900px;
       padding: 0 20px;
     }
 
@@ -168,7 +167,7 @@
 
     .hero-title {
       font-family: "Montserrat", sans-serif;
-      font-size: 40px;
+      font-size: 50px;
       font-weight: 700;
       margin-bottom: 10px;
     }
@@ -176,6 +175,7 @@
     .hero-subtitle {
       font-size: 16px;
       color: #e2f3ff;
+      max-width: 800px;
     }
 
     /* MAIN */
@@ -190,11 +190,12 @@
       padding: 34px;
       border-radius: 14px;
       box-shadow: 0 12px 28px rgba(15,23,42,0.12);
+      border-top: 4px solid var(--accent);
     }
 
     .section-header {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     .section-header h2 {
@@ -204,25 +205,56 @@
       margin-bottom: 6px;
     }
 
-    .section-tagline {
-      font-size: 14px;
-      color: #6b7280;
+    .section-chip {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: #e0f7f6;
+      color: #04726d;
+      padding: 4px 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .section-header p {
+      font-size: 15px;
+      color: #4a5568;
+      margin-top: 8px;
     }
 
     /* PRODUCT GRID */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 28px;
-      margin-top: 24px;
+      margin-top: 32px;
     }
 
     .product-card {
       background: #f9fbff;
       border-radius: 14px;
-      padding: 22px;
+      padding: 28px;
       text-align: center;
       border-top: 4px solid var(--accent);
+      transition: all .3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(15,23,42,0.2);
     }
 
     .product-card img {
@@ -234,14 +266,15 @@
 
     .product-card h3 {
       font-family: "Montserrat", sans-serif;
-      font-size: 18px;
+      font-size: 20px;
       color: var(--primary-dark);
-      margin-bottom: 6px;
+      margin-bottom: 12px;
     }
 
     .product-card p {
       font-size: 14px;
       color: #374151;
+      line-height: 1.6;
     }
 
     footer {
@@ -253,8 +286,14 @@
       margin-top: 24px;
     }
 
-    @media (max-width: 700px) {
-      .hero-title { font-size: 32px; }
+    @media (max-width: 900px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .hero-title {
+        font-size: 38px;
+      }
     }
 
     @media (max-width: 580px) {
@@ -268,36 +307,41 @@
         gap: 12px;
         font-size: 14px;
       }
+      .hero-title {
+        font-size: 32px;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="nav-container">
     <a href="index.html" class="nav-logo">
-      <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
+      <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
       <span>ChemSus Technologies Pvt Ltd</span>
     </a>
 
     <div class="nav-actions">
       <ul class="nav-menu">
         <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
         <li><a href="products.html" class="active">Products</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="collaboration.html">Collaboration</a></li>
         <li><a href="recognitions.html">Recognitions</a></li>
         <li><a href="investors.html">Investors</a></li>
         <li><a href="contact.html">Contact us</a></li>
+        <li><a href="request-sample.html">Request for Sample</a></li>
+        <li><a href="orders.html">Orders</a></li>
       </ul>
 
       <!-- Search box with icon -->
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages: home, products...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search products...">
         <span class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 
-                     1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 
-                     5.5 5.5 0 0 1 11 0"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
           </svg>
         </span>
       </form>
@@ -305,78 +349,82 @@
   </div>
 </header>
 
-<!-- HERO (matching frame) -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-kicker">BIO-BASED SPECIALTY MOLECULES</div>
-    <h1 class="hero-title" style="font-size: 50px;">Products</h1>
+    <div class="hero-kicker">Bio-based Specialty Chemicals</div>
+    <h1 class="hero-title">Products</h1>
     <p class="hero-subtitle">
-      A focused portfolio of biomass‑derived building blocks and preservatives for nutraceutical, food, cosmetic and industrial applications.
+      High-purity, sustainable chemicals derived from renewable lignocellulosic biomass for
+      nutraceutical, food, cosmetic and industrial applications.
     </p>
   </div>
 </section>
 
-<!-- MAIN -->
 <main>
-
   <section class="section">
     <div class="section-header">
       <h2>Our Product Portfolio</h2>
-      <p class="section-tagline">
-        Platform molecules and formulated ingredients developed from renewable lignocellulosic biomass.
-      </p>
+      <span class="section-chip">Renewable Platform Molecules</span>
+      <p>Learn more about our sustainable chemical solutions</p>
     </div>
 
     <div class="product-grid">
 
-      <!-- Product 1 -->
-      <div class="product-card">
-        <img src="assets/chemical1.avif" alt="5-Hydroxymethylfurfural">
-        <h3>5‑Hydroxymethylfurfural (5‑HMF)</h3>
-        <p>
-          A biomass‑derived platform chemical used in fuels, polymers,
-          pharmaceuticals and specialty materials.
-        </p>
-      </div>
+      <a href="products/5-hmf.html" class="product-card">
+        <img src="assets/chemical1.avif">
+        <h3>5-Hydroxymethylfurfural (5-HMF)</h3>
+        <p>Biomass-derived platform molecule used in fuels, polymers and pharma.</p>
+      </a>
 
-      <!-- Product 2 -->
-      <div class="product-card">
-        <img src="assets/chemical2.png" alt="Calcium Levulinate">
+      <a href="products/calcium-levulinate.html" class="product-card">
+        <img src="assets/chemical2.png">
         <h3>Calcium Levulinate</h3>
-        <p>
-          A nutraceutical‑grade calcium salt with high bioavailability,
-          developed from renewable lignocellulosic resources.
-        </p>
-      </div>
+        <p>Highly bioavailable calcium salt for nutraceutical applications.</p>
+      </a>
 
-      <!-- Product 3 -->
-      <div class="product-card">
-        <img src="assets/chemical3.jpg" alt="Sodium Levulinate">
+      <a href="products/sodium-levulinate.html" class="product-card">
+        <img src="assets/chemical3.jpg">
         <h3>Sodium Levulinate</h3>
-        <p>
-          A biodegradable preservative suitable for food, cosmetic
-          and personal‑care applications.
-        </p>
-      </div>
+        <p>Biodegradable preservative for food and cosmetics.</p>
+      </a>
+
+      <a href="products/ethyl-levulinate.html" class="product-card">
+        <img src="assets/chemical4.jpeg">
+        <h3>Ethyl Levulinate</h3>
+        <p>Green solvent and fragrance ingredient.</p>
+      </a>
+
+      <a href="products/methyl-levulinate.html" class="product-card">
+        <img src="assets/chemical5.jpeg">
+        <h3>Methyl Levulinate</h3>
+        <p>Bio-based ester used in fuels and fine chemicals.</p>
+      </a>
+
+      <a href="products/levulinic-acid.html" class="product-card">
+        <img src="assets/chemical6.jpeg">
+        <h3>Levulinic Acid</h3>
+        <p>Key bio-platform chemical derived from biomass.</p>
+      </a>
 
     </div>
   </section>
-
 </main>
 
 <footer>
   © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
 </footer>
 
-<!-- SIMPLE PAGE SEARCH / REDIRECT SCRIPT (same as index) -->
+<!-- UPDATED PAGE SEARCH / REDIRECT SCRIPT -->
 <script>
   document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
     e.preventDefault();
     const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
     if (!query) return;
 
-    if (query.includes('product')) {
+    if (query.includes('product') || query.includes('shop') || query.includes('chemical')) {
       window.location.href = 'products.html';
+    } else if (query.includes('shop')) {
+      window.location.href = 'shop.html';
     } else if (query.includes('recognition') || query.includes('award')) {
       window.location.href = 'recognitions.html';
     } else if (query.includes('investor') || query.includes('funding')) {
@@ -385,8 +433,16 @@
       window.location.href = 'contact.html';
     } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
       window.location.href = 'index.html';
+    } else if (query.includes('about') || query.includes('company')) {
+      window.location.href = 'about.html';
+    } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+      window.location.href = 'collaboration.html';
+    } else if (query.includes('sample') || query.includes('request')) {
+      window.location.href = 'request-sample.html';
+    } else if (query.includes('order') || query.includes('orders')) {
+      window.location.href = 'orders.html';
     } else {
-      alert('No matching page. Try: home, products, recognitions, investors, contact.');
+      alert('Try searching: 5-HMF, calcium levulinate, sodium levulinate, levulinic acid, shop, orders.');
     }
   });
 </script>
