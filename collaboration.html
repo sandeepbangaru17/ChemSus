@@ -592,6 +592,15 @@
       alert('Thank you for your interest! We will notify you when the collaboration portal launches.');
     }
   </script>
+<script>
+  // Shared cart badge updater – include on all pages
+  (function () {
+    const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.getElementById('cart-count');
+    if (badge) badge.textContent = count;
+  })();
+</script>
 
 </body>
 </html>
