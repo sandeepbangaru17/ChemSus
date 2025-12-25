@@ -5,493 +5,309 @@
   <title>Contact Us | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/logo.png">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --primary: #0074c7;
-      --primary-dark: #00508a;
-      --accent: #00b8b0;
-      --bg: #F3F7FB;
-      --ink: #1f2933;
+    :root{
+      --primary:#0074c7;
+      --primary-dark:#00508a;
+      --accent:#00b8b0;
+      --bg:#F3F7FB;
+      --ink:#1f2933;
     }
 
-    #cart-count {
-      background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 8px;
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:"Open Sans",Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      display:flex;
+      min-height:100vh;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    a{text-decoration:none;color:inherit}
 
-    body {
-      font-family: "Open Sans", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.6;
-      display: flex;
-      min-height: 100vh;
+    /* SIDEBAR */
+    .sidebar{
+      width:240px;
+      background:var(--primary);
+      color:#fff;
+      position:fixed;
+      top:0;left:0;
+      height:100vh;
+      border-right:3px solid var(--accent);
     }
 
-    a { text-decoration: none; color: inherit; }
-
-    /* COMPACT SIDEBAR NAVBAR */
-    .sidebar {
-      width: 240px;
-      background: var(--primary);
-      color: #ffffff;
-      border-right: 3px solid var(--accent);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 1000;
+    .nav-logo{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:16px 20px;
+      font-weight:700;
+      border-bottom:1px solid rgba(255,255,255,.15)
     }
 
-    .nav-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: "Montserrat", sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      color: #ffffff;
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      white-space: nowrap;
+    .nav-logo-img{height:24px}
+
+    .nav-menu{list-style:none;padding:10px 0}
+
+    .nav-menu li a{
+      display:block;
+      padding:10px 20px;
+      font-size:14px;
+      border-left:3px solid transparent
     }
 
-    .nav-logo-img {
-      height: 24px;
-      width: auto;
-    }
-
-    .nav-menu {
-      list-style: none;
-      padding: 8px 0;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .nav-menu li a {
-      display: block;
-      color: #fff;
-      border-left: 3px solid transparent;
-      padding: 10px 20px;
-      font-size: 13.5px;
-      transition: all 0.2s ease;
-    }
-
-    .nav-menu li a.active,
-    .nav-menu li a:hover {
-      background: rgba(255,255,255,0.1);
-      border-left-color: var(--accent);
-    }
-
-    /* SEARCH */
-    .search-section {
-      padding: 12px 20px 16px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .search-form {
-      position: relative;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 8px 32px 8px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.1);
-      color: #ffffff;
-      font-size: 12.5px;
-      outline: none;
-      backdrop-filter: blur(10px);
-    }
-
-    .search-input::placeholder {
-      color: #d1d5db;
-      font-size: 11.5px;
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      color: #ffffff;
-      pointer-events: none;
-    }
-
-    /* MAIN WRAPPER */
-    .main-wrapper {
-      margin-left: 240px;
-      flex: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* HERO with dotted lights + overlay (kept from original) */
-    .hero {
-      position: relative;
-      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
-                  #041424;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #fff;
-      border-top: 3px solid var(--accent);
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
-      background-size: 150px 150px;
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      padding: 0 20px;
-    }
-
-    .hero-title {
-      font-family: "Montserrat", sans-serif;
-      font-size: 40px;
-      font-weight: 700;
-    }
-
-    .hero-subtitle {
-      font-size: 16px;
-      color: #e2f3ff;
-      margin-top: 8px;
+    .nav-menu li a:hover,
+    .nav-menu li a.active{
+      background:rgba(255,255,255,.12);
+      border-left-color:var(--accent)
     }
 
     /* MAIN */
-    main {
-      max-width: 1150px;
-      margin: auto;
-      padding: 40px 18px;
-      width: 100%;
-      box-sizing: border-box;
-      flex: 1;
+    .main-wrapper{
+      margin-left:240px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
     }
 
-    .section {
-      background: #fff;
-      padding: 34px;
-      border-radius: 14px;
-      box-shadow: 0 12px 28px rgba(15,23,42,0.12);
-      border-top: 4px solid var(--accent);
+    .hero{
+      height:240px;
+      background:#041424;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      text-align:center;
+      border-top:3px solid var(--accent)
     }
 
-    .section-header {
-      text-align: center;
-      margin-bottom: 24px;
+    .hero-title{
+      font-family:"Montserrat",sans-serif;
+      font-size:36px;
+      font-weight:700
     }
 
-    .section-header h2 {
-      font-family: "Montserrat", sans-serif;
-      font-size: 26px;
-      color: var(--primary-dark);
+    main{
+      max-width:1150px;
+      margin:auto;
+      padding:40px 18px;
+      width:100%;
+      flex:1
     }
 
-    .section-chip {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      background: #e0f7f6;
-      color: #04726d;
-      padding: 4px 8px;
-      border-radius: 999px;
-      display: inline-block;
-      margin-top: 8px;
+    .section{
+      background:#fff;
+      padding:34px;
+      border-radius:14px;
+      box-shadow:0 12px 28px rgba(0,0,0,.12);
+      border-top:4px solid var(--accent)
     }
 
-    /* CONTACT CARD */
-    .contact-card {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 30px;
-      background: #f9fbff;
-      padding: 26px;
-      border-radius: 14px;
+    /* CONTACT CARD FIX */
+    .contact-card{
+      display:grid;
+      grid-template-columns:1fr 1.2fr;
+      gap:30px;
+      background:#f9fbff;
+      padding:26px;
+      border-radius:14px;
+      align-items:stretch;
     }
 
-    .contact-card iframe {
-      width: 100%;
-      height: 320px;
-      border-radius: 10px;
-      border: none;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    .contact-card iframe{
+      width:100%;
+      height:100%;
+      min-height:260px;
+      border:none;
+      border-radius:10px
     }
 
-    .contact-info h3 {
-      font-family: "Montserrat", sans-serif;
-      color: var(--primary-dark);
-      margin-bottom: 10px;
+    .contact-info h3{
+      font-family:"Montserrat",sans-serif;
+      color:var(--primary-dark);
+      margin-bottom:8px
     }
 
-    .contact-info p {
-      font-size: 14px;
-      color: #374151;
-      margin-bottom: 12px;
+    .contact-info p{
+      font-size:14px;
+      margin-bottom:10px
     }
 
-    .highlight-btn {
-      display: inline-flex;
+    .highlight-btn{
+      display:inline-block;
+      margin-top:8px;
+      padding:8px 16px;
+      background:linear-gradient(135deg,#00b8b0,#0074c7);
+      color:#fff;
+      border-radius:999px;
+      font-weight:600;
+      border:none;
+      cursor:pointer
+    }
+
+    /* FORM */
+    .contact-form input,
+    .contact-form textarea{
+      width:100%;
+      padding:10px;
+      margin-bottom:12px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-family:inherit
+    }
+
+    footer{
+      background:#06121f;
+      color:#cbd5f5;
+      text-align:center;
+      font-size:13px;
+      padding:14px
+    }
+
+    /* FLOATING WHATSAPP BUTTON */
+    .whatsapp-float {
+      position: fixed;
+      width: 56px;
+      height: 56px;
+      bottom: 24px;
+      right: 20px;
+      background-color: #25d366;
+      color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      z-index: 1500;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      margin-top: 6px;
-      background: linear-gradient(135deg, #00b8b0, #0074c7);
-      color: #ffffff !important;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 6px 16px rgba(0, 116, 199, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      text-decoration: none;
+      justify-content: center;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
 
-    .highlight-btn:hover {
+    .whatsapp-float:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(0, 116, 199, 0.45);
+      box-shadow: 0 14px 26px rgba(0,0,0,0.3);
     }
 
-    footer {
-      background: #06121f;
-      color: #cbd5f5;
-      font-size: 13px;
-      text-align: center;
-      padding: 14px 0;
-      margin-top: 24px;
+    .whatsapp-float svg {
+      width: 28px;
+      height: 28px;
+      fill: #ffffff;
     }
 
     /* RESPONSIVE */
-    @media (max-width: 1050px) {
-      .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main-wrapper {
-        margin-left: 0;
-      }
-
-      .mobile-toggle {
-        display: block;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1001;
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-
-      .mobile-toggle svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    @media (min-width: 1051px) {
-      .mobile-toggle {
-        display: none;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .contact-card {
-        grid-template-columns: 1fr;
-      }
-      .hero-title {
-        font-size: 32px;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .hero-title { font-size: 28px; }
+    @media(max-width:900px){
+      .contact-card{grid-template-columns:1fr}
+      .main-wrapper{margin-left:0}
+      .sidebar{display:none}
+      .contact-card iframe{min-height:240px}
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Mobile Toggle Button -->
-  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
-    </svg>
-  </button>
+<nav class="sidebar">
+  <a href="index.html" class="nav-logo">
+    <img src="assets/logo.jpg" class="nav-logo-img">
+    <span>ChemSus</span>
+  </a>
+  
+      <ul class="nav-menu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="collaboration.html">Collaboration</a></li>
+        <li><a href="recognitions.html">Recognitions</a></li>
+        <li><a href="investors.html">Investors</a></li>
+        <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+        <li><a href="contact.html">Contact us</a></li>
+        <li><a href="request-sample.html">Request for Sample</a></li>
+        <li><a href="orders.html">Orders</a></li>
+      </ul>
+</nav>
 
-  <!-- SIDEBAR NAVBAR -->
-  <nav class="sidebar" id="sidebar">
-    <a href="index.html" class="nav-logo">
-      <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
-      <span>ChemSus</span>
-    </a>
+<div class="main-wrapper">
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-            <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+  <section class="hero">
+    <h1 class="hero-title">Contact Us</h1>
+  </section>
 
-      <li><a href="contact.html" class="active">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-    </ul>
+  <main>
+    <section class="section">
+      <div class="contact-card">
 
-    <div class="search-section">
-      <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
-        <span class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
-          </svg>
-        </span>
-      </form>
-    </div>
-  </nav>
+        <!-- MAP -->
+        <iframe
+          src="https://www.google.com/maps?q=Technology%20Incubation%20Centre%20IIT%20Guwahati&output=embed"
+          loading="lazy">
+        </iframe>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-wrapper">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-content">
-        <h1 class="hero-title">Contact Us</h1>
-        <p class="hero-subtitle">
-          Connect with ChemSus Technologies for enquiries, collaborations, and partnerships
-        </p>
+        <!-- INFO + FORM -->
+        <div class="contact-info">
+
+          <h3>Registered Office</h3>
+          <p>
+            House No. 555, GNB Road,<br>
+            North Guwahati, Assam – 781030
+          </p>
+
+          <p>
+            <strong>Phone:</strong><br>
+            <a href="tel:+918486877575" class="highlight-btn">📞 +91 84868 77575</a>
+          </p>
+
+          <p>
+            <strong>Email:</strong><br>
+            <a href="mailto:chemsustech@gmail.com" class="highlight-btn">
+              ✉️ chemsustech@gmail.com
+            </a>
+          </p>
+
+          <!-- CONTACT FORM -->
+          <form class="contact-form"
+                action="https://formsubmit.co/chemsustech@gmail.com"
+                method="POST">
+
+            <h3>Send Us a Message</h3>
+
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+            <textarea name="message" rows="4" placeholder="Message" required></textarea>
+
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="thankyou.html">
+
+            <button type="submit" class="highlight-btn">📩 Send Message</button>
+          </form>
+
+        </div>
       </div>
     </section>
+  </main>
 
-    <!-- MAIN -->
-    <main>
-      <section class="section">
-        <div class="section-header">
-          <h2>Technical Services</h2>
-          <span class="section-chip">Get In Touch</span>
-        </div>
+  <footer>
+    © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+  </footer>
 
-        <div class="contact-card">
-          <!-- MAP -->
-          <iframe
-            src="https://www.google.com/maps?q=Technology%20Incubation%20Centre%20IIT%20Guwahati&output=embed"
-            loading="lazy">
-          </iframe>
+</div>
 
-          <!-- DETAILS -->
-          <div class="contact-info">
-            <h3>Registered Office</h3>
-            <p>
-              House No. 555, GNB Road,<br>
-              Near Kali Ghoramara, Kadamtal,<br>
-              North Guwahati, Assam – 781030
-            </p>
-
-            <h3>Guwahati Office</h3>
-            <p>
-              Room #002,<br>
-              Technology Incubation Center (TIC),<br>
-              IIT Guwahati, Assam – 781039
-            </p>
-
-            <p>
-              <strong>Phone:</strong><br>
-              <a href="tel:+918486877575" class="highlight-btn">
-                📞 +91 84868 77575
-              </a>
-            </p>
-
-            <p>
-              <strong>Email:</strong><br>
-              <a href="mailto:chemsustech@gmail.com" class="highlight-btn">
-                ✉️ chemsustech@gmail.com
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
-    </footer>
-  </div>
-
-  <!-- SEARCH SCRIPT -->
-  <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-      if (!query) return;
-
-      if (query.includes('product') || query.includes('shop')) {
-        window.location.href = 'products.html';
-      } else if (query.includes('recognition') || query.includes('award')) {
-        window.location.href = 'recognitions.html';
-      } else if (query.includes('investor') || query.includes('funding')) {
-        window.location.href = 'investors.html';
-      } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
-        window.location.href = 'contact.html';
-      } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
-        window.location.href = 'index.html';
-      } else if (query.includes('about') || query.includes('company')) {
-        window.location.href = 'about.html';
-      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
-        window.location.href = 'collaboration.html';
-      } else if (query.includes('sample') || query.includes('request')) {
-        window.location.href = 'request-sample.html';
-      } else if (query.includes('order') || query.includes('orders')) {
-        window.location.href = 'orders.html';
-      } else {
-        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
-      }
-    });
-  </script>
+<!-- FLOATING WHATSAPP BUTTON -->
+<a
+  href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%27d%20like%20to%20request%20a%20sample%20of%20your%20products."
+  class="whatsapp-float"
+  target="_blank"
+  aria-label="Chat with us on WhatsApp"
+>
+  <svg viewBox="0 0 32 32">
+    <path d="M16.04 3C9.4 3 4 8.25 4 14.73c0 2.48.82 4.79 2.23 6.68L4 29l7.86-2.07a12.2 12.2 0 0 0 4.18.7h.01c6.64 0 12.04-5.25 12.04-11.73C28.09 8.25 22.68 3 16.04 3z"/>
+  </svg>
+</a>
 
 </body>
 </html>
