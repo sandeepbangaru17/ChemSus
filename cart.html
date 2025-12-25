@@ -388,8 +388,7 @@
       </div>
     </main>
   </div>
-
-  <script>
+<script>
     function updateCartCount(cart) {
       const countSpan = document.getElementById('cart-count');
       const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -449,10 +448,20 @@
         <div class="cart-summary">
           <div class="summary-label">Grand Total (excl. taxes & shipping)</div>
           <div class="total-price">₹${grandTotal.toLocaleString('en-IN')}</div>
-          <div class="checkout-row">
-            <a href="shop.html" class="continue-link">← Continue shopping</a>
-            <button class="checkout-btn" onclick="checkout()">Proceed to checkout</button>
-          </div>
+<div class="checkout-row">
+  <!-- New button: add more items by going back to shop -->
+  <button
+    type="button"
+    class="checkout-btn"
+    style="background: #e5edf7; color: #123559; box-shadow: none;"
+    onclick="window.location.href='shop.html'">
+    + Add more items
+  </button>
+
+  <!-- Existing checkout button -->
+  <button class="checkout-btn" onclick="checkout()">Proceed to checkout</button>
+</div>
+
         </div>`;
 
       container.innerHTML = html;
@@ -476,12 +485,13 @@
       renderCart();
     };
 
+    // UPDATED: go directly to buy.html instead of alert + orders.html
     window.checkout = function() {
-      alert("Proceeding to checkout... Redirecting to Orders.");
-      window.location.href = 'orders.html';
+      window.location.href = 'buy.html';
     };
 
     renderCart();
   </script>
+
 </body>
 </html>

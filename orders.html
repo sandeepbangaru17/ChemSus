@@ -701,6 +701,12 @@
       }
     });
 
+    // after login is successful in orders.html
+    function onLoginSuccess() {
+      window.location.href = 'payment2.html';
+    }
+    
+
     // Auth tab switching
     function showAuthForm(type) {
       document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
@@ -754,6 +760,16 @@
       document.getElementById('orderForm').style.opacity = '0.7';
     });
   </script>
+
+<script>
+  // Shared cart badge updater – include on all pages
+  (function () {
+    const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.getElementById('cart-count');
+    if (badge) badge.textContent = count;
+  })();
+</script>
 
 </body>
 </html>
