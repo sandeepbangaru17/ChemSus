@@ -355,34 +355,7 @@
       margin-top: auto;
     }
 
-    /* WHATSAPP BUTTON */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #25d366, #20ba5f);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 12px 28px rgba(37, 211, 102, 0.4);
-      z-index: 1000;
-      transition: all 0.2s ease;
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1) translateY(-4px);
-      box-shadow: 0 16px 36px rgba(37, 211, 102, 0.5);
-    }
-
-    .whatsapp-float svg {
-      width: 32px;
-      height: 32px;
-      fill: #ffffff;
-    }
-
+   
     /* MOBILE TOGGLE */
     .mobile-toggle {
       display: block;
@@ -511,6 +484,55 @@
         font-size: 16px;
       }
     }
+    /* WhatsApp QR Popup */
+    #wa-qr {
+      position: fixed;
+      bottom: 20px;
+      right: 40px;
+      z-index: 99999;
+      font-family: Arial, sans-serif;
+    }
+    
+    #wa-qr-btn {
+      background: #25d366;
+      color: #fff;
+      border-radius: 30px;
+      padding: 10px 18px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    
+    #wa-qr-popup {
+      display: none;
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      width: 260px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      text-align: center;
+      padding: 14px;
+    }
+    
+    #wa-qr-popup img {
+      width: 200px;
+      margin: 10px auto;
+    }
+    
+    #wa-qr-popup a {
+      display: block;
+      background: #25d366;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+    
+    
   </style>
 </head>
 <body>
@@ -625,13 +647,7 @@
     </footer>
   </div>
 
-  <!-- WHATSAPP BUTTON -->
-  <a href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I'm%20interested%20in%205-HMF%20(5-Hydroxymethylfurfural)." 
-     class="whatsapp-float" target="_blank" aria-label="Chat about 5-HMF">
-    <svg viewBox="0 0 32 32">
-      <path d="M16.04 3C9.4 3 4 8.25 4 14.73c0 2.48.82 4.79 2.23 6.68L4 29l7.86-2.07a12.2 12.2 0 0 0 4.18.7h.01c6.64 0 12.04-5.25 12.04-11.73C28.09 8.25 22.68 3 16.04 3z"/>
-    </svg>
-  </a>
+ 
 
   <script>
     // Enhanced sidebar toggle with overlay
@@ -668,5 +684,28 @@
     // Expose globally
     window.toggleSidebar = toggleSidebar;
   </script>
+ <script>
+  function toggleWAQR() {
+    const p = document.getElementById("wa-qr-popup");
+    p.style.display = p.style.display === "block" ? "none" : "block";
+  }
+  </script>
+  
+
+<!-- WhatsApp QR Chat -->
+<div id="wa-qr">
+  <div id="wa-qr-popup">
+    <p>Scan this QR code to chat with us</p>
+
+    <img src="../assets/whatsapp-qr.png" alt="WhatsApp QR">
+
+    <a href="https://wa.me/918486877575" target="_blank">
+      Chat on WhatsApp Web
+    </a>
+  </div>
+
+  <button id="wa-qr-btn" onclick="toggleWAQR()">🟢 Chat</button>
+</div>
+  
 </body>
 </html>

@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <title>Checkout | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -391,7 +389,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart 🛒 <span id="cart-count">2</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html" class="active">Orders</a></li>
@@ -423,17 +421,20 @@
     <main>
       <section class="section">
         <div class="section-header">
-          <h2>Order Details & Delivery</h2>
+          <h2>Order Details &amp; Delivery</h2>
         </div>
 
         <!-- ORDER SUMMARY -->
         <div class="order-summary">
           <h3 style="font-family: Montserrat; margin-bottom: 16px; color: var(--primary-dark);">Order Summary</h3>
           <div id="orderItems">
-            <!-- Items loaded from cart -->
+          <div class="summary-item">
+            <strong>Calcium Levulinate</strong>
+            <span>2 kg × ₹2,500 = ₹5,000</span>
           </div>
+        </div>
           <div class="total-amount">
-            Total: <span id="totalAmount">₹0</span>
+            Total: <span id="totalAmount">₹5,000</span>
           </div>
         </div>
 
@@ -443,11 +444,11 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Full Name</label>
-              <input type="text" id="fullName" class="form-input" required>
+              <input type="text" id="fullName" class="form-input" required="">
             </div>
             <div class="form-group">
               <label class="form-label required">Email ID</label>
-              <input type="email" id="email" class="form-input" required>
+              <input type="email" id="email" class="form-input" required="">
             </div>
           </div>
 
@@ -455,34 +456,34 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Mobile Number</label>
-              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required>
+              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required="">
             </div>
             <div class="form-group">
               <label class="form-label required">Pincode</label>
-              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" maxlength="6" required>
+              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" maxlength="6" required="">
             </div>
           </div>
 
           <!-- ADDRESS DETAILS -->
           <div class="form-group">
             <label class="form-label required">Address</label>
-            <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required></textarea>
+            <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required=""></textarea>
           </div>
 
           <!-- CITY, REGION -->
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">City</label>
-              <input type="text" id="city" class="form-input" required>
+              <input type="text" id="city" class="form-input" required="">
             </div>
             <div class="form-group">
               <label class="form-label required">Region/State</label>
-              <input type="text" id="region" class="form-input" required>
+              <input type="text" id="region" class="form-input" required="">
             </div>
           </div>
 
           <!-- SUBMIT BUTTON -->
-          <button type="submit" class="btn-submit" id="submitBtn">Verify Mobile & Place Order</button>
+          <button type="submit" class="btn-submit" id="submitBtn">Verify Mobile &amp; Place Order</button>
         </form>
 
         <!-- SUCCESS MESSAGE -->
@@ -497,7 +498,7 @@
             <label class="form-label">OTP sent to <span id="otpMobileDisplay">+91 XXXXXXXXXX</span></label>
             <input type="text" id="otpInput" class="form-input" placeholder="Enter 6-digit OTP" maxlength="6">
           </div>
-          <button type="button" class="btn-submit" onclick="verifyOTPAndProceed()">Verify & Proceed to Payment</button>
+          <button type="button" class="btn-submit" onclick="verifyOTPAndProceed()">Verify &amp; Proceed to Payment</button>
         </div>
       </section>
     </main>
@@ -684,5 +685,6 @@
     window.toggleSidebar = toggleSidebar;
     window.setCheckoutSource = setCheckoutSource;
   </script>
-</body>
-</html>
+
+
+</body></html>
