@@ -220,29 +220,6 @@
     .btn-secondary { border: 2px solid var(--primary); color: var(--primary); background: transparent; }
     .btn-primary:hover, .btn-secondary:hover { transform: translateY(-2px); }
 
-    /* WHATSAPP BUTTON (Fixed) */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #25d366, #20ba5f);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 12px 28px rgba(37, 211, 102, 0.4);
-      z-index: 1100;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1) translateY(-5px);
-      box-shadow: 0 16px 36px rgba(37, 211, 102, 0.5);
-    }
-
-    .whatsapp-float svg { width: 32px; height: 32px; fill: #ffffff; }
 
     /* MOBILE TOGGLE & OVERLAY */
     .mobile-toggle {
@@ -373,13 +350,6 @@
       &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
     </footer>
   </div>
-
-  <a href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I'm%20interested%20in%20Levulinic%20Acid." 
-     class="whatsapp-float" target="_blank" aria-label="Chat with us on WhatsApp">
-    <svg viewBox="0 0 32 32">
-      <path d="M16.04 3C9.4 3 4 8.25 4 14.73c0 2.48.82 4.79 2.23 6.68L4 29l7.86-2.07a12.2 12.2 0 0 0 4.18.7h.01c6.64 0 12.04-5.25 12.04-11.73C28.09 8.25 22.68 3 16.04 3z"/>
-    </svg>
-  </a>
 
   <script>
     function toggleSidebar() {
