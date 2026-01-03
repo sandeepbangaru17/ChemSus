@@ -66,7 +66,7 @@
       transition: all 0.2s ease;
     }
     .nav-menu li a.active,
-    .nav-menu li a:hover { 
+    .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
@@ -173,9 +173,7 @@
       font-size: 24px;
       color: var(--primary-dark);
     }
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .form-group { margin-bottom: 20px; }
     .form-label {
       display: block;
       margin-bottom: 8px;
@@ -183,10 +181,7 @@
       color: var(--primary-dark);
       font-size: 14px;
     }
-    .form-label.required::after {
-      content: " *";
-      color: #ef4444;
-    }
+    .form-label.required::after { content: " *"; color: #ef4444; }
     .form-input, .form-textarea {
       width: 100%;
       padding: 12px 14px;
@@ -206,10 +201,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    .form-textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    .form-textarea { resize: vertical; min-height: 80px; }
     .btn-submit {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
       color: white;
@@ -224,15 +216,8 @@
       width: 100%;
       margin-top: 10px;
     }
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,184,176,0.3);
-    }
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,184,176,0.3); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .order-summary {
       background: #f9fbff;
       padding: 20px;
@@ -253,12 +238,8 @@
       border-bottom: 1px solid #e2e8f0;
       font-size: 14px;
     }
-    .summary-item:last-child {
-      border-bottom: none;
-    }
-    .summary-item strong {
-      font-weight: 600;
-    }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item strong { font-weight: 600; }
     .total-amount {
       font-size: 18px;
       font-weight: 700;
@@ -329,6 +310,7 @@
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
     </svg>
   </button>
+
   <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-logo">
       <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
@@ -358,6 +340,7 @@
       </form>
     </div>
   </nav>
+
   <div class="main-wrapper">
     <section class="hero">
       <div class="hero-content">
@@ -368,22 +351,24 @@
         </p>
       </div>
     </section>
+
     <main>
       <section class="section">
         <div class="section-header">
           <h2>Order Details & Delivery</h2>
         </div>
+
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
+
         <div class="order-summary">
           <h3>📦 Order Summary</h3>
-          <div id="orderItems">
-            <!-- Items loaded from buynow product -->
-          </div>
+          <div id="orderItems"></div>
           <div class="total-amount">
             Total: <span id="totalAmount">₹0</span>
           </div>
         </div>
+
         <form id="checkoutForm">
           <div class="form-row">
             <div class="form-group">
@@ -395,6 +380,7 @@
               <input type="email" id="email" class="form-input" placeholder="Enter your email address" required>
             </div>
           </div>
+
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Mobile Number</label>
@@ -405,10 +391,12 @@
               <input type="text" id="companyName" class="form-input" placeholder="Your company name">
             </div>
           </div>
+
           <div class="form-group">
             <label class="form-label required">Full Address</label>
             <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required></textarea>
           </div>
+
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">City</label>
@@ -419,6 +407,7 @@
               <input type="text" id="region" class="form-input" placeholder="e.g., Andhra Pradesh" required>
             </div>
           </div>
+
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Pincode</label>
@@ -429,20 +418,22 @@
               <input type="text" id="country" class="form-input" placeholder="India" value="India" required>
             </div>
           </div>
+
           <button type="submit" class="btn-submit" id="submitBtn">Place Order & Proceed to Payment</button>
         </form>
       </section>
     </main>
+
     <footer>
       © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
     </footer>
   </div>
+
   <script>
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
     }
 
-    // ✅ FIXED: Complete loadOrderData function
     function loadOrderData() {
       const buyNowData = sessionStorage.getItem('buyNowData');
       const orderItems = document.getElementById('orderItems');
@@ -472,37 +463,38 @@
       const unitPrice = parseFloat(productData.unitPrice) || 0;
       const totalPrice = quantity * unitPrice;
 
-      console.log('Product:', productName, 'Qty:', quantity, 'Price:', unitPrice, 'Total:', totalPrice);
-
       const itemHTML = `
         <div class="summary-item">
           <strong>${productName}</strong>
           <span>${quantity} kg × ₹${unitPrice.toLocaleString('en-IN')} = ₹${totalPrice.toLocaleString('en-IN')}</span>
         </div>
       `;
-
       orderItems.innerHTML = itemHTML;
       totalAmount.textContent = '₹' + totalPrice.toLocaleString('en-IN');
-      
-      // Store total in sessionStorage for payment page
+
       sessionStorage.setItem('orderTotal', totalPrice);
       sessionStorage.setItem('buyNowProduct', JSON.stringify({productName, quantity, unitPrice}));
     }
 
-    // ✅ BACKEND INTEGRATION: Place Buy-Now Order
+    // ✅ UPDATED: sends address/city/region/pincode to backend
     async function placeBuyNowOrderAndProceed() {
       const submitBtn = document.getElementById('submitBtn');
       const errorMsg = document.getElementById('errorMessage');
       const successMsg = document.getElementById('successMessage');
-      
+
       try {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Placing Order...';
 
-        // Get form data
+        // ✅ Get form data (include address fields)
         const customername = document.getElementById('fullName').value.trim();
         const email = document.getElementById('email').value.trim();
         const phone = document.getElementById('mobile').value.trim();
+
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const region = document.getElementById('region').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
 
         // Get buy-now product data
         const buyNowData = JSON.parse(sessionStorage.getItem('buyNowData'));
@@ -515,16 +507,20 @@
           productname: buyNowData.productName,
           quantity: parseFloat(buyNowData.quantity),
           totalprice,
-          paymentmode: "PENDING"
+          paymentmode: "PENDING",
+
+          // ✅ send shipping fields to backend (so adminorders shows it)
+          address,
+          city,
+          region,
+          pincode
         };
 
         console.log('Sending order to backend:', orderData);
 
         const response = await fetch('http://localhost:3000/api/orders', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderData)
         });
 
@@ -535,15 +531,12 @@
         const result = await response.json();
         console.log('Order created:', result);
 
-        // Show success
         errorMsg.style.display = 'none';
         successMsg.textContent = `✅ Order #${result.orderId} placed successfully! Redirecting to payment...`;
         successMsg.style.display = 'block';
 
-        // Clear buy-now data
         sessionStorage.removeItem('buyNowData');
 
-        // Proceed to payment after 2 seconds
         setTimeout(() => {
           window.location.href = 'payment2.html';
         }, 2000);
@@ -559,8 +552,7 @@
 
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
-      // Validate form
+
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
       const mobile = document.getElementById('mobile').value.trim();
@@ -575,20 +567,17 @@
         document.getElementById('errorMessage').style.display = 'block';
         return;
       }
-
       if (mobile.length !== 10 || isNaN(mobile)) {
         document.getElementById('errorMessage').textContent = '❌ Please enter a valid 10-digit mobile number.';
         document.getElementById('errorMessage').style.display = 'block';
         return;
       }
-
       if (pincode.length !== 6 || isNaN(pincode)) {
         document.getElementById('errorMessage').textContent = '❌ Please enter a valid 6-digit pincode.';
         document.getElementById('errorMessage').style.display = 'block';
         return;
       }
 
-      // Store order details for payment page
       const orderDetails = {
         fullName,
         email,
@@ -603,7 +592,7 @@
       };
       sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
 
-      // Place order via backend
+      // ✅ Place order via backend (now includes address)
       placeBuyNowOrderAndProceed();
     });
 

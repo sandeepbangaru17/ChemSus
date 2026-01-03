@@ -15,9 +15,7 @@
       --bg: #F3F7FB;
       --ink: #1f2933;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: "Open Sans", Arial, sans-serif;
       background: var(--bg);
@@ -26,7 +24,6 @@
       display: flex;
       min-height: 100vh;
     }
-
     a { text-decoration: none; color: inherit; }
 
     /* SIDEBAR */
@@ -43,7 +40,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -57,16 +53,13 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
       white-space: nowrap;
     }
-
     .nav-logo-img { height: 24px; width: auto; }
-
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
-
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -75,9 +68,8 @@
       font-size: 13.5px;
       transition: all 0.2s ease;
     }
-
     .nav-menu li a.active,
-    .nav-menu li a:hover { 
+    .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
@@ -90,7 +82,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .hero {
       position: relative;
       overflow: hidden;
@@ -105,7 +96,6 @@
       color: #fff;
       border-top: 3px solid var(--accent);
     }
-
     .hero::before {
       content: "";
       position: absolute;
@@ -117,14 +107,12 @@
       opacity: 0.6;
       pointer-events: none;
     }
-
     .hero-content {
       position: relative;
       z-index: 1;
       max-width: 900px;
       padding: 0 20px;
     }
-
     .hero-kicker {
       font-size: 13px;
       letter-spacing: 0.18em;
@@ -132,14 +120,12 @@
       margin-bottom: 8px;
       color: #b9e6ff;
     }
-
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 38px;
       font-weight: 700;
       margin-bottom: 10px;
     }
-
     .hero-subtitle {
       font-size: 16px;
       color: #e2f3ff;
@@ -153,7 +139,6 @@
       width: 100%;
       flex: 1;
     }
-
     .section {
       background: #fff;
       padding: 32px;
@@ -164,51 +149,21 @@
     }
 
     /* LOGIN SECTION */
-    #loginSection {
-      display: block;
-    }
+    #loginSection { display: block; }
+    .admin-layout { display: none; }
+    .admin-layout.active { display: block; }
 
-    .admin-layout {
-      display: none;
-    }
-
-    .admin-layout.active {
-      display: block;
-    }
-
-    .login-wrapper {
-      max-width: 420px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
+    .login-wrapper { max-width: 420px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 24px; }
     .section-header h2 {
       font-family: "Montserrat", sans-serif;
       color: var(--primary-dark);
       font-size: 24px;
     }
+    .section-subtitle { font-size: 13px; color: #6b7280; margin-top: 4px; }
 
-    .section-subtitle {
-      font-size: 13px;
-      color: #6b7280;
-      margin-top: 4px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: #4b5563;
-    }
-
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 13px; margin-bottom: 4px; color: #4b5563; }
     .form-input {
       width: 100%;
       padding: 8px 10px;
@@ -231,42 +186,14 @@
       font-family: "Montserrat", sans-serif;
       transition: all 0.2s ease;
     }
-
-    .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: white;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .btn-secondary:hover {
-      background: #d1d5db;
-      transform: translateY(-1px);
-    }
-
-    .login-error {
-      color: #ef4444;
-      font-size: 13px;
-      margin-top: 6px;
-      display: none;
-    }
+    .btn-primary { background: linear-gradient(90deg, var(--primary), var(--accent)); color: white; }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-secondary:hover { background: #d1d5db; transform: translateY(-1px); }
+    .login-error { color: #ef4444; font-size: 13px; margin-top: 6px; display: none; }
 
     /* DASHBOARD STYLES */
-    .stats {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
+    .stats { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
     .stat-card {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
       color: white;
@@ -276,18 +203,13 @@
       min-width: 120px;
       text-align: center;
     }
-
     .stat-number {
       font-size: 24px;
       font-weight: 700;
       font-family: "Montserrat", sans-serif;
       margin-bottom: 4px;
     }
-
-    .stat-label {
-      font-size: 12px;
-      opacity: 0.9;
-    }
+    .stat-label { font-size: 12px; opacity: 0.9; }
 
     .filters {
       display: flex;
@@ -299,13 +221,7 @@
       border-radius: 10px;
       border: 1px solid #e2e8f0;
     }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
     .filter-group label {
       font-size: 12px;
       font-weight: 600;
@@ -313,7 +229,6 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-
     .filter-input, .filter-select {
       padding: 8px 12px;
       border: 1px solid #d1d5db;
@@ -322,7 +237,6 @@
       background: white;
       min-width: 140px;
     }
-
     .filter-btn {
       background: var(--primary);
       color: white;
@@ -334,36 +248,17 @@
       font-size: 13px;
       transition: all 0.2s ease;
     }
+    .filter-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
-    .filter-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      margin-top: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
+    .table-wrapper { overflow-x: auto; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td {
       padding: 12px 10px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
       vertical-align: middle;
     }
-
-    th {
-      background: #f3f4f6;
-      font-family: "Montserrat", sans-serif;
-      font-weight: 600;
-    }
-
+    th { background: #f3f4f6; font-family: "Montserrat", sans-serif; font-weight: 600; }
     tr:hover { background: #f9fafb; }
 
     .status-badge {
@@ -372,7 +267,6 @@
       font-size: 11px;
       font-weight: 600;
     }
-
     .status-placed { background: #fef3c7; color: #d97706; }
     .status-shipped { background: #dbeafe; color: #1e40af; }
     .status-delivered { background: #d1fae5; color: #059669; }
@@ -387,23 +281,10 @@
       color: #166534;
     }
 
-    .actions {
-      white-space: nowrap;
-    }
-
-    .btn-sm {
-      padding: 4px 12px;
-      font-size: 12px;
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #dc2626;
-    }
+    .actions { white-space: nowrap; }
+    .btn-sm { padding: 4px 12px; font-size: 12px; }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-danger:hover { background: #dc2626; }
 
     /* MODAL */
     .modal {
@@ -416,9 +297,7 @@
       justify-content: center;
       padding: 20px;
     }
-
     .modal.active { display: flex; }
-
     .modal-content {
       background: white;
       padding: 32px;
@@ -429,21 +308,18 @@
       overflow-y: auto;
       box-shadow: 0 25px 50px rgba(0,0,0,0.25);
     }
-
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
     }
-
     .modal-title {
       font-family: "Montserrat", sans-serif;
       font-size: 20px;
       font-weight: 700;
       color: var(--primary-dark);
     }
-
     .modal-close {
       background: none;
       border: none;
@@ -456,16 +332,13 @@
       align-items: center;
       justify-content: center;
     }
-
     .modal-close:hover { background: #f3f4f6; border-radius: 50%; }
-
-    .form-row { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 16px; 
-      margin-bottom: 16px; 
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
     }
-
     .form-textarea {
       width: 100%;
       padding: 10px 12px;
@@ -474,6 +347,14 @@
       font-size: 13px;
       resize: vertical;
       min-height: 80px;
+    }
+
+    /* Address cell formatting */
+    .address-cell {
+      max-width: 260px;
+      white-space: normal;
+      word-break: break-word;
+      color: #334155;
     }
 
     footer {
@@ -498,7 +379,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     @media (max-width: 1050px) {
       .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
       .sidebar.open { transform: translateX(0); }
@@ -520,7 +400,6 @@
       <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
       <span>ChemSus</span>
     </a>
-
     <ul class="nav-menu">
       <li><a href="adminorders.html" class="active">Admin Orders</a></li>
     </ul>
@@ -537,11 +416,12 @@
 
     <main>
       <!-- LOGIN SECTION -->
-      <section class="section" id="loginSection" style="display: none;">
+      <section class="section" id="loginSection" style="display:none;">
         <div class="section-header">
           <h2>Admin Login</h2>
           <p class="section-subtitle">Enter your admin credentials to manage orders</p>
         </div>
+
         <div class="login-wrapper">
           <div class="form-group">
             <label class="form-label" for="adminUsername">Username</label>
@@ -563,7 +443,7 @@
             <h2 style="font-family:Montserrat,sans-serif;font-size:22px;color:var(--primary-dark);margin:0">Orders Management</h2>
             <span class="section-subtitle">Real-time order tracking and management</span>
           </div>
-          <button class="btn btn-secondary btn-sm" id="logoutBtn">Logout</button>
+          <button class="btn btn-secondary btn-sm" id="logoutBtn" style="display:inline-flex;">Logout</button>
         </div>
 
         <!-- STATS -->
@@ -598,6 +478,7 @@
               <option value="CANCELLED">Cancelled</option>
             </select>
           </div>
+
           <div class="filter-group">
             <label>Payment</label>
             <select id="paymentFilter" class="filter-select">
@@ -606,14 +487,17 @@
               <option value="PAID">Paid</option>
             </select>
           </div>
+
           <div class="filter-group">
             <label>Customer</label>
             <input type="text" id="customerFilter" class="filter-input" placeholder="Search customer...">
           </div>
+
           <div class="filter-group">
             <label>Date</label>
             <input type="date" id="dateFilter" class="filter-input">
           </div>
+
           <button class="filter-btn" onclick="applyFilters()">Filter</button>
           <button class="filter-btn" onclick="clearFilters()" style="background:#6b7280">Clear</button>
         </div>
@@ -626,6 +510,10 @@
                 <th style="width:140px">Customer</th>
                 <th style="width:160px">Email</th>
                 <th style="width:120px">Phone</th>
+
+                <!-- ✅ NEW: Address column -->
+                <th style="width:220px">Address</th>
+
                 <th style="width:160px">Product</th>
                 <th style="width:70px">Qty</th>
                 <th style="width:100px">Total ₹</th>
@@ -635,7 +523,14 @@
                 <th style="width:120px">Actions</th>
               </tr>
             </thead>
-            <tbody id="ordersTable"><tr><td colspan="11" style="text-align:center;padding:40px;color:#6b7280">No orders match your filters</td></tr></tbody>
+
+            <tbody id="ordersTable">
+              <tr>
+                <td colspan="12" style="text-align:center;padding:40px;color:#6b7280">
+                  Loading orders...
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </section>
@@ -653,8 +548,10 @@
         <div class="modal-title">Update Order</div>
         <button class="modal-close" onclick="closeModal()">×</button>
       </div>
+
       <form id="editForm">
         <input type="hidden" id="editOrderId">
+
         <div class="form-row">
           <div class="form-group">
             <label>Payment Status</label>
@@ -663,6 +560,7 @@
               <option value="PAID">Paid</option>
             </select>
           </div>
+
           <div class="form-group">
             <label>Order Status</label>
             <select id="editStatus" class="filter-select">
@@ -673,10 +571,12 @@
             </select>
           </div>
         </div>
+
         <div class="form-group">
           <label>Notes</label>
           <textarea id="editNotes" class="form-textarea" rows="3" placeholder="Order notes..."></textarea>
         </div>
+
         <div style="display:flex;gap:12px;justify-content:flex-end">
           <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Update Order</button>
@@ -699,6 +599,7 @@
 
     function setLoggedInState(loggedIn) {
       isLoggedIn = loggedIn;
+
       if (loggedIn) {
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('adminSection').classList.add('active');
@@ -710,21 +611,23 @@
         document.getElementById('adminSection').classList.remove('active');
         localStorage.removeItem('chemsusAdminOrdersLoggedIn');
         document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('ordersTable').innerHTML = 
-          '<tr><td colspan="11" style="text-align:center;padding:40px;color:#6b7280">Please login to view orders</td></tr>';
+        document.getElementById('ordersTable').innerHTML =
+          '<tr><td colspan="12" style="text-align:center;padding:40px;color:#6b7280">Please login to view orders</td></tr>';
       }
     }
 
     // Check login state on load
     if (isLoggedIn) {
       setLoggedInState(true);
+    } else {
+      setLoggedInState(false);
     }
 
     // Login handler
     document.getElementById('loginBtn').addEventListener('click', function() {
       const username = document.getElementById('adminUsername').value.trim();
       const password = document.getElementById('adminPassword').value.trim();
-      
+
       if (username === ADMIN_USER && password === ADMIN_PASS) {
         document.getElementById('loginError').style.display = 'none';
         setLoggedInState(true);
@@ -743,45 +646,75 @@
 
     async function loadOrders() {
       if (!isLoggedIn) return;
-      
+
       try {
         const response = await fetch('http://localhost:3000/api/adminorders');
         if (!response.ok) throw new Error('Failed to fetch orders');
+
         allOrders = await response.json();
         renderOrders(allOrders);
         updateStats(allOrders);
       } catch (error) {
         console.error('Load orders error:', error);
-        document.getElementById('ordersTable').innerHTML = 
-          '<tr><td colspan="11" style="text-align:center;padding:40px;color:#ef4444">Failed to load orders. Check backend at http://localhost:3000</td></tr>';
+        document.getElementById('ordersTable').innerHTML =
+          '<tr><td colspan="12" style="text-align:center;padding:40px;color:#ef4444">Failed to load orders. Check backend at http://localhost:3000</td></tr>';
       }
+    }
+
+    // ✅ Address mapping helper (backend field name different unna kuda work avvali)
+    function getOrderAddress(order) {
+      return (
+        order.address ||
+        order.shippingaddress ||
+        order.shippingAddress ||
+        order.deliveryaddress ||
+        order.deliveryAddress ||
+        order.customeraddress ||
+        order.customerAddress ||
+        order.billingaddress ||
+        order.billingAddress ||
+        '—'
+      );
     }
 
     function renderOrders(orders) {
       const tbody = document.getElementById('ordersTable');
-      if (!orders.length) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:40px;color:#6b7280">No orders match your filters</td></tr>';
+
+      if (!orders || !orders.length) {
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:40px;color:#6b7280">No orders match your filters</td></tr>';
         return;
       }
 
-      tbody.innerHTML = orders.map(order => `
-        <tr>
-          <td>${order.id}</td>
-          <td>${order.customername}</td>
-          <td>${order.email}</td>
-          <td>${order.phone}</td>
-          <td>${order.productname}</td>
-          <td>${order.quantity}kg</td>
-          <td>₹${parseFloat(order.totalprice).toLocaleString('en-IN')}</td>
-          <td><span class="payment-badge">${order.paymentmode}</span></td>
-          <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
-          <td>${new Date(order.createdat).toLocaleString('en-IN')}</td>
-          <td class="actions">
-            <button class="btn btn-primary btn-sm" onclick="editOrder(${order.id})">Edit</button>
-            ${order.status !== 'CANCELLED' ? `<button class="btn btn-danger btn-sm" onclick="deleteOrder(${order.id}, '${order.customername.replace(/'/g, "\\'")}')">Delete</button>` : ''}
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = orders.map(order => {
+        const safeCustomer = (order.customername || '').replace(/'/g, "\\'");
+        const address = getOrderAddress(order);
+
+        return `
+          <tr>
+            <td>${order.id}</td>
+            <td>${order.customername || ''}</td>
+            <td>${order.email || ''}</td>
+            <td>${order.phone || ''}</td>
+
+            <!-- ✅ Address column -->
+            <td class="address-cell">${address}</td>
+
+            <td>${order.productname || ''}</td>
+            <td>${(order.quantity ?? '')}kg</td>
+            <td>₹${Number(order.totalprice || 0).toLocaleString('en-IN')}</td>
+            <td><span class="payment-badge">${order.paymentmode || ''}</span></td>
+            <td><span class="status-badge status-${String(order.status || '').toLowerCase()}">${order.status || ''}</span></td>
+            <td>${order.createdat ? new Date(order.createdat).toLocaleString('en-IN') : ''}</td>
+            <td class="actions">
+              <button class="btn btn-primary btn-sm" onclick="editOrder(${order.id})">Edit</button>
+              ${order.status !== 'CANCELLED'
+                ? `<button class="btn btn-danger btn-sm" onclick="deleteOrder(${order.id}, '${safeCustomer}')">Delete</button>`
+                : ''
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function updateStats(orders) {
@@ -801,10 +734,11 @@
 
       if (statusFilter) filtered = filtered.filter(o => o.status === statusFilter);
       if (paymentFilter) filtered = filtered.filter(o => o.paymentmode === paymentFilter);
-      if (customerFilter) filtered = filtered.filter(o => o.customername.toLowerCase().includes(customerFilter));
+      if (customerFilter) filtered = filtered.filter(o => (o.customername || '').toLowerCase().includes(customerFilter));
       if (dateFilter) filtered = filtered.filter(o => new Date(o.createdat).toISOString().split('T')[0] === dateFilter);
 
       renderOrders(filtered);
+      updateStats(filtered);
     }
 
     function clearFilters() {
@@ -813,6 +747,7 @@
       document.getElementById('customerFilter').value = '';
       document.getElementById('dateFilter').value = '';
       renderOrders(allOrders);
+      updateStats(allOrders);
     }
 
     async function editOrder(id) {
@@ -821,9 +756,9 @@
 
       document.getElementById('editOrderId').value = id;
       document.getElementById('editPaymentMode').value = order.paymentmode || 'PENDING';
-      document.getElementById('editStatus').value = order.status;
+      document.getElementById('editStatus').value = order.status || 'PLACED';
       document.getElementById('editNotes').value = order.notes || '';
-      
+
       document.getElementById('editModal').classList.add('active');
     }
 
@@ -838,9 +773,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updates)
         });
-
         if (!response.ok) throw new Error('Failed to update order');
-        
+
         closeModal();
         loadOrders();
       } catch (error) {
@@ -852,12 +786,9 @@
       if (!confirm(`Delete order for ${customerName}?`)) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/adminorders/${id}`, {
-          method: 'DELETE'
-        });
-
+        const response = await fetch(`http://localhost:3000/api/adminorders/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to delete order');
-        
+
         loadOrders();
       } catch (error) {
         alert('Delete failed: ' + error.message);
@@ -867,12 +798,14 @@
     // Event Listeners
     document.getElementById('editForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
       const id = document.getElementById('editOrderId').value;
       const updates = {
         paymentmode: document.getElementById('editPaymentMode').value,
         status: document.getElementById('editStatus').value,
         notes: document.getElementById('editNotes').value || null
       };
+
       await updateOrder(id, updates);
     });
 
@@ -891,7 +824,13 @@
       if (isLoggedIn) loadOrders();
     }, 30000);
 
+    // expose for inline onclick
     window.toggleSidebar = toggleSidebar;
+    window.applyFilters = applyFilters;
+    window.clearFilters = clearFilters;
+    window.editOrder = editOrder;
+    window.deleteOrder = deleteOrder;
+    window.closeModal = closeModal;
   </script>
 </body>
 </html>

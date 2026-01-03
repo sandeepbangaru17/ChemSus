@@ -10,10 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 /* ===============================
-   DATABASE SETUP
+   DATABASE SETUP (SQLite)
 ================================ */
-const dbPath = path.join(__dirname, "db", "orders.db");
 const dbDir = path.join(__dirname, "db");
+const dbPath = path.join(dbDir, "orders.db");
 
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
@@ -22,13 +22,30 @@ if (!fs.existsSync(dbDir)) {
 
 const db = new sqlite3.Database(dbPath);
 
-db.serialize(() => {
+function runAsync(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) reject(err);
+      else resolve(this);
+    });
+  });
+}
+
+function allAsync(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+}
+
+// ✅ Create table if not exists + add missing columns (migration)
+async function ensureSchema() {
   console.log("🔄 Initializing database...");
 
-  db.run(`DROP TABLE IF EXISTS orders`);
-
-  db.run(`
-    CREATE TABLE orders (
+  await runAsync(`
+    CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       customername TEXT NOT NULL,
       email TEXT NOT NULL,
@@ -39,11 +56,37 @@ db.serialize(() => {
       paymentmode TEXT DEFAULT 'PENDING',
       status TEXT DEFAULT 'PLACED',
       notes TEXT,
-      createdat DATETIME DEFAULT CURRENT_TIMESTAMP
+      createdat DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+      -- ✅ Shipping fields
+      address TEXT,
+      city TEXT,
+      region TEXT,
+      pincode TEXT
     )
   `);
 
+  // ✅ add columns if old DB doesn't have them
+  const cols = await allAsync(`PRAGMA table_info(orders)`);
+  const colNames = cols.map((c) => c.name);
+
+  const addColumnIfMissing = async (name, type) => {
+    if (!colNames.includes(name)) {
+      await runAsync(`ALTER TABLE orders ADD COLUMN ${name} ${type}`);
+      console.log(`✅ Added column: ${name}`);
+    }
+  };
+
+  await addColumnIfMissing("address", "TEXT");
+  await addColumnIfMissing("city", "TEXT");
+  await addColumnIfMissing("region", "TEXT");
+  await addColumnIfMissing("pincode", "TEXT");
+
   console.log("✅ Orders table ready");
+}
+
+ensureSchema().catch((e) => {
+  console.error("❌ DB init error:", e.message);
 });
 
 /* ===============================
@@ -53,35 +96,33 @@ const otpStore = {};
 // otpStore[phone] = { otp, expires }
 
 /* ===============================
-   SEND OTP (FAST2SMS – WORKING)
+   SEND OTP (FAST2SMS)
 ================================ */
 app.post("/api/send-otp", async (req, res) => {
   const { phone } = req.body;
 
-  if (!phone || phone.length !== 10) {
+  if (!phone || String(phone).length !== 10) {
     return res.json({ success: false, message: "Invalid phone number" });
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000);
+
   otpStore[phone] = {
     otp,
-    expires: Date.now() + 5 * 60 * 1000 // 5 minutes
+    expires: Date.now() + 5 * 60 * 1000, // 5 minutes
   };
 
   console.log(`📲 OTP for ${phone}: ${otp}`);
 
   try {
-    const response = await axios.get(
-      "https://www.fast2sms.com/dev/bulkV2",
-      {
-        params: {
-          authorization: "PASTE_YOUR_REAL_FAST2SMS_API_KEY",
-          route: "otp",
-          variables_values: otp,
-          numbers: phone
-        }
-      }
-    );
+    const response = await axios.get("https://www.fast2sms.com/dev/bulkV2", {
+      params: {
+        authorization: "PASTE_YOUR_REAL_FAST2SMS_API_KEY",
+        route: "otp",
+        variables_values: otp,
+        numbers: phone,
+      },
+    });
 
     if (response.data.return === true) {
       res.json({ success: true });
@@ -102,9 +143,7 @@ app.post("/api/verify-otp", (req, res) => {
   const { phone, otp } = req.body;
 
   const record = otpStore[phone];
-  if (!record) {
-    return res.json({ success: false, message: "OTP not found" });
-  }
+  if (!record) return res.json({ success: false, message: "OTP not found" });
 
   if (Date.now() > record.expires) {
     delete otpStore[phone];
@@ -120,7 +159,7 @@ app.post("/api/verify-otp", (req, res) => {
 });
 
 /* ===============================
-   PLACE ORDER (AFTER OTP)
+   PLACE ORDER (SAVES ADDRESS TOO)
 ================================ */
 app.post("/api/orders", (req, res) => {
   const {
@@ -130,7 +169,13 @@ app.post("/api/orders", (req, res) => {
     productname,
     quantity,
     totalprice,
-    paymentmode
+    paymentmode,
+
+    // ✅ Shipping fields from orders.html
+    address,
+    city,
+    region,
+    pincode,
   } = req.body;
 
   if (
@@ -146,8 +191,8 @@ app.post("/api/orders", (req, res) => {
 
   db.run(
     `INSERT INTO orders 
-     (customername, email, phone, productname, quantity, totalprice, paymentmode, status)
-     VALUES (?, ?, ?, ?, ?, ?, COALESCE(?, 'PENDING'), 'PLACED')`,
+     (customername, email, phone, productname, quantity, totalprice, paymentmode, status, address, city, region, pincode)
+     VALUES (?, ?, ?, ?, ?, ?, COALESCE(?, 'PENDING'), 'PLACED', ?, ?, ?, ?)`,
     [
       customername,
       email,
@@ -155,14 +200,17 @@ app.post("/api/orders", (req, res) => {
       productname,
       quantity,
       totalprice,
-      paymentmode
+      paymentmode,
+      address || null,
+      city || null,
+      region || null,
+      pincode || null,
     ],
     function (err) {
       if (err) {
         console.error("❌ Order error:", err.message);
         return res.status(500).json({ error: err.message });
       }
-
       console.log(`✅ Order #${this.lastID} created`);
       res.json({ success: true, orderId: this.lastID });
     }
@@ -181,48 +229,41 @@ app.get("/api/adminorders", (req, res) => {
 
 app.patch("/api/adminorders/:id", (req, res) => {
   const id = req.params.id;
+
   const updates = [];
   const params = [];
-  const { paymentmode, status, notes } = req.body;
 
-  if (paymentmode !== undefined) {
-    updates.push("paymentmode=?");
-    params.push(paymentmode);
-  }
-  if (status !== undefined) {
-    updates.push("status=?");
-    params.push(status);
-  }
-  if (notes !== undefined) {
-    updates.push("notes=?");
-    params.push(notes);
-  }
+  const { paymentmode, status, notes, address, city, region, pincode } = req.body;
+
+  if (paymentmode !== undefined) { updates.push("paymentmode=?"); params.push(paymentmode); }
+  if (status !== undefined) { updates.push("status=?"); params.push(status); }
+  if (notes !== undefined) { updates.push("notes=?"); params.push(notes); }
+
+  // ✅ Optional: admin can edit address too
+  if (address !== undefined) { updates.push("address=?"); params.push(address); }
+  if (city !== undefined) { updates.push("city=?"); params.push(city); }
+  if (region !== undefined) { updates.push("region=?"); params.push(region); }
+  if (pincode !== undefined) { updates.push("pincode=?"); params.push(pincode); }
 
   params.push(id);
 
-  if (updates.length === 0)
+  if (updates.length === 0) {
     return res.status(400).json({ error: "No fields to update" });
+  }
 
-  db.run(
-    `UPDATE orders SET ${updates.join(",")} WHERE id=?`,
-    params,
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      if (this.changes === 0)
-        return res.status(404).json({ error: "Order not found" });
-
-      res.json({ success: true });
-    }
-  );
+  db.run(`UPDATE orders SET ${updates.join(",")} WHERE id=?`, params, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0) return res.status(404).json({ error: "Order not found" });
+    res.json({ success: true });
+  });
 });
 
 app.delete("/api/adminorders/:id", (req, res) => {
   const id = req.params.id;
+
   db.run("DELETE FROM orders WHERE id=?", [id], function (err) {
     if (err) return res.status(500).json({ error: err.message });
-    if (this.changes === 0)
-      return res.status(404).json({ error: "Order not found" });
-
+    if (this.changes === 0) return res.status(404).json({ error: "Order not found" });
     res.json({ success: true });
   });
 });

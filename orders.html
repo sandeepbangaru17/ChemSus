@@ -1,10 +1,11 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <title>Checkout | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #0074c7;
@@ -13,9 +14,7 @@
       --bg: #F3F7FB;
       --ink: #1f2933;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: "Open Sans", Arial, sans-serif;
       background: var(--bg);
@@ -24,7 +23,6 @@
       display: flex;
       min-height: 100vh;
     }
-
     a { text-decoration: none; color: inherit; }
 
     .sidebar {
@@ -40,7 +38,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -54,16 +51,13 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
       white-space: nowrap;
     }
-
     .nav-logo-img { height: 24px; width: auto; }
-
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
-
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -72,20 +66,16 @@
       font-size: 13.5px;
       transition: all 0.2s ease;
     }
-
     .nav-menu li a.active,
-    .nav-menu li a:hover { 
+    .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
-
     .search-section {
       padding: 12px 20px 16px;
       border-top: 1px solid rgba(255,255,255,0.1);
     }
-
     .search-form { position: relative; }
-
     .search-input {
       width: 100%;
       padding: 8px 32px 8px 12px;
@@ -96,9 +86,7 @@
       font-size: 12.5px;
       outline: none;
     }
-
     .search-input::placeholder { color: #d1d5db; }
-
     .search-icon {
       position: absolute;
       right: 12px;
@@ -117,7 +105,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .hero {
       position: relative;
       overflow: hidden;
@@ -132,7 +119,6 @@
       color: #fff;
       border-top: 3px solid var(--accent);
     }
-
     .hero::before {
       content: "";
       position: absolute;
@@ -144,14 +130,12 @@
       opacity: 0.6;
       pointer-events: none;
     }
-
     .hero-content {
       position: relative;
       z-index: 1;
       max-width: 900px;
       padding: 0 20px;
     }
-
     .hero-kicker {
       font-size: 13px;
       letter-spacing: 0.18em;
@@ -159,19 +143,16 @@
       margin-bottom: 8px;
       color: #b9e6ff;
     }
-
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 40px;
       font-weight: 700;
       margin-bottom: 10px;
     }
-
     .hero-subtitle {
       font-size: 16px;
       color: #e2f3ff;
     }
-
     main {
       max-width: 1150px;
       margin: 0 auto;
@@ -179,7 +160,6 @@
       width: 100%;
       flex: 1;
     }
-
     .section {
       background: #fff;
       padding: 36px;
@@ -187,22 +167,14 @@
       box-shadow: 0 14px 30px rgba(15,23,42,0.12);
       border-top: 4px solid var(--accent);
     }
-
-    .section-header {
-      margin-bottom: 24px;
-    }
-
+    .section-header { margin-bottom: 24px; }
     .section-header h2 {
       font-family: "Montserrat", sans-serif;
       font-size: 24px;
       color: var(--primary-dark);
     }
 
-    /* FORM STYLES */
-    .form-group {
-      margin-bottom: 20px;
-    }
-
+    .form-group { margin-bottom: 20px; }
     .form-label {
       display: block;
       margin-bottom: 8px;
@@ -210,12 +182,7 @@
       color: var(--primary-dark);
       font-size: 14px;
     }
-
-    .form-label.required::after {
-      content: " *";
-      color: #ef4444;
-    }
-
+    .form-label.required::after { content: " *"; color: #ef4444; }
     .form-input, .form-textarea {
       width: 100%;
       padding: 12px 14px;
@@ -225,23 +192,17 @@
       font-family: inherit;
       transition: all 0.2s ease;
     }
-
     .form-input:focus, .form-textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(0,184,176,0.1);
     }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-
-    .form-textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    .form-textarea { resize: vertical; min-height: 80px; }
 
     .btn-submit {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
@@ -257,12 +218,10 @@
       width: 100%;
       margin-top: 10px;
     }
-
     .btn-submit:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(0,184,176,0.3);
     }
-
     .btn-submit:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -275,7 +234,6 @@
       border-radius: 10px;
       margin-bottom: 24px;
     }
-
     .summary-item {
       display: flex;
       justify-content: space-between;
@@ -283,15 +241,8 @@
       border-bottom: 1px solid #e2e8f0;
       font-size: 14px;
     }
-
-    .summary-item:last-child {
-      border-bottom: none;
-    }
-
-    .summary-item strong {
-      font-weight: 600;
-    }
-
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item strong { font-weight: 600; }
     .total-amount {
       font-size: 20px;
       font-weight: 700;
@@ -309,10 +260,7 @@
       margin-top: 24px;
       display: none;
     }
-
-    .otp-section.show {
-      display: block;
-    }
+    .otp-section.show { display: block; }
 
     .success-message {
       background: #d1fae5;
@@ -347,7 +295,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     .mobile-toggle svg { width: 20px; height: 20px; }
 
     @media (max-width: 1050px) {
@@ -356,19 +303,17 @@
       .main-wrapper { margin-left: 0; }
       .mobile-toggle { display: block; }
     }
-
     @media (max-width: 900px) {
       .form-row { grid-template-columns: 1fr; }
       .hero-title { font-size: 32px; }
     }
-
     @media (max-width: 580px) {
       .hero-title { font-size: 28px; }
     }
   </style>
 </head>
-<body>
 
+<body>
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
@@ -380,7 +325,6 @@
       <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
       <span>ChemSus</span>
     </a>
-
     <ul class="nav-menu">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About Us</a></li>
@@ -424,74 +368,60 @@
           <h2>Order Details &amp; Delivery</h2>
         </div>
 
-        <!-- ORDER SUMMARY -->
         <div class="order-summary">
           <h3 style="font-family: Montserrat; margin-bottom: 16px; color: var(--primary-dark);">Order Summary</h3>
-          <div id="orderItems">
-          <div class="summary-item">
-            <strong>Calcium Levulinate</strong>
-            <span>2 kg × ₹2,500 = ₹5,000</span>
-          </div>
-        </div>
+          <div id="orderItems"></div>
           <div class="total-amount">
-            Total: <span id="totalAmount">₹5,000</span>
+            Total: <span id="totalAmount">₹0</span>
           </div>
         </div>
 
-        <!-- CHECKOUT FORM -->
         <form id="checkoutForm">
-          <!-- PERSONAL DETAILS -->
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Full Name</label>
-              <input type="text" id="fullName" class="form-input" required="">
+              <input type="text" id="fullName" class="form-input" required>
             </div>
             <div class="form-group">
               <label class="form-label required">Email ID</label>
-              <input type="email" id="email" class="form-input" required="">
+              <input type="email" id="email" class="form-input" required>
             </div>
           </div>
 
-          <!-- CONTACT DETAILS -->
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Mobile Number</label>
-              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required="">
+              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required>
             </div>
             <div class="form-group">
               <label class="form-label required">Pincode</label>
-              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" maxlength="6" required="">
+              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" maxlength="6" required>
             </div>
           </div>
 
-          <!-- ADDRESS DETAILS -->
           <div class="form-group">
             <label class="form-label required">Address</label>
-            <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required=""></textarea>
+            <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required></textarea>
           </div>
 
-          <!-- CITY, REGION -->
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">City</label>
-              <input type="text" id="city" class="form-input" required="">
+              <input type="text" id="city" class="form-input" required>
             </div>
             <div class="form-group">
               <label class="form-label required">Region/State</label>
-              <input type="text" id="region" class="form-input" required="">
+              <input type="text" id="region" class="form-input" required>
             </div>
           </div>
 
-          <!-- SUBMIT BUTTON -->
           <button type="submit" class="btn-submit" id="submitBtn">Verify Mobile &amp; Place Order</button>
         </form>
 
-        <!-- SUCCESS MESSAGE -->
         <div class="success-message" id="successMessage">
           ✅ Order placed successfully! Proceeding to payment...
         </div>
 
-        <!-- OTP VERIFICATION SECTION (Hidden initially) -->
         <div class="otp-section" id="otpSection">
           <h3 style="font-family: Montserrat; margin-bottom: 16px; color: var(--primary-dark);">Verify Mobile Number</h3>
           <div class="form-group">
@@ -513,7 +443,6 @@
       document.getElementById('sidebar').classList.toggle('open');
     }
 
-    // Load cart data on page load
     function loadOrderData() {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const orderItems = document.getElementById('orderItems');
@@ -528,7 +457,6 @@
 
       let grandTotal = 0;
       let itemsHTML = '';
-
       cart.forEach(item => {
         const subtotal = item.price * item.quantity;
         grandTotal += subtotal;
@@ -542,30 +470,32 @@
 
       orderItems.innerHTML = itemsHTML;
       totalAmount.textContent = '₹' + grandTotal.toLocaleString('en-IN');
-
-      // Store total for later use
       sessionStorage.setItem('orderTotal', grandTotal);
     }
 
-    // BACKEND INTEGRATION: Place Order Function
+    // ✅ UPDATED: Place Order (now sends address + city + region + pincode to backend)
     async function placeOrderAndProceed() {
       const submitBtn = document.getElementById('submitBtn');
       const successMsg = document.getElementById('successMessage');
-      
+
       try {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Placing Order...';
 
-        // Get form data
-        const customername = document.getElementById('fullName').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('mobile').value;
+        // customer
+        const customername = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('mobile').value.trim();
 
-        // Get cart items
+        // ✅ shipping fields
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const region = document.getElementById('region').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+
         const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
         const totalprice = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
 
-        // Send EACH cart item as separate order row to backend
         for (const item of cart) {
           const orderData = {
             customername,
@@ -574,39 +504,31 @@
             productname: item.name,
             quantity: item.quantity,
             totalprice: item.price * item.quantity,
-            paymentmode: "PENDING"
+            paymentmode: "PENDING",
+
+            // ✅ send to backend (so adminorders.html lo address kanipistundi)
+            address,
+            city,
+            region,
+            pincode
           };
 
           const response = await fetch('http://localhost:3000/api/orders', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
           });
 
-          if (!response.ok) {
-            throw new Error(`Order failed: ${response.status}`);
-          }
+          if (!response.ok) throw new Error(`Order failed: ${response.status}`);
         }
 
-        // Show success
         successMsg.style.display = 'block';
-        
-        // Clear cart
         localStorage.removeItem('chemsusCart');
-        
-        // Update cart badge
         document.getElementById('cart-count').textContent = '0';
 
-        // Proceed to payment after 2 seconds
         setTimeout(() => {
           const referrer = sessionStorage.getItem('checkoutSource') || 'buy';
-          if (referrer === 'buynow') {
-            window.location.href = 'payment2.html';
-          } else {
-            window.location.href = 'payment.html';
-          }
+          window.location.href = (referrer === 'buynow') ? 'payment2.html' : 'payment.html';
         }, 2000);
 
       } catch (error) {
@@ -617,11 +539,9 @@
       }
     }
 
-    // Form submission - Skip OTP for now, direct backend call
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
-      // Validate required fields
+
       const requiredFields = ['fullName', 'email', 'mobile', 'pincode', 'address', 'city', 'region'];
       for (const fieldId of requiredFields) {
         if (!document.getElementById(fieldId).value.trim()) {
@@ -630,23 +550,21 @@
         }
       }
 
-      // Store order details for payment page
+      // (optional) keep for payment pages
       const orderDetails = {
-        fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
-        mobile: document.getElementById('mobile').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        region: document.getElementById('region').value,
-        pincode: document.getElementById('pincode').value
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        mobile: document.getElementById('mobile').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        region: document.getElementById('region').value.trim(),
+        pincode: document.getElementById('pincode').value.trim()
       };
       sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
 
-      // Place order via backend
       placeOrderAndProceed();
     });
 
-    // OTP Verification (placeholder - not used now)
     function verifyOTPAndProceed() {
       const otp = document.getElementById('otpInput').value;
       if (otp.length !== 6) {
@@ -656,7 +574,6 @@
       placeOrderAndProceed();
     }
 
-    // Cart badge update
     (function() {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -664,7 +581,6 @@
       if (badge) badge.textContent = count;
     })();
 
-    // Search functionality
     document.getElementById('siteSearchForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
@@ -674,10 +590,8 @@
       else window.location.href = 'index.html';
     });
 
-    // Initialize on page load
     window.addEventListener('DOMContentLoaded', loadOrderData);
 
-    // Set checkout source (called from cart.html or buynow.html)
     function setCheckoutSource(source) {
       sessionStorage.setItem('checkoutSource', source);
     }
@@ -685,6 +599,5 @@
     window.toggleSidebar = toggleSidebar;
     window.setCheckoutSource = setCheckoutSource;
   </script>
-
-
-</body></html>
+</body>
+</html>
