@@ -153,20 +153,35 @@
       gap: 36px;
     }
 
-    .product-image {
+    /* LEFT IMAGE BOX: stack images vertically */
+    .product-image{
       position: relative;
-      height: 320px;
+      height: auto;                 /* ✅ remove fixed height */
       border-radius: 16px;
-      overflow: hidden;
+      overflow: visible;            /* ✅ allow full images */
       background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;       /* ✅ DOWN BY DOWN */
+      gap: 14px;                    /* space between images */
+      padding: 14px;                /* nice spacing */
       box-shadow: 0 8px 24px rgba(0, 116, 199, 0.15);
     }
-
-    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-    .product-image:hover img { transform: scale(1.05); }
+    
+    /* EACH IMAGE */
+    .product-image img{
+      width: 100%;
+      height: auto;                 /* ✅ natural height */
+      object-fit: contain;
+      border-radius: 12px;
+      background: #fff;
+      display: block;
+    }
+    
+    /* optional: remove hover zoom (it looks odd with 2 images) */
+    .product-image:hover img{
+      transform: none;
+    }
+    
 
     .content-section { display: flex; flex-direction: column; gap: 24px; }
     .meta-chip {
@@ -370,7 +385,7 @@
     <main>
       <div class="product-card">
         <div class="product-image">
-          <img src="../assets/4ai.JPEG" alt="Ethyl Levulinate – fragrance and solvent applications">
+          <img src="../assets/4ai.PNG" alt="Ethyl Levulinate – fragrance and solvent applications">
         </div>
 
         <div class="content-section">

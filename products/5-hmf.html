@@ -214,29 +214,34 @@
       gap: 36px;
     }
 
-    /* ENHANCED IMAGE LAYOUT */
-    .product-image {
+    //* LEFT IMAGE BOX: stack images vertically */
+    .product-image{
       position: relative;
-      height: 320px;
+      height: auto;                 /* ✅ remove fixed height */
       border-radius: 16px;
-      overflow: hidden;
+      overflow: visible;            /* ✅ allow full images */
       background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;       /* ✅ DOWN BY DOWN */
+      gap: 14px;                    /* space between images */
+      padding: 14px;                /* nice spacing */
       box-shadow: 0 8px 24px rgba(0, 116, 199, 0.15);
     }
-
-    .product-image img {
+    
+    /* EACH IMAGE */
+    .product-image img{
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.3s ease;
+      height: auto;                 /* ✅ natural height */
+      object-fit: contain;
+      border-radius: 12px;
+      background: #fff;
+      display: block;
     }
-
-    .product-image:hover img {
-      transform: scale(1.05);
+    
+    /* optional: remove hover zoom (it looks odd with 2 images) */
+    .product-image:hover img{
+      transform: none;
+    }
     }
 
     .product-image::before {
@@ -605,7 +610,9 @@
       <div class="product-card">
         <!-- ENHANCED IMAGE SECTION -->
         <div class="product-image">
-          <img src="../assets/1ai.JPEG" alt="5-HMF – biomass-derived platform chemical">
+          <img src="../assets/1ai.PNG" alt="5-HMF – biomass-derived platform chemical">
+           <!--<img src="../assets/11ai.PNG" alt="5-HMF – biomass-derived platform chemical">-->
+          
         </div>
 
         <!-- CONTENT -->
