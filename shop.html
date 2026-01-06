@@ -8,520 +8,374 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --primary: #0074c7;
-      --primary-dark: #00508a;
-      --accent: #00b8b0;
-      --bg: #F3F7FB;
-      --ink: #1f2933;
+    :root{
+      --primary:#0074c7;
+      --primary-dark:#00508a;
+      --accent:#00b8b0;
+      --bg:#F3F7FB;
+      --ink:#1f2933;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Open Sans",Arial,sans-serif;
+      line-height:1.6;
+      color:var(--ink);
+      background:var(--bg);
+      display:flex;
+      min-height:100vh;
+    }
+    a{text-decoration:none;color:inherit}
+
+    /* ===== Sidebar + overlay ===== */
+    .sidebar{
+      width:240px;
+      background:var(--primary);
+      color:#fff;
+      border-right:3px solid var(--accent);
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      position:fixed;
+      left:0;top:0;
+      z-index:1000;
+      transition:transform .3s ease;
+    }
+    .sidebar-overlay{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.5);
+      z-index:999;
+    }
+    .sidebar-overlay.active{display:block}
+
+    .nav-logo{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-family:"Montserrat",sans-serif;
+      font-weight:700;
+      font-size:16px;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      color:#fff;
+      padding:16px 20px;
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    .nav-logo-img{height:24px;width:auto}
+    .nav-menu{list-style:none;padding:8px 0;flex:1;overflow-y:auto}
+    .nav-menu li a{
+      display:block;
+      color:#fff;
+      padding:10px 20px;
+      font-size:13.5px;
+      border-left:3px solid transparent;
+      transition:all .2s ease;
+    }
+    .nav-menu li a.active,.nav-menu li a:hover{
+      background:rgba(255,255,255,.1);
+      border-left-color:var(--accent);
+    }
+    #cart-count{
+      background:var(--accent);
+      color:#fff;
+      padding:2px 8px;
+      border-radius:10px;
+      font-size:11px;
+      font-weight:bold;
+      margin-left:8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: "Open Sans", Arial, sans-serif;
-      line-height: 1.6;
-      color: var(--ink);
-      background-color: var(--bg);
-      display: flex;
-      min-height: 100vh;
+    .search-section{padding:12px 20px 16px;border-top:1px solid rgba(255,255,255,.1)}
+    .search-form{position:relative}
+    .search-input{
+      width:100%;
+      padding:8px 32px 8px 12px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.1);
+      color:#fff;
+      font-size:12.5px;
+      outline:none;
+      backdrop-filter:blur(10px);
+    }
+    .search-input::placeholder{color:#d1d5db;font-size:11.5px}
+    .search-icon{
+      position:absolute;right:12px;top:50%;
+      transform:translateY(-50%);
+      width:14px;height:14px;color:#fff;pointer-events:none;
     }
 
-    a { text-decoration: none; color: inherit; }
+    .mobile-toggle{
+      display:none;
+      position:fixed;
+      top:18px;left:18px;
+      z-index:1001;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      padding:12px;
+      border-radius:10px;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(0,116,199,.35);
+    }
+    .mobile-toggle svg{width:20px;height:20px}
 
-    .sidebar {
-      width: 240px;
-      background: var(--primary);
-      color: #ffffff;
-      border-right: 3px solid var(--accent);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 1000;
+    /* ===== Main ===== */
+    .main-wrapper{
+      margin-left:240px;
+      flex:1;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      width:100%;
     }
 
-    .nav-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: "Montserrat", sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      color: #ffffff;
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+    .hero{
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+        #041424;
+      color:#fff;
+      height:260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
     }
-
-    .nav-logo-img { height: 24px; width: auto; }
-
-    .nav-menu {
-      list-style: none;
-      padding: 8px 0;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .nav-menu li a {
-      display: block;
-      color: #ffffff;
-      padding: 10px 20px;
-      font-size: 13.5px;
-      border-left: 3px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .nav-menu li a.active,
-    .nav-menu li a:hover {
-      background: rgba(255,255,255,0.1);
-      border-left-color: var(--accent);
-    }
-
-    #cart-count {
-      background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 8px;
-    }
-
-    .floating-cart-btn {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 1200;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #ffffff;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: "Montserrat", sans-serif;
-      box-shadow: 0 10px 24px rgba(0, 116, 199, 0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .floating-cart-btn:hover {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      box-shadow: 0 14px 32px rgba(0, 116, 199, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .floating-cart-btn span {
-      background: rgba(255,255,255,0.25);
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    @media (max-width: 580px) {
-      .floating-cart-btn {
-        right: 14px;
-        bottom: 14px;
-        padding: 10px 16px;
-      }
-    }
-
-    .search-section {
-      padding: 12px 20px 16px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .search-form { position: relative; }
-
-    .search-input {
-      width: 100%;
-      padding: 8px 32px 8px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.1);
-      color: #ffffff;
-      font-size: 12.5px;
-      outline: none;
-      backdrop-filter: blur(10px);
-    }
-
-    .search-input::placeholder {
-      color: #d1d5db;
-      font-size: 11.5px;
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      color: #ffffff;
-      pointer-events: none;
-    }
-
-    .main-wrapper {
-      margin-left: 240px;
-      flex: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
-                  #041424;
-      color: #ffffff;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .hero::before{
+      content:"";
+      position:absolute;inset:0;
       background-image:
         radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
         radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
-      background-size: 140px 140px;
-      opacity: 0.6;
-      pointer-events: none;
+      background-size:140px 140px;
+      opacity:.6;
+      pointer-events:none;
+    }
+    .hero-content{position:relative;z-index:1;max-width:720px;padding:0 18px}
+    .hero-kicker{font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;color:#b9e6ff}
+    .hero-title{font-family:"Montserrat",sans-serif;font-size:40px;font-weight:700;margin-bottom:10px}
+    .hero-subtitle{font-size:16px;color:#e2f3ff}
+
+    main{
+      max-width:1150px;
+      margin:0 auto;
+      padding:34px 18px 42px;
+      width:100%;
+      flex:1;
+    }
+    .section-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .section-header h2{font-family:"Montserrat",sans-serif;font-size:24px;font-weight:700;color:#123559}
+    .section-intro{font-size:15px;margin-bottom:26px;color:#4a5568;max-width:760px}
+
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
+      gap:24px;
+      margin-top:20px;
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      padding: 0 18px;
+    .product-card{
+      background:#fff;
+      border-radius:14px;
+      padding:28px;
+      box-shadow:0 14px 30px rgba(15,23,42,.12);
+      border-top:4px solid var(--accent);
+      position:relative;
+      transition:all .3s ease;
+    }
+    .product-card:hover{transform:translateY(-8px);box-shadow:0 24px 40px rgba(15,23,42,.2)}
+    .product-card.out-of-stock{opacity:.7;border-top-color:#ef4444}
+    .product-card.out-of-stock:hover{transform:none}
+
+    .product-badge{
+      position:absolute;top:20px;right:20px;
+      background:var(--accent);
+      color:#fff;
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:600;
+    }
+    .stock-badge{
+      position:absolute;top:20px;left:20px;
+      padding:4px 10px;border-radius:12px;
+      font-size:11px;font-weight:600;
+    }
+    .stock-in{background:#d1fae5;color:#065f46}
+    .stock-out{background:#fee2e2;color:#991b1b}
+
+    .product-image{
+      width:100%;
+      height:180px;
+      background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+      border-radius:10px;
+      margin:38px 0 18px; /* give room for badges */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .product-image img{width:100%;height:100%;object-fit:contain}
+
+    .product-title{
+      font-family:"Montserrat",sans-serif;
+      font-size:20px;
+      font-weight:700;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+    .product-subtitle{font-size:14px;color:#64748b;margin-bottom:12px}
+
+    .product-features{list-style:none;margin-bottom:16px;font-size:14px}
+    .product-features li{margin:6px 0}
+    .product-features li::before{content:"✓ ";color:var(--accent);font-weight:700}
+
+    .more-details{
+      display:inline-block;
+      margin-top:10px;
+      background:#007bff;
+      color:#fff;
+      padding:10px 14px;
+      border-radius:8px;
+      font-size:13px;
+      font-weight:600;
     }
 
-    .hero-kicker {
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      color: #b9e6ff;
+    .product-price{
+      font-family:"Montserrat",sans-serif;
+      font-size:24px;
+      font-weight:700;
+      color:var(--primary);
+      margin:10px 0 16px;
+    }
+    .price-muted{color:#94a3b8;font-weight:700}
+
+    .out-of-stock-message{
+      background:#fef2f2;
+      color:#991b1b;
+      padding:12px;
+      border-radius:8px;
+      text-align:center;
+      font-weight:600;
+      margin-top:38px;
+      margin-bottom:14px;
+      border-left:4px solid #ef4444;
     }
 
-    .hero-title {
-      font-family: "Montserrat", sans-serif;
-      font-size: 40px;
-      font-weight: 700;
-      margin-bottom: 10px;
+    .product-actions{
+      display:flex;
+      gap:12px;
+      align-items:stretch;
+    }
+    .btn-buy{
+      flex:1;
+      background:linear-gradient(135deg,var(--accent),#00d4cc);
+      color:#fff;
+      padding:14px 10px;
+      border:none;border-radius:10px;
+      font-size:14px;font-weight:700;
+      font-family:"Montserrat",sans-serif;
+      cursor:pointer;
+      transition:all .2s ease;
+      min-height:50px;
+    }
+    .btn-buy:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.05)}
+    .btn-buy:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+
+    .cart-btn-container{flex:1;min-height:50px;display:flex}
+    .btn-cart{
+      width:100%;height:100%;
+      background:var(--primary);
+      color:#fff;border:none;border-radius:10px;
+      font-size:13px;font-weight:700;
+      font-family:"Montserrat",sans-serif;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+    .btn-cart:hover:not(:disabled){filter:brightness(1.05)}
+    .btn-cart:disabled{background:#9ca3af;cursor:not-allowed}
+
+    .qty-selector{
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;height:100%;
+      background:#f1f5f9;
+      border-radius:10px;
+      border:1px solid #cbd5e1;
+      overflow:hidden;
+    }
+    .qty-btn{
+      width:44px;height:100%;
+      background:var(--primary);
+      color:#fff;border:none;cursor:pointer;
+      font-weight:800;font-size:18px;
+    }
+    .qty-btn:hover{background:var(--primary-dark)}
+    .qty-value{font-weight:800;font-size:15px;color:var(--primary-dark);min-width:28px;text-align:center}
+
+    footer{
+      background:#06121f;
+      color:#cbd5f5;
+      font-size:13px;
+      text-align:center;
+      padding:14px 0;
+      margin-top:22px;
     }
 
-    .hero-subtitle {
-      font-size: 16px;
-      color: #e2f3ff;
+    .floating-cart-btn{
+      position:fixed;
+      right:20px;bottom:20px;
+      z-index:1200;
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#fff;border:none;border-radius:999px;
+      padding:12px 18px;
+      font-size:14px;font-weight:700;
+      font-family:"Montserrat",sans-serif;
+      box-shadow:0 10px 24px rgba(0,116,199,.4);
+      cursor:pointer;
+      display:flex;align-items:center;gap:8px;
+      transition:all .2s ease;
+    }
+    .floating-cart-btn span{
+      background:rgba(255,255,255,.25);
+      padding:2px 8px;border-radius:999px;
+      font-size:12px;font-weight:800;
     }
 
-    main {
-      max-width: 1150px;
-      margin: 0 auto;
-      padding: 34px 18px 42px 18px;
-      width: 100%;
-      box-sizing: border-box;
-      flex: 1;
+    /* ===== Responsive ===== */
+    @media (max-width:1050px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main-wrapper{margin-left:0}
+      .mobile-toggle{display:block}
+      body.no-scroll{overflow:hidden}
     }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+    @media (max-width:768px){
+      .products-grid{grid-template-columns:1fr;gap:20px}
+      .hero{height:230px}
+      .hero-title{font-size:32px}
+      /* keep buttons side-by-side (same look as laptop) */
+      .product-actions{flex-direction:row}
     }
-
-    .section-header h2 {
-      font-family: "Montserrat", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #123559;
-    }
-
-    .section-intro {
-      font-size: 15px;
-      margin-bottom: 26px;
-      color: #4a5568;
-      max-width: 760px;
-    }
-
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
-    }
-
-    .product-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 28px;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
-      border-top: 4px solid var(--accent);
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 24px 40px rgba(15, 23, 42, 0.2);
-    }
-
-    .product-card.out-of-stock {
-      opacity: 0.65;
-      border-top-color: #ef4444;
-    }
-
-    .product-card.out-of-stock:hover {
-      transform: none;
-    }
-
-    .product-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: #ffffff;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .stock-badge {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .stock-in { background: #d1fae5; color: #065f46; }
-    .stock-out { background: #fee2e2; color: #991b1b; }
-
-    .product-image {
-      width: 100%;
-      height: 180px;
-      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .product-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .product-title {
-      font-family: "Montserrat", sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 8px;
-    }
-
-    .product-subtitle {
-      font-size: 14px;
-      color: #64748b;
-      margin-bottom: 12px;
-    }
-
-    .product-features {
-      list-style: none;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
-    .product-features li::before {
-      content: "✓ ";
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .product-price {
-      font-family: "Montserrat", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 16px;
-    }
-
-    .out-of-stock-message {
-      background: #fef2f2;
-      color: #991b1b;
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 16px;
-      border-left: 4px solid #ef4444;
-    }
-
-    .product-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn-buy {
-      flex: 1;
-      background: linear-gradient(135deg, var(--accent), #00d4cc);
-      color: #ffffff;
-      padding: 14px 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: "Montserrat", sans-serif;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-buy:hover:not(:disabled) {
-      transform: translateY(-1px);
-      filter: brightness(1.1);
-    }
-
-    .btn-buy:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .cart-btn-container {
-      flex: 1;
-      height: 48px;
-      display: flex;
-    }
-
-    .btn-cart {
-      width: 100%;
-      height: 100%;
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: "Montserrat", sans-serif;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-cart:hover:not(:disabled) {
-      filter: brightness(1.1);
-    }
-
-    .btn-cart:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-    }
-
-    .qty-selector {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      height: 100%;
-      background: #f1f5f9;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-    }
-
-    .qty-btn {
-      width: 35px;
-      height: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s ease;
-    }
-
-    .qty-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    .qty-value {
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--primary-dark);
-    }
-
-    footer {
-      background-color: #06121f;
-      color: #cbd5f5;
-      font-size: 13px;
-      text-align: center;
-      padding: 14px 0;
-      margin-top: 22px;
-    }
-
-    @media (max-width: 1050px) {
-      .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-      }
-      .sidebar.open { transform: translateX(0); }
-      .main-wrapper { margin-left: 0; }
-      .mobile-toggle {
-        display: block;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1001;
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-      .mobile-toggle svg { width: 20px; height: 20px; }
-    }
-
-    @media (min-width: 1051px) {
-      .mobile-toggle { display: none; }
-    }
-
-    @media (max-width: 768px) {
-      .products-grid { grid-template-columns: 1fr; gap: 20px; }
-      .hero { height: 230px; }
-      .hero-title { font-size: 32px; }
-      .product-actions { flex-direction: column; }
-    }
-
-    @media (max-width: 580px) {
-      .hero-title { font-size: 28px; }
+    @media (max-width:580px){
+      .hero-title{font-size:28px}
+      .floating-cart-btn{right:14px;bottom:14px;padding:10px 16px}
+      .product-card{padding:22px}
+      .product-image{height:170px}
     }
   </style>
 </head>
-<body>
 
-  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
+<body>
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+
+  <button class="mobile-toggle" onclick="toggleSidebar(true)" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
     </svg>
@@ -549,7 +403,7 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search products...">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
@@ -569,37 +423,50 @@
     </section>
 
     <main>
-      <div class="section-header">
-        <h2>Our Products</h2>
-      </div>
-      <p class="section-intro" id="sectionIntro">High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.</p>
+      <div class="section-header"><h2>Our Products</h2></div>
+      <p class="section-intro" id="sectionIntro">
+        High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.
+      </p>
 
       <div class="products-grid" id="productsGrid">
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
-          Loading products...
-        </div>
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:#6b7280;">Loading products...</div>
       </div>
     </main>
 
-    <footer>
-      &copy; 2025 ChemSus Technologies Pvt Ltd.
-    </footer>
+    <footer>&copy; 2025 ChemSus Technologies Pvt Ltd.</footer>
   </div>
 
   <button class="floating-cart-btn" onclick="window.location.href='cart.html'">
-    Go to Cart
-    <span id="floating-cart-count">0</span>
+    Go to Cart <span id="floating-cart-count">0</span>
   </button>
 
   <script>
     let cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+    function toggleSidebar(forceOpen) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      const shouldOpen = (typeof forceOpen === 'boolean') ? forceOpen : !sidebar.classList.contains('open');
+
+      sidebar.classList.toggle('open', shouldOpen);
+      overlay.classList.toggle('active', shouldOpen);
+      document.body.classList.toggle('no-scroll', shouldOpen);
     }
 
     function loadShopItems() {
-      return JSON.parse(localStorage.getItem('chemsusShopItems')) || [];
+      const stored = JSON.parse(localStorage.getItem('chemsusShopItems')) || [];
+      if (stored.length > 0) return stored;
+
+      // ✅ fallback so mobile also shows products (localStorage is empty on new device)
+      return [
+        { name: "Calcium Levulinate", subtitle: "Pharma-grade nutritional supplement", features: ["High bioavailability", "Pharma & nutraceutical use", "Clean-label"], price: 1800, stockStatus: "in-stock", showBadge: false, badge: "", moreLink: "products/calcium-levulinate.html" },
+        { name: "Sodium Levulinate", subtitle: "Natural preservative & stabilizer", features: ["COSMOS/ECOCERT friendly", "Skin-conditioning", "Water soluble"], price: 1650, stockStatus: "in-stock", showBadge: true, badge: "Free sample available", moreLink: "products/sodium-levulinate.html" },
+        { name: "Levulinic Acid", subtitle: "Versatile platform chemical", features: ["Green chemistry platform", "Polymers & fuels", "Pharma intermediate"], price: 1400, stockStatus: "in-stock", showBadge: true, badge: "Free sample available", moreLink: "products/levulinic-acid.html" },
+        { name: "5-HMF", subtitle: "Bio-based intermediate", features: ["High reactivity", "Resins & coatings", "Sustainable building block"], price: 0, stockStatus: "out-of-stock", showBadge: false, badge: "", moreLink: "products/5hmf.html" },
+        { name: "Ethyl Levulinate", subtitle: "Green solvent & fuel additive", features: ["Bio-based ester", "Flavors & fragrances", "Low toxicity"], price: 2200, stockStatus: "in-stock", showBadge: false, badge: "", moreLink: "products/ethyl-levulinate.html" },
+        { name: "Methyl Levulinate", subtitle: "Renewable solvent & intermediate", features: ["Biofuel additive", "Performance solvent", "Chemical intermediate"], price: 2000, stockStatus: "in-stock", showBadge: false, badge: "", moreLink: "products/methyl-levulinate.html" }
+      ];
     }
 
     function saveCart() {
@@ -619,9 +486,7 @@
       const existing = cart.find(item => item.name === pName);
       if (existing) {
         existing.quantity += delta;
-        if (existing.quantity <= 0) {
-          cart = cart.filter(item => item.name !== pName);
-        }
+        if (existing.quantity <= 0) cart = cart.filter(item => item.name !== pName);
       } else if (delta > 0) {
         cart.push({ name: pName, price: pPrice, quantity: 1 });
       }
@@ -644,6 +509,8 @@
         const qtySelector = card.querySelector('.qty-selector');
         const qtyValue = card.querySelector('.qty-value');
 
+        if (!cartBtn || !qtySelector || !qtyValue) return;
+
         if (item && item.quantity > 0) {
           cartBtn.style.display = 'none';
           qtySelector.style.display = 'flex';
@@ -653,7 +520,13 @@
           qtySelector.style.display = 'none';
         }
       });
+
       updateFloatingCartCount();
+    }
+
+    function safeNumber(val) {
+      const n = Number(val);
+      return Number.isFinite(n) ? n : 0;
     }
 
     function renderProducts() {
@@ -661,12 +534,11 @@
       const grid = document.getElementById('productsGrid');
       const intro = document.getElementById('sectionIntro');
 
-      if (items.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">No products available</div>`;
+      if (!items || items.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#6b7280;">No products available</div>`;
         return;
       }
 
-      // Image list in order: cl, sl, la, 5hmf, el, ml
       const imageList = [
         'assets/cl.jpeg',
         'assets/sl.jpeg',
@@ -679,60 +551,91 @@
       let inStockCount = 0;
       grid.innerHTML = '';
 
-      items.forEach((item, index) => {
+      items.forEach((rawItem, index) => {
+        const item = {
+          name: rawItem.name || 'Product',
+          subtitle: rawItem.subtitle || '',
+          features: Array.isArray(rawItem.features) ? rawItem.features : [],
+          stockStatus: rawItem.stockStatus || 'in-stock',
+          showBadge: !!rawItem.showBadge,
+          badge: rawItem.badge || '',
+          moreLink: rawItem.moreLink || '',
+          price: safeNumber(rawItem.price) // ✅ prevents toLocaleString crash
+        };
+
         const isInStock = item.stockStatus === 'in-stock';
         if (isInStock) inStockCount++;
 
+        // ✅ If price is missing/0 -> show contact-for-price (and disable)
+        const hasValidPrice = item.price > 0;
+
         const card = document.createElement('div');
-        card.className = `product-card ${!isInStock ? 'out-of-stock' : ''}`;
+        card.className = `product-card ${(!isInStock ? 'out-of-stock' : '')}`;
         card.setAttribute('data-name', item.name);
         card.setAttribute('data-price', item.price);
 
-        let badgeHTML = '';
-        if (item.showBadge && item.badge) {
-          badgeHTML = `<span class="product-badge">${item.badge}</span>`;
-        }
+        const badgeHTML = (item.showBadge && item.badge)
+          ? `<span class="product-badge">${item.badge}</span>`
+          : '';
 
-        const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
+        const stockBadgeHTML =
+          `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
 
-        let featuresHTML = item.features.map(f => `<li>${f}</li>`).join('');
-        
-        let moreLink = '';
-        if (item.moreLink) {
-          moreLink = `<br><a href="${item.moreLink}" style="background-color:#007bff;color:white;padding:8px 14px;text-decoration:none;border-radius:5px;font-size:13px;display:inline-block;margin-top:6px;">More Details</a>`;
-        }
+        const featuresHTML = item.features.map(f => `<li>${f}</li>`).join('');
 
-        const outOfStockMsg = !isInStock ? '<div class="out-of-stock-message">Currently Out of Stock</div>' : '';
+        const moreLinkHTML = item.moreLink
+          ? `<a class="more-details" href="${item.moreLink}">More Details</a>`
+          : '';
 
-        // Pick image by index; if more items than images, reuse last image
+        const outOfStockMsg = !isInStock
+          ? '<div class="out-of-stock-message">Currently Out of Stock</div>'
+          : '';
+
         const imageSrc = imageList[index] || imageList[imageList.length - 1];
+
+        const priceHTML = (isInStock && hasValidPrice)
+          ? `₹${item.price.toLocaleString()} / kg`
+          : `<span class="price-muted">Contact for Price</span>`;
+
+        const buyDisabled = (!isInStock || !hasValidPrice);
+        const cartDisabled = (!isInStock || !hasValidPrice);
+
+        const safeName = item.name.replace(/'/g, "\\'");
 
         card.innerHTML = `
           ${stockBadgeHTML}
           ${badgeHTML}
           ${outOfStockMsg}
+
           <div class="product-image">
             <img src="${imageSrc}" alt="${item.name}">
           </div>
+
           <h3 class="product-title">${item.name}</h3>
           <p class="product-subtitle">${item.subtitle}</p>
+
           <ul class="product-features">
             ${featuresHTML}
-            ${moreLink}
           </ul>
-          <div class="product-price">₹${item.price.toLocaleString()} / kg</div>
+
+          ${moreLinkHTML}
+
+          <div class="product-price">${priceHTML}</div>
+
           <div class="product-actions">
-            <button class="btn-buy" ${!isInStock ? 'disabled' : ''} onclick="${isInStock ? `goToBuyPage('${item.name.replace(/'/g, "\\'")}', ${item.price})` : ''}">
-              ${isInStock ? 'Buy Now' : 'Out of Stock'}
+            <button class="btn-buy" ${buyDisabled ? 'disabled' : ''} onclick="${buyDisabled ? '' : `goToBuyPage('${safeName}', ${item.price})`}">
+              ${buyDisabled ? 'Unavailable' : 'Buy Now'}
             </button>
+
             <div class="cart-btn-container">
-              <button class="btn-cart" ${!isInStock ? 'disabled' : ''} onclick="${isInStock ? `updateItem('${item.name.replace(/'/g, "\\'")}', ${item.price}, 1)` : ''}">
-                ${isInStock ? 'Add to Cart' : 'Out of Stock'}
+              <button class="btn-cart" ${cartDisabled ? 'disabled' : ''} onclick="${cartDisabled ? '' : `updateItem('${safeName}', ${item.price}, 1)`}">
+                ${cartDisabled ? 'Unavailable' : 'Add to Cart'}
               </button>
+
               <div class="qty-selector">
-                <button class="qty-btn" onclick="updateItem('${item.name.replace(/'/g, "\\'")}', ${item.price}, -1)">−</button>
+                <button class="qty-btn" onclick="updateItem('${safeName}', ${item.price}, -1)">−</button>
                 <span class="qty-value">0</span>
-                <button class="qty-btn" onclick="updateItem('${item.name.replace(/'/g, "\\'")}', ${item.price}, 1)">+</button>
+                <button class="qty-btn" onclick="updateItem('${safeName}', ${item.price}, 1)">+</button>
               </div>
             </div>
           </div>
@@ -741,41 +644,43 @@
         grid.appendChild(card);
       });
 
-      intro.textContent = `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.`;
+      intro.textContent =
+        `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.`;
     }
 
-    document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
+    document.getElementById('siteSearchForm').addEventListener('submit', function(e){
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
       if (!query) return;
+
       const productCards = document.querySelectorAll('.product-card');
-      const matchingCard = Array.from(productCards).find(card => 
-        card.querySelector('.product-title').textContent.toLowerCase().includes(query)
+      const matchingCard = Array.from(productCards).find(card =>
+        card.querySelector('.product-title')?.textContent.toLowerCase().includes(query)
       );
-      if (matchingCard) {
-        matchingCard.scrollIntoView({ behavior: 'smooth' });
-      } else if (query.includes('cart')) {
-        window.location.href = 'cart.html';
-      } else {
-        window.location.href = 'index.html';
-      }
+
+      if (matchingCard) matchingCard.scrollIntoView({ behavior:'smooth' });
+      else if (query.includes('cart')) window.location.href = 'cart.html';
+      else window.location.href = 'index.html';
     });
 
     window.toggleSidebar = toggleSidebar;
     window.updateItem = updateItem;
     window.goToBuyPage = goToBuyPage;
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function(){
       renderProducts();
       saveCart();
       syncUI();
-      
-      setInterval(function () {
-        renderProducts();
-        syncUI();
-      }, 2000);
+
+      // Keep UI synced if cart changes in other tabs
+      window.addEventListener('storage', function(e){
+        if (e.key === 'chemsusCart') {
+          cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+          saveCart();
+          syncUI();
+        }
+      });
     });
   </script>
-
 </body>
 </html>
