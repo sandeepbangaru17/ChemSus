@@ -26,22 +26,42 @@
     }
     a{text-decoration:none;color:inherit}
 
-    /* SIDEBAR */
-    .sidebar{
-      width:240px;
-      background:var(--primary);
-      color:#fff;
-      border-right:3px solid var(--accent);
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      position:fixed;
-      left:0;top:0;
-      z-index:1000;
-      transform:translateX(-100%);
-      transition:transform .3s ease;
+    /* COMPACT SIDEBAR NAVBAR */
+    .sidebar {
+      width: 240px;
+      background: var(--primary);
+      color: #ffffff;
+      border-right: 3px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
-    .sidebar.open{transform:translateX(0)}
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     .nav-logo{
       display:inline-flex;
       align-items:center;
@@ -114,7 +134,7 @@
 
     /* WRAPPER */
     .main-wrapper{
-      margin-left:0;
+      margin-left:240px;
       flex:1;
       min-height:100vh;
       display:flex;
@@ -122,7 +142,6 @@
       transition:margin-left .3s ease;
       width:100%;
     }
-    .main-wrapper.sidebar-open{margin-left:240px}
 
     /* HERO */
     .hero{
@@ -298,97 +317,61 @@
       margin-top:auto;
     }
 
-    /* MOBILE TOGGLE + OVERLAY */
+    /* MOBILE TOGGLE */
     .mobile-toggle{
-      display:block;
+      display:none;
       position:fixed;
-      top:20px;
-      left:20px;
-      z-index:1001;
+      top:20px;left:20px;
+      z-index:1003;
       background:var(--primary);
       color:#fff;
       border:none;
       padding:12px;
       border-radius:8px;
       cursor:pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .mobile-toggle svg{width:20px;height:20px}
 
-    .sidebar-overlay{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.5);
-      z-index:999;
-    }
-    .sidebar-overlay.active{display:block}
-
-    /* DESKTOP */
-    @media (min-width:1051px){
-      .sidebar{transform:translateX(0)}
-      .main-wrapper{margin-left:240px}
-      .mobile-toggle{display:none}
-      .sidebar-overlay{display:none!important}
+    @media (max-width: 1050px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0; }
+      .mobile-toggle { display: block; }
     }
 
-    /* MOBILE/TABLET */
     @media (max-width:900px){
-      .product-card{
-        grid-template-columns:1fr;
-        gap:22px;
-        padding:24px 16px;
-      }
-      .hero{height:200px}
-      .hero-title{font-size:28px}
-      main{padding:24px 16px 32px}
-      .actions{flex-direction:column}
-      .btn-primary,.btn-secondary{min-width:unset}
-    }
-
-    @media (max-width:580px){
+      main{padding:24px 12px 32px}
+      .hero{height:auto;padding:26px 14px}
       .hero-title{font-size:24px}
-      .hero-subtitle{font-size:13px}
-      main{padding:20px 12px 24px}
-    }
 
-    /* WhatsApp */
-    #ib-wa{position:fixed;bottom:20px;right:20px;z-index:99999;font-family:Arial,sans-serif}
-    #ib-wa-btn{
-      background:#25d366;color:#fff;border:none;border-radius:30px;
-      padding:12px 18px;font-size:15px;cursor:pointer;
-      box-shadow:0 8px 20px rgba(0,0,0,.3);
-    }
-    #ib-wa-popup{
-      display:none;position:absolute;bottom:60px;right:0;width:300px;
-      background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.35);
-      overflow:hidden;
-    }
-    #ib-wa-popup header{
-      background:#075e54;color:#fff;padding:10px;display:flex;
-      justify-content:space-between;align-items:center;font-size:14px;
-    }
-    #ib-wa-popup header span:last-child{cursor:pointer;font-weight:700}
-    #ib-wa-popup .body{padding:12px;text-align:center}
-    #ib-wa-popup .body img{width:220px;margin:10px 0}
-    #ib-wa-popup .body a{
-      display:block;background:#25d366;color:#fff;padding:10px;border-radius:6px;
-      text-decoration:none;font-size:14px;
+      .product-card{
+        display:flex;
+        flex-direction:column;
+        gap:18px;
+        padding:18px;
+      }
+
+      .product-image{
+        padding:12px;
+        height:auto;
+      }
+
+      .actions{flex-direction:column}
+      .btn-primary,.btn-secondary{min-width:100%}
     }
   </style>
 </head>
 
 <body>
-  <!-- MOBILE SIDEBAR OVERLAY -->
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-  <!-- Mobile Toggle -->
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
     </svg>
   </button>
 
-  <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
     <a href="../index.html" class="nav-logo">
       <img src="../assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
@@ -422,7 +405,6 @@
   </nav>
 
   <div class="main-wrapper" id="mainWrapper">
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-kicker">High-bioavailability calcium salt</div>
@@ -433,13 +415,11 @@
       </div>
     </section>
 
-    <!-- MAIN CONTENT -->
     <main>
       <div class="product-card">
         <div class="product-image">
           <img src="../assets/cal.png" alt="Calcium Levulinate – biomass-derived calcium salt">
-          <!-- add more images like this (down by down): -->
-          <!-- <img src="../assets/calcium2.png" alt="Calcium Levulinate image 2"> -->
+          
         </div>
 
         <div class="content-section">
@@ -498,15 +478,30 @@
   </div>
 
   <script>
-    function toggleSidebar(){
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const mainWrapper = document.getElementById('mainWrapper');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
 
+    // Open Sidebar
+    function toggleSidebar() {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
-      mainWrapper.classList.toggle('sidebar-open');
     }
+
+    // Close Sidebar (Explicit)
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
 
     // Cart badge updater
     (function(){
@@ -520,43 +515,30 @@
     document.getElementById('siteSearchForm').addEventListener('submit', function(e){
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-      if(query.includes('shop') || query.includes('buy')) window.location.href = '../shop.html';
-      else if(query.includes('product')) window.location.href = '../products.html';
-      else window.location.href = '../index.html';
+      if (!query) return;
+
+      if (query.includes('product') || query.includes('shop')) {
+        window.location.href = '../products.html';
+      } else if (query.includes('recognition') || query.includes('award')) {
+        window.location.href = '../recognitions.html';
+      } else if (query.includes('investor') || query.includes('funding')) {
+        window.location.href = '../investors.html';
+      } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
+        window.location.href = '../contact.html';
+      } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
+        window.location.href = '../index.html';
+      } else if (query.includes('about') || query.includes('company')) {
+        window.location.href = '../about.html';
+      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+        window.location.href = '../collaboration.html';
+      } else if (query.includes('sample') || query.includes('request')) {
+        window.location.href = '../request-sample.html';
+      } else if (query.includes('order') || query.includes('orders')) {
+        window.location.href = '../orders.html';
+      } else {
+        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
+      }
     });
-
-    // WhatsApp widget
-    function ibToggleWA(){
-      const popup = document.getElementById("ib-wa-popup");
-      popup.style.display = popup.style.display === "block" ? "none" : "block";
-    }
-    window.ibToggleWA = ibToggleWA;
-    window.toggleSidebar = toggleSidebar;
   </script>
-
-  <!-- WhatsApp QR Chat Widget -->
-  <div id="ib-wa">
-    <div id="ib-wa-popup">
-      <header>
-        <span>Chat with ChemSus</span>
-        <span onclick="ibToggleWA()">✕</span>
-      </header>
-      <div class="body">
-        <p>Scan this QR code on your smartphone to chat with us</p>
-        <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
-          alt="WhatsApp QR">
-        <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
-          <span style="flex:1;height:1px;background:#ddd;"></span>
-          <span style="padding:0 10px;font-weight:600;">OR</span>
-          <span style="flex:1;height:1px;background:#ddd;"></span>
-        </div>
-        <a href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details." target="_blank">
-          Chat with us on WhatsApp Web
-        </a>
-      </div>
-    </div>
-    <button id="ib-wa-btn" onclick="ibToggleWA()">🟢 Chat</button>
-  </div>
 </body>
 </html>

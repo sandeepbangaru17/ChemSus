@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
+<html lang="en"><plasmo-csui></plasmo-csui><head>
+  <meta charset="UTF-8">
   <title>Methyl Levulinate | ChemSus Technologies Pvt Ltd</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="../assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -24,24 +22,43 @@
       display:flex;
       min-height:100vh;
     }
-    a{ text-decoration:none; color:inherit; }
+    a{text-decoration:none;color:inherit}
 
-    /* SIDEBAR */
-    .sidebar{
-      width:240px;
-      background:var(--primary);
-      color:#fff;
-      border-right:3px solid var(--accent);
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      position:fixed;
-      left:0; top:0;
-      z-index:1000;
-      transform:translateX(-100%);
-      transition:transform .3s ease;
+    /* COMPACT SIDEBAR NAVBAR */
+    .sidebar {
+      width: 240px;
+      background: var(--primary);
+      color: #ffffff;
+      border-right: 3px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
-    .sidebar.open{ transform:translateX(0); }
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
 
     .nav-logo{
       display:inline-flex;
@@ -57,7 +74,12 @@
     }
     .nav-logo-img{height:24px;width:auto}
 
-    .nav-menu{ list-style:none; padding:8px 0; flex:1; overflow-y:auto; }
+    .nav-menu{
+      list-style:none;
+      padding:8px 0;
+      flex:1;
+      overflow-y:auto;
+    }
     .nav-menu li a{
       display:block;
       color:#fff;
@@ -82,8 +104,11 @@
       margin-left:8px;
     }
 
-    .search-section{ padding:12px 20px 16px; border-top:1px solid rgba(255,255,255,.1); }
-    .search-form{ position:relative; }
+    .search-section{
+      padding:12px 20px 16px;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+    .search-form{position:relative}
     .search-input{
       width:100%;
       padding:8px 32px 8px 12px;
@@ -95,27 +120,26 @@
       outline:none;
       backdrop-filter:blur(10px);
     }
-    .search-input::placeholder{ color:#d1d5db; font-size:11.5px; }
+    .search-input::placeholder{color:#d1d5db;font-size:11.5px}
     .search-icon{
       position:absolute;
       right:12px;
       top:50%;
       transform:translateY(-50%);
-      width:14px;
-      height:14px;
+      width:14px;height:14px;
       color:#fff;
       pointer-events:none;
     }
 
+    /* MAIN WRAPPER */
     .main-wrapper{
-      margin-left:0;
+      margin-left:240px;
       flex:1;
       min-height:100vh;
       display:flex;
       flex-direction:column;
       transition:margin-left .3s ease;
     }
-    .main-wrapper.sidebar-open{ margin-left:240px; }
 
     /* HERO */
     .hero{
@@ -144,7 +168,7 @@
       opacity:.6;
       pointer-events:none;
     }
-    .hero-content{ position:relative; z-index:1; max-width:720px; padding:0 18px; }
+    .hero-content{position:relative;z-index:1;max-width:720px;padding:0 18px}
     .hero-kicker{
       font-size:12px;
       letter-spacing:.18em;
@@ -158,7 +182,7 @@
       font-weight:700;
       margin-bottom:6px;
     }
-    .hero-subtitle{ font-size:14px; color:#e2f3ff; }
+    .hero-subtitle{font-size:14px;color:#e2f3ff}
 
     /* MAIN */
     main{
@@ -181,12 +205,11 @@
       align-items:start;
     }
 
-    /* IMAGE BOX (down-by-down ready) */
     .product-image{
       position:relative;
       height:auto;
       border-radius:16px;
-      overflow:hidden;                 /* important for mobile */
+      overflow:hidden;
       background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
       display:flex;
       flex-direction:column;
@@ -200,7 +223,6 @@
       inset:0;
       background:radial-gradient(circle at 20% 30%, rgba(0,184,176,.08), transparent 50%);
       pointer-events:none;
-      z-index:0;
     }
     .product-image img{
       width:100%;
@@ -213,7 +235,7 @@
       z-index:1;
     }
 
-    .content-section{ display:flex; flex-direction:column; gap:24px; }
+    .content-section{display:flex;flex-direction:column;gap:24px}
     .meta-chip{
       display:inline-block;
       width:fit-content;
@@ -225,7 +247,7 @@
       padding:4px 8px;
       border-radius:999px;
     }
-    .lead{ font-size:15px; color:#4b5563; line-height:1.7; }
+    .lead{font-size:15px;color:#4b5563;line-height:1.7}
 
     .section-title{
       font-family:"Montserrat",sans-serif;
@@ -236,8 +258,8 @@
       padding-bottom:8px;
       border-bottom:2px solid #e2e8f0;
     }
-    .features-list{ margin-left:20px; font-size:14.5px; color:#374151; list-style:none; }
-    .features-list li{ margin-bottom:8px; position:relative; }
+    .features-list{margin-left:20px;font-size:14.5px;color:#374151;list-style:none}
+    .features-list li{margin-bottom:8px;position:relative}
     .features-list li::before{
       content:"▸";
       color:var(--accent);
@@ -247,7 +269,7 @@
       top:0;
     }
 
-    .actions{ margin-top:32px; display:flex; gap:16px; flex-wrap:wrap; }
+    .actions{margin-top:32px;display:flex;gap:16px;flex-wrap:wrap}
     .btn-primary,.btn-secondary{
       padding:14px 24px;
       border-radius:12px;
@@ -272,7 +294,7 @@
       color:var(--primary);
       background:transparent;
     }
-    .btn-primary:hover,.btn-secondary:hover{ transform:translateY(-2px); }
+    .btn-primary:hover,.btn-secondary:hover{transform:translateY(-2px)}
 
     footer{
       background:#06121f;
@@ -283,112 +305,185 @@
       margin-top:auto;
     }
 
-    /* MOBILE TOGGLE + OVERLAY */
+    /* MOBILE TOGGLE */
     .mobile-toggle{
+      display:none;
       position:fixed;
-      top:20px;
-      left:20px;
-      z-index:1001;
+      top:20px;left:20px;
+      z-index:1003;
       background:var(--primary);
       color:#fff;
       border:none;
       padding:12px;
       border-radius:8px;
       cursor:pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .sidebar-overlay{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.5);
-      z-index:999;
-    }
-    .sidebar-overlay.active{ display:block; }
+    .mobile-toggle svg{width:20px;height:20px}
 
-    /* DESKTOP */
-    @media (min-width:1051px){
-      .sidebar{ transform:translateX(0); }
-      .main-wrapper{ margin-left:240px; }
-      .mobile-toggle{ display:none; }
-      .sidebar-overlay{ display:none !important; }
+    @media (max-width: 1050px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0; }
+      .mobile-toggle { display: block; }
     }
 
-    /* ✅ MOBILE FIX (stack properly) */
     @media (max-width:900px){
+      main{padding:24px 12px 32px}
+      .hero{height:auto;padding:26px 14px}
+      .hero-title{font-size:24px}
+
       .product-card{
-        display:flex;             /* override grid */
-        flex-direction:column;    /* image top, content bottom */
-        gap:22px;
-        padding:24px 16px;
+        display:flex;
+        flex-direction:column;
+        gap:20px;
+        padding:22px 16px;
       }
-      .hero{ height:200px; }
-      .hero-title{ font-size:28px; }
-      main{ padding:24px 16px 32px; }
-    }
-    @media (max-width:580px){
-      .hero-title{ font-size:24px; }
-      .hero-subtitle{ font-size:13px; }
-      .actions{ flex-direction:column; }
-      main{ padding:20px 12px 24px; }
+
+      .product-image{
+        padding:12px;
+        height:auto;
+      }
+
+      .actions{flex-direction:column}
+      .btn-primary,.btn-secondary{min-width:100%}
     }
 
-    /* WhatsApp widget */
-    #ib-wa{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      z-index:99999;
-      font-family:Arial,sans-serif;
+    /* === WhatsApp QR Floating Widget (UPDATED) === */
+    #ib-wa {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 99999;
+      font-family: Arial, sans-serif;
     }
-    #ib-wa-btn{
-      background:#25d366;
-      color:#fff;
-      border:none;
-      border-radius:30px;
-      padding:12px 18px;
-      font-size:15px;
-      cursor:pointer;
-      box-shadow:0 8px 20px rgba(0,0,0,.3);
+    
+    #ib-wa-btn {
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 50%; /* Circle shape */
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
     }
-    #ib-wa-popup{
-      display:none;
-      position:absolute;
-      bottom:60px;
-      right:0;
-      width:300px;
-      background:#fff;
-      border-radius:12px;
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
-      overflow:hidden;
+
+    #ib-wa-btn:hover {
+      transform: scale(1.1);
     }
-    #ib-wa-popup header{
-      background:#075e54;
-      color:#fff;
-      padding:10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:14px;
+
+    #ib-wa-btn svg {
+      width: 35px;
+      height: 35px;
+      fill: white;
     }
-    #ib-wa-popup header span:last-child{ cursor:pointer; font-weight:700; }
-    #ib-wa-popup .body{ padding:12px; text-align:center; }
-    #ib-wa-popup .body img{ width:220px; margin:10px 0; }
-    #ib-wa-popup .body a{
-      display:block;
-      background:#25d366;
-      color:#fff;
-      padding:10px;
-      border-radius:6px;
-      text-decoration:none;
-      font-size:14px;
+    
+    #ib-wa-popup {
+      display: none;
+      position: absolute;
+      bottom: 80px; /* Above the button */
+      right: 0;
+      width: 300px;
+      /* Mobile Friendly Max Width */
+      max-width: 85vw;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: waSlideUp 0.3s ease-out;
+    }
+
+    @keyframes waSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    #ib-wa-popup header {
+      background: #075e54;
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    
+    #ib-wa-popup header span:last-child {
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.8;
+    }
+    
+    #ib-wa-popup .body {
+      padding: 16px;
+      text-align: center;
+    }
+    
+    #ib-wa-popup .body img {
+      width: 180px;
+      height: auto;
+      margin: 10px 0;
+      border: 4px solid #f0f0f0;
+      border-radius: 8px;
+    }
+    
+    #ib-wa-popup .body a {
+      display: block;
+      background: #25d366;
+      color: #fff;
+      padding: 12px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
     }
   </style>
-</head>
+<style id="sweezy-cursors--styles">
+      body a,
+      body button,
+      body [type='button'],
+      body input[type='reset'],
+      body input[type='submit'],
+      body [role="button"],
+      ::-webkit-search-cancel-button,
+      ::-webkit-search-decoration,
+      ::-webkit-scrollbar-button, 
+      ::-webkit-file-upload-button,
+      body .sweezy-custom-cursor-hover,
+      body button.sweezy-custom-cursor-hover,
+      body a.sweezy-custom-cursor-hover {
+        cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABU5JREFUWEe9l2tsFFUUx//nzsy23RaKaZnStN3dCQWMaCAQCUFNMBalRqNgiR8sIjF+JNQYIdHEKGh8RB4JGu2GIBoiREQRISomysM14iOIPLQFO9N0+8BdGuhj233MXHN3ZrfLuttKNTvJZHf23rvnd/7n3HPuEPJcHo9nFWPsJSKaCaAdwHO6rn+eb/5kf6dcC71e7wpG7JNqWFjCEzhOMkIgyzTNxq6urqOTNZZrXU4ATdNOVXBr0XEMwc0IAxLhrrgbA6BvDMO4pxAAfQ1IVPmlUUCi5L06WoTvTNZhGIYIyf925VPg8jKWUFtdUYDZAM0RFwKJQgJIptpaEgMk2ACDCgKxQgIoptpaFk+HoPmqjMAoFTAERabaWp4AZJZUoTkkITBSSIBiS22tNMcU6GUIRFBABdxcba2yANlJwiAQGCwkQBlXW2u4rYBMaNaBwAAvnAINU7nq99reJwEuWghc5RxAD+d87/Dw8KZwODz4XwtCZh0oqqmpmd7d3d2jaVpvwzSo/pksHYKt3Rb6LaBtiOOHK5ZgOs85X22aphkMBtsARCcDkwTw+XwtRLQJwBTOeSeA6csqyO2fIzm7QKhg1wMoDAcuW3j61ChkUaTs6xqALbquvwLAuhEQ8nq9jxGjPbe5gYZphH1hoC8GNFQS/HPldAiSyegkpIDYfDaG6ikMikw49GcMv/QmQITdnPMdkUikPRQKDf0bEPL5fD+rLiw8OV+CixEuWYS7T8XROEOCf54yZjRlPAWS+exiWPf1EI78EYNIEiKMWpa10zTNDcFgcGQ8EAEQebiKlWyrlxyJCY0/xVFXSvAvdNkhyDbuJGYqQcV4OAHs/z2KqaUMx9qj+PK8CBFE97wXgJkPIgmwsloq2XKzkBtJY5svmega4fAvLs4dgsxwpGCyFNl+cgjbDl8DgT/Z2dm5Ky+Apmlt88pp9qeLXXbnkwlnI8COthj8d5ZkeC+UcBIxW5VsRSSCWcywYGMQgyP8qK7r942nwG4C1px70A13OskIfQlghtuRP9O7tMeiR2QkZmqOo6LQf60/hGNnIn2GYVTnBfB4PE0gtn/7kmKs8DhJl9PgWFEai73dqK4DcQ4wQskN+/rx8beDcV3XXXkBamtrS2RZ7l6gSjcdaCxLhyEzwXJ6mgsyZdz5bHk/hM+ODUYMwyjNCyAGvF7vGyanZw+vmop5laL4CG9zyJ+W2ZE+8zlt3FHExbDyxSB+bY+267o+ZyKAaiK6dHut4v6oqRxgGcmWGef0d3u3JCFTIcj0XiaMMMLcRy+KuvCBYRhrxgUQg5qmvRw3+fNvPVKOh2YX2QayZc6GyZI8vUsYYd/3g9i4tU9sw6bOzs4DEwKIXFAU5Te3jPqvWlTUlGUVoH8YEwrg+pwRcxghrhCWPtWB3r8SXbqui1N0fEIAMaG2tnaRoign6lW56OB61d6WqTtZI0Ro8sieNA5AIby+9wre2RMWJXmtYRi7xy3F2YM+n+8JAO/N97iwp6UKpS5m//F4Cecc3cWcQz8OYd0LQTAJXxiGcf9EDSnne4HP51sPYJtnukw7n6nGrEqnKybD4CRoZkgEoIvh3YP9eO3tyyCGCwDuMAzj6qQAxCLxcipJ0i5wXta8vByPL5+Geo/LbitJj21VrCKGE6eHsXVXCGcujECS6GQ0Gl3Z09MTnsi4GM+pQGphXV3dTFmWtwN4IBqzUKMquHVWMSqEIkQIheM4fS6C/gETisyucc5fNQzjzfG6XzbUuACpyZqmzbEsq4kxtpRzfgsRVThjIQBnOOdHGGMfdnR0iJPRDV1/A/S02zBdMZSwAAAAAElFTkSuQmCC") 6 3, pointer !important;
+      }
+    
+      html,
+      body,
+      body select,
+      body .sweezy-custom-cursor-default-hover {
+        cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABOtJREFUWEe913tsFEUcB/Dv7O3ttZRSykNNc7R3hsQokiCiYjCYEEgqKCH2dRI1EjBCFGMI8Ifx+YftVTQ+ImI0MSYaosT+wR/yUAwRFSWGEq34CJKd7V1bSoGDPu56u7PzM3O7V1oooU8mudxudm9+n/3NzG9uWTQa3UBEOwB0MMZipmn+gRvYWDQa7Y5WhIrPddnoSVO3EOLhRCLx440yKIATq5qhr6uegdhGE6mLIi2Jqi3L2n8jEB7g0VK9/pmbkbggUP0cR9d54QB43DTNPZON8ABrSvX6p28CJOFcn0TtFgtmmy2J6HnLsnZOJiIHqHtkut6w3gPAJfTahLWvJNHyXz+I6CXLst6YLIQHWDVdb1g32wMID5FxCU+92YFjJzMA0VuWZW2bDIQC2LGVJcH6J2blAsOF9y0JQhI27erCd8f7wBg+45xvUFcnEqIA2VhliVG/dqYP8DKQ/xABL+6+gN0/90LTsJdzXgcgO1GIHKBuxTSjITZjKED4mVAYIsT3X8KH3/dCD7BD6XR6TWdnZ99EIDzAsmKjodYH+HMgl4H8sfqWhJ1H02g82I2AhmOO46xqa2s7P16EB3iw2Giomu5lYHDQq86BPScz2P5ND5iGv4UQK5LJZNt4EDlA7dKpRnx1yTAAAEJ6007BcseEfdzB5n09kAB3XXd5IpE4PVaEB3igyIivHAZwVTY8gML8cMbFhm97lUltYpVj3cQ8wOIiI15ZfHUGhhuOfCYE4URK4snDGfRJXBRCrB7LJuYB7plixFdMvQy4VmD19I6/RHP3SJzqIcSOZnHBoTSAKs75gdEMhwdYWGjEl031J6D0x3tQoMGgYY4TGYmaZoGzNmwp5VrLsppGilCA/toFhaH40ilDJhrydUBNvFza/So5+FyVbr98d2YJj510wbOs2zTNktEB5heE4ksKLwcaCOgHv2IVtGcIX7a7aE5JnE4DKUHISoABIKCDc142KkDN7aFQ4+KCoTVgAOE/vZ/63y65qGsWUJsDgAQR/QngDBH1Auh3XffzZDLZMjrAbUaocVFoaAby+0F+0vnLr+msxJZTLhjRVsuy3h5poGvdl5sDNXODocYFhgcg4EinQFPCRVda4tmKAJYU+YXIJTgu4b7fJVIujnPOF00EIFNzq17QOM8AT0tsa87i1/MSOkOGMeaUGZh25K4ANDtfESXePwu808VAJJdZlnV4PAiVgUx1RC+4v5Rh2wlbFbp+AI0A3gVQ5wIffRxlqFRZ8IelRxDuNjVVEvZxzleNF9A1M4hZZ7KEoMZaiKiWc/6P6jQcDhcGg0FrfgHN3ls+aKNyCS+nNHzRq5GU8s7W1ta/xopg5eXlNZqmvQ7gF9u2N7e3t6uKNtAikcirgvDa3rDEwkB+WRLaHWBxKoQA0aec8/VjBlzvh2VlZbMMw2hdXkCFn5Q6lwuSS9iUDuKg0FX1i1iW1XG9voa7nlvM12uRSGSXANv4U2kWFeTviC7QIhgesgthMGw3TVO93o26jQgQDofn6rr+b8xwtYagPfD33XGBubIIGuE9zvkLo44Or3qOqEWj0a81oqrdwX7cS24OsYMMfEAhaKAY5/yrEXV0xU0jBlRUVEQZY0cl2C13wMUlMLRBU8EP+EtRTipAdT5nzpyyQCCwFcA8VaSI6BDnXL26qXfJMbX/AaJ6SE5q1mCzAAAAAElFTkSuQmCC") 1 1, auto !important;
+      }
+    </style><style id="monica-reading-highlight-style">
+        .monica-reading-highlight {
+          animation: fadeInOut 1.5s ease-in-out;
+        }
 
-<body>
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        @keyframes fadeInOut {
+          0%, 100% { background-color: transparent; }
+          30%, 70% { background-color: rgba(2, 118, 255, 0.20); }
+        }
+      </style></head>
 
-  <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
+<body data-new-gr-c-s-check-loaded="14.1268.0" data-gr-ext-installed="">
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
     </svg>
@@ -416,8 +511,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." />
-        <span class="search-icon" aria-hidden="true">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
           </svg>
@@ -429,7 +524,7 @@
   <div class="main-wrapper" id="mainWrapper">
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Renewable solvent & intermediate</div>
+        <div class="hero-kicker">Renewable solvent &amp; intermediate</div>
         <h1 class="hero-title">Methyl Levulinate</h1>
         <p class="hero-subtitle">Bio‑based ester used in fuels, solvents, and fine chemical synthesis.</p>
       </div>
@@ -439,9 +534,7 @@
       <div class="product-card">
         <div class="product-image">
           <img src="../assets/methylle.PNG" alt="Methyl Levulinate - Renewable Intermediate">
-          <!-- Add second image if needed (it will be down-by-down):
-          <img src="../assets/5ai_2.PNG" alt="Methyl Levulinate image 2">
-          -->
+          
         </div>
 
         <div class="content-section">
@@ -479,79 +572,84 @@
       </div>
     </main>
 
-    <footer>&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</footer>
+    <footer>© 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</footer>
   </div>
+
+  
 
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const mainWrapper = document.getElementById('mainWrapper');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
 
+    // Open Sidebar
+    function toggleSidebar() {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
-      mainWrapper.classList.toggle('sidebar-open');
     }
 
-    document.getElementById('mobileToggle').addEventListener('click', toggleSidebar);
-    document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+    // Close Sidebar (Explicit)
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
 
-    // Cart badge
-    (function () {
-      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
-      const badge = document.getElementById('cart-count');
-      if (badge) badge.textContent = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    })();
-
-    // Site search
-    document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-      if (query.includes('shop') || query.includes('buy')) window.location.href = '../shop.html';
-      else if (query.includes('product')) window.location.href = '../products.html';
-      else window.location.href = '../index.html';
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
     });
 
-    // WhatsApp widget
+    // Cart badge
+    (function(){
+      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+      const count = cart.reduce((sum,item)=>sum + item.quantity, 0);
+      const badge = document.getElementById('cart-count');
+      if(badge) badge.textContent = count;
+    })();
+
+    // WhatsApp Toggle
     function ibToggleWA() {
       const popup = document.getElementById("ib-wa-popup");
-      popup.style.display = popup.style.display === "block" ? "none" : "block";
+      if (popup.style.display === "block") {
+        popup.style.display = "none";
+      } else {
+        popup.style.display = "block";
+      }
     }
-    window.ibToggleWA = ibToggleWA;
+
+    // Site search
+    document.getElementById('siteSearchForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
+      if (!query) return;
+
+      if (query.includes('product') || query.includes('shop')) {
+        window.location.href = '../products.html';
+      } else if (query.includes('recognition') || query.includes('award')) {
+        window.location.href = '../recognitions.html';
+      } else if (query.includes('investor') || query.includes('funding')) {
+        window.location.href = '../investors.html';
+      } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
+        window.location.href = '../contact.html';
+      } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
+        window.location.href = '../index.html';
+      } else if (query.includes('about') || query.includes('company')) {
+        window.location.href = '../about.html';
+      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+        window.location.href = '../collaboration.html';
+      } else if (query.includes('sample') || query.includes('request')) {
+        window.location.href = '../request-sample.html';
+      } else if (query.includes('order') || query.includes('orders')) {
+        window.location.href = '../orders.html';
+      } else {
+        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
+      }
+    });
   </script>
 
-  <!-- WhatsApp QR Chat Widget -->
-  <div id="ib-wa">
-    <div id="ib-wa-popup">
-      <header>
-        <span>Chat with ChemSus</span>
-        <span onclick="ibToggleWA()">✕</span>
-      </header>
 
-      <div class="body">
-        <p>Scan this QR code on your smartphone to chat with us</p>
-
-        <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
-          alt="WhatsApp QR"
-        >
-
-        <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
-          <span style="flex:1;height:1px;background:#ddd;"></span>
-          <span style="padding:0 10px;font-weight:600;">OR</span>
-          <span style="flex:1;height:1px;background:#ddd;"></span>
-        </div>
-
-        <a
-          href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
-          target="_blank" rel="noopener"
-        >
-          Chat with us on WhatsApp Web
-        </a>
-      </div>
-    </div>
-
-    <button id="ib-wa-btn" onclick="ibToggleWA()">🟢 Chat</button>
-  </div>
-</body>
-</html>
+<div id="monica-content-root" class="monica-widget" style="pointer-events: auto;"></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

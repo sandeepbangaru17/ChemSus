@@ -25,6 +25,7 @@
     }
     a { text-decoration: none; color: inherit; }
 
+    /* COMPACT SIDEBAR NAVBAR */
     .sidebar {
       width: 240px;
       background: var(--primary);
@@ -36,8 +37,30 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1000;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -52,12 +75,14 @@
       white-space: nowrap;
     }
     .nav-logo-img { height: 24px; width: auto; }
+    
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
+    
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -66,11 +91,23 @@
       font-size: 13.5px;
       transition: all 0.2s ease;
     }
+    
     .nav-menu li a.active,
     .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
+
+    #cart-count {
+      background: var(--accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
     .search-section {
       padding: 12px 20px 16px;
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -98,13 +135,17 @@
       pointer-events: none;
     }
 
+    /* MAIN WRAPPER */
     .main-wrapper {
       margin-left: 240px;
       flex: 1;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: margin-left 0.3s ease;
     }
+
+    /* HERO */
     .hero {
       position: relative;
       overflow: hidden;
@@ -153,6 +194,7 @@
       font-size: 16px;
       color: #e2f3ff;
     }
+
     main {
       max-width: 1150px;
       margin: 0 auto;
@@ -167,13 +209,14 @@
       box-shadow: 0 14px 30px rgba(15,23,42,0.12);
       border-top: 4px solid var(--accent);
     }
-    .section-header { margin-bottom: 24px; }
+    .section-header {
+      margin-bottom: 24px;
+    }
     .section-header h2 {
       font-family: "Montserrat", sans-serif;
       font-size: 24px;
       color: var(--primary-dark);
     }
-
     .form-group { margin-bottom: 20px; }
     .form-label {
       display: block;
@@ -203,7 +246,6 @@
       gap: 20px;
     }
     .form-textarea { resize: vertical; min-height: 80px; }
-
     .btn-submit {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
       color: white;
@@ -218,21 +260,21 @@
       width: 100%;
       margin-top: 10px;
     }
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,184,176,0.3);
-    }
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,184,176,0.3); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    
     .order-summary {
       background: #f9fbff;
       padding: 20px;
       border-radius: 10px;
       margin-bottom: 24px;
+      border: 2px solid #e0f2fe;
+    }
+    .order-summary h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: var(--primary-dark);
     }
     .summary-item {
       display: flex;
@@ -244,35 +286,31 @@
     .summary-item:last-child { border-bottom: none; }
     .summary-item strong { font-weight: 600; }
     .total-amount {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--primary);
       padding-top: 12px;
       margin-top: 12px;
       border-top: 2px solid var(--accent);
     }
-
-    .otp-section {
-      background: #f0fffe;
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px dashed var(--accent);
-      margin-top: 24px;
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
       display: none;
+      border-left: 4px solid #ef4444;
     }
-    .otp-section.show { display: block; }
-
     .success-message {
-      background: #d1fae5;
-      border: 2px solid #10b981;
-      color: #065f46;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      margin-top: 20px;
+      background: #dcfce7;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
       display: none;
+      border-left: 4px solid #22c55e;
     }
-
     footer {
       background: #06121f;
       color: #cbd5f5;
@@ -282,18 +320,20 @@
       margin-top: 24px;
     }
 
+    /* MOBILE TOGGLE */
     .mobile-toggle {
       display: none;
       position: fixed;
       top: 20px;
       left: 20px;
-      z-index: 1001;
+      z-index: 1003; /* Highest z-index */
       background: var(--primary);
       color: white;
       border: none;
       padding: 12px;
       border-radius: 8px;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .mobile-toggle svg { width: 20px; height: 20px; }
 
@@ -309,11 +349,13 @@
     }
     @media (max-width: 580px) {
       .hero-title { font-size: 28px; }
+      .section { padding: 24px 20px; }
     }
   </style>
 </head>
-
 <body>
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
@@ -333,12 +375,11 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">2</span></a></li>
+      <li><a href="cart.html" class="active">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html" class="active">Orders</a></li>
+      <li><a href="orders.html">Orders</a></li>
     </ul>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
@@ -357,7 +398,7 @@
         <div class="hero-kicker">Secure Checkout</div>
         <h1 class="hero-title">Complete Your Order</h1>
         <p class="hero-subtitle">
-          Provide your details and verify your mobile number to proceed with payment.
+          Provide your details to proceed with payment
         </p>
       </div>
     </section>
@@ -365,11 +406,14 @@
     <main>
       <section class="section">
         <div class="section-header">
-          <h2>Order Details &amp; Delivery</h2>
+          <h2>Order Details & Delivery</h2>
         </div>
 
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
         <div class="order-summary">
-          <h3 style="font-family: Montserrat; margin-bottom: 16px; color: var(--primary-dark);">Order Summary</h3>
+          <h3>📦 Order Summary</h3>
           <div id="orderItems"></div>
           <div class="total-amount">
             Total: <span id="totalAmount">₹0</span>
@@ -380,56 +424,54 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Full Name</label>
-              <input type="text" id="fullName" class="form-input" required>
+              <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
             </div>
             <div class="form-group">
               <label class="form-label required">Email ID</label>
-              <input type="email" id="email" class="form-input" required>
+              <input type="email" id="email" class="form-input" placeholder="Enter your email address" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">Mobile Number</label>
-              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required>
+              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
             </div>
             <div class="form-group">
-              <label class="form-label required">Pincode</label>
-              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" maxlength="6" required>
+              <label class="form-label">Company Name (Optional)</label>
+              <input type="text" id="companyName" class="form-input" placeholder="Your company name">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label required">Address</label>
+            <label class="form-label required">Full Address</label>
             <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label class="form-label required">City</label>
-              <input type="text" id="city" class="form-input" required>
+              <input type="text" id="city" class="form-input" placeholder="e.g., Visakhapatnam" required>
             </div>
             <div class="form-group">
               <label class="form-label required">Region/State</label>
-              <input type="text" id="region" class="form-input" required>
+              <input type="text" id="region" class="form-input" placeholder="e.g., Andhra Pradesh" required>
             </div>
           </div>
 
-          <button type="submit" class="btn-submit" id="submitBtn">Verify Mobile &amp; Place Order</button>
-        </form>
-
-        <div class="success-message" id="successMessage">
-          ✅ Order placed successfully! Proceeding to payment...
-        </div>
-
-        <div class="otp-section" id="otpSection">
-          <h3 style="font-family: Montserrat; margin-bottom: 16px; color: var(--primary-dark);">Verify Mobile Number</h3>
-          <div class="form-group">
-            <label class="form-label">OTP sent to <span id="otpMobileDisplay">+91 XXXXXXXXXX</span></label>
-            <input type="text" id="otpInput" class="form-input" placeholder="Enter 6-digit OTP" maxlength="6">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label required">Pincode</label>
+              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" pattern="[0-9]{6}" maxlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required">Country</label>
+              <input type="text" id="country" class="form-input" placeholder="India" value="India" required>
+            </div>
           </div>
-          <button type="button" class="btn-submit" onclick="verifyOTPAndProceed()">Verify &amp; Proceed to Payment</button>
-        </div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">Place Order & Proceed to Payment</button>
+        </form>
       </section>
     </main>
 
@@ -439,147 +481,200 @@
   </div>
 
   <script>
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+    // ✅ GLOBAL CONFIG - Auto-detects backend URL (PC + Mobile!)
+    let API_BASE = '/api';
+
+    // ✅ Test backend connection
+    async function initBackend() {
+      try {
+        const response = await fetch('/api/test');
+        if (response.ok) {
+          const config = await response.json();
+          console.log('✅ Backend detected:', config.backendURL);
+          API_BASE = config.apiBase || '/api';
+        }
+      } catch (e) {
+        console.warn('Backend test failed, using relative URLs:', e);
+        API_BASE = '/api';
+      }
     }
 
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    // Open/Close Sidebar function
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    }
+
+    // Explicitly close Sidebar
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
+
     function loadOrderData() {
-      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+      const buyNowData = sessionStorage.getItem('buyNowData');
       const orderItems = document.getElementById('orderItems');
       const totalAmount = document.getElementById('totalAmount');
 
-      if (cart.length === 0) {
-        orderItems.innerHTML = '<p style="color: #666;">No items in cart</p>';
+      if (!buyNowData) {
+        orderItems.innerHTML = '<p style="color: #d32f2f; font-weight: 600;">⚠️ No product selected. <a href="shop.html" style="color: var(--accent);">Go to Shop</a></p>';
         totalAmount.textContent = '₹0';
         document.getElementById('checkoutForm').style.display = 'none';
         return;
       }
 
-      let grandTotal = 0;
-      let itemsHTML = '';
-      cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
-        grandTotal += subtotal;
-        itemsHTML += `
-          <div class="summary-item">
-            <strong>${item.name}</strong>
-            <span>${item.quantity} kg × ₹${item.price.toLocaleString('en-IN')} = ₹${subtotal.toLocaleString('en-IN')}</span>
-          </div>
-        `;
-      });
+      let productData;
+      try {
+        productData = JSON.parse(buyNowData);
+      } catch (e) {
+        orderItems.innerHTML = '<p style="color: #d32f2f; font-weight: 600;">⚠️ Invalid product data. <a href="shop.html" style="color: var(--accent);">Go to Shop</a></p>';
+        return;
+      }
 
-      orderItems.innerHTML = itemsHTML;
-      totalAmount.textContent = '₹' + grandTotal.toLocaleString('en-IN');
-      sessionStorage.setItem('orderTotal', grandTotal);
+      const productName = productData.productName || 'Unknown Product';
+      const quantity = parseFloat(productData.quantity) || 1;
+      const unitPrice = parseFloat(productData.unitPrice) || 0;
+      const totalPrice = quantity * unitPrice;
+
+      const itemHTML = `
+        <div class="summary-item">
+          <strong>${productName}</strong>
+          <span>${quantity} kg × ₹${unitPrice.toLocaleString('en-IN')} = ₹${totalPrice.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+      orderItems.innerHTML = itemHTML;
+      totalAmount.textContent = '₹' + totalPrice.toLocaleString('en-IN');
+
+      sessionStorage.setItem('orderTotal', totalPrice);
+      sessionStorage.setItem('buyNowProduct', JSON.stringify({productName, quantity, unitPrice}));
     }
 
-    // ✅ UPDATED: Place Order (now sends address + city + region + pincode to backend)
-    async function placeOrderAndProceed() {
+    // ✅ FIXED: Mobile-compatible API calls with relative URLs
+    async function placeBuyNowOrderAndProceed() {
       const submitBtn = document.getElementById('submitBtn');
+      const errorMsg = document.getElementById('errorMessage');
       const successMsg = document.getElementById('successMessage');
 
       try {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Placing Order...';
 
-        // customer
         const customername = document.getElementById('fullName').value.trim();
         const email = document.getElementById('email').value.trim();
         const phone = document.getElementById('mobile').value.trim();
-
-        // ✅ shipping fields
         const address = document.getElementById('address').value.trim();
         const city = document.getElementById('city').value.trim();
         const region = document.getElementById('region').value.trim();
         const pincode = document.getElementById('pincode').value.trim();
 
-        const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+        const buyNowData = JSON.parse(sessionStorage.getItem('buyNowData'));
         const totalprice = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
 
-        for (const item of cart) {
-          const orderData = {
-            customername,
-            email,
-            phone,
-            productname: item.name,
-            quantity: item.quantity,
-            totalprice: item.price * item.quantity,
-            paymentmode: "PENDING",
+        const orderData = {
+          customername, email, phone,
+          productname: buyNowData.productName,
+          quantity: parseFloat(buyNowData.quantity),
+          totalprice,
+          paymentmode: "PENDING",
+          address, city, region, pincode
+        };
 
-            // ✅ send to backend (so adminorders.html lo address kanipistundi)
-            address,
-            city,
-            region,
-            pincode
-          };
+        console.log('📤 Sending to', API_BASE + '/orders', orderData);
 
-          const response = await fetch('http://localhost:3000/api/orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-          });
+        // ✅ FIXED: Relative URL - Works on localhost AND mobile network IP!
+        const response = await fetch(`${API_BASE}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
 
-          if (!response.ok) throw new Error(`Order failed: ${response.status}`);
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`HTTP ${response.status}: ${err}`);
         }
 
+        const result = await response.json();
+        console.log('✅ Order created:', result);
+
+        // ✅ CRITICAL: Store orderId for payment page
+        sessionStorage.setItem('orderId', result.orderId);
+
+        errorMsg.style.display = 'none';
+        successMsg.textContent = `✅ Order #${result.orderId} placed successfully! Redirecting to payment...`;
         successMsg.style.display = 'block';
-        localStorage.removeItem('chemsusCart');
-        document.getElementById('cart-count').textContent = '0';
+
+        sessionStorage.removeItem('buyNowData');
 
         setTimeout(() => {
-          const referrer = sessionStorage.getItem('checkoutSource') || 'buy';
-          window.location.href = (referrer === 'buynow') ? 'payment2.html' : 'payment.html';
+          window.location.href = 'payment2.html';
         }, 2000);
 
       } catch (error) {
-        console.error('Order error:', error);
-        alert('Order failed. Please check if backend is running on http://localhost:3000 and try again.');
+        console.error('❌ Order failed:', error);
+        errorMsg.textContent = `❌ Order failed: ${error.message}`;
+        errorMsg.style.display = 'block';
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Verify Mobile & Place Order';
+        submitBtn.textContent = 'Place Order & Proceed to Payment';
       }
     }
 
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const requiredFields = ['fullName', 'email', 'mobile', 'pincode', 'address', 'city', 'region'];
-      for (const fieldId of requiredFields) {
-        if (!document.getElementById(fieldId).value.trim()) {
-          alert('Please fill all required fields');
-          return;
-        }
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const region = document.getElementById('region').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+      const country = document.getElementById('country').value.trim();
+
+      if (!fullName || !email || !mobile || !address || !city || !region || !pincode || !country) {
+        document.getElementById('errorMessage').textContent = '❌ Please fill in all required fields.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
+      }
+      if (mobile.length !== 10 || isNaN(mobile)) {
+        document.getElementById('errorMessage').textContent = '❌ Please enter a valid 10-digit mobile number.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
+      }
+      if (pincode.length !== 6 || isNaN(pincode)) {
+        document.getElementById('errorMessage').textContent = '❌ Please enter a valid 6-digit pincode.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
       }
 
-      // (optional) keep for payment pages
       const orderDetails = {
-        fullName: document.getElementById('fullName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        mobile: document.getElementById('mobile').value.trim(),
-        address: document.getElementById('address').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        region: document.getElementById('region').value.trim(),
-        pincode: document.getElementById('pincode').value.trim()
+        fullName, email, mobile, address, city, region, pincode, country,
+        companyName: document.getElementById('companyName').value.trim(),
+        timestamp: new Date().toISOString()
       };
       sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
 
-      placeOrderAndProceed();
+      placeBuyNowOrderAndProceed();
     });
 
-    function verifyOTPAndProceed() {
-      const otp = document.getElementById('otpInput').value;
-      if (otp.length !== 6) {
-        alert('Please enter valid 6-digit OTP');
-        return;
-      }
-      placeOrderAndProceed();
-    }
-
-    (function() {
+    function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);
       const badge = document.getElementById('cart-count');
       if (badge) badge.textContent = count;
-    })();
+    }
 
     document.getElementById('siteSearchForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -587,17 +682,16 @@
       if (!query) return;
       if (query.includes('shop')) window.location.href = 'shop.html';
       else if (query.includes('cart')) window.location.href = 'cart.html';
+      else if (query.includes('product')) window.location.href = 'products.html';
       else window.location.href = 'index.html';
     });
 
-    window.addEventListener('DOMContentLoaded', loadOrderData);
-
-    function setCheckoutSource(source) {
-      sessionStorage.setItem('checkoutSource', source);
-    }
-
-    window.toggleSidebar = toggleSidebar;
-    window.setCheckoutSource = setCheckoutSource;
+    window.addEventListener('DOMContentLoaded', async function() {
+      console.log('orders.html loaded ✅');
+      await initBackend();
+      loadOrderData();
+      updateCartBadge();
+    });
   </script>
 </body>
 </html>

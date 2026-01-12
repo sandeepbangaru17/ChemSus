@@ -18,293 +18,204 @@
       --danger: #e53e3e;
     }
 
-    * { box-sizing:border-box; margin:0; padding:0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family:"Open Sans",Arial,sans-serif;
-      background:var(--bg);
-      color:var(--ink);
-      line-height:1.6;
-      display:flex;
-      min-height:100vh;
+      font-family: "Open Sans", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    a { text-decoration:none; color:inherit; }
+    a { text-decoration: none; color: inherit; }
 
-    /* SIDEBAR (same theme) */
-    .sidebar{
-      width:240px;
-      background:var(--primary);
-      color:#fff;
-      position:fixed;
-      top:0;left:0;
-      height:100vh;
-      border-right:3px solid var(--accent);
-      display:flex;
-      flex-direction:column;
+    /* Centered Wrapper (No Sidebar) */
+    .main-wrapper {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
-    .nav-logo{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:16px 20px;
-      font-family:"Montserrat",sans-serif;
-      font-weight:700;
-      border-bottom:1px solid rgba(255,255,255,.15);
+    /* HEADER / HERO */
+    .header-simple {
+      text-align: center;
+      padding: 40px 0 30px;
     }
 
-    .nav-logo-img{height:24px}
-
-    .nav-menu{list-style:none;padding:10px 0;flex:1;overflow-y:auto;}
-
-    .nav-menu li a{
-      display:block;
-      padding:10px 20px;
-      font-size:14px;
-      border-left:3px solid transparent;
-      color:#fff;
-      transition:.2s;
+    .logo-container {
+      margin-bottom: 20px;
     }
 
-    .nav-menu li a:hover,
-    .nav-menu li a.active{
-      background:rgba(255,255,255,.12);
-      border-left-color:var(--accent);
+    .logo-img {
+      height: 40px;
+      width: auto;
     }
 
-    #cart-count {
-      background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 8px;
+    .hero-title {
+      font-family: "Montserrat", sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #123559;
+      margin-bottom: 8px;
     }
 
-    /* MAIN WRAPPER */
-    .main-wrapper{
-      margin-left:240px;
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
+    .hero-subtitle {
+      font-size: 15px;
+      color: #64748b;
     }
 
-    /* HERO – same dark dotted bg */
-    .hero{
-      position:relative;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
-        #041424;
-      color:#ffffff;
-      height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      border-top:3px solid var(--accent);
+    /* PAYMENT CARD */
+    .payment-card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+      border-top: 4px solid var(--accent);
+      margin-bottom: 40px;
     }
 
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
-      background-size:140px 140px;
-      opacity:0.6;
-      pointer-events:none;
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      align-items: start;
     }
 
-    .hero-content{
-      position:relative;
-      z-index:1;
-      padding:0 18px;
-      max-width:720px;
+    /* LEFT: QR Section */
+    .qr-box {
+      text-align: center;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 24px;
+      border: 1px solid #e2e8f0;
     }
 
-    .hero-kicker{
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      margin-bottom:6px;
-      color:#b9e6ff;
+    .qr-box h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
     }
 
-    .hero-title{
-      font-family:"Montserrat",sans-serif;
-      font-size:32px;
-      font-weight:700;
-      margin-bottom:6px;
+    .qr-box img {
+      width: 220px;
+      height: 220px;
+      border-radius: 12px;
+      background: #fff;
+      object-fit: contain;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
     }
 
-    .hero-subtitle{
-      font-size:14px;
-      color:#e2f3ff;
+    .qr-note {
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.5;
     }
 
-    /* MAIN CONTENT */
-    main{
-      max-width:900px;
-      margin:0 auto;
-      padding:32px 18px 40px 18px;
-      width:100%;
-      flex:1;
+    .amount-summary {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 14px;
+      color: #111827;
+      font-family: "Montserrat", sans-serif;
     }
 
-    .payment-card{
-      background:#fff;
-      padding:28px;
-      border-radius:16px;
-      box-shadow:0 14px 30px rgba(15,23,42,0.12);
-      border-top:4px solid var(--accent);
+    .amount-summary span {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 20px;
+      display: block;
+      margin-top: 4px;
     }
 
-    .payment-grid{
-      display:grid;
-      grid-template-columns:1.1fr 1.2fr;
-      gap:24px;
+    /* RIGHT: Upload & Feedback */
+    .section-title {
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #123559;
+      margin-bottom: 10px;
+      margin-top: 24px;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    .upload-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      background: #fcfdfe;
+      text-align: center;
+      font-size: 13px;
+      color: #4b5563;
     }
 
-    .qr-box{
-      text-align:center;
-      border-radius:12px;
-      background:#f1f5f9;
-      padding:20px 16px;
-    }
+    .upload-box input[type="file"] { display: none; }
 
-    .qr-box h3{
-      font-family:"Montserrat",sans-serif;
-      font-size:18px;
-      margin-bottom:8px;
-      color:#123559;
-    }
-
-    .qr-box img{
-      width:210px;
-      height:210px;
-      border-radius:12px;
-      background:#fff;
-      object-fit:contain;
-      box-shadow:0 10px 22px rgba(15,23,42,0.18);
-      margin:10px 0;
-    }
-
-    .qr-note{
-      font-size:13px;
-      color:#4b5563;
-    }
-
-    .amount-summary{
-      margin-top:12px;
-      font-size:14px;
-      color:#111827;
-      font-family:"Montserrat",sans-serif;
-    }
-
-    .amount-summary span{
-      color:var(--primary-dark);
-      font-weight:700;
-      font-size:18px;
-    }
-
-    /* Receipt upload */
-    .section-title{
-      font-family:"Montserrat",sans-serif;
-      font-size:16px;
-      font-weight:600;
-      color:#123559;
-      margin-bottom:8px;
-    }
-
-    .upload-box{
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      padding:14px;
-      background:#f9fbff;
-      text-align:center;
-      font-size:13px;
-      color:#4b5563;
-      margin-bottom:14px;
-    }
-
-    .upload-box input[type="file"]{
-      display:none;
-    }
-
-    .upload-label{
-      display:inline-block;
-      margin-top:8px;
-      padding:8px 16px;
-      border-radius:999px;
-      background:linear-gradient(135deg,#00b8b0,#0074c7);
-      color:#fff;
-      font-size:13px;
-      font-weight:600;
-      cursor:pointer;
+    .upload-label {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #00b8b0, #0074c7);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0,116,199,0.2);
     }
 
     .upload-label:hover {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,116,199,0.3);
     }
 
-    .preview-img{
-      margin-top:10px;
-      max-width:100%;
-      max-height:190px;
-      border-radius:8px;
-      box-shadow:0 8px 18px rgba(15,23,42,0.18);
-      display:none;
+    .preview-img {
+      margin-top: 16px;
+      max-width: 100%;
+      max-height: 180px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: none;
+      border: 1px solid #e2e8f0;
     }
 
-    .error-text{
-      color:var(--danger);
-      font-size:12px;
-      margin-top:4px;
-      display:none;
+    .error-text { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; font-weight: 600; }
+    .success-text { color: #059669; font-size: 12px; margin-top: 6px; display: none; font-weight: 600; }
+
+    .rating-row { margin-top: 10px; }
+
+    .stars {
+      display: flex;
+      gap: 8px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #e2e8f0;
+      margin-bottom: 12px;
     }
 
-    .success-text{
-      color:#059669;
-      font-size:12px;
-      margin-top:4px;
-      display:none;
-    }
+    .star.active { color: #facc15; }
 
-    /* Rating */
-    .rating-row{
-      margin-top:14px;
-    }
-
-    .stars{
-      display:flex;
-      gap:6px;
-      font-size:26px;
-      cursor:pointer;
-      color:#e5e7eb;
-    }
-
-    .star.active{
-      color:#facc15;
-    }
-
-    .feedback-textarea{
-      width:100%;
-      margin-top:10px;
-      padding:8px 10px;
-      border-radius:8px;
-      border:1px solid #d1d5db;
-      font-family:inherit;
-      font-size:13px;
-      min-height:80px;
+    .feedback-textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-family: inherit;
+      font-size: 14px;
+      min-height: 80px;
       outline: none;
+      transition: border-color 0.2s;
     }
 
     .feedback-textarea:focus {
@@ -312,29 +223,29 @@
       box-shadow: 0 0 0 3px rgba(0,116,199,0.1);
     }
 
-    .actions-row{
-      margin-top:20px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
+    .actions-row {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .btn-primary{
-      background:linear-gradient(135deg,var(--accent),#00d4cc);
-      color:#fff;
-      border:none;
-      border-radius:8px;
-      padding:11px 22px;
-      font-size:14px;
-      font-weight:600;
-      font-family:"Montserrat",sans-serif;
-      cursor:pointer;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #00d4cc);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: "Montserrat", sans-serif;
+      cursor: pointer;
       transition: all 0.2s ease;
+      width: 100%;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      filter: brightness(1.05);
       box-shadow: 0 8px 20px rgba(0,184,176,0.3);
     }
 
@@ -344,140 +255,94 @@
       transform: none;
     }
 
-    .btn-secondary{
-      background:transparent;
-      color:#123559;
-      border-radius:8px;
-      padding:10px 18px;
-      font-size:13px;
-      font-weight:600;
-      font-family:"Montserrat",sans-serif;
-      border:1px solid #cbd5e1;
-      cursor:pointer;
-      transition: all 0.2s ease;
+    .btn-secondary {
+      background: transparent;
+      color: #64748b;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
     }
 
-    .btn-secondary:hover {
-      background: #f1f5f9;
-      border-color: var(--primary);
-      transform: translateY(-1px);
-    }
+    .btn-secondary:hover { color: var(--primary-dark); }
 
-    footer{
-      background:#06121f;
-      color:#cbd5f5;
-      font-size:13px;
-      text-align:center;
-      padding:14px 0;
-      margin-top:22px;
-    }
-
+    /* EMPTY STATE */
     .empty-cart-message {
       text-align: center;
-      padding: 60px 20px;
-      color: #6b7280;
+      padding: 80px 20px;
+      color: #64748b;
     }
-
-    .empty-cart-message h2 {
-      font-family: "Montserrat", sans-serif;
-      margin-bottom: 12px;
-      color: #374151;
-      font-size: 24px;
-    }
-
-    .empty-cart-message p {
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
+    .empty-cart-message h2 { font-family: "Montserrat", sans-serif; font-size: 24px; color: #1e293b; margin-bottom: 10px; }
     .empty-cart-message a {
       display: inline-block;
-      padding: 11px 22px;
-      background: linear-gradient(135deg, var(--accent), #00d4cc);
-      color: white;
-      border-radius: 8px;
+      margin-top: 16px;
+      color: var(--primary);
       font-weight: 600;
-      font-size: 14px;
-      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+    }
+    .empty-cart-message a:hover { border-bottom-color: var(--primary); }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 13px;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      margin-top: auto;
     }
 
-    .empty-cart-message a:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-
-    @media(max-width:900px){
-      .sidebar{display:none;}
-      .main-wrapper{margin-left:0;}
-      .payment-grid{
-        grid-template-columns:1fr;
-      }
-      .qr-box img{
-        width:190px;
-        height:190px;
-      }
-      main {
-        padding: 24px 16px 32px 16px;
-      }
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .payment-card { padding: 24px 20px; }
+      .payment-grid { grid-template-columns: 1fr; gap: 32px; }
+      .qr-box { order: -1; } /* Keep QR on top on mobile */
+      .header-simple { padding: 30px 0 20px; }
+      .hero-title { font-size: 24px; }
     }
   </style>
 </head>
+
 <body>
 
-<nav class="sidebar">
-  <a href="index.html" class="nav-logo">
-    <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
-    <span>ChemSus</span>
-  </a>
-  <ul class="nav-menu">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About Us</a></li>
-    <li><a href="products.html">Products</a></li>
-    <li><a href="shop.html">Shop</a></li>
-    <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-    <li><a href="orders.html" class="active">Orders</a></li>
-  </ul>
-</nav>
-
-<div class="main-wrapper">
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-kicker">Secure Payment</div>
+  <div class="main-wrapper">
+    <header class="header-simple">
+      <div class="logo-container">
+        <a href="index.html">
+          <img src="assets/logo.jpg" alt="ChemSus Logo" class="logo-img">
+        </a>
+      </div>
       <h1 class="hero-title">Complete Your Payment</h1>
-      <p class="hero-subtitle">
-        Scan the QR code, upload your payment receipt, and share your experience.
-      </p>
-    </div>
-  </section>
+      <p class="hero-subtitle">Scan, Upload Receipt & Finish</p>
+    </header>
 
-  <main>
     <div class="payment-card" id="paymentForm">
       <div class="payment-grid">
-        <!-- LEFT: QR + amount -->
         <div class="qr-box">
           <h3>Scan to Pay</h3>
           <img src="assets/payment-qr.png" alt="Payment QR Code">
           <p class="qr-note">
-            Use any UPI / banking app to scan this QR and pay the exact order amount shown below.
+            Use any UPI / Banking app to scan this QR code.
           </p>
           <div class="amount-summary">
-            Order total: <span id="orderTotalText">₹0</span>
+            Total Amount to Pay:
+            <span id="orderTotalText">₹0</span>
           </div>
         </div>
 
-        <!-- RIGHT: upload + rating -->
         <div>
-          <div class="section-title">Upload payment receipt</div>
+          <div class="section-title">1. Upload Payment Receipt</div>
           <div class="upload-box">
-            <p>Select a screenshot or PDF/image of your successful payment.</p>
-            <label class="upload-label" for="receiptInput">Upload receipt</label>
+            <p>Please upload a screenshot or PDF of the successful transaction.</p>
+            <label class="upload-label" for="receiptInput">Choose File</label>
             <input type="file" id="receiptInput" accept="image/*,.pdf">
+            
             <img id="receiptPreview" class="preview-img" alt="Receipt preview">
-            <div id="receiptError" class="error-text">Please upload a valid image or PDF receipt.</div>
-            <div id="receiptSuccess" class="success-text">✓ Receipt uploaded successfully!</div>
+            <div id="receiptError" class="error-text">Please upload a valid image or PDF.</div>
+            <div id="receiptSuccess" class="success-text">✓ File selected</div>
           </div>
 
-          <div class="section-title">Rate your experience</div>
+          <div class="section-title">2. Rate Your Experience</div>
           <div class="rating-row">
             <div class="stars" id="starContainer">
               <span class="star" data-value="1">★</span>
@@ -486,247 +351,195 @@
               <span class="star" data-value="4">★</span>
               <span class="star" data-value="5">★</span>
             </div>
-            <div id="ratingError" class="error-text">Please select a rating from 1 to 5.</div>
+            <div id="ratingError" class="error-text">Please select a star rating.</div>
             <textarea id="feedbackInput" class="feedback-textarea"
-              placeholder="Optional: Tell us about your ChemSus web experience..."></textarea>
+              placeholder="Optional: Any feedback on the ordering process?"></textarea>
           </div>
 
           <div class="actions-row">
-            <button class="btn-primary" id="submitBtn" onclick="confirmPayment()">Confirm payment &amp; finish</button>
-            <button class="btn-secondary" onclick="window.location.href='cart.html'">← Back to Cart</button>
+            <button class="btn-primary" id="submitBtn" onclick="confirmPayment()">Confirm Payment & Finish</button>
+            <button class="btn-secondary" onclick="window.location.href='orders.html'">Cancel & Go Back</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Empty cart message -->
     <div class="empty-cart-message" id="emptyMessage" style="display: none;">
-      <h2>No items in cart</h2>
-      <p>Your cart is empty. Add items from the shop to proceed with payment.</p>
-      <a href="shop.html">Go to Shop →</a>
+      <h2>No pending order found</h2>
+      <p>It seems you haven't placed an order yet.</p>
+      <a href="shop.html">Browse Shop</a>
     </div>
-  </main>
 
-  <footer>
-    © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
-  </footer>
-</div>
+    <footer>
+      © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+    </footer>
+  </div>
 
-<script>
-  // Initialize payment and amount
-  function initializePayment() {
-    const badge = document.getElementById('cart-count');
-    
-    // PRIORITY 1: Get total from sessionStorage (set by orders.html BEFORE redirect)
-    let total = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
-    
-    console.log('💰 SessionStorage orderTotal:', total);
-    
-    // PRIORITY 2: If sessionStorage empty, calculate from cart (direct page load)
-    if (total === 0) {
-      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-      if (badge) badge.textContent = count;
-      
-      if (cart && cart.length > 0) {
-        total = cart.reduce((sum, item) => {
-          const price = item.price || item.productPrice || item.pricePerKg || 0;
-          const qty = item.quantity || 1;
-          return sum + (price * qty);
-        }, 0);
-        console.log('📦 Cart total calculated:', total);
-      }
-    } else {
-      // If we got sessionStorage total, cart is already cleared
-      if (badge) badge.textContent = '0';
-      console.log('✅ Using sessionStorage total:', total);
-    }
+  <script>
+    // ✅ GLOBAL CONFIG - Auto-detects backend URL
+    let API_BASE = '/api';
 
-    // No amount found at all
-    if (total === 0) {
-      document.getElementById('paymentForm').style.display = 'none';
-      document.getElementById('emptyMessage').style.display = 'block';
-      console.log('❌ No total found - showing empty message');
-      return;
-    }
-    
-    // Display the amount
-    const totalElement = document.getElementById('orderTotalText');
-    if (totalElement) {
-      totalElement.textContent = '₹' + total.toLocaleString('en-IN');
-      console.log('💳 Amount displayed:', '₹' + total.toLocaleString('en-IN'));
-    }
-  }
-
-  // Receipt preview
-  const receiptInput = document.getElementById('receiptInput');
-  const receiptPreview = document.getElementById('receiptPreview');
-  const receiptError = document.getElementById('receiptError');
-  const receiptSuccess = document.getElementById('receiptSuccess');
-
-  receiptInput.addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    receiptError.style.display = 'none';
-    receiptSuccess.style.display = 'none';
-
-    if (!file) {
-      receiptPreview.style.display = 'none';
-      return;
-    }
-
-    const allowed = ['image/', 'application/pdf'];
-    if (!allowed.some(t => file.type.startsWith(t))) {
-      receiptError.style.display = 'block';
-      receiptPreview.style.display = 'none';
-      return;
-    }
-
-    if (file.type.startsWith('image/')) {
-      const url = URL.createObjectURL(file);
-      receiptPreview.src = url;
-      receiptPreview.style.display = 'block';
-      receiptSuccess.style.display = 'block';
-    } else {
-      receiptPreview.style.display = 'none';
-      receiptSuccess.style.display = 'block';
-    }
-  });
-
-  // Rating stars
-  const starContainer = document.getElementById('starContainer');
-  const ratingError = document.getElementById('ratingError');
-  let selectedRating = 0;
-
-  starContainer.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('star')) return;
-    selectedRating = parseInt(e.target.getAttribute('data-value'), 10);
-    document.querySelectorAll('.star').forEach(star => {
-      const v = parseInt(star.getAttribute('data-value'), 10);
-      star.classList.toggle('active', v <= selectedRating);
-    });
-    ratingError.style.display = 'none';
-  });
-
-  async function confirmPayment() {
-    const submitBtn = document.getElementById('submitBtn');
-    const file = receiptInput.files[0];
-    const cartTotal = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
-    let hasError = false;
-
-    if (!file) {
-      receiptError.textContent = 'Please upload your payment receipt.';
-      receiptError.style.display = 'block';
-      hasError = true;
-    }
-
-    if (!selectedRating) {
-      ratingError.style.display = 'block';
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    try {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Processing...';
-
-      const feedback = document.getElementById('feedbackInput').value.trim();
-      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
-
-      // Get order ID from sessionStorage or use 1 as default
-      const orderId = sessionStorage.getItem('orderId') || 1;
-      
-      // Get customer info from cart order details or use defaults
-      let customerName = 'Customer';
-      let customerEmail = 'customer@example.com';
-      let customerPhone = '0000000000';
-      let orderAmount = cartTotal;
-
-      const orderDetails = sessionStorage.getItem('orderDetails');
-      if (orderDetails) {
-        try {
-          const details = JSON.parse(orderDetails);
-          customerName = details.fullName || customerName;
-          customerEmail = details.email || customerEmail;
-          customerPhone = details.mobile || customerPhone;
-        } catch (e) {
-          console.log('Could not parse order details');
+    async function initBackend() {
+      try {
+        const response = await fetch('/api/test');
+        if (response.ok) {
+          const config = await response.json();
+          API_BASE = config.apiBase || '/api';
         }
+      } catch (e) {
+        console.warn('Backend test failed:', e);
+        API_BASE = '/api';
       }
-
-      // Calculate total if not available
-      if (orderAmount === 0 && cart.length > 0) {
-        orderAmount = cart.reduce((sum, item) => {
-          const price = item.price || item.productPrice || item.pricePerKg || 0;
-          const qty = item.quantity || 1;
-          return sum + (price * qty);
-        }, 0);
-      }
-
-      // ✅ Upload receipt to backend
-      const formData = new FormData();
-      formData.append('orderid', orderId);
-      formData.append('customername', customerName);
-      formData.append('email', customerEmail);
-      formData.append('phone', customerPhone);
-      formData.append('amount', orderAmount);
-      formData.append('rating', selectedRating);
-      formData.append('feedback', feedback || null);
-      formData.append('receiptimage', file);
-
-      console.log('📤 Uploading receipt with:', {
-        orderid: orderId,
-        customername: customerName,
-        email: customerEmail,
-        phone: customerPhone,
-        amount: orderAmount,
-        rating: selectedRating
-      });
-
-      const receiptResponse = await fetch('http://localhost:3000/api/receipts', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!receiptResponse.ok) {
-        throw new Error('Failed to upload receipt to backend');
-      }
-
-      const receiptResult = await receiptResponse.json();
-      console.log('✅ Receipt uploaded successfully:', receiptResult);
-
-      // Store payment confirmation data
-      const paymentInfo = {
-        hasReceipt: !!file,
-        rating: selectedRating,
-        feedback: feedback,
-        receiptId: receiptResult.receiptId,
-        confirmedAt: new Date().toISOString()
-      };
-      localStorage.setItem('chemsusPaymentInfo', JSON.stringify(paymentInfo));
-
-      alert('✅ Thank you! Your payment receipt has been uploaded and feedback recorded.');
-      
-      // Clear cart after successful payment
-      localStorage.removeItem('chemsusCart');
-      sessionStorage.removeItem('orderTotal');
-      sessionStorage.removeItem('orderDetails');
-      sessionStorage.removeItem('orderId');
-      
-      window.location.href = 'orders.html';
-
-    } catch (error) {
-      console.error('❌ Payment error:', error);
-      receiptError.textContent = '❌ Error: ' + error.message + '. Check if backend is running.';
-      receiptError.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Confirm payment & finish';
     }
-  }
 
-  // Initialize on page load
-  window.addEventListener('load', initializePayment);
-</script>
+    function loadOrderTotal() {
+      const orderTotal = sessionStorage.getItem('orderTotal');
+      const orderId = sessionStorage.getItem('orderId');
+      
+      // If no order details exist, show empty state
+      if (!orderTotal || !orderId) {
+        document.getElementById('paymentForm').style.display = 'none';
+        document.getElementById('emptyMessage').style.display = 'block';
+        return;
+      }
+      
+      const total = parseFloat(orderTotal);
+      document.getElementById('orderTotalText').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    // --- File Upload Handling ---
+    const receiptInput = document.getElementById('receiptInput');
+    const receiptPreview = document.getElementById('receiptPreview');
+    const receiptError = document.getElementById('receiptError');
+    const receiptSuccess = document.getElementById('receiptSuccess');
+
+    receiptInput.addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      receiptError.style.display = 'none';
+      receiptSuccess.style.display = 'none';
+      receiptPreview.style.display = 'none';
+
+      if (!file) return;
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+      if (!allowedTypes.some(type => file.type === type)) {
+        receiptError.textContent = 'Invalid format. Only JPG, PNG, or PDF allowed.';
+        receiptError.style.display = 'block';
+        receiptInput.value = ''; // Reset input
+        return;
+      }
+
+      if (file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        receiptPreview.src = url;
+        receiptPreview.style.display = 'block';
+      }
+      
+      receiptSuccess.textContent = `✓ ${file.name} selected`;
+      receiptSuccess.style.display = 'block';
+    });
+
+    // --- Star Rating Logic ---
+    const starContainer = document.getElementById('starContainer');
+    const ratingError = document.getElementById('ratingError');
+    let selectedRating = 0;
+
+    starContainer.addEventListener('click', function (e) {
+      if (e.target.classList.contains('star')) {
+        selectedRating = parseInt(e.target.getAttribute('data-value'), 10);
+        document.querySelectorAll('.star').forEach(star => {
+          const val = parseInt(star.getAttribute('data-value'), 10);
+          star.classList.toggle('active', val <= selectedRating);
+        });
+        ratingError.style.display = 'none';
+      }
+    });
+
+    // --- Submit Logic ---
+    async function confirmPayment() {
+      const submitBtn = document.getElementById('submitBtn');
+      const orderTotal = sessionStorage.getItem('orderTotal');
+      const orderDetailsRaw = sessionStorage.getItem('orderDetails');
+      const orderId = sessionStorage.getItem('orderId');
+      const receiptFile = receiptInput.files[0];
+
+      if (!orderId || !orderDetailsRaw) {
+        alert('❌ No active order found. Please start from the beginning.');
+        window.location.href = 'shop.html';
+        return;
+      }
+
+      let hasError = false;
+
+      // Validation
+      if (!receiptFile) {
+        receiptError.style.display = 'block';
+        hasError = true;
+      }
+      if (!selectedRating) {
+        ratingError.style.display = 'block';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Uploading...';
+
+        const orderDetails = JSON.parse(orderDetailsRaw);
+        const feedback = document.getElementById('feedbackInput').value.trim();
+        const total = parseFloat(orderTotal);
+
+        const formData = new FormData();
+        formData.append('orderid', orderId);
+        formData.append('customername', orderDetails.fullName);
+        formData.append('email', orderDetails.email);
+        formData.append('phone', orderDetails.mobile);
+        formData.append('amount', total);
+        formData.append('rating', selectedRating);
+        formData.append('feedback', feedback || '');
+        formData.append('receiptimage', receiptFile);
+
+        console.log('📤 Uploading receipt to:', API_BASE + '/receipts');
+
+        const receiptResponse = await fetch(API_BASE + '/receipts', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!receiptResponse.ok) {
+          const err = await receiptResponse.text();
+          throw new Error(`Server Error: ${err}`);
+        }
+
+        const receiptResult = await receiptResponse.json();
+        console.log('✅ Success:', receiptResult);
+
+        // Clear session data to prevent duplicate submissions
+        sessionStorage.removeItem('buyNowData');
+        sessionStorage.removeItem('buyNowProduct');
+        sessionStorage.removeItem('orderDetails');
+        sessionStorage.removeItem('orderTotal');
+        sessionStorage.removeItem('orderId');
+
+        alert('✅ Receipt uploaded successfully! We will verify your payment shortly.');
+        window.location.href = 'index.html'; // Or a dedicated thank you page
+
+      } catch (error) {
+        console.error('❌ Upload failed:', error);
+        alert('Upload failed: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Payment & Finish';
+      }
+    }
+
+    // Initialize Page
+    window.addEventListener('load', async function() {
+      await initBackend();
+      loadOrderTotal();
+    });
+  </script>
 
 </body>
 </html>
