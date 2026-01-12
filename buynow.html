@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Buy Now | ChemSus Technologies Pvt Ltd</title>
+  <title>Buy | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -14,7 +14,9 @@
       --bg: #F3F7FB;
       --ink: #1f2933;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: "Open Sans", Arial, sans-serif;
       background: var(--bg);
@@ -23,7 +25,10 @@
       display: flex;
       min-height: 100vh;
     }
+
     a { text-decoration: none; color: inherit; }
+
+    /* COMPACT SIDEBAR NAVBAR */
     .sidebar {
       width: 240px;
       background: var(--primary);
@@ -35,8 +40,30 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1000;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -50,13 +77,16 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
       white-space: nowrap;
     }
+
     .nav-logo-img { height: 24px; width: auto; }
+
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
+
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -65,18 +95,67 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+
     .nav-menu li a.active,
     .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
+
+    #cart-count {
+      background: var(--accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    /* SEARCH */
+    .search-section {
+      padding: 12px 20px 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .search-form { position: relative; }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 32px 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: #ffffff;
+      font-size: 12.5px;
+      outline: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-input::placeholder { color: #d1d5db; font-size: 11.5px; }
+
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: #ffffff;
+      pointer-events: none;
+    }
+
+    /* MAIN CONTENT WRAPPER */
     .main-wrapper {
       margin-left: 240px;
       flex: 1;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: margin-left 0.3s ease;
     }
+
+    /* HERO */
     .hero {
       position: relative;
       overflow: hidden;
@@ -92,6 +171,7 @@
       text-align: center;
       border-top: 3px solid var(--accent);
     }
+
     .hero::before {
       content: "";
       position: absolute;
@@ -103,12 +183,14 @@
       opacity: 0.6;
       pointer-events: none;
     }
+
     .hero-content {
       position: relative;
       z-index: 1;
       max-width: 720px;
       padding: 0 18px;
     }
+
     .hero-kicker {
       font-size: 12px;
       letter-spacing: 0.18em;
@@ -116,16 +198,19 @@
       margin-bottom: 6px;
       color: #b9e6ff;
     }
+
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 6px;
     }
+
     .hero-subtitle {
       font-size: 14px;
       color: #e2f3ff;
     }
+
     main {
       max-width: 900px;
       margin: 0 auto;
@@ -133,6 +218,7 @@
       width: 100%;
       flex: 1;
     }
+
     .buy-card {
       background: #ffffff;
       padding: 28px;
@@ -140,6 +226,7 @@
       box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
       border-top: 4px solid var(--accent);
     }
+
     .buy-header {
       display: flex;
       justify-content: space-between;
@@ -147,12 +234,14 @@
       gap: 16px;
       margin-bottom: 18px;
     }
+
     .buy-title {
       font-family: "Montserrat", sans-serif;
       font-size: 22px;
       font-weight: 700;
       color: #123559;
     }
+
     .buy-tag {
       font-size: 11px;
       padding: 4px 8px;
@@ -162,6 +251,7 @@
       text-transform: uppercase;
       letter-spacing: 0.16em;
     }
+
     .buy-price {
       font-family: "Montserrat", sans-serif;
       font-size: 24px;
@@ -169,22 +259,26 @@
       color: var(--primary);
       margin-bottom: 6px;
     }
+
     .buy-note {
       font-size: 13px;
       color: #4b5563;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
     }
+
     .qty-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin: 18px 0;
     }
+
     .qty-label {
       font-size: 14px;
       font-weight: 600;
       color: #1f2937;
     }
+
     .qty-input {
       width: 90px;
       padding: 8px 10px;
@@ -193,6 +287,7 @@
       font-size: 14px;
       font-family: inherit;
     }
+
     .totals-row {
       display: flex;
       justify-content: space-between;
@@ -202,17 +297,34 @@
       border-top: 1px dashed #e5e7eb;
       font-size: 14px;
     }
+
     .totals-row strong {
       font-family: "Montserrat", sans-serif;
       font-size: 18px;
       color: var(--primary-dark);
     }
+
+    .payment-box {
+      margin-top: 18px;
+      padding: 14px 12px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: 13px;
+      color: #4b5563;
+    }
+
+    .payment-box ul {
+      margin-left: 18px;
+      margin-top: 6px;
+    }
+
     .actions-row {
       margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
     }
+
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
       color: #ffffff;
@@ -223,7 +335,20 @@
       font-weight: 600;
       font-family: "Montserrat", sans-serif;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,184,176,0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .btn-secondary {
       background: transparent;
       color: #123559;
@@ -234,7 +359,14 @@
       font-family: "Montserrat", sans-serif;
       border: 1px solid #cbd5e1;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
     footer {
       background: #06121f;
       color: #cbd5f5;
@@ -243,14 +375,56 @@
       padding: 14px 0;
       margin-top: 22px;
     }
+
+    /* MOBILE TOGGLE */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1003; /* Highest z-index */
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .mobile-toggle svg { width: 20px; height: 20px; }
+
     @media (max-width: 1050px) {
-      .sidebar { display: none; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
       .main-wrapper { margin-left: 0; }
+      .mobile-toggle { display: block; }
+    }
+
+    @media (max-width: 768px) {
+      .buy-header {
+        flex-direction: column;
+      }
+      .hero-title {
+        font-size: 24px;
+      }
+      .buy-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <nav class="sidebar">
+
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+    </svg>
+  </button>
+
+  <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-logo">
       <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
       <span>ChemSus</span>
@@ -259,92 +433,277 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="collaboration.html">Collaboration</a></li>
+      <li><a href="recognitions.html">Recognitions</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="contact.html">Contact us</a></li>
+      <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
     </ul>
+
+    <div class="search-section">
+      <form class="search-form" id="siteSearchForm">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <span class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+          </svg>
+        </span>
+      </form>
+    </div>
   </nav>
+
   <div class="main-wrapper">
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Buy now</div>
-        <h1 class="hero-title" id="heroProductName">Buy Product</h1>
+        <div class="hero-kicker">Checkout</div>
+        <h1 class="hero-title" id="heroProductName">Review Your Order</h1>
         <p class="hero-subtitle">
-          Choose quantity for this product and place your order instantly.
+          View net quantity, final amount, and proceed to secure order confirmation.
         </p>
       </div>
     </section>
+
     <main>
       <div class="buy-card">
         <div class="buy-header">
           <div>
-            <div class="buy-title" id="productNameHeading">Product Name</div>
-            <div class="buy-tag">Instant order</div>
+            <div class="buy-title" id="productNameHeading">Order Summary</div>
+            <div class="buy-tag">Cart checkout</div>
           </div>
           <div>
-            <div class="buy-price" id="unitPriceText">₹0 / kg</div>
-            <div class="buy-note">Unit price (excl. taxes & shipping)</div>
+            <div class="buy-price" id="unitPriceText">₹0</div>
+            <div class="buy-note">Total amount (excl. taxes &amp; shipping)</div>
+            <div style="font-size:13px;color:#4b5563;">
+              Net quantity: <span id="cartQtyText">0 kg</span>
+            </div>
           </div>
         </div>
-        <div class="qty-row">
-          <span class="qty-label">Quantity (kg)</span>
-          <input type="number" id="quantityInput" class="qty-input" value="1" min="1" step="1">
-        </div>
+
+        <div class="payment-box" id="itemsListBox">
+          </div>
+
         <div class="totals-row">
-          <div>This product total (₹)</div>
-          <strong id="lineTotalText">₹0</strong>
+          <div>Grand total (₹, excl. taxes &amp; shipping)</div>
+          <strong id="totalText">₹0</strong>
         </div>
+
+        <div class="payment-box" style="margin-top:16px;">
+          <strong>Payment &amp; fulfilment:</strong>
+          <ul>
+            <li>Online payment or bank transfer (details shared after order placement).</li>
+            <li>Taxes and shipping calculated by sales team before final invoice.</li>
+            <li>Orders are confirmed via email from ChemSus.</li>
+          </ul>
+        </div>
+
         <div class="actions-row">
-          <button class="btn-primary" onclick="placeOrder()">Place Order & Go to Orders</button>
-          <button class="btn-secondary" onclick="window.location.href='shop.html'">← Back to Shop</button>
+          <button class="btn-primary" onclick="confirmAndGoToOrders()">Confirm &amp; Go to Orders</button>
+          <button class="btn-secondary" onclick="window.location.href='cart.html'">← Back to Cart</button>
         </div>
       </div>
     </main>
+
     <footer>
-      &copy; 2025 ChemSus Technologies Pvt Ltd.
+      &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
     </footer>
   </div>
+
   <script>
-    // Read product and show unit price
-    const params = new URLSearchParams(window.location.search);
-    const productName = params.get('name') || 'Product';
-    const unitPrice = parseFloat(params.get('price')) || 0;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
 
-    document.getElementById('heroProductName').textContent = 'Buy ' + productName;
-    document.getElementById('productNameHeading').textContent = productName;
-    document.getElementById('unitPriceText').textContent =
-      '₹' + unitPrice.toLocaleString('en-IN') + ' / kg';
-
-    const qtyInput = document.getElementById('quantityInput');
-    const lineTotalText = document.getElementById('lineTotalText');
-
-    function updateLineTotal() {
-      const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-      qtyInput.value = qty;
-      const total = unitPrice * qty;
-      lineTotalText.textContent = '₹' + total.toLocaleString('en-IN');
-      return { qty, total };
+    // Open Sidebar
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
 
-    qtyInput.addEventListener('input', updateLineTotal);
+    // Close Sidebar (Explicit)
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
 
-    // ✅ FIXED: Correct sessionStorage key and data structure
-    function placeOrder() {
-      const { qty, total } = updateLineTotal();
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Load cart from localStorage
+    function loadCart() {
+      return JSON.parse(localStorage.getItem('chemsusCart')) || [];
+    }
+
+    // Save cart to localStorage and update badge
+    function saveCart(cart) {
+      localStorage.setItem('chemsusCart', JSON.stringify(cart));
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const span = document.getElementById('cart-count');
+      if (span) span.textContent = count;
+    }
+
+    // Render order summary
+    function renderSummary() {
+      const itemsListBox = document.getElementById('itemsListBox');
+      const totalText = document.getElementById('totalText');
+      const unitPriceText = document.getElementById('unitPriceText');
+      const cartQtyText = document.getElementById('cartQtyText');
+      const heroTitle = document.getElementById('heroProductName');
+      const heading = document.getElementById('productNameHeading');
+
+      // Check if we are in "Buy Now" mode (single item from query params)
+      const params = new URLSearchParams(window.location.search);
+      const buyNowName = params.get('name');
+      const buyNowPrice = parseFloat(params.get('price'));
+
+      if (buyNowName && buyNowPrice) {
+        // --- Single Product Buy Mode ---
+        heroTitle.textContent = 'Buy ' + buyNowName;
+        heading.textContent = buyNowName;
+        unitPriceText.textContent = '₹' + buyNowPrice.toLocaleString('en-IN') + ' / kg';
+
+        // Inject quantity input for single buy
+        itemsListBox.innerHTML = `
+           <div class="qty-row">
+            <span class="qty-label">Quantity (kg)</span>
+            <input type="number" id="quantityInput" class="qty-input" value="1" min="1" step="1">
+          </div>
+        `;
+        
+        const qtyInput = document.getElementById('quantityInput');
+        
+        function updateSingleTotal() {
+             const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+             qtyInput.value = qty;
+             const total = buyNowPrice * qty;
+             totalText.textContent = '₹' + total.toLocaleString('en-IN');
+             cartQtyText.textContent = qty + ' kg';
+        }
+
+        qtyInput.addEventListener('input', updateSingleTotal);
+        updateSingleTotal(); // Init
+        
+        // Override confirm function for single buy
+        window.confirmAndGoToOrders = function() {
+            const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+            const total = buyNowPrice * qty;
+            
+            const buyNowData = {
+                productName: buyNowName,
+                quantity: qty,
+                unitPrice: buyNowPrice
+            };
+            
+            sessionStorage.setItem('buyNowData', JSON.stringify(buyNowData));
+            sessionStorage.setItem('orderTotal', total);
+            
+            window.location.href = 'orders.html'; 
+        };
+
+        return; // Exit here for single buy mode
+      }
+
+      // --- Cart Mode ---
+      const cart = loadCart();
+      saveCart(cart); // Ensure badge is updated
+
+      if (!cart.length) {
+        heroTitle.textContent = 'No items in cart';
+        heading.textContent = 'Order Summary';
+        unitPriceText.textContent = '₹0';
+        totalText.textContent = '₹0';
+        cartQtyText.textContent = '0 kg';
+        itemsListBox.innerHTML = `
+          <p style="color: #d32f2f; font-weight: 600;">⚠️ Your cart is empty. <a href="shop.html" style="color: var(--accent);">Go to Shop</a></p>
+        `;
+        document.querySelector('.actions-row .btn-primary').disabled = true;
+        return;
+      }
+
+      let grandTotal = 0;
+      let totalQty = 0;
+      let listHtml = '<strong>Items in your cart:</strong><ul style="margin-left: 18px; margin-top: 6px;">';
+
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        grandTotal += subtotal;
+        totalQty += item.quantity;
+        listHtml += `
+          <li style="margin-bottom: 6px;">
+            ${item.name} – ${item.quantity} kg × ₹${item.price.toLocaleString('en-IN')}
+            = ₹${subtotal.toLocaleString('en-IN')}
+          </li>`;
+      });
+
+      listHtml += '</ul>';
+
+      heroTitle.textContent = 'Review Your Order';
+      heading.textContent = 'Order Summary';
+      unitPriceText.textContent = '₹' + grandTotal.toLocaleString('en-IN');
+      totalText.textContent = '₹' + grandTotal.toLocaleString('en-IN');
+      cartQtyText.textContent = totalQty + ' kg';
+      itemsListBox.innerHTML = listHtml;
+
+      // Enable confirm button
+      document.querySelector('.actions-row .btn-primary').disabled = false;
       
-      const buyNowData = {
-        productName: document.getElementById('productNameHeading').textContent,
-        quantity: qty,
-        unitPrice: unitPrice
+      // Standard cart checkout function
+      window.confirmAndGoToOrders = function() {
+          const totalPrice = cart.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+          const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+          sessionStorage.setItem('buyNowData', JSON.stringify({
+            productName: `${cart.length} product(s) from Cart`,
+            quantity: totalQty,
+            unitPrice: (totalPrice / totalQty).toFixed(2) // Approximate average for display logic downstream
+          }));
+
+          sessionStorage.setItem('cartItems', JSON.stringify(cart));
+          sessionStorage.setItem('orderTotal', totalPrice);
+
+          window.location.href = 'orders.html';
       };
-      
-      // ✅ FIXED: Use 'buyNowData' key to match orders2.html
-      sessionStorage.setItem('buyNowData', JSON.stringify(buyNowData));
-      
-      window.location.href = 'orders2.html';
     }
 
-    window.placeOrder = placeOrder;
-    updateLineTotal();
+    document.getElementById('siteSearchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
+      if (!query) return;
+
+      if (query.includes('product') || query.includes('shop')) {
+        window.location.href = 'products.html';
+      } else if (query.includes('recognition') || query.includes('award')) {
+        window.location.href = 'recognitions.html';
+      } else if (query.includes('investor') || query.includes('funding')) {
+        window.location.href = 'investors.html';
+      } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
+        window.location.href = 'contact.html';
+      } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
+        window.location.href = 'index.html';
+      } else if (query.includes('about') || query.includes('company')) {
+        window.location.href = 'about.html';
+      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
+        window.location.href = 'collaboration.html';
+      } else if (query.includes('sample') || query.includes('request')) {
+        window.location.href = 'request-sample.html';
+      } else if (query.includes('order') || query.includes('orders')) {
+        window.location.href = 'orders.html';
+      } else {
+        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
+      }
+    });
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', renderSummary);
   </script>
+
 </body>
 </html>

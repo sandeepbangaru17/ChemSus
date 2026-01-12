@@ -5,10 +5,8 @@
   <title>Request for Sample | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -51,8 +49,30 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1000;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -67,12 +87,14 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     .nav-logo-img { height: 24px; width: auto; }
+    
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
+    
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -81,6 +103,7 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+    
     .nav-menu li a.active,
     .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
@@ -123,6 +146,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: margin-left 0.3s ease;
     }
 
     /* HERO */
@@ -301,110 +325,153 @@
 
     /* RESPONSIVE */
     @media (max-width: 1050px) {
-      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
       .main-wrapper { margin-left: 0; }
+      
       .mobile-toggle {
         display: block;
         position: fixed;
         top: 20px;
         left: 20px;
-        z-index: 1001;
+        z-index: 1003;
         background: var(--primary);
         color: white;
         border: none;
         padding: 12px;
         border-radius: 8px;
         cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       }
       .mobile-toggle svg { width: 20px; height: 20px; }
     }
+    
     @media (min-width: 1051px) { .mobile-toggle { display: none; } }
+    
     @media (max-width: 768px) {
       .form-row { grid-template-columns: 1fr; gap: 16px; }
       .form-container { padding: 24px 20px; }
       .hero { height: 230px; }
       .hero-title { font-size: 32px; }
     }
+    
     @media (max-width: 580px) { .hero-title { font-size: 28px; } }
 
-    /* === WhatsApp QR Floating Widget === */
+    /* === WhatsApp QR Floating Widget (UPDATED) === */
     #ib-wa {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 25px;
+      right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
     }
+    
     #ib-wa-btn {
       background: #25d366;
       color: #fff;
       border: none;
-      border-radius: 30px;
-      padding: 12px 18px;
-      font-size: 15px;
+      border-radius: 50%; /* Circle shape */
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
     }
+
+    #ib-wa-btn:hover {
+      transform: scale(1.1);
+    }
+
+    #ib-wa-btn svg {
+      width: 35px;
+      height: 35px;
+      fill: white;
+    }
+    
     #ib-wa-popup {
       display: none;
       position: absolute;
-      bottom: 60px;
+      bottom: 80px; /* Above the button */
       right: 0;
       width: 300px;
+      /* Mobile Friendly Max Width */
+      max-width: 85vw;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
       overflow: hidden;
+      animation: waSlideUp 0.3s ease-out;
     }
+
+    @keyframes waSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     #ib-wa-popup header {
       background: #075e54;
       color: #fff;
-      padding: 10px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 14px;
+      font-size: 15px;
+      font-weight: 600;
     }
+    
     #ib-wa-popup header span:last-child {
       cursor: pointer;
-      font-weight: bold;
+      font-size: 18px;
+      opacity: 0.8;
     }
+    
     #ib-wa-popup .body {
-      padding: 12px;
+      padding: 16px;
       text-align: center;
     }
+    
     #ib-wa-popup .body img {
-      width: 220px;
+      width: 180px;
+      height: auto;
       margin: 10px 0;
+      border: 4px solid #f0f0f0;
+      border-radius: 8px;
     }
+    
     #ib-wa-popup .body a {
       display: block;
       background: #25d366;
       color: #fff;
-      padding: 10px;
-      border-radius: 6px;
+      padding: 12px;
+      border-radius: 50px;
       text-decoration: none;
       font-size: 14px;
+      font-weight: bold;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
     }
   </style>
 </head>
 
 <body>
-  <!-- Mobile Toggle Button -->
+
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
     </svg>
   </button>
 
-  <!-- SIDEBAR NAVBAR -->
   <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-logo">
-      <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
+      <img src="assets/logo.jpg" align="ChemSus Logo" class="nav-logo-img">
       <span>ChemSus</span>
     </a>
-
+    
     <ul class="nav-menu">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About Us</a></li>
@@ -431,9 +498,7 @@
     </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <div class="main-wrapper">
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-kicker">Sample Request</div>
@@ -444,7 +509,6 @@
       </div>
     </section>
 
-    <!-- MAIN -->
     <main>
       <div class="section-header">
         <h2>Sample Request Form</h2>
@@ -518,24 +582,26 @@
     </main>
 
     <footer>
-      &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+      © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
     </footer>
   </div>
 
-  <!-- WhatsApp QR Chat Widget -->
   <div id="ib-wa">
     <div id="ib-wa-popup">
       <header>
         <span>Chat with ChemSus</span>
         <span onclick="ibToggleWA()">✕</span>
       </header>
+
       <div class="body">
-        <p>Scan this QR code on your smartphone to chat with us</p>
+        <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
+
         <img
           id="ibWaQr"
           src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
           alt="WhatsApp QR"
         >
+
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
           <span style="flex:1;height:1px;background:#ddd;"></span>
           <span style="padding:0 10px;font-weight:600;">OR</span>
@@ -548,20 +614,45 @@
           target="_blank"
           rel="noopener"
         >
-          Chat with us on WhatsApp Web
+          Open WhatsApp
         </a>
       </div>
     </div>
-    <button id="ib-wa-btn" onclick="ibToggleWA()">🟢 Chat</button>
+
+    <button id="ib-wa-btn" onclick="ibToggleWA()" aria-label="Open WhatsApp Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-6.9c-18.6-29.5-28.4-63.5-28.4-98.6 0-101.9 82.9-184.8 185-184.8 49.3 0 95.7 19.2 130.5 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-4-10.5-6.8z"/>
+      </svg>
+    </button>
   </div>
 
-  <!-- SCRIPTS -->
   <script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    // Open Sidebar
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
 
-    // Site search functionality
+    // Close Sidebar (Explicit)
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Site search functionality with routing
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
@@ -590,7 +681,7 @@
       }
     });
 
-    // Shared cart badge updater – include on all pages
+    // Shared cart badge updater
     (function () {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -601,10 +692,14 @@
     // WhatsApp widget toggle
     function ibToggleWA() {
       const popup = document.getElementById("ib-wa-popup");
-      popup.style.display = (popup.style.display === "block") ? "none" : "block";
+      if (popup.style.display === "block") {
+        popup.style.display = "none";
+      } else {
+        popup.style.display = "block";
+      }
     }
 
-    // ✅ Send form details to WhatsApp on submit
+    // Send form details to WhatsApp on submit
     document.getElementById('sampleRequestForm').addEventListener('submit', function (e) {
       e.preventDefault();
 

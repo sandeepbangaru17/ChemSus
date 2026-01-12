@@ -26,7 +26,7 @@
     }
     a { text-decoration: none; color: inherit; }
 
-    /* SIDEBAR */
+    /* COMPACT SIDEBAR NAVBAR */
     .sidebar {
       width: 240px;
       background: var(--primary);
@@ -38,8 +38,30 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1000;
+      z-index: 1002; /* Above overlay */
+      transition: transform 0.3s ease;
     }
+
+    /* Sidebar Overlay (Backdrop) for Mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001; /* Below sidebar */
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -74,14 +96,17 @@
       border-left-color: var(--accent);
     }
 
-    /* MAIN */
+    /* MAIN WRAPPER */
     .main-wrapper {
       margin-left: 240px;
       flex: 1;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: margin-left 0.3s ease;
     }
+
+    /* HERO */
     .hero {
       position: relative;
       overflow: hidden;
@@ -251,7 +276,7 @@
     .filter-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
     .table-wrapper { overflow-x: auto; margin-top: 20px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1000px; }
     th, td {
       padding: 12px 10px;
       border-bottom: 1px solid #e5e7eb;
@@ -351,14 +376,15 @@
 
     /* Address cell formatting */
     .address-cell {
-      max-width: 260px;
+      max-width: 220px;
       white-space: normal;
       word-break: break-word;
       color: #334155;
+      font-size: 12px;
     }
 
     footer {
-      background: #06121f;
+      background-color: #06121f;
       color: #cbd5f5;
       font-size: 13px;
       text-align: center;
@@ -366,21 +392,25 @@
       margin-top: auto;
     }
 
+    /* MOBILE TOGGLE */
     .mobile-toggle {
       display: none;
       position: fixed;
       top: 20px;
       left: 20px;
-      z-index: 1001;
+      z-index: 1003;
       background: var(--primary);
       color: white;
       border: none;
       padding: 12px;
       border-radius: 8px;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+    .mobile-toggle svg { width: 20px; height: 20px; }
+
     @media (max-width: 1050px) {
-      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
       .main-wrapper { margin-left: 0; }
       .mobile-toggle { display: block; }
@@ -389,9 +419,11 @@
 </head>
 
 <body>
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
     <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
     </svg>
   </button>
 
@@ -415,7 +447,6 @@
     </section>
 
     <main>
-      <!-- LOGIN SECTION -->
       <section class="section" id="loginSection" style="display:none;">
         <div class="section-header">
           <h2>Admin Login</h2>
@@ -436,7 +467,6 @@
         </div>
       </section>
 
-      <!-- DASHBOARD SECTION -->
       <section class="section admin-layout active" id="adminSection">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #e5e7eb;">
           <div>
@@ -446,7 +476,6 @@
           <button class="btn btn-secondary btn-sm" id="logoutBtn" style="display:inline-flex;">Logout</button>
         </div>
 
-        <!-- STATS -->
         <div class="stats">
           <div class="stat-card">
             <div class="stat-number" id="totalOrders">0</div>
@@ -466,7 +495,6 @@
           </div>
         </div>
 
-        <!-- FILTERS -->
         <div class="filters">
           <div class="filter-group">
             <label>Status</label>
@@ -510,10 +538,7 @@
                 <th style="width:140px">Customer</th>
                 <th style="width:160px">Email</th>
                 <th style="width:120px">Phone</th>
-
-                <!-- ✅ NEW: Address column -->
                 <th style="width:220px">Address</th>
-
                 <th style="width:160px">Product</th>
                 <th style="width:70px">Qty</th>
                 <th style="width:100px">Total ₹</th>
@@ -541,7 +566,6 @@
     </footer>
   </div>
 
-  <!-- EDIT MODAL -->
   <div class="modal" id="editModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -555,7 +579,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Payment Status</label>
-            <select id="editPaymentMode" class="filter-select">
+            <select id="editPaymentMode" class="filter-select" style="width:100%">
               <option value="PENDING">Pending</option>
               <option value="PAID">Paid</option>
             </select>
@@ -563,7 +587,7 @@
 
           <div class="form-group">
             <label>Order Status</label>
-            <select id="editStatus" class="filter-select">
+            <select id="editStatus" class="filter-select" style="width:100%">
               <option value="PLACED">Placed</option>
               <option value="SHIPPED">Shipped</option>
               <option value="DELIVERED">Delivered</option>
@@ -577,7 +601,7 @@
           <textarea id="editNotes" class="form-textarea" rows="3" placeholder="Order notes..."></textarea>
         </div>
 
-        <div style="display:flex;gap:12px;justify-content:flex-end">
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
           <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Update Order</button>
         </div>
@@ -590,12 +614,48 @@
     const ADMIN_USER = 'admin';
     const ADMIN_PASS = 'chemsus123';
 
+    // API Base URL Detection (works on localhost & mobile)
+    let API_BASE = '/api';
+
+    async function initBackend() {
+      try {
+        const response = await fetch('/api/test');
+        if (response.ok) {
+          const config = await response.json();
+          console.log('✅ Backend detected:', config.backendURL);
+          API_BASE = config.apiBase || '/api';
+        }
+      } catch (e) {
+        console.warn('Backend check failed, using relative /api', e);
+        API_BASE = '/api';
+      }
+    }
+
     let allOrders = [];
     let isLoggedIn = localStorage.getItem('chemsusAdminOrdersLoggedIn') === 'true';
 
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    // Sidebar Toggle Logic
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
 
     function setLoggedInState(loggedIn) {
       isLoggedIn = loggedIn;
@@ -648,7 +708,7 @@
       if (!isLoggedIn) return;
 
       try {
-        const response = await fetch('http://localhost:3000/api/adminorders');
+        const response = await fetch(`${API_BASE}/adminorders`);
         if (!response.ok) throw new Error('Failed to fetch orders');
 
         allOrders = await response.json();
@@ -657,11 +717,10 @@
       } catch (error) {
         console.error('Load orders error:', error);
         document.getElementById('ordersTable').innerHTML =
-          '<tr><td colspan="12" style="text-align:center;padding:40px;color:#ef4444">Failed to load orders. Check backend at http://localhost:3000</td></tr>';
+          '<tr><td colspan="12" style="text-align:center;padding:40px;color:#ef4444">Failed to load orders.</td></tr>';
       }
     }
 
-    // ✅ Address mapping helper (backend field name different unna kuda work avvali)
     function getOrderAddress(order) {
       return (
         order.address ||
@@ -695,10 +754,7 @@
             <td>${order.customername || ''}</td>
             <td>${order.email || ''}</td>
             <td>${order.phone || ''}</td>
-
-            <!-- ✅ Address column -->
             <td class="address-cell">${address}</td>
-
             <td>${order.productname || ''}</td>
             <td>${(order.quantity ?? '')}kg</td>
             <td>₹${Number(order.totalprice || 0).toLocaleString('en-IN')}</td>
@@ -768,7 +824,7 @@
 
     async function updateOrder(id, updates) {
       try {
-        const response = await fetch(`http://localhost:3000/api/adminorders/${id}`, {
+        const response = await fetch(`${API_BASE}/adminorders/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updates)
@@ -786,7 +842,7 @@
       if (!confirm(`Delete order for ${customerName}?`)) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/adminorders/${id}`, { method: 'DELETE' });
+        const response = await fetch(`${API_BASE}/adminorders/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to delete order');
 
         loadOrders();
@@ -813,19 +869,24 @@
       if (e.target === this) closeModal();
     });
 
-    // Filter event listeners
     document.getElementById('statusFilter').addEventListener('change', applyFilters);
     document.getElementById('paymentFilter').addEventListener('change', applyFilters);
     document.getElementById('customerFilter').addEventListener('input', applyFilters);
     document.getElementById('dateFilter').addEventListener('change', applyFilters);
 
-    // Auto-refresh every 30s when logged in
     setInterval(() => {
       if (isLoggedIn) loadOrders();
     }, 30000);
 
+    // Initial load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await initBackend();
+      if (isLoggedIn) loadOrders();
+    });
+
     // expose for inline onclick
     window.toggleSidebar = toggleSidebar;
+    window.closeSidebar = closeSidebar;
     window.applyFilters = applyFilters;
     window.clearFilters = clearFilters;
     window.editOrder = editOrder;
