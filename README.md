@@ -263,5 +263,3 @@ git commit -m "Implement ChemSus admin dashboard with full CRUD and order/paymen
 All rights reserved.
 
 ---
-
-ust say the word 👍
