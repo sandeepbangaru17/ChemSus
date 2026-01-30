@@ -25,7 +25,7 @@
     }
     a { text-decoration: none; color: inherit; }
 
-    /* COMPACT SIDEBAR NAVBAR */
+    /* SIDEBAR */
     .sidebar {
       width: 240px;
       background: var(--primary);
@@ -37,11 +37,9 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1002; /* Above overlay */
+      z-index: 1002;
       transition: transform 0.3s ease;
     }
-
-    /* Sidebar Overlay (Backdrop) for Mobile */
     .sidebar-overlay {
       display: none;
       position: fixed;
@@ -50,17 +48,15 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
-      z-index: 1001; /* Below sidebar */
+      z-index: 1001;
       backdrop-filter: blur(2px);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     .sidebar-overlay.active {
       display: block;
       opacity: 1;
     }
-
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -75,14 +71,12 @@
       white-space: nowrap;
     }
     .nav-logo-img { height: 24px; width: auto; }
-    
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
     }
-    
     .nav-menu li a {
       display: block;
       color: #ffffff;
@@ -91,18 +85,14 @@
       font-size: 13.5px;
       transition: all 0.2s ease;
     }
-    
     .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
-
-    /* Active link styling - only highlight if href matches current page */
     .nav-menu li a.active {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
     }
-
     #cart-count {
       background: var(--accent);
       color: white;
@@ -112,7 +102,6 @@
       font-weight: 700;
       margin-left: 8px;
     }
-
     .search-section {
       padding: 12px 20px 16px;
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -214,14 +203,78 @@
       box-shadow: 0 14px 30px rgba(15,23,42,0.12);
       border-top: 4px solid var(--accent);
     }
-    .section-header {
-      margin-bottom: 24px;
-    }
+    .section-header { margin-bottom: 24px; }
     .section-header h2 {
       font-family: "Montserrat", sans-serif;
       font-size: 24px;
       color: var(--primary-dark);
     }
+
+    /* ORDER SUMMARY BLOCK (product details like screenshot) */
+    .order-summary {
+      background: #f9fbff;
+      padding: 20px 22px 22px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 2px solid #e0f2fe;
+    }
+    .order-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .order-summary-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .order-summary-title span.icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: #fff7ed;
+      color: #d97706;
+      font-size: 16px;
+    }
+    .order-summary-line {
+      border-top: 1px solid #06b6d4;
+      margin: 10px 0 16px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .summary-row-label {
+      color: #4b5563;
+    }
+    .summary-row-value {
+      font-weight: 600;
+      color: #111827;
+      text-align: right;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* FORM */
     .form-group { margin-bottom: 20px; }
     .form-label {
       display: block;
@@ -267,37 +320,7 @@
     }
     .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,184,176,0.3); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    
-    .order-summary {
-      background: #f9fbff;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 24px;
-      border: 2px solid #e0f2fe;
-    }
-    .order-summary h3 {
-      font-family: "Montserrat", sans-serif;
-      font-size: 16px;
-      margin-bottom: 16px;
-      color: var(--primary-dark);
-    }
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
-    .summary-item:last-child { border-bottom: none; }
-    .summary-item strong { font-weight: 600; }
-    .total-amount {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primary);
-      padding-top: 12px;
-      margin-top: 12px;
-      border-top: 2px solid var(--accent);
-    }
+
     .error-message {
       background: #fee2e2;
       color: #991b1b;
@@ -331,7 +354,7 @@
       position: fixed;
       top: 20px;
       left: 20px;
-      z-index: 1003; /* Highest z-index */
+      z-index: 1003;
       background: var(--primary);
       color: white;
       border: none;
@@ -383,7 +406,6 @@
       <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="checkout.html">Checkout</a></li>
       <li><a href="orders.html">Orders</a></li>
     </ul>
     <div class="search-section">
@@ -418,11 +440,34 @@
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
 
+        <!-- NEW ORDER SUMMARY LAYOUT -->
         <div class="order-summary">
-          <h3>📦 Order Summary</h3>
-          <div id="orderItems"></div>
-          <div class="total-amount">
-            Total: <span id="totalAmount">₹0</span>
+          <div class="order-summary-header">
+            <div class="order-summary-title">
+              <span class="icon">📦</span>
+              <span>Order Summary</span>
+            </div>
+            <span id="summaryRightInfo" style="font-size:13px;color:#4b5563;"></span>
+          </div>
+
+          <div class="order-summary-line"></div>
+
+          <div class="summary-row">
+            <span class="summary-row-label">Product</span>
+            <span id="summaryProduct" class="summary-row-value">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Quantity</span>
+            <span id="summaryQuantity" class="summary-row-value">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Unit Price</span>
+            <span id="summaryUnitPrice" class="summary-row-value">–</span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total:</span>
+            <span id="totalAmount">₹0</span>
           </div>
         </div>
 
@@ -487,16 +532,15 @@
   </div>
 
   <script>
-    // ✅ GLOBAL CONFIG - Auto-detects backend URL (PC + Mobile!)
+    // GLOBAL CONFIG
     let API_BASE = '/api';
 
-    // ✅ Test backend connection
     async function initBackend() {
       try {
         const response = await fetch('/api/test');
         if (response.ok) {
           const config = await response.json();
-          console.log('✅ Backend detected:', config.backendURL);
+          console.log('Backend detected:', config.backendURL);
           API_BASE = config.apiBase || '/api';
         }
       } catch (e) {
@@ -508,19 +552,15 @@
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
 
-    // Open/Close Sidebar function
     function toggleSidebar() {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
     }
-
-    // Explicitly close Sidebar
     function closeSidebar() {
       sidebar.classList.remove('open');
       overlay.classList.remove('active');
     }
 
-    // Close mobile menu automatically when a link inside it is clicked
     const navLinks = document.querySelectorAll('.nav-menu a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
@@ -530,13 +570,10 @@
       });
     });
 
-    // ✅ NEW: Set active nav link based on current page
     function setActiveNavLink() {
       const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-      
       navLinks.forEach(link => {
         const href = link.getAttribute('href');
-        // Only set active if the href matches current page exactly
         if (href === currentPage) {
           link.classList.add('active');
         } else {
@@ -545,14 +582,22 @@
       });
     }
 
+    // LOAD PRODUCT DATA INTO SUMMARY BLOCK
     function loadOrderData() {
       const buyNowData = sessionStorage.getItem('buyNowData');
-      const orderItems = document.getElementById('orderItems');
-      const totalAmount = document.getElementById('totalAmount');
+
+      const productEl = document.getElementById('summaryProduct');
+      const qtyEl = document.getElementById('summaryQuantity');
+      const unitEl = document.getElementById('summaryUnitPrice');
+      const totalEl = document.getElementById('totalAmount');
+      const rightInfo = document.getElementById('summaryRightInfo');
 
       if (!buyNowData) {
-        orderItems.innerHTML = '<p style="color: #d32f2f; font-weight: 600;">⚠️ No product selected. <a href="shop.html" style="color: var(--accent);">Go to Shop</a></p>';
-        totalAmount.textContent = '₹0';
+        productEl.textContent = 'No product selected';
+        qtyEl.textContent = '-';
+        unitEl.textContent = '₹0';
+        totalEl.textContent = '₹0';
+        rightInfo.textContent = '';
         document.getElementById('checkoutForm').style.display = 'none';
         return;
       }
@@ -561,7 +606,12 @@
       try {
         productData = JSON.parse(buyNowData);
       } catch (e) {
-        orderItems.innerHTML = '<p style="color: #d32f2f; font-weight: 600;">⚠️ Invalid product data. <a href="shop.html" style="color: var(--accent);">Go to Shop</a></p>';
+        productEl.textContent = 'Invalid product data';
+        qtyEl.textContent = '-';
+        unitEl.textContent = '₹0';
+        totalEl.textContent = '₹0';
+        rightInfo.textContent = '';
+        document.getElementById('checkoutForm').style.display = 'none';
         return;
       }
 
@@ -570,20 +620,17 @@
       const unitPrice = parseFloat(productData.unitPrice) || 0;
       const totalPrice = quantity * unitPrice;
 
-      const itemHTML = `
-        <div class="summary-item">
-          <strong>${productName}</strong>
-          <span>${quantity} kg × ₹${unitPrice.toLocaleString('en-IN')} = ₹${totalPrice.toLocaleString('en-IN')}</span>
-        </div>
-      `;
-      orderItems.innerHTML = itemHTML;
-      totalAmount.textContent = '₹' + totalPrice.toLocaleString('en-IN');
+      productEl.textContent = productName;
+      qtyEl.textContent = quantity + ' kg';
+      unitEl.textContent = '₹' + unitPrice.toLocaleString('en-IN');
+      totalEl.textContent = '₹' + totalPrice.toLocaleString('en-IN');
+      rightInfo.textContent = quantity + ' kg × ₹' + unitPrice.toLocaleString('en-IN') +
+        ' = ₹' + totalPrice.toLocaleString('en-IN');
 
       sessionStorage.setItem('orderTotal', totalPrice);
-      sessionStorage.setItem('buyNowProduct', JSON.stringify({productName, quantity, unitPrice}));
+      sessionStorage.setItem('buyNowProduct', JSON.stringify({ productName, quantity, unitPrice }));
     }
 
-    // ✅ FIXED: Mobile-compatible API calls with relative URLs
     async function placeBuyNowOrderAndProceed() {
       const submitBtn = document.getElementById('submitBtn');
       const errorMsg = document.getElementById('errorMessage');
@@ -613,9 +660,6 @@
           address, city, region, pincode
         };
 
-        console.log('📤 Sending to', API_BASE + '/orders', orderData);
-
-        // ✅ FIXED: Relative URL - Works on localhost AND mobile network IP!
         const response = await fetch(`${API_BASE}/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -628,9 +672,7 @@
         }
 
         const result = await response.json();
-        console.log('✅ Order created:', result);
 
-        // ✅ CRITICAL: Store orderId for payment page
         sessionStorage.setItem('orderId', result.orderId);
 
         errorMsg.style.display = 'none';
@@ -644,7 +686,7 @@
         }, 2000);
 
       } catch (error) {
-        console.error('❌ Order failed:', error);
+        console.error('Order failed:', error);
         errorMsg.textContent = `❌ Order failed: ${error.message}`;
         errorMsg.style.display = 'block';
         submitBtn.disabled = false;
@@ -708,14 +750,12 @@
     });
 
     window.addEventListener('DOMContentLoaded', async function() {
-      console.log('checkout.html loaded ✅');
       await initBackend();
       setActiveNavLink();
       loadOrderData();
       updateCartBadge();
     });
 
-    // ✅ Update active link on page resize too
     window.addEventListener('resize', setActiveNavLink);
   </script>
 </body>
