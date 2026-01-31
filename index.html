@@ -128,6 +128,55 @@
       border-left-color: var(--accent);
     }
 
+    /* ADMIN LOGIN BUTTON */
+    .admin-login {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 0;
+    }
+
+    .admin-login a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      padding: 14px 20px;
+      font-size: 13.5px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .admin-login a::before {
+      content: '';
+      width: 3px;
+      height: 20px;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .admin-login a:hover {
+      background: rgba(255,255,255,0.15);
+      border-left-color: var(--accent);
+    }
+
+    .admin-login a:hover::before {
+      opacity: 1;
+    }
+
+    .admin-login svg {
+      width: 16px;
+      height: 16px;
+      fill: #ffffff;
+      opacity: 0.9;
+    }
+
     /* SEARCH */
     .search-section {
       padding: 12px 20px 16px;
@@ -567,12 +616,22 @@
       <li><a href="orders.html">Orders</a></li>
     </ul>
 
+    <!-- ADMIN LOGIN BUTTON -->
+    <div class="admin-login">
+      <a href="/admin/admin.html">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <span>Admin Login</span>
+      </a>
+    </div>
+
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 1 1 11 0"></path>
           </svg>
         </span>
       </form>
@@ -754,14 +813,16 @@
         window.location.href = 'request-sample.html';
       } else if (query.includes('order') || query.includes('orders')) {
         window.location.href = 'orders.html';
+      } else if (query.includes('admin') || query.includes('login')) {
+        window.location.href = '/admin/admin.html';
       } else {
-        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
+        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders, admin.');
       }
     });
 
     // Close mobile menu automatically when a link inside it is clicked
     // This is better UX so the menu doesn't stay open after navigating
-    const navLinks = document.querySelectorAll('.nav-menu a');
+    const navLinks = document.querySelectorAll('.nav-menu a, .admin-login a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         if (window.innerWidth <= 1050) {

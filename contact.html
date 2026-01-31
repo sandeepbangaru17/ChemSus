@@ -23,6 +23,7 @@
       font-family:"Open Sans",Arial,sans-serif;
       background:var(--bg);
       color:var(--ink);
+      line-height:1.6;
       display:flex;
       min-height:100vh;
     }
@@ -41,7 +42,7 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 1002; /* Above overlay */
+      z-index: 1002;
       transition: transform 0.3s ease;
     }
 
@@ -54,7 +55,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
-      z-index: 1001; /* Below sidebar */
+      z-index: 1001;
       backdrop-filter: blur(2px);
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -70,13 +71,13 @@
       align-items: center;
       gap: 8px;
       font-family: "Montserrat", sans-serif;
-      font-weight: 700;
       font-size: 16px;
+      font-weight: 700;
       letter-spacing: 0.02em;
-      white-space: nowrap;
       color: #ffffff;
       padding: 16px 20px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      white-space: nowrap;
     }
 
     .nav-logo-img { height: 24px; width: auto; }
@@ -91,9 +92,9 @@
     .nav-menu li a {
       display: block;
       color: #ffffff;
+      border-left: 3px solid transparent;
       padding: 10px 20px;
       font-size: 13.5px;
-      border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
 
@@ -101,6 +102,16 @@
     .nav-menu li a:hover {
       background: rgba(255,255,255,0.1);
       border-left-color: var(--accent);
+    }
+
+    #cart-count {
+      background: var(--accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 8px;
     }
 
     /* SEARCH */
@@ -120,10 +131,9 @@
       color: #ffffff;
       font-size: 12.5px;
       outline: none;
-      backdrop-filter: blur(10px);
     }
 
-    .search-input::placeholder { color: #d1d5db; font-size: 11.5px; }
+    .search-input::placeholder { color: #d1d5db; }
 
     .search-icon {
       position: absolute;
@@ -146,16 +156,6 @@
       transition: margin-left 0.3s ease;
     }
 
-    #cart-count {
-      background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 8px;
-    }
-
     /* HERO with dark dotted bg */
     .hero{
       position:relative;
@@ -165,7 +165,7 @@
         radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
         #041424;
       color:#ffffff;
-      height:240px;
+      height:260px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -185,27 +185,32 @@
       pointer-events:none;
     }
 
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      padding: 0 20px;
+    }
+
     .hero-title{
-      position:relative;
-      z-index:1;
       font-family:"Montserrat",sans-serif;
-      font-size:36px;
+      font-size:40px;
       font-weight:700;
     }
 
     main{
       max-width:1150px;
-      margin:auto;
-      padding:40px 18px;
+      margin:0 auto;
+      padding:34px 18px 42px 18px;
       width:100%;
       flex:1
     }
 
     .section{
       background:#fff;
-      padding:34px;
+      padding:36px;
       border-radius:14px;
-      box-shadow:0 12px 28px rgba(0,0,0,.12);
+      box-shadow:0 14px 30px rgba(15,23,42,0.12);
       border-top:4px solid var(--accent)
     }
 
@@ -231,35 +236,69 @@
     .contact-info h3{
       font-family:"Montserrat",sans-serif;
       color:var(--primary-dark);
-      margin-bottom:8px
+      margin-bottom:8px;
+      font-size:20px;
     }
 
     .contact-info p{
       font-size:14px;
-      margin-bottom:10px
+      margin-bottom:10px;
+      line-height:1.6;
     }
 
     .highlight-btn{
       display:inline-block;
       margin-top:8px;
-      padding:8px 16px;
-      background:linear-gradient(135deg,#00b8b0,#0074c7);
+      padding:10px 18px;
+      background:linear-gradient(135deg,var(--accent),var(--primary));
       color:#fff;
       border-radius:999px;
       font-weight:600;
       border:none;
-      cursor:pointer
+      cursor:pointer;
+      transition:all 0.2s ease;
+      font-size:14px;
+    }
+
+    .highlight-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 16px rgba(0,184,176,0.35);
     }
 
     /* FORM */
+    .contact-form{
+      margin-top:20px;
+    }
+
+    .contact-form h3{
+      font-family:"Montserrat",sans-serif;
+      color:var(--primary-dark);
+      margin-bottom:12px;
+      font-size:18px;
+    }
+
     .contact-form input,
     .contact-form textarea{
       width:100%;
-      padding:10px;
+      padding:11px 14px;
       margin-bottom:12px;
-      border:1px solid #ccc;
-      border-radius:6px;
-      font-family:inherit
+      border:2px solid #e2e8f0;
+      border-radius:8px;
+      font-family:inherit;
+      font-size:14px;
+      outline:none;
+      transition:all 0.2s ease;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(0,184,176,0.1);
+    }
+
+    .contact-form textarea{
+      resize:vertical;
+      min-height:100px;
     }
 
     footer{
@@ -267,7 +306,8 @@
       color:#cbd5f5;
       text-align:center;
       font-size:13px;
-      padding:14px
+      padding:14px 0;
+      margin-top:24px;
     }
 
     /* MOBILE TOGGLE */
@@ -276,7 +316,7 @@
       position: fixed;
       top: 20px;
       left: 20px;
-      z-index: 1003; /* Highest z-index */
+      z-index: 1003;
       background: var(--primary);
       color: white;
       border: none;
@@ -295,15 +335,20 @@
       .mobile-toggle { display: block; }
     }
 
-    @media (min-width: 1051px) {
-      .mobile-toggle { display: none; }
+    @media (max-width: 900px) {
+      .hero-title { font-size: 32px; }
     }
 
     @media (max-width: 768px) {
       .contact-card{ grid-template-columns:1fr; }
+      .hero-title { font-size: 28px; }
     }
 
-    /* === WhatsApp QR Floating Widget (UPDATED) === */
+    @media (max-width: 580px) {
+      .hero-title { font-size: 24px; }
+    }
+
+    /* === WhatsApp QR Floating Widget === */
     #ib-wa {
       position: fixed;
       bottom: 25px;
@@ -316,7 +361,7 @@
       background: #25d366;
       color: #fff;
       border: none;
-      border-radius: 50%; /* Circle shape */
+      border-radius: 50%;
       width: 60px;
       height: 60px;
       display: flex;
@@ -340,10 +385,9 @@
     #ib-wa-popup {
       display: none;
       position: absolute;
-      bottom: 80px; /* Above the button */
+      bottom: 80px;
       right: 0;
       width: 300px;
-      /* Mobile Friendly Max Width */
       max-width: 85vw;
       background: #fff;
       border-radius: 16px;
@@ -460,7 +504,7 @@
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
         <span class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
           </svg>
         </span>
@@ -470,7 +514,9 @@
 
   <div class="main-wrapper">
     <section class="hero">
-      <h1 class="hero-title">Contact Us</h1>
+      <div class="hero-content">
+        <h1 class="hero-title">Contact Us</h1>
+      </div>
     </section>
 
     <main>
@@ -509,7 +555,7 @@
 
               <input type="hidden" name="_captcha" value="false">
               <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_next" value="thankyou.html">
+              <input type="hidden" name="_next" value="https://chemsus.com/thankyou.html">
 
               <button type="submit" class="highlight-btn">📩 Send Message</button>
             </form>
@@ -517,6 +563,7 @@
         </div>
       </section>
     </main>
+
     <div class="download-section">
       <a
         href="assets/broucher.pdf"
@@ -573,19 +620,18 @@
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
 
-    // Open Sidebar
+    // Open/Close Sidebar
     function toggleSidebar() {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
     }
 
-    // Close Sidebar (Explicit)
     function closeSidebar() {
       sidebar.classList.remove('open');
       overlay.classList.remove('active');
     }
 
-    // Close mobile menu automatically when a link inside it is clicked
+    // Close mobile menu when clicking nav links
     const navLinks = document.querySelectorAll('.nav-menu a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
@@ -595,7 +641,7 @@
       });
     });
 
-    // Shared cart badge updater
+    // Cart badge updater
     (function () {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);

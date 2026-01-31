@@ -572,7 +572,7 @@
     </button>
   </div>
 
-  <script>
+ <script>
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
 
@@ -598,7 +598,7 @@
       });
     });
 
-    // Default Products Data (UNCHANGED)
+    // Default Products Data (Fallback)
     function getDefaultProducts() {
       return [
         {
@@ -646,10 +646,15 @@
       ];
     }
 
-    // Render (same UI)
+    // Render products to the grid
     function renderProducts(products) {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
+
+      if (!products || products.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:#666;grid-column:1/-1;">No products available yet.</p>';
+        return;
+      }
 
       products.forEach(product => {
         const card = document.createElement('a');
@@ -658,7 +663,7 @@
         card.innerHTML = `
           <img src="${product.image || 'assets/logo.png'}" alt="${product.name}" onerror="this.src='assets/logo.png'">
           <h3>${product.name}</h3>
-          <p>${product.description || ''}</p>
+          <p>${product.description || 'No description available.'}</p>
         `;
         grid.appendChild(card);
       });
@@ -668,11 +673,30 @@
     async function loadProducts() {
       try {
         const res = await fetch('/api/products-page', { cache: 'no-store' });
-        if (!res.ok) throw new Error('API failed');
-        const products = await res.json();
-        if (!Array.isArray(products) || products.length === 0) throw new Error('Empty DB');
-        renderProducts(products);
+        if (!res.ok) throw new Error('API request failed');
+        
+        const data = await res.json();
+        
+        // ✅ Filter only active products
+        const activeProducts = data.filter(p => p.is_active === 1 || p.is_active === true);
+        
+        // ✅ Sort by sort_order, then by id
+        activeProducts.sort((a, b) => {
+          const orderDiff = (a.sort_order || 0) - (b.sort_order || 0);
+          if (orderDiff !== 0) return orderDiff;
+          return (a.id || 0) - (b.id || 0);
+        });
+
+        // If database is empty, use defaults
+        if (activeProducts.length === 0) {
+          console.warn('No active products in database, using defaults');
+          renderProducts(getDefaultProducts());
+        } else {
+          renderProducts(activeProducts);
+        }
       } catch (e) {
+        console.error('Failed to load products:', e);
+        console.warn('Using default products as fallback');
         renderProducts(getDefaultProducts());
       }
     }
@@ -698,7 +722,7 @@
       }
     }
 
-    // Search Redirect Logic (unchanged)
+    // Search Redirect Logic
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
@@ -727,5 +751,6 @@
       }
     });
   </script>
+
 </body>
 </html>
