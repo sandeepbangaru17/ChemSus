@@ -5,7 +5,7 @@
   <title>Payment | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -25,7 +25,6 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
-      display: flex;
       min-height: 100vh;
     }
 
@@ -163,7 +162,8 @@
       background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
                   radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
                   #041424;
-      height: 260px;
+      min-height: 260px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -202,6 +202,7 @@
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 40px;
+      line-height: 1.1;
       font-weight: 700;
       margin-bottom: 10px;
     }
@@ -657,7 +658,10 @@
         <div class="payment-grid">
           <div class="qr-box">
             <h3>Scan to Pay</h3>
-            <img src="assets/payment-qr.png" alt="Payment QR Code">
+            <img src="assets/payment-qr.png" alt="Payment QR Code" onerror="this.style.display='none';document.getElementById('qrFallback').style.display='block';">
+            <div id="qrFallback" style="display:none;margin-top:10px;color:#b91c1c;font-weight:600;">
+              QR code not available. Please contact ChemSus for payment details.
+            </div>
             <p class="qr-note">
               Use any UPI / Banking app to scan this QR code and complete the payment.
             </p>
@@ -724,7 +728,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR"
         >
 
@@ -735,7 +739,7 @@
         </div>
 
         <a
-          href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+          href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank"
         >
           Open WhatsApp

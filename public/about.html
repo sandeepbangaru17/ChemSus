@@ -3,9 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Products | ChemSus Technologies Pvt Ltd</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | ChemSus Technologies Pvt Ltd</title>
   <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
     rel="stylesheet">
@@ -30,7 +31,6 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
-      display: flex;
       min-height: 100vh;
     }
 
@@ -52,8 +52,13 @@
       left: 0;
       top: 0;
       z-index: 1002;
-      /* Above overlay */
+      /* High z-index to sit above overlay */
+      transform: translateX(-100%);
       transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
     }
 
     /* Sidebar Overlay (Backdrop) for Mobile */
@@ -65,7 +70,9 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
+      /* Dimmed background */
       z-index: 1001;
+      /* Below sidebar, above content */
       backdrop-filter: blur(2px);
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -81,13 +88,10 @@
       align-items: center;
       gap: 8px;
       font-family: "Montserrat", sans-serif;
-      font-size: 16px;
       font-weight: 700;
-      letter-spacing: 0.02em;
-      color: #ffffff;
+      font-size: 16px;
       padding: 16px 20px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      white-space: nowrap;
     }
 
     .nav-logo-img {
@@ -105,9 +109,9 @@
     .nav-menu li a {
       display: block;
       color: #ffffff;
-      border-left: 3px solid transparent;
       padding: 10px 20px;
       font-size: 13.5px;
+      border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
 
@@ -146,10 +150,12 @@
       color: #ffffff;
       font-size: 12.5px;
       outline: none;
+      backdrop-filter: blur(10px);
     }
 
     .search-input::placeholder {
       color: #d1d5db;
+      font-size: 11.5px;
     }
 
     .search-icon {
@@ -163,9 +169,9 @@
       pointer-events: none;
     }
 
-    /* MAIN CONTENT */
+    /* MAIN WRAPPER */
     .main-wrapper {
-      margin-left: 240px;
+      margin-left: 0;
       flex: 1;
       min-height: 100vh;
       display: flex;
@@ -177,15 +183,17 @@
     .hero {
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at top left, rgba(0, 184, 176, 0.18), transparent 55%),
+      background:
+        radial-gradient(circle at top left, rgba(0, 184, 176, 0.18), transparent 55%),
         radial-gradient(circle at bottom right, rgba(0, 116, 199, 0.2), transparent 55%),
         #041424;
-      height: 260px;
+      color: #ffffff;
+      min-height: 240px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: #fff;
       border-top: 3px solid var(--accent);
     }
 
@@ -204,128 +212,116 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 900px;
-      padding: 0 20px;
+      max-width: 820px;
+      padding: 0 18px;
     }
 
     .hero-kicker {
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-bottom: 8px;
       color: #b9e6ff;
+      margin-bottom: 6px;
     }
 
     .hero-title {
       font-family: "Montserrat", sans-serif;
-      font-size: 40px;
+      font-size: 36px;
+      line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .hero-subtitle {
-      font-size: 16px;
+      font-size: 15px;
       color: #e2f3ff;
     }
 
+    /* MAIN CONTENT */
     main {
-      max-width: 1150px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 34px 18px 42px 18px;
+      padding: 32px 18px 40px;
       width: 100%;
       flex: 1;
     }
 
-    .section {
-      background: #fff;
+    .info-section {
+      background: #ffffff;
       padding: 36px;
-      border-radius: 14px;
+      border-radius: 16px;
       box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
       border-top: 4px solid var(--accent);
+      margin-bottom: 30px;
     }
 
-    .section-header {
-      margin-bottom: 24px;
-      text-align: center;
-    }
-
-    .section-header h2 {
+    .section-title {
       font-family: "Montserrat", sans-serif;
-      font-size: 24px;
+      font-size: 22px;
+      font-weight: 700;
       color: var(--primary-dark);
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 20px;
     }
 
-    .product-grid {
+    .content-text {
+      font-size: 15px;
+      color: #374151;
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+
+    .features-list {
+      margin-left: 20px;
+      font-size: 14.5px;
+      color: #374151;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .features-list li {
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .features-list li::before {
+      content: "▸";
+      color: var(--accent);
+      font-weight: 700;
+      position: absolute;
+      left: -20px;
+    }
+
+    .strengths-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 24px;
-      margin-top: 32px;
+      margin-top: 10px;
     }
 
-    .product-card {
-      background: #f9fbff;
-      border-radius: 14px;
-      padding: 28px;
-      text-align: center;
-      border-top: 4px solid var(--accent);
-      transition: all .3s ease;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+    .strength-card {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
     }
 
-    .product-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
-    }
-
-    .product-card img {
-      max-width: 100%;
-      height: 140px;
-      object-fit: contain;
-      margin-bottom: 14px;
-    }
-
-    .product-card h3 {
+    .strength-card h4 {
       font-family: "Montserrat", sans-serif;
-      font-size: 20px;
       color: var(--primary-dark);
-      margin-bottom: 12px;
-    }
-
-    .product-card p {
-      font-size: 14px;
-      color: #374151;
-      line-height: 1.6;
-    }
-
-    footer {
-      background: #06121f;
-      color: #cbd5f5;
-      font-size: 13px;
-      text-align: center;
-      padding: 14px 0;
-      margin-top: 24px;
+      margin-bottom: 8px;
     }
 
     /* MOBILE TOGGLE */
     .mobile-toggle {
-      display: none;
       position: fixed;
       top: 20px;
       left: 20px;
       z-index: 1003;
-      /* Highest z-index */
+      /* Above everything */
       background: var(--primary);
       color: white;
       border: none;
@@ -335,40 +331,25 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .mobile-toggle svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    @media (max-width: 1050px) {
+    @media (min-width: 1051px) {
       .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
         transform: translateX(0);
       }
 
       .main-wrapper {
-        margin-left: 0;
+        margin-left: 240px;
       }
 
       .mobile-toggle {
-        display: block;
+        display: none;
       }
     }
 
     @media (max-width: 900px) {
-      .product-grid {
-        grid-template-columns: 1fr;
+      .info-section {
+        padding: 28px 20px;
       }
 
-      .hero-title {
-        font-size: 32px;
-      }
-    }
-
-    @media (max-width: 580px) {
       .hero-title {
         font-size: 28px;
       }
@@ -511,21 +492,20 @@
   <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
     </svg>
   </button>
 
   <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-logo">
-      <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
+      <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
       <span>ChemSus</span>
     </a>
-
     <ul class="nav-menu">
       <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="about.html" class="active">About Us</a></li>
+      <li><a href="products.html">Products</a></li>
       <li><a href="shop.html">Shop</a></li>
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
@@ -540,7 +520,8 @@
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
         <span class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+            viewBox="0 0 16 16">
             <path
               d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
             </path>
@@ -550,36 +531,88 @@
     </div>
   </nav>
 
-  <div class="main-wrapper">
+  <div class="main-wrapper" id="mainWrapper">
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Bio-based Specialty Chemicals</div>
-        <h1 class="hero-title">Products</h1>
-        <p class="hero-subtitle">
-          High-purity, sustainable chemicals derived from renewable lignocellulosic biomass for
-          nutraceutical, food, cosmetic and industrial applications.
-        </p>
+        <div class="hero-kicker">Specialty & Sustainable Chemicals</div>
+        <h1 class="hero-title">About ChemSus Technologies</h1>
+        <p class="hero-subtitle">Innovating at the intersection of chemistry and sustainability to provide high-purity
+          chemical solutions.</p>
       </div>
     </section>
 
     <main>
-      <section class="section">
-        <div class="section-header">
-          <h2>Our Product Portfolio</h2>
-        </div>
+      <div class="info-section">
+        <p class="content-text">
+          ChemSus Technologies Private Limited is an Indian specialty chemicals company dedicated to the manufacturing
+          of value-added products. Our operations are guided by the principles of green chemistry, aiming for safer,
+          cleaner, and more efficient industrial processes.
+        </p>
+      </div>
 
-        <div class="product-grid" id="productGrid">
+      <div class="info-section">
+        <h2 class="section-title">Who We Are</h2>
+        <p class="content-text">
+          Incorporated on 29 May 2023 and registered in Assam, India, ChemSus Technologies operates from North Guwahati.
+          We have strong roots in the region, including incubation support from ecosystems like IIT Guwahati, allowing
+          us to serve customers across the nation and globally.
+        </p>
+        <p class="content-text" style="margin-top:16px;">
+          <strong>Registered Office:</strong> House No. 555, GNB Road, North Guwahati, Assam – 781030<br>
+          <strong>Branch Office:</strong> 11-2, Gavara jaggayyapalem, BHPV, Visakhapatnam 530012
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2 class="section-title">Our Strengths</h2>
+        <div class="strengths-grid">
+          <div class="strength-card">
+            <h4>IIT Guwahati Support</h4>
+            <p class="content-text">Incubated within a world-class technology ecosystem for technical excellence.</p>
+          </div>
+          <div class="strength-card">
+            <h4>Quality Standards</h4>
+            <p class="content-text">Focus on high-purity intermediates (up to 99%) for sensitive industrial uses.</p>
+          </div>
+          <div class="strength-card">
+            <h4>Sustainable Routes</h4>
+            <p class="content-text">Processes designed to minimize environmental footprint and energy use.</p>
+          </div>
         </div>
-      </section>
+      </div>
+
+      <div class="info-section">
+        <h2 class="section-title">Industries We Serve</h2>
+        <ul class="features-list">
+          <li>Pharmaceuticals</li>
+          <li>Biochemicals & Bio-solvents</li>
+          <li>Green Chemistry Research</li>
+          <li>Personal Care & Cosmetics</li>
+          <li>Fragrance & Flavor Industries</li>
+          <li>Modern Agrochemicals</li>
+          <li>Advanced Material Science</li>
+        </ul>
+      </div>
+
+      <div class="info-section" style="background: linear-gradient(135deg, #041424, #00508a); color: #fff;">
+        <h2 class="section-title" style="color: var(--accent); border-color: rgba(255,255,255,0.1);">Purpose & Vision
+        </h2>
+        <p class="content-text" style="color: #e2f3ff;">
+          Our vision is to enable environmentally responsible specialty chemical solutions that support better health,
+          cleaner processes, and more sustainable value chains for our global partners.
+        </p>
+      </div>
     </main>
+
     <div class="download-section">
-      <a href="assets/broucher.pdf" download class="download-btn">
+      <a href="assets/brochure.pdf" download="ChemSus_Brochure.pdf" class="download-btn">
         ⬇ Download Company Brochure (PDF)
       </a>
     </div>
 
-    <footer>
-      © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+    <footer
+      style="background:#06121f; color:#cbd5f5; text-align:center; padding:16px 0; font-size:13px; margin-top:auto;">
+      &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
     </footer>
   </div>
 
@@ -594,7 +627,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
 
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
@@ -603,7 +636,7 @@
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
 
-        <a href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank">
           Open WhatsApp
         </a>
@@ -621,148 +654,27 @@
   <script>
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
+    // We don't need to manipulate mainWrapper margin via JS anymore 
+    // because CSS media queries handle it based on screen size, 
+    // and the sidebar is fixed position.
 
-    // Open Sidebar
+    // Open/Close Sidebar function
     function toggleSidebar() {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
     }
 
-    // Close Sidebar (Explicit)
+    // Explicitly close Sidebar
     function closeSidebar() {
       sidebar.classList.remove('open');
       overlay.classList.remove('active');
     }
 
-    // Close mobile menu automatically when a link inside it is clicked
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 1050) {
-          closeSidebar();
-        }
-      });
-    });
-
-    // Default Products Data (Fallback)
-    function getDefaultProducts() {
-      return [
-        {
-          id: 1,
-          name: '5-Hydroxymethylfurfural (5-HMF)',
-          description: 'Biomass-derived platform molecule used in fuels, polymers and pharma.',
-          image: 'assets/chemical1.avif',
-          link: 'products/5-hmf.html'
-        },
-        {
-          id: 2,
-          name: 'Calcium Levulinate',
-          description: 'Highly bioavailable calcium salt for nutraceutical applications.',
-          image: 'assets/chemical2.png',
-          link: 'products/calcium-levulinate.html'
-        },
-        {
-          id: 3,
-          name: 'Sodium Levulinate',
-          description: 'Biodegradable preservative for food and cosmetics.',
-          image: 'assets/chemical3.jpg',
-          link: 'products/sodium-levulinate.html'
-        },
-        {
-          id: 4,
-          name: 'Ethyl Levulinate',
-          description: 'Green solvent and fragrance ingredient.',
-          image: 'assets/chemical4.jpeg',
-          link: 'products/ethyl-levulinate.html'
-        },
-        {
-          id: 5,
-          name: 'Methyl Levulinate',
-          description: 'Bio-based ester used in fuels and fine chemicals.',
-          image: 'assets/chemical5.jpeg',
-          link: 'products/methyl-levulinate.html'
-        },
-        {
-          id: 6,
-          name: 'Levulinic Acid',
-          description: 'Key bio-platform chemical derived from biomass.',
-          image: 'assets/chemical6.jpeg',
-          link: 'products/levulinic-acid.html'
-        },
-        {
-          id: 7,
-          name: 'Delta-aminolevulinic acid (DALA)',
-          description: 'Plant growth regulator and PDT precursor.',
-          image: 'assets/dala.jpg',
-          link: 'products/dala.html'
-        }
-      ];
-    }
-
-    // Render products to the grid
-    function renderProducts(products) {
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '';
-
-      if (!products || products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;color:#666;grid-column:1/-1;">No products available yet.</p>';
-        return;
-      }
-
-      products.forEach(product => {
-        const card = document.createElement('a');
-        card.href = product.link || '#';
-        card.className = 'product-card';
-        card.innerHTML = `
-          <img src="${product.image || 'assets/logo.jpg'}" alt="${product.name}" onerror="this.src='assets/logo.jpg'">
-          <h3>${product.name}</h3>
-          <p>${product.description || 'No description available.'}</p>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // Fetch from backend; fallback to defaults if DB empty/unavailable
-    async function loadProducts() {
-      try {
-        const res = await fetch('/api/products-page', { cache: 'no-store' });
-        if (!res.ok) throw new Error('API request failed');
-
-        const data = await res.json();
-
-        // ✅ Filter only active products
-        const activeProducts = data.filter(p => p.is_active === 1 || p.is_active === true);
-
-        // ✅ Sort by sort_order, then by id
-        activeProducts.sort((a, b) => {
-          const orderDiff = (a.sort_order || 0) - (b.sort_order || 0);
-          if (orderDiff !== 0) return orderDiff;
-          return (a.id || 0) - (b.id || 0);
-        });
-
-        // If database is empty, use defaults
-        if (activeProducts.length === 0) {
-          console.warn('No active products in database, using defaults');
-          renderProducts(getDefaultProducts());
-        } else {
-          renderProducts(activeProducts);
-        }
-      } catch (e) {
-        console.error('Failed to load products:', e);
-        console.warn('Using default products as fallback');
-        renderProducts(getDefaultProducts());
-      }
-    }
-
-    // Initial Load
-    loadProducts();
-
-    // Cart badge updater
+    // Initialize Cart Badge
     (function () {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
       const badge = document.getElementById('cart-count');
-      if (badge) badge.textContent = count;
+      if (badge) badge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     })();
 
     // WhatsApp Toggle
@@ -775,7 +687,17 @@
       }
     }
 
-    // Search Redirect Logic
+    // Close mobile menu automatically when a link inside it is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Search Redirection Logic
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
@@ -804,7 +726,6 @@
       }
     });
   </script>
-
 </body>
 
 </html>

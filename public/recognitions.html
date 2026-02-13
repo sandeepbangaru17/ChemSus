@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Investors | ChemSus Technologies Pvt Ltd</title>
+  <title>Recognitions | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
@@ -28,25 +28,17 @@
       margin-left: 8px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "Open Sans", Arial, sans-serif;
-      line-height: 1.6;
+      background: var(--bg);
       color: var(--ink);
-      background-color: var(--bg);
-      display: flex;
+      line-height: 1.6;
       min-height: 100vh;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
     /* COMPACT SIDEBAR NAVBAR */
     .sidebar {
@@ -89,13 +81,13 @@
       align-items: center;
       gap: 8px;
       font-family: "Montserrat", sans-serif;
-      font-weight: 700;
       font-size: 16px;
+      font-weight: 700;
       letter-spacing: 0.02em;
-      white-space: nowrap;
       color: #ffffff;
       padding: 16px 20px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      white-space: nowrap;
     }
 
     .nav-logo-img {
@@ -113,9 +105,9 @@
     .nav-menu li a {
       display: block;
       color: #ffffff;
+      border-left: 3px solid transparent;
       padding: 10px 20px;
       font-size: 13.5px;
-      border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
 
@@ -177,13 +169,16 @@
     .hero {
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at top left, #052b3f, #031521);
-      color: #ffffff;
-      height: 260px;
+      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+                  #041424;
+      min-height: 260px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      color: #ffffff;
       border-top: 3px solid var(--accent);
     }
 
@@ -202,8 +197,8 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 720px;
-      padding: 0 18px;
+      max-width: 900px;
+      padding: 0 20px;
     }
 
     .hero-kicker {
@@ -217,37 +212,44 @@
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 40px;
+      line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 10px;
     }
 
     .hero-subtitle {
       font-size: 16px;
       color: #e2f3ff;
+      margin-top: 8px;
     }
 
-    /* MAIN LAYOUT */
+    /* MAIN */
     main {
       max-width: 1150px;
       margin: 0 auto;
-      padding: 34px 18px 42px 18px;
+      padding: 40px 18px;
       width: 100%;
       box-sizing: border-box;
       flex: 1;
     }
 
+    .section {
+      background: #ffffff;
+      padding: 34px;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(15,23,42,0.12);
+      border-top: 4px solid var(--accent);
+    }
+
     .section-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      text-align: center;
+      margin-bottom: 24px;
     }
 
     .section-header h2 {
       font-family: "Montserrat", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #123559;
+      font-size: 26px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
     }
 
     .section-chip {
@@ -258,195 +260,47 @@
       color: #04726d;
       padding: 4px 8px;
       border-radius: 999px;
+      display: inline-block;
     }
 
-    .section-intro {
-      font-size: 15px;
-      margin-bottom: 26px;
-      color: #4a5568;
-      max-width: 760px;
+    .section-header p {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 8px;
     }
 
-    .funding-wrapper {
+    .recognition-card {
       display: grid;
-      grid-template-columns: 1.05fr 1.6fr;
-      gap: 42px;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 30px;
       align-items: center;
-      background-color: #ffffff;
-      padding: 28px 26px;
+      background: #f9fbff;
+      padding: 26px;
       border-radius: 14px;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
-      border-top: 4px solid var(--accent);
-      position: relative;
-      overflow: hidden;
     }
 
-    .funding-wrapper::after {
-      content: "";
-      position: absolute;
-      right: -50px;
-      top: 0;
-      width: 160px;
-      height: 140%;
-      background: linear-gradient(
-        135deg,
-        rgba(0,184,176,0.06) 0%,
-        rgba(0,116,199,0.12) 40%,
-        transparent 70%
-      );
-      transform: rotate(-6deg);
-    }
-
-    .funding-logo {
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .funding-logo-inner {
-      background: #f2fbff;
-      border-radius: 12px;
-      padding: 18px 12px;
-      border: 1px solid #e0f2ff;
-    }
-
-    .funding-logo img {
+    .recognition-card img {
       max-width: 100%;
-      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
     }
 
-    .funding-logo-caption {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #64748b;
-    }
-
-    .funding-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .funding-pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .recognition-card h3 {
+      font-family: "Montserrat", sans-serif;
+      color: var(--primary-dark);
       margin-bottom: 10px;
     }
 
-    .funding-pill {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-
-    .funding-content h3 {
-      font-family: "Montserrat", sans-serif;
-      font-size: 22px;
-      color: var(--primary-dark);
-      margin-bottom: 6px;
-    }
-
-    .funding-meta {
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 14px;
-    }
-
-    .funding-text {
-      font-size: 15px;
-      margin-bottom: 12px;
-      color: #1f2937;
-    }
-
-    .funding-text strong {
-      font-weight: 600;
-    }
-
-    .funding-list {
-      margin: 10px 0 6px 18px;
+    .recognition-card p {
       font-size: 14px;
       color: #374151;
+      margin-bottom: 10px;
     }
 
-    .funding-list li {
-      margin-bottom: 4px;
-    }
-
-    .icon-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-      font-size: 11px;
+    .recognition-meta {
+      font-size: 13px;
       color: #4b5563;
-    }
-
-    .icon-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: #edf2ff;
-    }
-
-    .icon-pill svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--primary-dark);
-    }
-
-    .divider {
-      height: 1px;
-      background-color: #dde7f0;
-      margin: 32px 0 24px 0;
-    }
-
-    .subsection-title {
-      font-family: "Montserrat", sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      color: #123559;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .subsection-badge {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .subsection-text {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 8px;
-      max-width: 900px;
-    }
-
-    .milestones {
-      list-style: none;
-      margin-left: 0;
-      padding-left: 0;
-      font-size: 14px;
-      color: #4b5563;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 8px 24px;
-    }
-
-    .milestones li::before {
-      content: "•";
-      color: var(--accent);
-      margin-right: 6px;
-      font-weight: 700;
+      margin-top: 10px;
     }
 
     footer {
@@ -455,7 +309,7 @@
       font-size: 13px;
       text-align: center;
       padding: 14px 0;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     /* RESPONSIVE */
@@ -500,12 +354,8 @@
     }
 
     @media (max-width: 900px) {
-      .funding-wrapper {
+      .recognition-card {
         grid-template-columns: 1fr;
-        padding: 24px 20px;
-      }
-      .hero {
-        height: 230px;
       }
       .hero-title {
         font-size: 32px;
@@ -513,9 +363,7 @@
     }
 
     @media (max-width: 580px) {
-      .hero-title {
-        font-size: 28px;
-      }
+      .hero-title { font-size: 28px; }
     }
     
     /* === WhatsApp QR Floating Widget (UPDATED) === */
@@ -638,8 +486,8 @@
       <li><a href="products.html">Products</a></li>
       <li><a href="shop.html">Shop</a></li>
       <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html" class="active">Investors</a></li>
+      <li><a href="recognitions.html" class="active">Recognitions</a></li>
+      <li><a href="investors.html">Investors</a></li>
       <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
@@ -661,123 +509,53 @@
   <div class="main-wrapper">
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Capital for sustainable chemistry</div>
-        <h1 class="hero-title">Investors</h1>
+        <div class="hero-kicker">GOVERNMENT & ECOSYSTEM SUPPORT</div>
+        <h1 class="hero-title">Recognitions</h1>
         <p class="hero-subtitle">
-          Strategic partnerships enabling advanced bamboo‑to‑chemicals platforms for nutraceutical, food, and personal‑care applications.
+          National-level recognition supporting innovation in sustainable specialty chemicals
         </p>
       </div>
     </section>
 
     <main>
-      <div class="section-header">
-        <h2>Funding</h2>
-        <span class="section-chip">Current grant</span>
-      </div>
-      <p class="section-intro">
-        ChemSus Technologies attracts mission‑aligned funding to translate laboratory breakthroughs into industrially viable, low‑carbon chemical processes built on bamboo biomass.
-      </p>
-
-      <div class="funding-wrapper">
-        <div class="funding-logo">
-          <div class="funding-logo-inner">
-            <img src="assets/investors.png" alt="BIRAC - Biotechnology Industry Research Assistance Council">
-          </div>
-          <p class="funding-logo-caption">
-            Biotechnology Industry Research Assistance Council (BIRAC) – Biotechnology Ignition Grant (BIG), North Eastern Region.
-          </p>
+      <section class="section">
+        <div class="section-header">
+          <h2>Startup India – DPIIT Recognition</h2>
+          <span class="section-chip">Government of India</span>
+          <p>Official startup certification for innovative chemical technologies</p>
         </div>
 
-        <div class="funding-content">
-          <div class="funding-pill-row">
-            <span class="funding-pill">BIRAC‑BIG (NER)</span>
-            <span class="funding-pill">Biomass conversion</span>
-            <span class="funding-pill">Pilot scale</span>
-          </div>
+        <div class="recognition-card">
+          <img src="assets/certificate.png" alt="Startup India DPIIT Certificate">
 
-          <h3>Rs. 50 Lakhs Innovation Grant</h3>
-          <div class="funding-meta">
-            Grant value: Rs. 50 Lakhs &nbsp;|&nbsp; Duration: 24 months &nbsp;|&nbsp; Location: North‑Eastern Region, India
-          </div>
+          <div>
+            <h3>Certificate of Recognition</h3>
 
-          <p class="funding-text">
-            BIRAC, under its Biotechnology Ignition Grant – North Eastern Region scheme, supports ChemSus Technologies in developing a scalable process to convert bamboo biomass into high‑value specialty chemicals for health and personal‑care markets.
-          </p>
+            <p>
+              ChemSus Technologies Private Limited is officially recognized as a startup by the
+              <strong>Department for Promotion of Industry and Internal Trade (DPIIT),
+              Government of India</strong>, under the <strong>Startup India</strong> initiative.
+            </p>
 
-          <p class="funding-text"><strong>Key technical objectives:</strong></p>
-          <ul class="funding-list">
-            <li>Design and optimization of a robust, modular process for bamboo biomass conversion.</li>
-            <li>Production of pharmaceutical‑grade calcium levulinate as a nutritional supplement component.</li>
-            <li>Development of food and cosmetic preservatives based on levulinic acid and sodium levulinate.</li>
-            <li>Establishment of a pilot facility targeting a throughput of approximately 10 kg/day.</li>
-          </ul>
+            <p>
+              The recognition acknowledges ChemSus' innovation in the
+              <strong>specialty chemicals sector</strong>, with a focus on
+              <strong>sustainable and green chemical processes</strong> using renewable
+              <strong>lignocellulosic biomass</strong>.
+            </p>
 
-          <p class="funding-text">
-            The grant accelerates the journey from bench‑scale chemistry to pre‑commercial deployment, enabling process validation, regulatory data generation, and early customer evaluations.
-          </p>
+            <p>
+              This recognition strengthens ChemSus Technologies' credibility with investors,
+              partners, and customers, and supports its mission to scale environmentally
+              responsible chemical technologies.
+            </p>
 
-          <div class="icon-strip">
-            <span class="icon-pill">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 2v2.5l-3.6 6.2A4.5 4.5 0 0 0 9.5 18h5a4.5 4.5 0 0 0 4.1-7.3L15 4.5V2h-2v3.1l3.2 5.5A2.5 2.5 0 0 1 14.5 16h-5a2.5 2.5 0 0 1-2.2-3.8L10 5.1V2H9z"/>
-              </svg>
-              Wet‑chemistry process scale‑up
-            </span>
-            <span class="icon-pill">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 4a3 3 0 1 0 2.92 3.55l2.16 1.25a3 3 0 1 0 .04 3.4l2.2 1.27A3 3 0 1 0 17 12a3 3 0 0 0-.46.04l-2.2-1.27A3 3 0 0 0 9.92 7.6L7.76 6.34A3 3 0 0 0 7 4z"/>
-              </svg>
-              Biomass‑derived intermediates
-            </span>
-            <span class="icon-pill">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2 5 5v6c0 5 3.4 9.3 7 11 3.6-1.7 7-6 7-11V5l-7-3zm0 2.2 5 2.2v4.6c0 3.9-2.3 7.5-5 9.1-2.7-1.6-5-5.2-5-9.1V6.4l5-2.2z"/>
-              </svg>
-              Safety & regulatory readiness
-            </span>
+            <div class="recognition-meta">
+              <strong>Date of Issue:</strong> 04 September 2023<br>
+              <strong>Valid Upto:</strong> 28 May 2033
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <section>
-        <h3 class="subsection-title">
-          <span class="subsection-badge"></span>
-          Project overview
-        </h3>
-        <p class="subsection-text">
-          The project focuses on transforming abundantly available bamboo biomass from the North‑Eastern region into value‑added levulinic‑acid derivatives using green‑chemistry routes with minimal waste and solvent footprint.
-        </p>
-        <p class="subsection-text">
-          By integrating upstream biomass pretreatment with optimized reaction and purification steps, ChemSus builds a flexible platform capable of serving nutraceutical, food, and personal‑care markets from a single process backbone.
-        </p>
-      </section>
-
-      <section>
-        <h3 class="subsection-title">
-          <span class="subsection-badge"></span>
-          Impact and outcomes
-        </h3>
-        <p class="subsection-text">
-          The funded work is expected to generate new income opportunities for bamboo growers, reduce dependence on petrochemical‑derived ingredients, and provide traceable, India‑origin inputs for regulated markets.
-        </p>
-        <p class="subsection-text">
-          The resulting pilot data, formulations, and supply‑chain partnerships will underpin future commercial plants and additional products built on the same bamboo‑to‑chemicals platform.
-        </p>
-      </section>
-
-      <section>
-        <h3 class="subsection-title">
-          <span class="subsection-badge"></span>
-          Key milestones
-        </h3>
-        <ul class="milestones">
-          <li>Laboratory optimization and kinetic understanding of the bamboo‑conversion route.</li>
-          <li>Design, fabrication, and commissioning of a pilot‑scale module targeting 10 kg/day output.</li>
-          <li>Quality, stability, and application testing for calcium levulinate and levulinate‑based preservatives.</li>
-          <li>Generation of safety dossiers and regulatory documentation enabling early customer trials.</li>
-        </ul>
       </section>
     </main>
 
@@ -797,7 +575,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR"
         >
 
@@ -808,7 +586,7 @@
         </div>
 
         <a
-          href="https://wa.me/918486877575?text=Hi%20ChemSus%2C%20I%20would%20like%20to%20request%20a%20sample%20or%20get%20more%20details."
+          href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank"
         >
           Open WhatsApp

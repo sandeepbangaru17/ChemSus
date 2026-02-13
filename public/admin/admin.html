@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChemSus Admin Dashboard</title>
-  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link rel="icon" type="image/png" href="../assets/logo.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -679,7 +679,7 @@
       <!-- PACK PRICING -->
       <section id="view-packs" class="card" style="display:none;">
         <h2>Pack Pricing Management</h2>
-        <p class="hint">Manage pack sizes and BioFM comparison pricing for shop items.</p>
+        <p class="hint">Manage pack sizes and pricing for shop items.</p>
 
         <div class="row">
           <div class="field">
@@ -728,17 +728,6 @@
 
           <div class="row">
             <div class="field">
-              <label>BioFM USD Price</label>
-              <input id="packBiofmUsd" type="number" step="0.01" placeholder="36.3">
-            </div>
-            <div class="field">
-              <label>BioFM INR Price</label>
-              <input id="packBiofmInr" type="number" step="0.01" placeholder="7336">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
               <label>Our Price (INR)</label>
               <input id="packOurPrice" type="number" step="0.01" placeholder="2000">
             </div>
@@ -765,8 +754,6 @@
                   <th>ID</th>
                   <th>Active</th>
                   <th>Pack Size</th>
-                  <th>BioFM USD</th>
-                  <th>BioFM INR</th>
                   <th>Our Price</th>
                   <th>Sort</th>
                   <th>Actions</th>
@@ -901,7 +888,7 @@
         <div class="row">
           <div class="field">
             <label>Current brochure URL</label>
-            <input id="brochureurl" placeholder="assets/broucher.pdf">
+            <input id="brochureurl" placeholder="assets/brochure.pdf">
           </div>
           <div class="field">
             <label>Upload brochure PDF</label>
@@ -928,6 +915,7 @@
       </div>
       <div style="padding:20px;max-height:70vh;overflow:auto;">
         <img id="modalImg" src="" alt="receipt" style="width:100%;height:auto;border-radius:12px;border:2px solid #e2e8f0;">
+        <iframe id="modalPdf" title="receipt-pdf" style="display:none;width:100%;height:70vh;border:none;"></iframe>
       </div>
     </div>
   </div>
@@ -947,7 +935,19 @@
     }
 
     function escapeHtml(s) {
-      return String(s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+      return String(s ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function encodeRow(obj) {
+      try { return encodeURIComponent(JSON.stringify(obj)); } catch { return ''; }
+    }
+    function decodeRow(s) {
+      try { return JSON.parse(decodeURIComponent(s || '')); } catch { return null; }
     }
 
     function tagHTML(st) {
@@ -978,16 +978,48 @@
     }
 
     function openModal(src) {
-      document.getElementById('modalImg').src = src;
+      const img = document.getElementById('modalImg');
+      const pdf = document.getElementById('modalPdf');
+      const isPdf = String(src || '').toLowerCase().endsWith('.pdf');
+      if (isPdf) {
+        img.style.display = 'none';
+        pdf.style.display = 'block';
+        pdf.src = src;
+      } else {
+        pdf.style.display = 'none';
+        img.style.display = 'block';
+        img.src = src;
+      }
       document.getElementById('imgModal').style.display = 'block';
     }
 
     function closeModal() {
       document.getElementById('imgModal').style.display = 'none';
       document.getElementById('modalImg').src = '';
+      document.getElementById('modalPdf').src = '';
     }
 
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    document.addEventListener('click', (e) => {
+      const pBtn = e.target.closest('button[data-edit-product]');
+      if (pBtn) {
+        const row = decodeRow(pBtn.dataset.editProduct);
+        if (row) fillProductsForm(row);
+        return;
+      }
+      const sBtn = e.target.closest('button[data-edit-shop]');
+      if (sBtn) {
+        const row = decodeRow(sBtn.dataset.editShop);
+        if (row) fillShopForm(row);
+        return;
+      }
+      const packBtn = e.target.closest('button[data-edit-pack]');
+      if (packBtn) {
+        const row = decodeRow(packBtn.dataset.editPack);
+        if (row) fillPackForm(row);
+      }
+    });
 
     async function login() {
       const username = document.getElementById('loginUser').value.trim();
@@ -1091,7 +1123,7 @@
             <td><span class="muted">${escapeHtml(r.link)}</span></td>
             <td>${r.image ? `<a href="../${r.image}" target="_blank" style="color:var(--accent);font-weight:600;">View</a>` : '—'}</td>
             <td>${r.sort_order ?? 0}</td>
-            <td><button class="btn ghost small" onclick='fillProductsForm(${JSON.stringify(r)})'>✏️ Edit</button></td>
+            <td><button class="btn ghost small" data-edit-product="${encodeRow(r)}">✏️ Edit</button></td>
           `;
           tb.appendChild(tr);
         });
@@ -1193,7 +1225,7 @@
             <td>${escapeHtml(r.stockStatus)}</td>
             <td>${r.image ? `<a href="../${r.image}" target="_blank" style="color:var(--accent);font-weight:600;">View</a>` : '—'}</td>
             <td>${r.sort_order ?? 0}</td>
-            <td><button class="btn ghost small" onclick='fillShopForm(${JSON.stringify(r)})'>✏️ Edit</button></td>
+            <td><button class="btn ghost small" data-edit-shop="${encodeRow(r)}">✏️ Edit</button></td>
           `;
           tb.appendChild(tr);
         });
@@ -1273,7 +1305,7 @@
     }
 
     function clearPackForm() {
-      ['packId','packSize','packBiofmUsd','packBiofmInr','packOurPrice','packSort'].forEach(id => {
+      ['packId','packSize','packOurPrice','packSort'].forEach(id => {
         document.getElementById(id).value = '';
       });
       document.getElementById('packActive').value = '1';
@@ -1284,8 +1316,6 @@
       document.getElementById('packId').value = p.id ?? '';
       document.getElementById('packActive').value = String(p.is_active ?? 1);
       document.getElementById('packSize').value = p.pack_size ?? '';
-      document.getElementById('packBiofmUsd').value = p.biofm_usd ?? 0;
-      document.getElementById('packBiofmInr').value = p.biofm_inr ?? 0;
       document.getElementById('packOurPrice').value = p.our_price ?? 0;
       document.getElementById('packSort').value = p.sort_order ?? 0;
       document.getElementById('packFormSection').style.display = 'block';
@@ -1327,11 +1357,9 @@
               <td><b>${p.id}</b></td>
               <td>${p.is_active ? '✅ Yes' : '❌ No'}</td>
               <td><b>${escapeHtml(p.pack_size)}</b></td>
-              <td>$${Number(p.biofm_usd||0).toFixed(2)}</td>
-              <td>₹${Number(p.biofm_inr||0).toLocaleString('en-IN')}</td>
               <td><b>₹${Number(p.our_price||0).toLocaleString('en-IN')}</b></td>
               <td>${p.sort_order ?? 0}</td>
-              <td><button class="btn ghost small" onclick='fillPackForm(${JSON.stringify(p)})'>✏️ Edit</button></td>
+              <td><button class="btn ghost small" data-edit-pack="${encodeRow(p)}">✏️ Edit</button></td>
             `;
             tb.appendChild(tr);
           });
@@ -1350,8 +1378,6 @@
         const payload = {
           shopItemId: Number(shopItemId),
           packSize: document.getElementById('packSize').value.trim(),
-          biofmUsd: Number(document.getElementById('packBiofmUsd').value || 0),
-          biofmInr: Number(document.getElementById('packBiofmInr').value || 0),
           ourPrice: Number(document.getElementById('packOurPrice').value || 0),
           isActive: Number(document.getElementById('packActive').value),
           sortOrder: Number(document.getElementById('packSort').value || 0),
@@ -1481,19 +1507,21 @@
       rows.forEach(p => {
         const rec = receiptUrl(p);
         const tr = document.createElement('tr');
+        const stars = Math.max(0, Math.min(5, Number(p.rating||0)));
+        const isPdf = String(rec || '').toLowerCase().endsWith('.pdf');
         tr.innerHTML = `
           <td><b>#${p.id}</b></td>
           <td><b>#${p.orderid}</b></td>
           <td>${tagHTML(p.status)}</td>
-          <td><b>₹${Number(p.amount||0).toLocaleString('en-IN')}</b></td>
-          <td>${'⭐'.repeat(p.rating||0)}</td>
-          <td>${rec ? `<img class="thumb" src="${rec}" onclick="openModal('${rec}')">` : '—'}</td>
-          <td style="max-width:200px;"><span class="muted">${escapeHtml(p.feedback||'—')}</span></td>
+          <td><b>${String.fromCharCode(0x20B9)}${Number(p.amount||0).toLocaleString('en-IN')}</b></td>
+          <td>${'\u2605'.repeat(stars)}</td>
+          <td>${rec ? (isPdf ? `<a href="${rec}" target="_blank" class="btn ghost small">View PDF</a>` : `<img class="thumb" src="${rec}" onclick="openModal('${rec}')">`) : '-'}</td>
+          <td style="max-width:200px;"><span class="muted">${escapeHtml(p.feedback||'-')}</span></td>
           <td>
             <div class="actions-cell">
-              <button class="btn ghost small" onclick="markPayment(${p.id},'SUCCESS')">✓</button>
-              <button class="btn danger small" onclick="markPayment(${p.id},'FAILED')">✗</button>
-              <button class="btn danger small" onclick="deletePayment(${p.id})">🗑️</button>
+              <button class="btn ghost small" onclick="markPayment(${p.id},'SUCCESS')">OK</button>
+              <button class="btn danger small" onclick="markPayment(${p.id},'FAILED')">FAIL</button>
+              <button class="btn danger small" onclick="deletePayment(${p.id})">DEL</button>
             </div>
           </td>
           <td class="muted" style="font-size:12px;">${escapeHtml(p.createdat)}</td>

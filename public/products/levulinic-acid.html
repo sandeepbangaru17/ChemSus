@@ -2,9 +2,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Methyl Levulinate | ChemSus Technologies Pvt Ltd</title>
+  <title>Levulinic Acid | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link rel="icon" type="image/png" href="../assets/logo.jpg">
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Open+Sans:wght@400;600&amp;display=swap"
     rel="stylesheet">
@@ -29,20 +29,19 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
-      display: flex;
       min-height: 100vh;
     }
 
     a {
-      text-decoration: none;
-      color: inherit
+      color: inherit;
+      text-decoration: none
     }
 
-    /* COMPACT SIDEBAR NAVBAR */
+    /* ===== SIDEBAR ===== */
     .sidebar {
       width: 240px;
       background: var(--primary);
-      color: #ffffff;
+      color: #fff;
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
@@ -52,7 +51,7 @@
       top: 0;
       z-index: 1002;
       /* Above overlay */
-      transition: transform 0.3s ease;
+      transition: transform .3s ease;
     }
 
     /* Sidebar Overlay (Backdrop) for Mobile */
@@ -84,9 +83,9 @@
       font-weight: 700;
       font-size: 16px;
       padding: 16px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, .1);
-      color: #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
       white-space: nowrap;
+      color: #fff;
     }
 
     .nav-logo-img {
@@ -110,8 +109,8 @@
       transition: all .2s ease;
     }
 
-    .nav-menu li a.active,
-    .nav-menu li a:hover {
+    .nav-menu li a:hover,
+    .nav-menu li a.active {
       background: rgba(255, 255, 255, .1);
       border-left-color: var(--accent);
     }
@@ -128,7 +127,7 @@
 
     .search-section {
       padding: 12px 20px 16px;
-      border-top: 1px solid rgba(255, 255, 255, .1);
+      border-top: 1px solid rgba(255, 255, 255, .12);
     }
 
     .search-form {
@@ -163,7 +162,28 @@
       pointer-events: none;
     }
 
-    /* MAIN WRAPPER */
+    /* ===== MOBILE TOGGLE ===== */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1003;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
+    }
+
+    .mobile-toggle svg {
+      width: 20px;
+      height: 20px
+    }
+
+    /* ===== MAIN WRAPPER ===== */
     .main-wrapper {
       margin-left: 240px;
       flex: 1;
@@ -171,23 +191,25 @@
       display: flex;
       flex-direction: column;
       transition: margin-left .3s ease;
+      width: 100%;
     }
 
-    /* HERO */
+    /* ===== HERO ===== */
     .hero {
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(circle at top left, rgba(0, 184, 176, .18), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(0, 116, 199, .2), transparent 55%),
+        radial-gradient(circle at top left, rgba(0, 184, 176, 0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(0, 116, 199, 0.2), transparent 55%),
         #041424;
       color: #fff;
-      height: 220px;
+      min-height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       border-top: 3px solid var(--accent);
+      padding: 32px 18px;
     }
 
     .hero::before {
@@ -195,8 +217,8 @@
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, .08) 0, rgba(255, 255, 255, .08) 2px, transparent 3px),
-        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, .08) 0, rgba(255, 255, 255, .08) 2px, transparent 3px);
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.08) 2px, transparent 3px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.08) 2px, transparent 3px);
       background-size: 140px 140px;
       opacity: .6;
       pointer-events: none;
@@ -205,8 +227,9 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 720px;
-      padding: 0 18px
+      max-width: 780px;
+      width: 100%;
+      padding: 0 8px;
     }
 
     .hero-kicker {
@@ -222,14 +245,15 @@
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 6px;
+      line-height: 1.15;
     }
 
     .hero-subtitle {
       font-size: 14px;
-      color: #e2f3ff
+      color: #e2f3ff;
     }
 
-    /* MAIN */
+    /* ===== CONTENT ===== */
     main {
       max-width: 1100px;
       margin: 0 auto;
@@ -250,9 +274,9 @@
       align-items: start;
     }
 
+    /* IMAGE BOX */
     .product-image {
       position: relative;
-      height: auto;
       border-radius: 16px;
       overflow: hidden;
       background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -267,17 +291,17 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 20% 30%, rgba(0, 184, 176, .08), transparent 50%);
+      background: radial-gradient(circle at 20% 30%, rgba(0, 184, 176, 0.08), transparent 50%);
       pointer-events: none;
     }
 
     .product-image img {
       width: 100%;
       height: auto;
+      display: block;
       object-fit: contain;
       border-radius: 12px;
       background: #fff;
-      display: block;
       position: relative;
       z-index: 1;
     }
@@ -290,7 +314,6 @@
 
     .meta-chip {
       display: inline-block;
-      width: fit-content;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: .16em;
@@ -298,6 +321,7 @@
       color: #04726d;
       padding: 4px 8px;
       border-radius: 999px;
+      width: fit-content;
     }
 
     .lead {
@@ -320,7 +344,7 @@
       margin-left: 20px;
       font-size: 14.5px;
       color: #374151;
-      list-style: none
+      list-style: none;
     }
 
     .features-list li {
@@ -341,7 +365,7 @@
       margin-top: 32px;
       display: flex;
       gap: 16px;
-      flex-wrap: wrap
+      flex-wrap: wrap;
     }
 
     .btn-primary,
@@ -356,7 +380,7 @@
       justify-content: center;
       gap: 8px;
       flex: 1;
-      min-width: 160px;
+      min-width: 170px;
       transition: all .2s ease;
     }
 
@@ -367,9 +391,9 @@
     }
 
     .btn-secondary {
-      border: 2px solid var(--primary);
-      color: var(--primary);
       background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
 
     .btn-primary:hover,
@@ -416,97 +440,17 @@
     footer {
       background: #06121f;
       color: #cbd5f5;
-      font-size: 13px;
       text-align: center;
       padding: 16px 0;
+      font-size: 13px;
       margin-top: auto;
     }
 
-    /* MOBILE TOGGLE */
-    .mobile-toggle {
-      display: none;
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1003;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .mobile-toggle svg {
-      width: 20px;
-      height: 20px
-    }
-
-    @media (max-width: 1050px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main-wrapper {
-        margin-left: 0;
-      }
-
-      .mobile-toggle {
-        display: block;
-      }
-    }
-
-    @media (max-width:900px) {
-      main {
-        padding: 24px 12px 32px
-      }
-
-      .hero {
-        height: auto;
-        padding: 26px 14px
-      }
-
-      .hero-title {
-        font-size: 24px
-      }
-
-      .product-card {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 22px 16px;
-      }
-
-      .product-image {
-        padding: 12px;
-        height: auto;
-      }
-
-      .actions {
-        flex-direction: column
-      }
-
-      .btn-primary,
-      .btn-secondary {
-        min-width: 100%
-      }
-
-      .btn-pubchem {
-        padding: 14px 24px;
-        font-size: 14px;
-      }
-    }
-
-    /* === WhatsApp QR Floating Widget (UPDATED) === */
+    /* ===== WHATSAPP WIDGET ===== */
     #ib-wa {
       position: fixed;
-      bottom: 25px;
-      right: 25px;
+      bottom: 20px;
+      right: 20px;
       z-index: 99999;
       font-family: Arial, sans-serif;
     }
@@ -516,14 +460,14 @@
       color: #fff;
       border: none;
       border-radius: 50%;
-      /* Circle shape */
+      /* Circular */
       width: 60px;
       height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
       transition: transform 0.3s ease;
     }
 
@@ -541,14 +485,12 @@
       display: none;
       position: absolute;
       bottom: 80px;
-      /* Above the button */
       right: 0;
       width: 300px;
-      /* Mobile Friendly Max Width */
       max-width: 85vw;
       background: #fff;
       border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .2);
       overflow: hidden;
       animation: waSlideUp 0.3s ease-out;
     }
@@ -607,6 +549,66 @@
       margin-top: 10px;
       box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
     }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1050px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-wrapper {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+    }
+
+    @media (max-width:900px) {
+      .product-card {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        padding: 24px 16px;
+      }
+
+      .hero {
+        height: 200px;
+      }
+
+      .hero-title {
+        font-size: 28px
+      }
+
+      main {
+        padding: 22px 14px 28px
+      }
+
+      .actions {
+        flex-direction: column
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        min-width: 100%
+      }
+
+      .btn-pubchem {
+        padding: 14px 24px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width:580px) {
+      .hero-title {
+        font-size: 24px
+      }
+    }
   </style>
   <style id="sweezy-cursors--styles">
     body a,
@@ -622,14 +624,14 @@
     body .sweezy-custom-cursor-hover,
     body button.sweezy-custom-cursor-hover,
     body a.sweezy-custom-cursor-hover {
-      cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABU5JREFUWEe9l2tsFFUUx//nzsy23ZaKaZnStN3dCQWMaCAQCUFNMBalRqNgiR8sIjF+JNQYIdHEKGh8RB4JGu2GIBoiREQRISomysM14iOIPLQFO9N0+8BdGuhj293MXHN3ZrfLuttKNTvJZHf23rvnd/7n3HPuEPJcHo9nFWPsJSKaCaAdwHO6rn+eb/5kf6dcC71e7wpG7JNqWFjCEzhOMkIgyzTNxq6urqOTNZZrXU4ATdNOVXBr0XEMwc0IAxLhrrgbA6BvDMO4pxAAfQ1IVPmlUUCi5L06WoTvTNZhGIYIyf925VPg8jKWUFtdUYDZAM0RFwKJQgJIptpaEgMk2ACDCgKxQgIoptpaFk+HoPmqjMAoFTAERabaWp4AZJZUoTkkITBSSIBiS22tNMcU6GUIRFBABdxcba2yANlJwiAQGCwkQBlXW2u4rYBMaNaBwAAvnAINU7nq99reJwEuWghc5RxAD+d87/Dw8KZwODz4XwtCZh0oqqmpmd7d3d2jaVpvwzSo/pksHYKt3Rb6LaBtiOOHK5ZgOm85X22aphkMBtsARCcDkwTw+XwtRLQJwBTOeSeA6csqyO2fIzm7QKhg1wMoDAcuW3j61ChkUaTs6xqALbquvwLAuhEQ8nq9jxGjPbe5gYZphH1hoC8GNFQS/HPldAiSyegkpIDYfDaG6ikMikw49GcMv/QmQITdnPMdkUikPRQKDf0bEPL5fD+rLiw8OV+CixEuWYS7T8XROEOCf54yZjRlPAWS+exiWPf1EI78EYNIEiKMWpa10zTNDcFgcGQ8EAEQebiKlWyrlxyJCY0/xVFXSvAvdNkhyDbuJGYqQcV4OAHs/z2KqaUMx9qj+PK8CBFE97wXgJkPIgmwsloq2XKzkBtJY5svmega4fAvLs4dgsxwpGCyFNl+cgjbDl8DgT/Z2dm5Ky+Apmlt88pp9qeLXXbnkwlnI8COthj8d5ZkeC+UcBIxW5VsRSSCWcywYGMQgyP8qK7r942nwG4C1px70A13OskIfQlghtuRP9O7tMeiR2QkZmqOo6LQf60/hGNnIn2GYVTnBfB4PE0gtn/7kmKs8DhJl9PgWFEai73dqK4DcQ4wQskN+/rx8beDcV3XXXkBamtrS2RZ7l6gSjcdaCxLhyEzwXJ6mgsyZdz5bHk/hM+ODUYMwyjNCyAGvF7vGyanZw+vmop5laL4CG9zyJ+W2ZE+8zlt3FHExbDyxSB+bY+267o+ZyKAaiK6dHut4v6oqRxgGcmWGef0d3u3JCFTIcj0XiaMMMLcRy+KuvCBYRhrxgUQg5qmvRw3+fNvPVKOh2YX2QayZc6GyZI8vUsYYd/3g9i4tU9sw6bOzs4DEwKIXFAU5Te3jPqvWlTUlGUVoH8YEwrg+pwRcxghrhCWPtWB3r8SXbqui1N0fEIAMaG2tnaRoign6lW56OB61d6WqTtZI0Ro8sieNA5AIby+9wre2RMWJXmtYRi7xy3F2YM+n+8JAO/N97iwp6UKpS5m//F4Cecc3cWcQz8OYd0LQTAJXxiGcf9EDSnne4HP51sPYJtnukw7n6nGrEqnKybD4CRoZkgEoIvh3YP9eO3tyyCGCwDuMAzj6qQAxCLxcipJ0i5wXta8vByPL5+Geo/LbitJj21VrCKGE6eHsXVXCGcujECS6GQ0Gl3Z09MTnsi4GM+pQGphXV3dTFmWtwN4IBqzUKMquHVWMSqEIkQIheM4fS6C/gETisyucc5fNQzjzfG6XzbUuACpyZqmzbEsq4kxtpRzfgsRVThjIQBnOOdHGGMfdnR0iJPRDV1/A/S02zBdMZSwAAAAAElFTkSuQmCC") 6 3, pointer !important;
+      cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABU5JREFUWEe9l2tsFFUUx//nzsy23RaKaZnStN3dCQWMaCAQCUFNMBalRqNgiR8sIjF+JNQYIdHEKGh8RB4JGu2GIBoiREQRISomysM14iOIPLQFO9N0+8BdGuhj293MXHN3ZrfLuttKNTvJZHf23rvnd/7n3HPuEPJcHo9nFWPsJSKaCaAdwHO6rn+eb/5kf6dcC71e7wpG7JNqWFjCEzhOMkIgyzTNxq6urqOTNZZrXU4ATdNOVXBr0XEMwc0IAxLhrrgbA6BvDMO4pxAAfQ1IVPmlUUCi5L06WoTvTNZhGIYIyf925VPg8jKWUFtdUYDZAM0RFwKJQgJIptpaEgMk2ACDCgKxQgIoptpaFk+HoPmqjMAoFTAERabaWp4AZJZUoTkkITBSSIBiS22tNMcU6GUIRFBABdxcba2yANlJwiAQGCwkQBlXW2u4rYBMaNaBwAAvnAINU7nq99reJwEuWghc5RxAD+d87/Dw8KZwODz4XwtCZh0oqqmqmd7d3d2jaVpvwzSo/pksHYKt3Rb6LaBtiOOHK5ZgOs85X22aphkMBtsARCcDkwTw+XwtRLQJwBTOeSeA6csqyO2fIzm7QKhg1wMoDAcuW3j61ChkUaTs6xqALbquvwLAuhEQ8nq9jxGjPbe5gYZphH1hoC8GNFQS/HPldAiSyegkpIDYfDaG6ikMikw49GcMv/QmQITdnPMdkUikPRQKDf0bEPL5fD+rLiw8OV+CixEuWYS7T8XROEOCf54yZjRlPAWS+exiWPf1EI78EYNIEiKMWpa10zTNDcFgcGQ8EAEQebiKlWyrlxyJCY0/xVFXSvAvdNkhyDbuJGaLeV4OAHs/z2KqaUMx9qj+PK8CBFE97wXgJkPIgmwsloq2XKzkBtJY5svmega4fAvLs4dgsxwpGCyFNl+cgjbDl8DgT/Z2dm5Ky+Apmlt88pp9qeLXXbnkwlnI8COthj8d5ZkeC+UcBIxW5VsRSSCWcywYGMQgyP8qK7r942nwG4C1px70A13OskIfQlghtuRP9O7tMeiR2QkZmqOo6LQf60/hGNnIn2GYVTnBfB4PE0gtn/7kmKs8DhJl9PgWFEai73dqK4DcQ4wQskN+/rx8beDcV3XXXkBamtrS2RZ7l6gSjcdaCxLhyEzwXJ6mgsyZdz5bHk/hM+ODUYMwyjNCyAGvF7vGyanZw+vmop5laL4CG9zyJ+W2ZE+8zlt3FHExbDyxSB+bY+267o+ZyKAaiK6dHut4v6oqRxgGcmWGef0d3u3JCFTIcj0XiaMMMLcRy+KuvCBYRhrxgUQg5qmvRw3+fNvPVKOh2YX2QayZc6GyZI8vUsYYd/3g9i4tU9sw6bOzs4DEwKIXFAU5Te3jPqvWlTUlGUVoH8YEwrg+pwRcxghrhCWPtWB3r8SXbqui1N0fEIAMaG2tnaRoign6lW56OB61d6WqTtZI0Ro8sieNA5AIby+9wre2RMWJXmtYRi7xy3F2YM+n+8JAO/N97iwp6UKpS5m//F4Cecc3cWcQz8OYd0LQTAJXxiGcf9EDSnne4HP51sPYJtnukw7j6nGrEqnKybD4CRoZkgEoIvh3YP9eO3tyyCGCwDuMAzj6qQAxCLxcipJ0i5wXta8vByPL5+Geo/LbitJj21VrCKGE6eHsXVXCGcujECS6GQ0Gl3Z09MTnsi4GM+pQGphXV3dTFmWtwN4IBqzUKMquHVWMSqEIkQIheM4fS6C/gETisyucc5fNQzjzfG6XzbUuACpyZqmzbEsq4kxtpRzfgsRVThjIQBnOOdHGGMfdnR0iJPRDV1/A/S02zBdMZSwAAAAAElFTkSuQmCC") 6 3, pointer !important;
     }
 
     html,
     body,
     body select,
     body .sweezy-custom-cursor-default-hover {
-      cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABOtJREFUWEe913tsFEUcB/Dv7O3ttZRSykNNc7R3hsQokiCiYjCYEEgqKCH2dRI1EjBCFGMI8Ifx+YftVTQ+ImI0MSYaosT+wR/yUAwRFSWGEq34CJKd7V1bSoGDPu56u7PzM3O7V1oooU8mudxudm9+n/3NzG9uWTQa3UBEOwB0MMZipmn+gRvYWDQa7Y5WhIrPddnoSVO3EOLhRCLx440yKIATq5qhr6uegdhGE6mLIi2Jqi3L2n8jEB7g0VK9/pmbkbggUP0cR9d54QB43DTNPZON8ABrSvX6p28CJOFcn0TtFgtmmy2J6HnLsnZOJiIHqHtkut6w3gPAJfTahLWvJNHyXz+I6CXLst6YLIQHWDVdb1g32wMID5FxCU+92YFjJzMA0VuWZW2bDIQC2LGVJcH6J2blAsOF9y0JQhI27erCd8f7wBg+45xvUFcnEqIA2VhliVG/dqYP8DKQ/xABL+6+gN0/90LTsJdzXgcgO1GIHKBuxTSjITZjKED4mVAYIsT3X8KH3/dCD7BD6XR6TWdnZ99EIDzAsmKjodYH+HMgl4H8sfqWhJ1H02g82I2AhmOO46xqa2s7P16EB3iw2Giomu5lYHDQq86BPScz2P5ND5iGv4UQK5LJZNt4EDlA7dKpRnx1yTAAAEJ6007BcseEfdzB5n09kAB3XXd5IpE4PVaEB3igyIivHAZwVTY8gML8cMbFhm97lUltYpVj3cQ8wOIiI15ZfHUGhhuOfCYE4URK4snDGfRJXBRCrB7LJuYB7plixFdMvQy4VmD19I6/RHP3SJzqIcSOZnHBoTSAKs75gdEMhxdYWGjEl031J6D0x3tQoMGgYY4TGYmaZoGzNmwp5VrLsppGilCA/toFhaH40ilDJhrydUBNvFza/So5+FyVbr98d2YJj510wbOs2zTNktEB5heE4ksKLwcaCOgHv2IVtGcIX7a7aE5JnE4DKUHISoABIKCDc142KkDN7aFQ4+KCoTVgAOE/vZ/63y65qGsWUJsDgAQR/QngDBH1Auh3XffzZDLZMjrAbUaocVFoaAby+0F+0vnLr+msxJZTLhjRVsuy3h5poGvdl5sDNXODocYFhgcg4EinQFPCRVda4tmKAJYU+YXIJTgu4b7fJVIujnPOF00EIFNzq17QOM8AT0tsa87i1/MSOkOGMeaUGZh25K4ANDtfESXePwu808VAJJdZlnV4PAiVgUx1RC+4v5Rh2wlbFbp+AI0A3gVQ5wIffRxlqFRZ8IelRxDuNjVVEnZxzleNF9A1M4hZZ7KEoMZaiKiWc/6P6jQcDhcGg0FrfgHN3ls+aKNyCS+nNHzRq5GU8s7W1ta/xopg5eXlNZqmvQ7gF9u2N7e3t6uKNtAikcirgvDa3rDEwkB+WRLaHWBxKoQA0aec8/VjBlzvh2VlZbMMw2hdXkCFn5Q6lwuSS9iUDuKg0FX1i1iW1XG9voa7nlvM12uRSGSXANv4U2kWFeTviC7QIhgesgthMGw3TVN93o26jQgQDofn6rr+b8xwtYagPfD33XGBubIIGuE9zvkLo44Or3qOqEWr0a81oqrdwX7cS24OsYMMfEAhaKAY5/yrEXV0xU0jBlRUVEQZY0cl2C13wMUlMLRBU8EP+EtRTipAdT5nzpyyQCCwFcA8VaSI6BDnXL26qXfJMbX/AaJ6SE5q1mCzAAAAAElFTkSuQmCC") 1 1, auto !important;
+      cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABOtJREFUWEe913tsFEUcB/Dv7O3ttZRSykNNc7R3hsQokiCiYjCYEEgqKCH2dRI1EjBCFGMI8Ifx+YftVTQ+ImI0MSYaosT+wR/yUAwRFSWGEq34CJKd7V1bSoGDPu56u7PzM3O7V1oooU8mudxudm9+n/3NzG9uWTQa3UBEOwB0MMZipmn+gRvYWDQa7Y5WhIrPddnoSVO3EOLhRCLx440yKIATq5qhr6uegdhGE6mLIi2Jqi3L2n8jEB7g0VK9/pmbkbggUP0cR9d54QB43DTNPZON8ABrSvX6p28CJOFcn0TtFgitm2yJ6HnLsnZOJiIHqHtkut6w3gPAJfTahLWvJNHyXz+I6CXLst6YLIQHWDVdb1g32wMID5FxCU+92YFjJzMA0VuWZW2bDIQC2LGVJcH6J2blAsOF9y0JQhI27erCd8f7wBg+45xvUFcnEqIA2VhliVG/dqYP8DKQ/xABL+6+gN0/90LTsJdzXgcgO1GIHKBuxTSjITZjKED4mVAYIsT3X8KH3/dCD7BD6XR6TWdnZ99EIDzAsmKjodYH+HMgl4H8sfqWhJ1H02g82I2AhmOO46xqa2s7P16EB3iw2Giomu5lYHDQq86BPScz2P5ND5iGv4UQK5LJZNt4EDlA7dKpRnx1yTAAAEJ6007BcseEfdzB5n09kAB3XXd5IpE4PVaEB3igyIivHAZwVTY8gML8cMbFhm97lUltYpVj3cQ8wOIiI15ZfHUGhhuOfCYE4URK4snDGfRJXBRCrB7LJuYB7plixFdMvQy4VmD19I6/RHP3SJzqIcSOZnHBoTSAKs75gdEMhwdYWGjEl031J6D0x3tQoMGgYY4TGYmaZoGzNmwp5VrLsppGilCA/toFhaH40ilDJhrydUBNvFza/So5+FyVbr98d2YJj510wbOs2zTNktEB5heE4ksKLwcaCOgHv2IVtGcIX7a7aE5JnE4DKUHISoABIKCDc142KkDN7aFQ4+KCoTVgAOE/vZ/63y65qGsWUJsDgAQR/QngDBH1Auh3XffzZDLZMjrAbUaocVFoaAby+0F+0vnLr+msxJZTLhjRVsuy3h5poGvdl5sDNXODocYFhgcg4EinQFPCRVda4tmKAJYU+IXIJTgu4b7fJVIujnPOF00EIFNzq17QOM8AT0tsa87i1/MSOkOGMeaUGZh25K4ANDtfESXePwu808VAJJdZlnV4PAiVgUx1RC+4v5Rh2wlbFbp+AI0A3gVQ5wIffRxlqFRZ8IelRxDuNjVVEnZxzleNF9A1M4hZZ7KEoMZaiKiWc/6P6jQcDhcGg0FrfgHN3ls+aKNyCS+nNHzRq5GU8s7W1ta/xopg5eXlNZqmvQ7gF9u2N7e3t6uKNtAikcirgvDa3rDEwkB+WRLaHWBxKoQA0aec8/VjBlzvh2VlZbMMw2hdXkCFn5Q6lwuSS9iUDuKg0FX1i1iW1XG9voa7nlvM12uRSGSXANv4U2kWFeTviC7QIhgesgthMGw3TVN93o26jQgQDofn6rr+b8xwtYagPfD33XGBubIIGuE9zvkLo44Or3qOqEWj0a81oqrdwX7cS24OsYMMfEAhaKAY5/yrEXV0xU0jBlRUVEQZY0cl2C13wMUlMLRBU8EP+EtRTipAdT5nzkyyQCCwFcA8VaSI6BDnXL26qXfJMbX/AaJ6SE5q1mCzAAAAAElFTkSuQmCC") 1 1, auto !important;
     }
   </style>
   <style id="monica-reading-highlight-style">
@@ -656,7 +658,7 @@
   <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
     </svg>
   </button>
@@ -698,16 +700,16 @@
   <div class="main-wrapper" id="mainWrapper">
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Renewable solvent &amp; intermediate</div>
-        <h1 class="hero-title">Methyl Levulinate</h1>
-        <p class="hero-subtitle">Bio‑based ester used in fuels, solvents, and fine chemical synthesis.</p>
+        <div class="hero-kicker">Biomass-derived platform acid</div>
+        <h1 class="hero-title">Levulinic Acid</h1>
+        <p class="hero-subtitle">Renewable building-block chemical for sustainable global innovation.</p>
       </div>
     </section>
 
     <main>
       <div class="product-card">
         <div class="product-image">
-          <img src="../assets/methylle.png" alt="Methyl Levulinate - Renewable Intermediate">
+          <img src="../assets/lev.png" alt="Levulinic Acid Applications">
 
         </div>
 
@@ -715,33 +717,40 @@
           <span class="meta-chip">Product overview</span>
 
           <p class="lead">
-            Methyl Levulinate (CAS No.: 624-45-3) is a versatile bio-based ester derived from levulinic acid. It serves
-            as a sustainable building block for specialty chemicals and a high-performance additive in biofuel
-            formulations.
+            Levulinic Acid (CAS No.: 123-76-2) is a versatile biomass-derived "platform" acid.
+            Its high reactivity and renewable origin make it a cornerstone of green chemistry across
+            agriculture, polymers, fuels, and pharmaceuticals.
           </p>
 
           <div class="section-group">
-            <h3 class="section-title">Key Applications</h3>
+            <h3 class="section-title">Agriculture &amp; Herbicides</h3>
             <ul class="features-list">
-              <li>High-efficiency biofuel blending and fuel additives</li>
-              <li>Renewable performance solvent for coatings, inks, and cleaners</li>
-              <li>Versatile chemical intermediate for pharmaceutical and specialty synthesis</li>
-              <li>Precursor for bio-based resins and sustainable plasticizers</li>
+              <li>Key precursor for 5-aminolevulinic acid (ALA), a biodegradable herbicide</li>
+              <li>Widely used as an eco-friendly plant growth regulator</li>
+              <li>Supports sustainable, low-residue farming and crop protection</li>
             </ul>
           </div>
 
           <div class="section-group">
-            <h3 class="section-title">Core Features</h3>
+            <h3 class="section-title">Polymers &amp; Industrial Materials</h3>
             <ul class="features-list">
-              <li>High purity (&gt;99%) for demanding industrial processes</li>
-              <li>100% sourced from biomass-derived levulinic acid</li>
-              <li>Superior solvency and formulation flexibility</li>
-              <li>Biodegradable profile with low environmental toxicity</li>
+              <li>Essential building block for bioplasticizers, nylon, and synthetic rubber</li>
+              <li>Improves flexibility and performance in PVC and polymer systems</li>
+              <li>Intermediate for γ-valerolactone, bio-solvents, and lubricants</li>
+            </ul>
+          </div>
+
+          <div class="section-group">
+            <h3 class="section-title">Personal Care &amp; Pharmaceuticals</h3>
+            <ul class="features-list">
+              <li>Sodium Levulinate salts used for mild preservation in cosmetics</li>
+              <li>Functions as a skin-conditioning agent in clean-label formulations</li>
+              <li>Intermediate for photodynamic therapy and pharmaceutical synthesis</li>
             </ul>
           </div>
 
           <div class="actions">
-            <a href="../shop.html#methyl-levulinate" class="btn-primary">🛒 Buy Methyl Levulinate</a>
+            <a href="../shop.html#levulinic-acid" class="btn-primary">🛒 Buy Levulinic Acid</a>
             <a href="../products.html" class="btn-secondary">← All Products</a>
           </div>
         </div>
@@ -749,7 +758,7 @@
 
       <!-- Added PubChem link button -->
       <div class="pubchem-link-container">
-        <a href="https://pubchem.ncbi.nlm.nih.gov/compound/69354" target="_blank" class="btn-pubchem">
+        <a href="https://pubchem.ncbi.nlm.nih.gov/compound/11579" target="_blank" class="btn-pubchem">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -790,15 +799,28 @@
       });
     });
 
-    // Cart badge
+    // Cart badge updater
     (function () {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const count = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
       const badge = document.getElementById('cart-count');
       if (badge) badge.textContent = count;
     })();
 
-    // WhatsApp Toggle
+    // Site search (simple redirect)
+    document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const q = (document.getElementById('siteSearchInput').value || '').trim().toLowerCase();
+      if (!q) return;
+
+      if (q.includes('shop') || q.includes('buy')) window.location.href = '../shop.html';
+      else if (q.includes('product')) window.location.href = '../products.html';
+      else if (q.includes('about')) window.location.href = '../about.html';
+      else if (q.includes('contact')) window.location.href = '../contact.html';
+      else window.location.href = '../index.html';
+    });
+
+    // WhatsApp widget
     function ibToggleWA() {
       const popup = document.getElementById("ib-wa-popup");
       if (popup.style.display === "block") {
@@ -807,35 +829,7 @@
         popup.style.display = "block";
       }
     }
-
-    // Site search
-    document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-      if (!query) return;
-
-      if (query.includes('product') || query.includes('shop')) {
-        window.location.href = '../products.html';
-      } else if (query.includes('recognition') || query.includes('award')) {
-        window.location.href = '../recognitions.html';
-      } else if (query.includes('investor') || query.includes('funding')) {
-        window.location.href = '../investors.html';
-      } else if (query.includes('contact') || query.includes('address') || query.includes('phone')) {
-        window.location.href = '../contact.html';
-      } else if (query.includes('home') || query.includes('objective') || query.includes('chemsus')) {
-        window.location.href = '../index.html';
-      } else if (query.includes('about') || query.includes('company')) {
-        window.location.href = '../about.html';
-      } else if (query.includes('collab') || query.includes('collaboration') || query.includes('partner')) {
-        window.location.href = '../collaboration.html';
-      } else if (query.includes('sample') || query.includes('request')) {
-        window.location.href = '../request-sample.html';
-      } else if (query.includes('order') || query.includes('orders')) {
-        window.location.href = '../orders.html';
-      } else {
-        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
-      }
-    });
+    window.ibToggleWA = ibToggleWA;
   </script>
 
 

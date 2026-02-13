@@ -31,7 +31,6 @@
       line-height: 1.6;
       color: var(--ink);
       background: var(--bg);
-      display: flex;
       min-height: 100vh;
     }
 
@@ -195,7 +194,8 @@
         radial-gradient(circle at bottom right, rgba(0, 116, 199, 0.2), transparent 55%),
         #041424;
       color: #fff;
-      height: 260px;
+      min-height: 260px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -233,6 +233,7 @@
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 40px;
+      line-height: 1.1;
       font-weight: 700;
       margin-bottom: 10px
     }
@@ -811,6 +812,22 @@
     let cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
     let PRODUCT_PRICING = {}; // Will be loaded from API
 
+    function escapeHtml(s) {
+      return String(s ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+    function safeUrl(u) {
+      const s = String(u || '').trim();
+      if (!s) return '';
+      if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('/') || s.startsWith('products/')) return s;
+      if (/^[a-z0-9._/\\-]+$/i.test(s)) return s;
+      return '';
+    }
+
     function toggleSidebar(forceOpen) {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
@@ -831,9 +848,9 @@
           if (!packRes.ok) continue;
           const packs = await packRes.json();
 
-          PRODUCT_PRICING[item.name] = {};
+          PRODUCT_PRICING[item.id] = {};
           packs.forEach(p => {
-            PRODUCT_PRICING[item.name][p.pack_size] = {
+            PRODUCT_PRICING[item.id][p.pack_size] = {
               biofmUsd: p.biofm_usd || 0,
               biofmInr: p.biofm_inr || 0,
               our: p.our_price || 0
@@ -845,8 +862,8 @@
       }
     }
 
-    function getFirstAvailablePack(productName) {
-      const t = PRODUCT_PRICING[productName];
+    function getFirstAvailablePack(itemId) {
+      const t = PRODUCT_PRICING[itemId];
       if (!t) return null;
       const packs = Object.keys(t);
       for (const p of packs) {
@@ -855,8 +872,8 @@
       return packs[0] || null;
     }
 
-    function getPackPrice(productName, packLabel) {
-      const t = PRODUCT_PRICING[productName];
+    function getPackPrice(itemId, packLabel) {
+      const t = PRODUCT_PRICING[itemId];
       if (!t) return { biofmUsd: 0, biofmInr: 0, our: 0 };
       const row = t[packLabel];
       if (!row) return { biofmUsd: 0, biofmInr: 0, our: 0 };
@@ -875,33 +892,84 @@
       document.getElementById('floating-cart-count').textContent = count;
     }
 
-    function updateItem(pName, pPrice, delta, packLabel) {
-      const key = pName + ' | ' + (packLabel || '');
-      const existing = cart.find(i => i.key === key);
+    function normalizeCart(items) {
+      if (!Array.isArray(items)) return;
+      const nameToId = new Map(items.map(i => [i.name, i.id]));
+      cart = cart.map(i => {
+        if (!i) return i;
+        if (!i.baseName && typeof i.name === 'string') {
+          const m = i.name.match(/^(.*)\\s+\\((.+)\\)$/);
+          if (m) {
+            i.baseName = m[1];
+            i.packSize = i.packSize || m[2];
+          } else {
+            i.baseName = i.name;
+          }
+        }
+        if (!i.shopItemId && i.baseName) {
+          const id = nameToId.get(i.baseName);
+          if (id) i.shopItemId = id;
+        }
+        if (!i.key) {
+          const keyBase = i.shopItemId ? `id:${i.shopItemId}` : (i.baseName || i.name || '');
+          i.key = keyBase + ' | ' + (i.packSize || '');
+        }
+        return i;
+      });
+      saveCart();
+    }
+
+    function updateItem(pName, pPrice, delta, packLabel, itemId) {
+      const keyBase = itemId ? `id:${itemId}` : pName;
+      const key = keyBase + ' | ' + (packLabel || '');
+      let existing = cart.find(i => i.key === key);
+      if (!existing && itemId) {
+        existing = cart.find(i => Number(i.shopItemId) === Number(itemId) && String(i.packSize || '') === String(packLabel || ''));
+      }
       if (existing) {
         existing.quantity += delta;
         if (existing.quantity <= 0) cart = cart.filter(i => i.key !== key);
       } else if (delta > 0) {
-        cart.push({ key, name: pName + (packLabel ? ' (' + packLabel + ')' : ''), price: pPrice, quantity: 1 });
+        cart.push({
+          key,
+          shopItemId: itemId || null,
+          baseName: pName,
+          packSize: packLabel || '',
+          name: pName + (packLabel ? ' (' + packLabel + ')' : ''),
+          price: pPrice,
+          quantity: 1
+        });
       }
       saveCart();
       syncUI();
     }
 
-    function goToBuyPage(name, price, packLabel) {
+    function goToBuyPage(name, price, packLabel, itemId) {
       const params = new URLSearchParams();
       params.set('name', name + (packLabel ? ' (' + packLabel + ')' : ''));
       params.set('price', String(price));
+      if (packLabel) params.set('pack', packLabel);
+      if (itemId) params.set('itemId', String(itemId));
       window.location.href = 'buy.html?' + params.toString();
     }
 
     function syncUI() {
       document.querySelectorAll('.product-card').forEach(card => {
         const pName = card.getAttribute('data-name');
+        const itemId = card.getAttribute('data-item-id');
         const select = card.querySelector('.pack-select');
         const packLabel = select ? select.value : '';
-        const key = pName + ' | ' + (packLabel || '');
-        const item = cart.find(i => i.key === key);
+        const keyBase = itemId ? `id:${itemId}` : pName;
+        const key = keyBase + ' | ' + (packLabel || '');
+        const item =
+          cart.find(i => i.key === key) ||
+          (itemId
+            ? cart.find(
+                i =>
+                  Number(i.shopItemId) === Number(itemId) &&
+                  String(i.packSize || '') === String(packLabel || '')
+              )
+            : null);
         const cartBtn = card.querySelector('.btn-cart');
         const qtySel = card.querySelector('.qty-selector');
         const qtyVal = card.querySelector('.qty-value');
@@ -944,6 +1012,8 @@
         return;
       }
 
+      normalizeCart(items);
+
       grid.innerHTML = '';
       let inStockCount = 0;
 
@@ -959,7 +1029,8 @@
           showBadge: !!raw.showBadge,
           badge: raw.badge || '',
           moreLink: raw.moreLink || '',
-          image: raw.image || ''
+          image: raw.image || '',
+          price: safeNumber(raw.price || 0)
         };
         const isInStock = item.stockStatus === 'in-stock';
         if (isInStock) inStockCount++;
@@ -969,34 +1040,41 @@
         card.setAttribute('data-name', item.name);
         card.setAttribute('data-item-id', item.id);
 
-        const pricingTable = PRODUCT_PRICING[item.name] || null;
+        const pricingTable = PRODUCT_PRICING[item.id] || null;
         const packOptions = pricingTable ? Object.keys(pricingTable) : [];
-        const defaultPack = pricingTable ? (getFirstAvailablePack(item.name) || packOptions[0]) : null;
-        const defaultPrices = defaultPack ? getPackPrice(item.name, defaultPack) : { biofmUsd: 0, biofmInr: 0, our: 0 };
+        const defaultPack = pricingTable ? (getFirstAvailablePack(item.id) || packOptions[0]) : null;
+        const defaultPrices = defaultPack ? getPackPrice(item.id, defaultPack) : { biofmUsd: 0, biofmInr: 0, our: 0 };
         const ourInitial = safeNumber(defaultPrices.our);
         const biofmUsdInitial = safeNumber(defaultPrices.biofmUsd);
         const biofmInrInitial = safeNumber(defaultPrices.biofmInr);
+        const basePriceInitial = ourInitial || item.price;
 
-        const badgeHTML = (item.showBadge && item.badge) ? `<span class="product-badge">${item.badge}</span>` : '';
+        const safeName = escapeHtml(item.name);
+        const safeSubtitle = escapeHtml(item.subtitle);
+        const safeBadge = escapeHtml(item.badge);
+        const badgeHTML = (item.showBadge && item.badge) ? `<span class="product-badge">${safeBadge}</span>` : '';
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
-        const featuresHTML = item.features.map(f => `<li>${f}</li>`).join('');
-        const moreHTML = item.moreLink ? `<a class="more-details" href="${item.moreLink}">More Details</a>` : '';
+        const featuresHTML = item.features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
+        const safeMore = safeUrl(item.moreLink || '');
+        const moreHTML = safeMore ? `<a class="more-details" href="${safeMore}">More Details</a>` : '';
         const outMsg = !isInStock ? '<div class="out-of-stock-message">Currently Out of Stock</div>' : '';
 
         const fallbackImages = ['assets/cl.jpeg', 'assets/sl.jpeg', 'assets/la.jpeg', 'assets/5hmf.jpeg', 'assets/el.jpeg', 'assets/ml.jpeg'];
-        const imageSrc = item.image || fallbackImages[index % fallbackImages.length];
+        const imageSrc = safeUrl(item.image || '') || fallbackImages[index % fallbackImages.length];
 
         const packSelectHTML = pricingTable && packOptions.length > 0 ? `
           <div class="pack-row">
             <span class="pack-label">SELECT QUANTITY</span>
             <span class="pack-label-badge">Required for price update</span>
             <select class="pack-select">
-              ${packOptions.map(p => `<option value="${p}" ${p === defaultPack ? 'selected' : ''}>${p}</option>`).join('')}
+              ${packOptions.map(p => {
+                const safeP = escapeHtml(p);
+                return `<option value="${safeP}" ${p === defaultPack ? 'selected' : ''}>${safeP}</option>`;
+              }).join('')}
             </select>
           </div>` : '';
 
-        const safeName = item.name.replace(/'/g, "\\'");
-        const disabledInitial = !isInStock || !ourInitial;
+        const disabledInitial = !isInStock || !basePriceInitial;
 
         card.innerHTML = `
           ${stockBadgeHTML}
@@ -1004,11 +1082,11 @@
           ${outMsg}
 
           <div class="product-image">
-            <img src="${imageSrc}" alt="${item.name}">
+            <img src="${imageSrc}" alt="${safeName}">
           </div>
 
-          <h3 class="product-title">${item.name}</h3>
-          <p class="product-subtitle">${item.subtitle}</p>
+          <h3 class="product-title">${safeName}</h3>
+          <p class="product-subtitle">${safeSubtitle}</p>
 
           <ul class="product-features">${featuresHTML}</ul>
           ${moreHTML}
@@ -1021,7 +1099,7 @@
           </div> -->
 
           <div class="product-price" data-price-display>
-            ${ourInitial ? `Our Price: ₹${ourInitial.toLocaleString('en-IN')} / pack` : 'Our Price: –'}
+            ${basePriceInitial ? `Our Price: ₹${basePriceInitial.toLocaleString('en-IN')} / pack` : 'Our Price: –'}
           </div>
 
           <div class="product-actions">
@@ -1046,21 +1124,21 @@
         const cartBtn = card.querySelector('.btn-cart');
         const qtyMinus = card.querySelector('.qty-selector .qty-btn:first-child');
         const qtyPlus = card.querySelector('.qty-selector .qty-btn:last-child');
-
         function refreshForPack() {
           const packLabel = selectEl ? selectEl.value : null;
-          const { biofmUsd, biofmInr, our } = packLabel ? getPackPrice(item.name, packLabel) : { biofmUsd: 0, biofmInr: 0, our: 0 };
+          const { biofmUsd, biofmInr, our } = packLabel ? getPackPrice(item.id, packLabel) : { biofmUsd: 0, biofmInr: 0, our: 0 };
           const u = safeNumber(our);
           const usd = safeNumber(biofmUsd);
           const inr = safeNumber(biofmInr);
+          const basePrice = u || item.price;
 
           if (biofmDisplay) {
             biofmDisplay.style.display = 'none';
           }
           if (priceDisplay) {
-            priceDisplay.textContent = u ? `Our Price: ₹${u.toLocaleString('en-IN')} / pack` : 'Our Price: –';
+            priceDisplay.textContent = basePrice ? `Our Price: ₹${basePrice.toLocaleString('en-IN')} / pack` : 'Our Price: -';
           }
-          const dis = !isInStock || !u;
+          const dis = !isInStock || !basePrice;
           if (buyBtn) {
             buyBtn.disabled = dis;
             buyBtn.textContent = dis ? 'Unavailable' : 'Buy Now';
@@ -1081,35 +1159,31 @@
         if (buyBtn) {
           buyBtn.addEventListener('click', () => {
             const packLabel = selectEl ? selectEl.value : null;
-            const { our } = packLabel ? getPackPrice(item.name, packLabel) : { our: 0 };
-            const price = safeNumber(our);
+            const price = packLabel ? safeNumber(getPackPrice(item.id, packLabel).our) : item.price;
             if (!price) return;
-            goToBuyPage(item.name, price, packLabel);
+            goToBuyPage(item.name, price, packLabel, item.id);
           });
         }
 
         if (cartBtn) {
           cartBtn.addEventListener('click', () => {
             const packLabel = selectEl ? selectEl.value : null;
-            const { our } = packLabel ? getPackPrice(item.name, packLabel) : { our: 0 };
-            const price = safeNumber(our);
+            const price = packLabel ? safeNumber(getPackPrice(item.id, packLabel).our) : item.price;
             if (!price) return;
-            updateItem(item.name, price, 1, packLabel);
+            updateItem(item.name, price, 1, packLabel, item.id);
           });
         }
 
         if (qtyMinus && qtyPlus) {
           qtyMinus.addEventListener('click', () => {
             const packLabel = selectEl ? selectEl.value : null;
-            const { our } = packLabel ? getPackPrice(item.name, packLabel) : { our: 0 };
-            const price = safeNumber(our);
-            updateItem(item.name, price, -1, packLabel);
+            const price = packLabel ? safeNumber(getPackPrice(item.id, packLabel).our) : item.price;
+            updateItem(item.name, price, -1, packLabel, item.id);
           });
           qtyPlus.addEventListener('click', () => {
             const packLabel = selectEl ? selectEl.value : null;
-            const { our } = packLabel ? getPackPrice(item.name, packLabel) : { our: 0 };
-            const price = safeNumber(our);
-            updateItem(item.name, price, 1, packLabel);
+            const price = packLabel ? safeNumber(getPackPrice(item.id, packLabel).our) : item.price;
+            updateItem(item.name, price, 1, packLabel, item.id);
           });
         }
 

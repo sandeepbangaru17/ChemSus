@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Buy | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -23,7 +23,6 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
-      display: flex;
       min-height: 100vh;
     }
 
@@ -160,7 +159,8 @@
         radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
         #041424;
       color: #ffffff;
-      height: 220px;
+      min-height: 220px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -198,6 +198,7 @@
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 28px;
+      line-height: 1.1;
       font-weight: 700;
       margin-bottom: 6px;
     }
@@ -595,13 +596,54 @@
       return { base:m[1], pack:m[2] };
     }
 
-    function renderSummary() {
+    function safeNumber(v, fallback = 0){
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
+    }
+    const RUPEE = String.fromCharCode(0x20B9);
+    function escapeHtml(s){
+      return String(s ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    async function fetchUnitPrice(itemId, packLabel, fallback){
+      try{
+        if(itemId && packLabel){
+          const res = await fetch(`/api/pack-pricing/${itemId}`);
+          if(res.ok){
+            const packs = await res.json();
+            const match = packs.find(p => String(p.pack_size) === String(packLabel));
+            if(match && Number(match.our_price) > 0) return Number(match.our_price);
+          }
+        }
+        if(itemId){
+          const res = await fetch('/api/shop-items');
+          if(res.ok){
+            const items = await res.json();
+            const it = items.find(i => Number(i.id) === Number(itemId));
+            if(it && Number(it.price) > 0) return Number(it.price);
+          }
+        }
+      }catch(e){}
+      return fallback;
+    }
+
+    async function renderSummary() {
       const cart = loadCart();
       saveCart(cart);
 
       const params = new URLSearchParams(window.location.search);
       const buyNowName = params.get('name');
-      const buyNowPrice = parseFloat(params.get('price'));
+      const buyNowItemId = Number(params.get('itemId') || 0);
+      const buyNowPack = params.get('pack') || '';
+      let buyNowPrice = safeNumber(params.get('price'), 0);
+      if (buyNowItemId) {
+        buyNowPrice = await fetchUnitPrice(buyNowItemId, buyNowPack, buyNowPrice);
+      }
 
       const heroTitle = document.getElementById('heroProductName');
       const heading = document.getElementById('productNameHeading');
@@ -618,7 +660,9 @@
 
       // BUY NOW MODE (from Shop)
       if (buyNowName && buyNowPrice) {
-        const { base, pack } = splitNameAndPack(buyNowName);
+        const parsed = splitNameAndPack(buyNowName);
+        const base = parsed.base;
+        const pack = buyNowPack || parsed.pack;
         const displayName = base + (pack ? ' ('+pack+')' : '');
 
         heroTitle.textContent = 'Buy ' + base;
@@ -648,7 +692,9 @@
           const buyNowData = {
             productName: displayName,
             quantity: q,
-            unitPrice: buyNowPrice
+            unitPrice: buyNowPrice,
+            shopItemId: buyNowItemId || null,
+            packSize: pack || ''
           };
 
           sessionStorage.setItem('buyNowData', JSON.stringify(buyNowData));
@@ -689,13 +735,16 @@
       let listHtml = '<strong>Items in your cart:</strong><ul style="margin-left: 18px; margin-top: 6px;">';
 
       cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
+        const qty = safeNumber(item.quantity, 0);
+        const price = safeNumber(item.price, 0);
+        const subtotal = price * qty;
         grandTotal += subtotal;
-        totalQty += item.quantity;
+        totalQty += qty;
+        const safeName = escapeHtml(item.name || '');
         listHtml += `
           <li style="margin-bottom: 6px;">
-            ${item.name} – ${item.quantity} × ₹${item.price.toLocaleString('en-IN')}
-            = ₹${subtotal.toLocaleString('en-IN')}
+            ${safeName} x ${qty} @ ${RUPEE}${price.toLocaleString('en-IN')}
+            = ${RUPEE}${subtotal.toLocaleString('en-IN')}
           </li>`;
       });
       listHtml += '</ul>';
@@ -704,10 +753,10 @@
       heading.textContent = 'Cart Checkout';
       packLabelTag.textContent = `${cart.length} item(s) in cart`;
       packNameText.textContent = 'Multiple packs';
-      unitPriceText.textContent = 'Cart Total: ₹' + grandTotal.toLocaleString('en-IN');
-      subtotalText.textContent = 'Subtotal: ₹' + grandTotal.toLocaleString('en-IN');
+      unitPriceText.textContent = 'Cart Total: ' + RUPEE + grandTotal.toLocaleString('en-IN');
+      subtotalText.textContent = 'Subtotal: ' + RUPEE + grandTotal.toLocaleString('en-IN');
       perPackText.textContent = 'Net quantity: ' + totalQty + ' pack(s)';
-      totalText.textContent = '₹' + grandTotal.toLocaleString('en-IN');
+      totalText.textContent = RUPEE + grandTotal.toLocaleString('en-IN');
       qtyInput.style.display = 'none';
       document.querySelector('.qty-input-row .q-label').textContent = 'Quantity from cart';
       itemsListBoxFallback.innerHTML = listHtml;

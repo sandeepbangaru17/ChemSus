@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Checkout | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -21,7 +21,6 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
-      display: flex;
       min-height: 100vh;
     }
     a { text-decoration: none; color: inherit; }
@@ -137,7 +136,8 @@
       background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
                   radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
                   #041424;
-      height: 240px;
+      min-height: 240px;
+      padding: 32px 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -172,6 +172,7 @@
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: 36px;
+      line-height: 1.1;
       font-weight: 700;
       margin-bottom: 10px;
     }
@@ -639,6 +640,29 @@
 
         const buyNowData = JSON.parse(sessionStorage.getItem('buyNowData'));
         const totalprice = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
+        const companyName = document.getElementById('companyName').value.trim();
+        const country = document.getElementById('country').value.trim();
+
+        let items = [];
+        const cartItemsRaw = sessionStorage.getItem('cartItems');
+        if (cartItemsRaw) {
+          try {
+            const parsed = JSON.parse(cartItemsRaw);
+            if (Array.isArray(parsed)) {
+              items = parsed.map(i => ({
+                shopItemId: i.shopItemId || null,
+                packSize: i.packSize || '',
+                quantity: Number(i.quantity || 0)
+              })).filter(i => i.shopItemId && i.quantity > 0);
+            }
+          } catch {}
+        } else if (buyNowData?.shopItemId) {
+          items = [{
+            shopItemId: buyNowData.shopItemId,
+            packSize: buyNowData.packSize || '',
+            quantity: Number(buyNowData.quantity || 1)
+          }];
+        }
 
         const orderData = {
           customername, email, phone,
@@ -646,7 +670,9 @@
           quantity: parseFloat(buyNowData.quantity),
           totalprice,
           paymentmode: "PENDING",
-          address, city, region, pincode
+          address, city, region, pincode,
+          companyName, country,
+          items
         };
 
         const response = await fetch(`${API_BASE}/orders`, {
@@ -669,6 +695,7 @@
         successMsg.style.display = 'block';
 
         sessionStorage.removeItem('buyNowData');
+        sessionStorage.removeItem('cartItems');
 
         setTimeout(() => {
           window.location.href = 'payment2.html';
