@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout | ChemSus Technologies Pvt Ltd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7;
+      --primary-dark: #00508a;
+      --accent: #00b8b0;
+      --bg: #F3F7FB;
+      --ink: #1f2933;
+      --highlight:#f97316;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Open Sans", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    .sidebar {
+      width: 240px;
+      background: var(--primary);
+      color: #ffffff;
+      border-right: 3px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1002;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset:0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      white-space: nowrap;
+    }
+    .nav-logo-img { height: 24px; width: auto; }
+    .nav-menu {
+      list-style: none;
+      padding: 8px 0;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .nav-menu li a {
+      display: block;
+      color: #ffffff;
+      border-left: 3px solid transparent;
+      padding: 10px 20px;
+      font-size: 13.5px;
+      transition: all 0.2s ease;
+    }
+    .nav-menu li a:hover, .nav-menu li a.active {
+      background: rgba(255,255,255,0.1);
+      border-left-color: var(--accent);
+    }
+    #cart-count {
+      background: var(--accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .search-section {
+      padding: 12px 20px 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .search-form { position: relative; }
+    .search-input {
+      width: 100%;
+      padding: 8px 32px 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: #ffffff;
+      font-size: 12.5px;
+      outline: none;
+    }
+    .search-input::placeholder { color: #d1d5db; }
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: #ffffff;
+      pointer-events: none;
+    }
+
+    .main-wrapper {
+      margin-left: 240px;
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 0.3s ease;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+                  #041424;
+      min-height: 240px;
+      padding: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      border-top: 3px solid var(--accent);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 2px, transparent 3px);
+      background-size: 140px 140px;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      padding: 0 20px;
+    }
+    .hero-kicker {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #b9e6ff;
+    }
+    .hero-title {
+      font-family: "Montserrat", sans-serif;
+      font-size: 36px;
+      line-height: 1.1;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      font-size: 15px;
+      color: #e2f3ff;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 34px 18px 42px;
+      width: 100%;
+      flex: 1;
+    }
+    .section {
+      background: #fff;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 14px 30px rgba(15,23,42,0.12);
+      border-top: 4px solid var(--accent);
+    }
+    .section-header { margin-bottom: 20px; }
+    .section-header h2 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 22px;
+      color: var(--primary-dark);
+    }
+
+    .order-summary {
+      background: #f9fbff;
+      padding: 18px 20px 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 2px solid #e0f2fe;
+    }
+    .order-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .order-summary-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .order-summary-title span.icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: #fff7ed;
+      color: #d97706;
+      font-size: 16px;
+    }
+    .order-summary-line {
+      border-top: 1px solid #06b6d4;
+      margin: 8px 0 14px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .summary-row-label {
+      color: #4b5563;
+    }
+    .summary-row-value {
+      font-weight: 600;
+      color: #111827;
+      text-align: right;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .info-banner{
+      margin:0 0 16px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:rgba(249,115,22,0.05);
+      border:1px solid rgba(249,115,22,0.5);
+      font-size:13px;
+      color:#7c2d12;
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+    }
+    .info-icon{
+      width:18px;height:18px;border-radius:999px;
+      background:var(--highlight);color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:700;flex-shrink:0;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 14px;
+    }
+    .form-label.required::after { content: " *"; color: #ef4444; }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 11px 13px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,184,176,0.1);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--accent), #00d4cc);
+      color: white;
+      padding: 13px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: "Montserrat", sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,184,176,0.3); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 11px 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      display: none;
+      border-left: 4px solid #ef4444;
+    }
+    .success-message {
+      background: #dcfce7;
+      color: #166534;
+      padding: 11px 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      display: none;
+      border-left: 4px solid #22c55e;
+    }
+    footer {
+      background: #06121f;
+      color: #cbd5f5;
+      font-size: 13px;
+      text-align: center;
+      padding: 14px 0;
+      margin-top: 24px;
+    }
+
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1003;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .mobile-toggle svg { width: 20px; height: 20px; }
+
+    @media (max-width: 1050px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0; }
+      .mobile-toggle { display: block; }
+    }
+    @media (max-width: 900px) {
+      .form-row { grid-template-columns: 1fr; }
+      .hero-title { font-size: 30px; }
+    }
+    @media (max-width: 580px) {
+      .hero-title { font-size: 26px; }
+      .section { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
+    </svg>
+  </button>
+
+  <nav class="sidebar" id="sidebar">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
+      <span>ChemSus</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="collaboration.html">Collaboration</a></li>
+      <li><a href="recognitions.html">Recognitions</a></li>
+      <li><a href="investors.html">Investors</a></li>
+      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="contact.html">Contact us</a></li>
+      <li><a href="request-sample.html">Request for Sample</a></li>
+      <li><a href="orders.html" class="active">Orders</a></li>
+    </ul>
+    <div class="search-section">
+      <form class="search-form" id="siteSearchForm">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <span class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+          </svg>
+        </span>
+      </form>
+    </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-kicker">Secure Checkout</div>
+        <h1 class="hero-title">Complete Your Order</h1>
+        <p class="hero-subtitle">
+          Review your order details and provide delivery information
+        </p>
+      </div>
+    </section>
+
+    <main>
+      <section class="section">
+        <div class="section-header">
+          <h2>Order Details & Delivery</h2>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <div class="info-banner">
+          <div class="info-icon">!</div>
+          <div>
+            <strong>Pack size and pricing confirmed.</strong> Review your order summary below, then fill in delivery details to proceed.
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="order-summary-header">
+            <div class="order-summary-title">
+              <span class="icon">📦</span>
+              <span>Order Summary</span>
+            </div>
+          </div>
+
+          <div class="order-summary-line"></div>
+
+          <div class="summary-row">
+            <span class="summary-row-label">Product</span>
+            <span id="summaryProduct" class="summary-row-value">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Quantity (packs)</span>
+            <span id="summaryQuantity" class="summary-row-value">–</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Unit Price per pack</span>
+            <span id="summaryUnitPrice" class="summary-row-value">–</span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total:</span>
+            <span id="totalAmount">₹0</span>
+          </div>
+        </div>
+
+        <form id="checkoutForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label required">Full Name</label>
+              <input type="text" id="fullName" class="form-input" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required">Email ID</label>
+              <input type="email" id="email" class="form-input" placeholder="Enter your email address" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label required">Mobile Number</label>
+              <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company Name (Optional)</label>
+              <input type="text" id="companyName" class="form-input" placeholder="Your company name">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label required">Full Address</label>
+            <textarea id="address" class="form-textarea" placeholder="Street address, building name, etc." required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label required">City</label>
+              <input type="text" id="city" class="form-input" placeholder="e.g., Visakhapatnam" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required">Region/State</label>
+              <input type="text" id="region" class="form-input" placeholder="e.g., Andhra Pradesh" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label required">Pincode</label>
+              <input type="text" id="pincode" class="form-input" placeholder="6-digit pincode" pattern="[0-9]{6}" maxlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required">Country</label>
+              <input type="text" id="country" class="form-input" placeholder="India" value="India" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submitBtn">Place Order & Proceed to Payment</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    let API_BASE = '/api';
+
+    async function initBackend() {
+      try {
+        const response = await fetch('/api/test');
+        if (response.ok) {
+          const config = await response.json();
+          console.log('Backend detected:', config.backendURL);
+          API_BASE = config.apiBase || '/api';
+        }
+      } catch (e) {
+        console.warn('Backend test failed, using relative URLs:', e);
+        API_BASE = '/api';
+      }
+    }
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1050) closeSidebar();
+      });
+    });
+
+    function loadOrderData() {
+      const buyNowData = sessionStorage.getItem('buyNowData');
+
+      const productEl = document.getElementById('summaryProduct');
+      const qtyEl = document.getElementById('summaryQuantity');
+      const unitEl = document.getElementById('summaryUnitPrice');
+      const totalEl = document.getElementById('totalAmount');
+
+      if (!buyNowData) {
+        productEl.textContent = 'No product selected';
+        qtyEl.textContent = '–';
+        unitEl.textContent = '₹0';
+        totalEl.textContent = '₹0';
+        document.getElementById('checkoutForm').style.display = 'none';
+        return;
+      }
+
+      let productData;
+      try {
+        productData = JSON.parse(buyNowData);
+      } catch (e) {
+        productEl.textContent = 'Invalid product data';
+        qtyEl.textContent = '–';
+        unitEl.textContent = '₹0';
+        totalEl.textContent = '₹0';
+        document.getElementById('checkoutForm').style.display = 'none';
+        return;
+      }
+
+      const productName = productData.productName || 'Unknown Product';
+      const quantity = parseFloat(productData.quantity) || 1;
+      const unitPrice = parseFloat(productData.unitPrice) || 0;
+      const totalPrice = quantity * unitPrice;
+
+      productEl.textContent = productName;
+      qtyEl.textContent = quantity + ' pack(s)';
+      unitEl.textContent = '₹' + unitPrice.toLocaleString('en-IN');
+      totalEl.textContent = '₹' + totalPrice.toLocaleString('en-IN');
+
+      sessionStorage.setItem('orderTotal', totalPrice);
+    }
+
+    async function placeBuyNowOrderAndProceed() {
+      const submitBtn = document.getElementById('submitBtn');
+      const errorMsg = document.getElementById('errorMessage');
+      const successMsg = document.getElementById('successMessage');
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Placing Order...';
+
+        const customername = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('mobile').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const region = document.getElementById('region').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+
+        const buyNowData = JSON.parse(sessionStorage.getItem('buyNowData'));
+        const totalprice = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
+        const companyName = document.getElementById('companyName').value.trim();
+        const country = document.getElementById('country').value.trim();
+
+        let items = [];
+        const cartItemsRaw = sessionStorage.getItem('cartItems');
+        if (cartItemsRaw) {
+          try {
+            const parsed = JSON.parse(cartItemsRaw);
+            if (Array.isArray(parsed)) {
+              items = parsed.map(i => ({
+                shopItemId: i.shopItemId || null,
+                packSize: i.packSize || '',
+                quantity: Number(i.quantity || 0)
+              })).filter(i => i.shopItemId && i.quantity > 0);
+            }
+          } catch {}
+        } else if (buyNowData?.shopItemId) {
+          items = [{
+            shopItemId: buyNowData.shopItemId,
+            packSize: buyNowData.packSize || '',
+            quantity: Number(buyNowData.quantity || 1)
+          }];
+        }
+
+        const orderData = {
+          customername, email, phone,
+          productname: buyNowData.productName,
+          quantity: parseFloat(buyNowData.quantity),
+          totalprice,
+          paymentmode: "PENDING",
+          address, city, region, pincode,
+          companyName, country,
+          items
+        };
+
+        const response = await fetch(`${API_BASE}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`HTTP ${response.status}: ${err}`);
+        }
+
+        const result = await response.json();
+
+        sessionStorage.setItem('orderId', result.orderId);
+
+        errorMsg.style.display = 'none';
+        successMsg.textContent = `✅ Order #${result.orderId} placed successfully! Redirecting to payment...`;
+        successMsg.style.display = 'block';
+
+        sessionStorage.removeItem('buyNowData');
+        sessionStorage.removeItem('cartItems');
+
+        setTimeout(() => {
+          window.location.href = 'payment2.html';
+        }, 2000);
+
+      } catch (error) {
+        console.error('Order failed:', error);
+        errorMsg.textContent = `❌ Order failed: ${error.message}`;
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Place Order & Proceed to Payment';
+      }
+    }
+
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const region = document.getElementById('region').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+      const country = document.getElementById('country').value.trim();
+
+      if (!fullName || !email || !mobile || !address || !city || !region || !pincode || !country) {
+        document.getElementById('errorMessage').textContent = '❌ Please fill in all required fields.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
+      }
+      if (mobile.length !== 10 || isNaN(mobile)) {
+        document.getElementById('errorMessage').textContent = '❌ Please enter a valid 10-digit mobile number.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
+      }
+      if (pincode.length !== 6 || isNaN(pincode)) {
+        document.getElementById('errorMessage').textContent = '❌ Please enter a valid 6-digit pincode.';
+        document.getElementById('errorMessage').style.display = 'block';
+        return;
+      }
+
+      const orderDetails = {
+        fullName, email, mobile, address, city, region, pincode, country,
+        companyName: document.getElementById('companyName').value.trim(),
+        timestamp: new Date().toISOString()
+      };
+      sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
+
+      placeBuyNowOrderAndProceed();
+    });
+
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const badge = document.getElementById('cart-count');
+      if (badge) badge.textContent = count;
+    }
+
+    document.getElementById('siteSearchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
+      if (!query) return;
+      if (query.includes('shop')) window.location.href = 'shop.html';
+      else if (query.includes('cart')) window.location.href = 'cart.html';
+      else if (query.includes('product')) window.location.href = 'products.html';
+      else window.location.href = 'index.html';
+    });
+
+    window.addEventListener('DOMContentLoaded', async function() {
+      await initBackend();
+      loadOrderData();
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>
