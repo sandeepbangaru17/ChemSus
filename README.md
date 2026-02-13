@@ -1,37 +1,37 @@
-# ChemSus Technologies – Web Application
+# ChemSus Technologies - Web Application
 
 A full-stack web application for **ChemSus Technologies Pvt Ltd**, including a **product showcase**, **shop**, **order & payment flow**, and a **secure admin dashboard** to manage products, orders, payments, and receipts.
 
 ---
 
-## 🌐 Project Overview
+## Project Overview
 
 This project provides:
 
 * Public website for **products and shop**
-* **Order placement** (Buy Now & Cart flow)
+* **Order placement** (Buy Now and Cart flow)
 * **UPI payment receipt upload**
 * **Admin dashboard** for full control:
-
   * Products page
   * Shop items
+  * Pack pricing
   * Orders management
-  * Payments & receipt verification
+  * Payments and receipt verification
   * Site settings (brochure upload)
 
 The system is lightweight, fast, and built with **Node.js + SQLite**, making it easy to deploy and maintain.
 
 ---
 
-## 🚀 Features
+## Features
 
 ### Public Website
 
 * Products listing (`products.html`)
-* Shop with Buy Now & Add to Cart (`shop.html`)
+* Shop with Buy Now and Add to Cart (`shop.html`)
 * Order form (`orders.html`)
-* Payment via UPI QR
-* Receipt upload + rating (`payment.html`, `payment2.html`)
+* Payment via UPI QR (`payment2.html`)
+* Receipt upload + rating (`payment2.html`)
 * Success page after payment (`success.html`)
 
 ### Admin Dashboard
@@ -39,19 +39,19 @@ The system is lightweight, fast, and built with **Node.js + SQLite**, making it 
 * Secure admin login
 * Products page CRUD
 * Shop items CRUD
-* Order listing with filters & delete
-* Payments & receipts:
-
+* Pack pricing CRUD
+* Order listing with filters and delete
+* Payments and receipts:
   * View uploaded receipts
   * Mark payments SUCCESS / FAILED
   * Delete payments
-* Upload images & PDFs
+* Upload images and PDFs
 * Manage brochure download link
-* Fully **mobile-responsive**
+* Fully mobile-responsive
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -74,46 +74,36 @@ The system is lightweight, fast, and built with **Node.js + SQLite**, making it 
 
 ---
 
-## 📁 Project File Structure
+## Project File Structure
 
 ```text
-chemsus/
-│
-├── admin/
-│   └── admin.html              # Admin dashboard UI
-│
-├── assets/
-│   ├── logo.jpg
-│   ├── payment-qr.png
-│   ├── uploads/                # Uploaded images & PDFs
-│   └── receipts/               # Uploaded payment receipts
-│
-├── products/
-│   └── *.html                  # Individual product pages
-│
-├── db/
-│   └── chemsus.sqlite          # SQLite database (DO NOT DELETE)
-│
-├── server/
-│   ├── server.js               # Express server
-│   └── db.js                   # SQLite schema & init
-│
-├── index.html                  # Home page
-├── products.html               # Products listing page
-├── shop.html                   # Shop page
-├── orders.html                 # Order form
-├── payment.html                # Payment page (cart flow)
-├── payment2.html               # Payment page (buy now flow)
-├── success.html                # Payment success page
-│
-├── package.json
-├── package-lock.json
-└── README.md
+project_chem/
+|-- backend/
+|   |-- server.js            # Express server
+|   |-- db.js                # SQLite schema and init
+|-- public/
+|   |-- admin/               # Admin dashboard UI
+|   |-- assets/              # Images, uploads, receipts
+|   |-- products/            # Individual product pages
+|   |-- index.html
+|   |-- products.html
+|   |-- shop.html
+|   |-- cart.html
+|   |-- buy.html
+|   |-- orders.html
+|   |-- payment2.html
+|   |-- success.html
+|-- db/
+|   |-- chemsus.sqlite        # SQLite database (do not delete)
+|-- seed-data.sql
+|-- seed.js
+|-- package.json
+|-- README.md
 ```
 
 ---
 
-## 📄 Pages & Routes
+## Pages and Routes
 
 ### Public Pages
 
@@ -122,9 +112,10 @@ chemsus/
 | `/index.html`    | Home                  |
 | `/products.html` | Product listing       |
 | `/shop.html`     | Shop page             |
+| `/cart.html`     | Cart                  |
+| `/buy.html`      | Buy Now / Cart review |
 | `/orders.html`   | Order form            |
-| `/payment.html`  | Payment (cart orders) |
-| `/payment2.html` | Payment (buy now)     |
+| `/payment2.html` | Payment page          |
 | `/success.html`  | Order success         |
 
 ### Admin
@@ -135,7 +126,7 @@ chemsus/
 
 ---
 
-## 🔐 Admin Login
+## Admin Login
 
 **Default credentials:**
 
@@ -144,23 +135,30 @@ Username: admin
 Password: chemsus123
 ```
 
-> ⚠️ Change credentials in `server.js` before production.
+For production, set environment variables:
+
+```text
+ADMIN_USER=your_admin_user
+ADMIN_PASS=your_admin_password
+```
 
 ---
 
-## 🗄️ Database Tables
+## Database Tables
 
-* `products_page` – Products page cards
-* `shop_items` – Shop items
-* `orders` – Customer orders
-* `payments` – Payment & receipt records
-* `site_settings` – Brochure & site settings
+* `products_page` - Products page cards
+* `shop_items` - Shop items
+* `pack_pricing` - Pack sizes and pricing
+* `orders` - Customer orders
+* `order_items` - Order line items
+* `payments` - Payment and receipt records
+* `site_settings` - Brochure and site settings
 
-📌 Database is **persistent** – `chemsus.sqlite` is never deleted automatically.
+Database is persistent - `chemsus.sqlite` is never deleted automatically.
 
 ---
 
-## ⚙️ API Overview
+## API Overview
 
 ### Admin APIs
 
@@ -168,6 +166,7 @@ Password: chemsus123
 * `POST /api/admin/logout`
 * `GET /api/admin/products-page`
 * `GET /api/admin/shop-items`
+* `GET /api/admin/pack-pricing/:shopItemId`
 * `GET /api/admin/orders`
 * `GET /api/admin/payments`
 * `DELETE /api/admin/orders/:id`
@@ -179,30 +178,32 @@ Password: chemsus123
 * `POST /api/orders`
 * `POST /api/receipts`
 * `GET /api/site/brochure`
+* `GET /api/shop-items`
+* `GET /api/pack-pricing/:shopItemId`
 
 ---
 
-## ▶️ How to Run the Project
+## How to Run the Project
 
-### 1️⃣ Install dependencies
+### 1) Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2️⃣ Start the server
+### 2) Start the server
 
 ```bash
-node server/server.js
+npm start
 ```
 
-or (recommended for development):
+or (development):
 
 ```bash
-npx nodemon server/server.js
+npm run dev
 ```
 
-### 3️⃣ Open in browser
+### 3) Open in browser
 
 ```text
 http://localhost:3000
@@ -210,56 +211,27 @@ http://localhost:3000
 
 ---
 
-## 📦 Git Workflow
-
-### Stage all changes
-
-```bash
-git add .
-```
-
-### Commit
-
-```bash
-git commit -m "Implement ChemSus admin dashboard with full CRUD and order/payment management"
-```
-
----
-
-## 🧪 Tested Features
-
-* ✔ Product CRUD
-* ✔ Shop CRUD
-* ✔ Order placement
-* ✔ Receipt upload
-* ✔ Payment verification
-* ✔ Delete orders & payments
-* ✔ Mobile responsiveness
-
----
-
-## 🔒 Security Notes
+## Security Notes
 
 * Admin authentication uses HTTP-only cookies
-* File uploads are sanitised
-* SQLite foreign keys enforced
-* Receipt deletion removes DB entry (file can be optionally cleaned)
+* Admin requests use same-origin checks
+* File uploads are type-validated
+* Receipt deletion removes DB entry and file
+* Static files are served only from `public/`
 
 ---
 
-## 📌 Future Improvements (Optional)
+## Future Improvements (Optional)
 
 * Role-based admin access
 * Email notifications
 * Payment gateway integration
-* Pagination for orders & payments
+* Pagination for orders and payments
 * Cloud storage for receipts
 
 ---
 
-## 🧾 License
+## License
 
-© 2025 **ChemSus Technologies Pvt Ltd**
+? 2025 **ChemSus Technologies Pvt Ltd**
 All rights reserved.
-
----
