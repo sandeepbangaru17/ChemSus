@@ -11,7 +11,7 @@ DELETE FROM site_settings WHERE key = 'brochure_url';
 -- ============================================
 -- SITE SETTINGS
 -- ============================================
-INSERT INTO site_settings (key, value) VALUES ('brochure_url', 'assets/broucher.pdf');
+INSERT INTO site_settings (key, value) VALUES ('brochure_url', 'assets/brochure.pdf');
 
 -- ============================================
 -- PRODUCTS PAGE
@@ -20,10 +20,10 @@ INSERT INTO products_page (name, description, image, link, is_active, sort_order
 ('Calcium Levulinate', 'Premium pharmaceutical-grade calcium salt for nutraceutical applications with superior bioavailability.', 'assets/cl.jpeg', 'products/calcium-levulinate.html', 1, 1),
 ('Sodium Levulinate', 'Natural preservative and humectant for cosmetics and personal care products. COSMOS/ECOCERT friendly.', 'assets/sl.jpeg', 'products/sodium-levulinate.html', 1, 2),
 ('Levulinic Acid', 'Versatile platform chemical for pharmaceuticals, polymers, and green chemistry applications.', 'assets/la.jpeg', 'products/levulinic-acid.html', 1, 3),
-('5-HMF', 'High-purity 5-hydroxymethylfurfural for research, polymer synthesis, and pharmaceutical intermediates.', 'assets/5hmf.jpeg', 'products/5-hmf.html', 1, 4),
+('5-HMF', 'High-purity 5-hydroxymethylfurfural for research, polymer synthesis, and pharmaceutical intermediates.', 'assets/chemical1.avif', 'products/5-hmf.html', 1, 4),
 ('Ethyl Levulinate', 'Bio-based green solvent and fuel additive with low toxicity and excellent solvency properties.', 'assets/el.jpeg', 'products/ethyl-levulinate.html', 1, 5),
 ('Methyl Levulinate', 'Renewable ester solvent for coatings, inks, and biofuel applications.', 'assets/ml.jpeg', 'products/methyl-levulinate.html', 1, 6),
-('DALA', 'Delta-aminolevulinic acid for pharmaceutical and agricultural applications.', 'assets/dala.jpeg', 'products/dala.html', 1, 7);
+('DALA', 'Delta-aminolevulinic acid for pharmaceutical and agricultural applications.', 'assets/dala.jpg', 'products/dala.html', 1, 7);
 
 -- ============================================
 -- SHOP ITEMS
@@ -39,7 +39,7 @@ INSERT INTO shop_items (name, subtitle, features_json, price, stockStatus, showB
  0, 
  '', 
  'products/calcium-levulinate.html', 
- 'assets/cl.jpeg', 
+ 'assets/call.png', 
  1, 
  1);
 
@@ -123,7 +123,7 @@ INSERT INTO shop_items (name, subtitle, features_json, price, stockStatus, showB
  1, 
  'Limited stock', 
  'products/dala.html', 
- 'assets/dala.jpeg', 
+ 'assets/dala.jpg', 
  1, 
  7);
 
@@ -131,51 +131,44 @@ INSERT INTO shop_items (name, subtitle, features_json, price, stockStatus, showB
 -- PACK PRICING
 -- ============================================
 
--- Get shop item IDs (we'll use them in the INSERT statements)
--- For Calcium Levulinate (ID will be 1)
+-- Use shop item names to resolve IDs
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(1, '100 g', 36.3, 7336, 2000, 1, 1),
-(1, '500 g', 116.8, 10735, 7000, 1, 2),
-(1, '1 kg', 203, 18658, 10000, 1, 3),
-(1, '2 kg', 0, 0, 19000, 1, 4),
-(1, '5 kg', 0, 0, 42500, 1, 5);
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '100 g', 36.3, 7336, 2000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '500 g', 116.8, 10735, 7000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '1 kg', 203, 18658, 10000, 1, 3),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '2 kg', 0, 0, 19000, 1, 4),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '5 kg', 0, 0, 42500, 1, 5);
 
--- For Sodium Levulinate (ID will be 2)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(2, '100 g', 26, 2390, 2000, 1, 1),
-(2, '500 g', 86.7, 7969, 7000, 1, 2),
-(2, '1 kg', 144.5, 13281, 10000, 1, 3),
-(2, '2 kg', 262.9, 24163, 18000, 1, 4),
-(2, '3 kg', 404.8, 37169, 27000, 1, 5),
-(2, '5 kg', 642.3, 59034, 42500, 1, 6);
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '100 g', 26, 2390, 2000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '500 g', 86.7, 7969, 7000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '1 kg', 144.5, 13281, 10000, 1, 3),
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '2 kg', 262.9, 24163, 18000, 1, 4),
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '3 kg', 404.8, 37169, 27000, 1, 5),
+((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '5 kg', 642.3, 59034, 42500, 1, 6);
 
--- For Levulinic Acid (ID will be 3)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(3, '100 g', 40.6, 7373, 2000, 1, 1),
-(3, '500 g', 108.1, 9936, 3000, 1, 2),
-(3, '1 kg', 164.6, 15128, 5000, 1, 3);
+((SELECT id FROM shop_items WHERE name='Levulinic Acid'), '100 g', 40.6, 7373, 2000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Levulinic Acid'), '500 g', 108.1, 9936, 3000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Levulinic Acid'), '1 kg', 164.6, 15128, 5000, 1, 3);
 
--- For 5-HMF (ID will be 4)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(4, '5 g', 30, 2206, 2000, 1, 1),
-(4, '25 g', 85, 6250, 5000, 1, 2),
-(4, '100 g', 249, 18290, 15000, 1, 3);
+((SELECT id FROM shop_items WHERE name='5-HMF'), '5 g', 30, 2206, 2000, 1, 1),
+((SELECT id FROM shop_items WHERE name='5-HMF'), '25 g', 85, 6250, 5000, 1, 2),
+((SELECT id FROM shop_items WHERE name='5-HMF'), '100 g', 249, 18290, 15000, 1, 3);
 
--- For Ethyl Levulinate (ID will be 5)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(5, '100 g', 77, 7077, 4000, 1, 1),
-(5, '500 mL', 97, 8915, 7000, 1, 2),
-(5, '1 L', 125.5, 11535, 10000, 1, 3);
+((SELECT id FROM shop_items WHERE name='Ethyl Levulinate'), '100 g', 77, 7077, 4000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Ethyl Levulinate'), '500 mL', 97, 8915, 7000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Ethyl Levulinate'), '1 L', 125.5, 11535, 10000, 1, 3);
 
--- For Methyl Levulinate (ID will be 6)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(6, '100 g', 77, 7077, 4000, 1, 1),
-(6, '500 mL', 97, 8915, 7000, 1, 2),
-(6, '1 L', 125.5, 11535, 10000, 1, 3);
+((SELECT id FROM shop_items WHERE name='Methyl Levulinate'), '100 g', 77, 7077, 4000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Methyl Levulinate'), '500 mL', 97, 8915, 7000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Methyl Levulinate'), '1 L', 125.5, 11535, 10000, 1, 3);
 
--- For DALA (ID will be 7)
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-(7, '5 g', 182.5, 16774, 15000, 1, 1),
-(7, '10 g', 273.7, 25156, 20000, 1, 2),
-(7, '25 g', 410.7, 37748, 30000, 1, 3),
-(7, '100 g', 925.7, 85084, 70000, 1, 4);
+((SELECT id FROM shop_items WHERE name='DALA'), '5 g', 182.5, 16774, 15000, 1, 1),
+((SELECT id FROM shop_items WHERE name='DALA'), '10 g', 273.7, 25156, 20000, 1, 2),
+((SELECT id FROM shop_items WHERE name='DALA'), '25 g', 410.7, 37748, 30000, 1, 3),
+((SELECT id FROM shop_items WHERE name='DALA'), '100 g', 925.7, 85084, 70000, 1, 4);
