@@ -753,8 +753,16 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="quantity">Anticipated Quantity required *</label>
-              <input type="text" id="quantity" class="form-input" name="quantity" placeholder="e.g., 100g, 1kg, etc."
-                required>
+              <select id="quantity" class="form-select" name="quantity" required>
+                <option value="">Select quantity (kg)...</option>
+                <option value="1 kg">1 kg</option>
+                <option value="2 kg">2 kg</option>
+                <option value="5 kg">5 kg</option>
+                <option value="10 kg">10 kg</option>
+                <option value="other">Other (type required quantity)</option>
+              </select>
+              <input type="text" id="quantityOther" class="form-input" name="quantityOther"
+                placeholder="Enter required quantity (e.g., 750 kg)" style="display:none; margin-top:10px;">
             </div>
             <div class="form-group">
               <label class="form-label" for="timeline">Time Line</label>
@@ -939,6 +947,19 @@
       }
     }
 
+    const quantitySelect = document.getElementById("quantity");
+    const quantityOtherInput = document.getElementById("quantityOther");
+
+    function toggleCustomQuantityField() {
+      const isOther = quantitySelect.value === "other";
+      quantityOtherInput.style.display = isOther ? "block" : "none";
+      quantityOtherInput.required = isOther;
+      if (!isOther) quantityOtherInput.value = "";
+    }
+
+    quantitySelect.addEventListener("change", toggleCustomQuantityField);
+    toggleCustomQuantityField();
+
     // Send form details to WhatsApp on submit
     document.getElementById('sampleRequestForm').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -950,7 +971,9 @@
       const email = document.getElementById("email").value.trim();
       const phone = document.getElementById("phone").value.trim();
       const intendedUse = document.getElementById("intendedUse").value.trim();
-      const quantity = document.getElementById("quantity").value.trim();
+      const quantityValue = document.getElementById("quantity").value.trim();
+      const quantityOther = document.getElementById("quantityOther").value.trim();
+      const quantity = quantityValue === "other" ? quantityOther : quantityValue;
       const timeline = document.getElementById("timeline").value.trim();
       const orderFrequency = document.getElementById("orderFrequency").value;
 
