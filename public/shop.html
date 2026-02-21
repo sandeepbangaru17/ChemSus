@@ -170,6 +170,7 @@
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+      transition: opacity .2s ease;
     }
 
     .mobile-toggle svg {
@@ -179,6 +180,7 @@
 
     .main-wrapper {
       margin-left: 240px;
+      width: calc(100% - 240px);
       flex: 1;
       min-height: 100vh;
       display: flex;
@@ -681,7 +683,8 @@
 
       .main-wrapper {
         margin-left: 0;
-        padding-top: 60px;
+        width: 100%;
+        padding-top: 72px;
         /* Space for mobile toggle */
       }
 
@@ -691,6 +694,11 @@
 
       body.no-scroll {
         overflow: hidden
+      }
+
+      body.no-scroll .mobile-toggle {
+        opacity: 0;
+        pointer-events: none;
       }
     }
 
