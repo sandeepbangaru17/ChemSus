@@ -111,6 +111,29 @@ async function initDb() {
     CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(payment_status);
     CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(created_at);
 
+    CREATE TABLE IF NOT EXISTS email_otp_sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      challenge_id TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL,
+      otp_hash TEXT NOT NULL,
+      attempts INTEGER NOT NULL DEFAULT 0,
+      max_attempts INTEGER NOT NULL DEFAULT 5,
+      expires_at TEXT NOT NULL,
+      cooldown_until TEXT NOT NULL,
+      verified_at TEXT DEFAULT NULL,
+      verification_token TEXT DEFAULT NULL,
+      token_expires_at TEXT DEFAULT NULL,
+      used_at TEXT DEFAULT NULL,
+      order_id INTEGER DEFAULT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE SET NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_email_otp_email ON email_otp_sessions(email);
+    CREATE INDEX IF NOT EXISTS idx_email_otp_challenge ON email_otp_sessions(challenge_id);
+    CREATE INDEX IF NOT EXISTS idx_email_otp_token ON email_otp_sessions(verification_token);
+
     CREATE TABLE IF NOT EXISTS order_items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       order_id INTEGER NOT NULL,
