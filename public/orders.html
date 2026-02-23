@@ -554,7 +554,7 @@
         margin-left: 0;
         width: 100%;
         padding-top: 0;
-/* No forced top gap on mobile */
+        /* No forced top gap on mobile */
       }
 
       .mobile-toggle {
@@ -581,14 +581,14 @@
         padding: 22px 18px;
       }
     }
-  
+
     @media (max-width: 1050px) {
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -986,10 +986,7 @@
         otpState.challengeId = result.challengeId || '';
         resetOtpState({ clearChallenge: false });
         startOtpCooldown(result.resendInSec || 60);
-        const info = result.delivery === 'dev' && result.devOtp
-          ? ` OTP: ${result.devOtp}`
-          : '';
-        setOtpStatus(`OTP sent to ${email}.${info}`, false);
+        setOtpStatus(`OTP sent to ${email}.`, false);
       } catch (err) {
         setOtpStatus(err.message || 'Failed to send OTP', true);
         otpState.cooldownSeconds = 0;
@@ -1206,5 +1203,3 @@
 </body>
 
 </html>
-
-

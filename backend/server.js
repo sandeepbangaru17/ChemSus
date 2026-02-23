@@ -94,7 +94,10 @@ function getOtpTransporter() {
   const secure =
     String(process.env.OTP_SMTP_SECURE || process.env.SMTP_SECURE || "false") ===
     "true";
-  if (!host || !user || !pass || !Number.isFinite(port)) return null;
+  if (!host || !user || !pass || !Number.isFinite(port)) {
+    console.warn("SMTP configuration is incomplete. OTP will not be sent via email.");
+    return null;
+  }
 
   otpTransporter = nodemailer.createTransport({
     host,
@@ -691,8 +694,10 @@ app.post("/api/otp/email/send", async (req, res) => {
       resendInSec: OTP_RESEND_SEC,
       delivery: delivery?.mode || "unknown",
     };
-    if ((delivery?.mode || "") === "dev" && process.env.NODE_ENV !== "production") {
-      out.devOtp = otp;
+    // Security: Never return the OTP code to the frontend, even in development.
+    // Use server logs if you need to see the OTP for testing.
+    if ((delivery?.mode || "") === "dev") {
+      console.log(`[DEBUG] OTP for ${email}: ${otp}`);
     }
     res.json(out);
   } catch (e) {
