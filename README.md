@@ -142,6 +142,22 @@ ADMIN_USER=your_admin_user
 ADMIN_PASS=your_admin_password
 ```
 
+For email OTP verification on checkout, set SMTP and OTP variables:
+
+```text
+OTP_SMTP_HOST=smtp.your-provider.com
+OTP_SMTP_PORT=587
+OTP_SMTP_SECURE=false
+OTP_SMTP_USER=your_smtp_user
+OTP_SMTP_PASS=your_smtp_password
+OTP_EMAIL_FROM=no-reply@yourdomain.com
+OTP_HASH_SECRET=change_this_secret
+OTP_TTL_MIN=10
+OTP_RESEND_SEC=60
+OTP_MAX_ATTEMPTS=5
+OTP_TOKEN_TTL_MIN=30
+```
+
 ---
 
 ## Database Tables
@@ -153,6 +169,7 @@ ADMIN_PASS=your_admin_password
 * `order_items` - Order line items
 * `payments` - Payment and receipt records
 * `site_settings` - Brochure and site settings
+* `email_otp_sessions` - Email OTP sessions for checkout verification
 
 Database is persistent - `chemsus.sqlite` is never deleted automatically.
 
@@ -175,6 +192,8 @@ Database is persistent - `chemsus.sqlite` is never deleted automatically.
 
 ### Public APIs
 
+* `POST /api/otp/email/send`
+* `POST /api/otp/email/verify`
 * `POST /api/orders`
 * `POST /api/receipts`
 * `GET /api/site/brochure`
