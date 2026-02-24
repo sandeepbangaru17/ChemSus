@@ -247,7 +247,7 @@
     .chem-intro-collision .emoji {
       position: absolute;
       left: 50%;
-      top: 42.5%;
+      top: 41.8%;
       font-size: clamp(106px, 15vw, 196px);
       line-height: 1;
       opacity: 0;
@@ -256,12 +256,12 @@
     }
 
     .chem-intro-collision .left {
-      transform: translate(-300%, -54%) rotate(32deg) scale(0.88);
+      transform: translate(-286%, -54%) rotate(28deg) scale(0.9);
       animation: collideLeft 2.2s cubic-bezier(0.2, 0.88, 0.24, 1) forwards;
     }
 
     .chem-intro-collision .right {
-      transform: translate(200%, -54%) rotate(-32deg) scale(0.88);
+      transform: translate(186%, -54%) rotate(-28deg) scale(-0.9, 0.9);
       animation: collideRight 2.2s cubic-bezier(0.2, 0.88, 0.24, 1) forwards;
     }
 
@@ -442,7 +442,7 @@
     @keyframes collideLeft {
       0% {
         opacity: 0;
-        transform: translate(-300%, -54%) rotate(32deg) scale(0.88);
+        transform: translate(-286%, -54%) rotate(28deg) scale(0.9);
       }
 
       18% {
@@ -451,29 +451,29 @@
 
       56% {
         opacity: 1;
-        transform: translate(-72%, -52%) rotate(18deg) scale(1.04);
+        transform: translate(-82%, -52%) rotate(16deg) scale(1.02);
       }
 
       71% {
         opacity: 1;
-        transform: translate(-58%, -54%) rotate(40deg) scale(1.08);
+        transform: translate(-64%, -54%) rotate(36deg) scale(1.07);
       }
 
       81% {
         opacity: 1;
-        transform: translate(-65%, -53%) rotate(34deg) scale(1.04);
+        transform: translate(-70%, -53%) rotate(32deg) scale(1.03);
       }
 
       100% {
         opacity: 0;
-        transform: translate(-234%, -58%) rotate(44deg) scale(0.84);
+        transform: translate(-230%, -58%) rotate(42deg) scale(0.82);
       }
     }
 
     @keyframes collideRight {
       0% {
         opacity: 0;
-        transform: translate(200%, -54%) rotate(-32deg) scale(0.88);
+        transform: translate(186%, -54%) rotate(-28deg) scale(-0.9, 0.9);
       }
 
       18% {
@@ -482,22 +482,22 @@
 
       56% {
         opacity: 1;
-        transform: translate(-28%, -52%) rotate(-18deg) scale(1.04);
+        transform: translate(-18%, -52%) rotate(-16deg) scale(-1.02, 1.02);
       }
 
       71% {
         opacity: 1;
-        transform: translate(-42%, -54%) rotate(-40deg) scale(1.08);
+        transform: translate(-36%, -54%) rotate(-36deg) scale(-1.07, 1.07);
       }
 
       81% {
         opacity: 1;
-        transform: translate(-35%, -53%) rotate(-34deg) scale(1.04);
+        transform: translate(-30%, -53%) rotate(-32deg) scale(-1.03, 1.03);
       }
 
       100% {
         opacity: 0;
-        transform: translate(134%, -58%) rotate(-44deg) scale(0.84);
+        transform: translate(130%, -58%) rotate(-42deg) scale(-0.82, 0.82);
       }
     }
 
