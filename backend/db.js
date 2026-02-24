@@ -1,10 +1,66 @@
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 const sqlite3 = require("sqlite3").verbose();
 
-const DB_DIR = path.join(__dirname, "..", "db");
-const DB_PATH = path.join(DB_DIR, "chemsus.sqlite");
-if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
+const ROOT = path.join(__dirname, "..");
+const DEFAULT_DB_PATH = path.join(ROOT, "db", "chemsus.sqlite");
+
+function resolveDbPath(rawPath) {
+  const val = String(rawPath || "").trim();
+  if (!val) return DEFAULT_DB_PATH;
+  return path.isAbsolute(val) ? val : path.join(ROOT, val);
+}
+
+function ensureDirFor(filePath) {
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function isWritable(filePath) {
+  try {
+    ensureDirFor(filePath);
+    fs.accessSync(path.dirname(filePath), fs.constants.W_OK);
+    if (fs.existsSync(filePath)) {
+      fs.accessSync(filePath, fs.constants.W_OK);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function pickDbPath() {
+  const primary = resolveDbPath(process.env.DB_PATH);
+  if (isWritable(primary)) return primary;
+
+  const fallback = resolveDbPath(
+    process.env.DB_FALLBACK_PATH || path.join(os.tmpdir(), "chemsus.sqlite")
+  );
+  ensureDirFor(fallback);
+
+  // Seed fallback DB with existing data once when possible.
+  if (fs.existsSync(primary) && !fs.existsSync(fallback)) {
+    try {
+      fs.copyFileSync(primary, fallback);
+    } catch (e) {
+      console.warn("[DB] Failed to seed fallback DB:", e.message || e);
+    }
+  }
+
+  if (isWritable(fallback)) {
+    console.warn(
+      `[DB] Primary DB path is not writable: ${primary}. Using fallback: ${fallback}`
+    );
+    return fallback;
+  }
+
+  // Last resort: return primary so startup still surfaces a clear SQLite error.
+  return primary;
+}
+
+const DB_PATH = pickDbPath();
+console.log(`[DB] SQLite path: ${DB_PATH}`);
 
 const db = new sqlite3.Database(DB_PATH);
 
