@@ -211,20 +211,20 @@
       position: absolute;
       left: 50%;
       top: 42%;
-      font-size: clamp(88px, 13vw, 182px);
+      font-size: clamp(124px, 18vw, 252px);
       line-height: 1;
       opacity: 0;
-      filter: drop-shadow(0 0 22px rgba(133, 255, 187, 0.38));
+      filter: drop-shadow(0 0 26px rgba(136, 255, 189, 0.46));
       will-change: transform, opacity;
     }
 
     .chem-intro-collision .left {
-      transform: translate(-290%, -50%) rotate(-16deg) scale(0.9);
+      transform: translate(-300%, -50%) rotate(-16deg) scale(0.9);
       animation: collideLeft 1.7s cubic-bezier(0.18, 0.82, 0.22, 1) forwards;
     }
 
     .chem-intro-collision .right {
-      transform: translate(190%, -50%) rotate(16deg) scale(0.9);
+      transform: translate(200%, -50%) rotate(16deg) scale(0.9);
       animation: collideRight 1.7s cubic-bezier(0.18, 0.82, 0.22, 1) forwards;
     }
 
@@ -271,15 +271,15 @@
       font-weight: 800;
       letter-spacing: 0.012em;
       line-height: 1.08;
-      background: linear-gradient(96deg, #5d2800 0%, #7a3700 24%, #165231 56%, #0f3d24 78%, #072716 100%);
+      background: linear-gradient(96deg, #2a0f00 0%, #3b1600 24%, #0d2f1a 56%, #081f11 78%, #04130b 100%);
       background-size: 250% 100%;
       color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
       font-size: clamp(46px, 8.4vw, 102px);
       margin-bottom: 6px;
-      -webkit-text-stroke: 1px rgba(0, 0, 0, 0.42);
-      text-shadow: 0 5px 22px rgba(0, 0, 0, 0.56), 0 2px 10px rgba(255, 173, 92, 0.2), 0 2px 10px rgba(118, 212, 153, 0.22);
+      -webkit-text-stroke: 1.15px rgba(0, 0, 0, 0.62);
+      text-shadow: 0 7px 24px rgba(0, 0, 0, 0.74), 0 2px 8px rgba(135, 70, 18, 0.2), 0 2px 8px rgba(31, 89, 58, 0.24);
       animation: titleShimmer 4.2s linear infinite;
     }
 
@@ -380,7 +380,7 @@
     @keyframes collideLeft {
       0% {
         opacity: 0;
-        transform: translate(-290%, -50%) rotate(-16deg) scale(0.9);
+        transform: translate(-300%, -50%) rotate(-16deg) scale(0.9);
       }
 
       15% {
@@ -389,24 +389,24 @@
 
       62% {
         opacity: 1;
-        transform: translate(-110%, -50%) rotate(0deg) scale(1.02);
+        transform: translate(-58%, -50%) rotate(-1deg) scale(1.08);
       }
 
       72% {
         opacity: 1;
-        transform: translate(-126%, -52%) rotate(-3deg) scale(0.98);
+        transform: translate(-76%, -52%) rotate(-4deg) scale(1.02);
       }
 
       100% {
         opacity: 0;
-        transform: translate(-220%, -56%) rotate(-14deg) scale(0.85);
+        transform: translate(-232%, -56%) rotate(-14deg) scale(0.85);
       }
     }
 
     @keyframes collideRight {
       0% {
         opacity: 0;
-        transform: translate(190%, -50%) rotate(16deg) scale(0.9);
+        transform: translate(200%, -50%) rotate(16deg) scale(0.9);
       }
 
       15% {
@@ -415,17 +415,17 @@
 
       62% {
         opacity: 1;
-        transform: translate(10%, -50%) rotate(0deg) scale(1.02);
+        transform: translate(-42%, -50%) rotate(1deg) scale(1.08);
       }
 
       72% {
         opacity: 1;
-        transform: translate(26%, -52%) rotate(3deg) scale(0.98);
+        transform: translate(-24%, -52%) rotate(4deg) scale(1.02);
       }
 
       100% {
         opacity: 0;
-        transform: translate(120%, -56%) rotate(14deg) scale(0.85);
+        transform: translate(132%, -56%) rotate(14deg) scale(0.85);
       }
     }
 
@@ -1259,7 +1259,7 @@
     <div class="chem-intro-grid" aria-hidden="true"></div>
     <div class="chem-intro-collision" aria-hidden="true">
       <span class="emoji left">&#129514;</span>
-      <span class="emoji right">&#9883;&#65039;</span>
+      <span class="emoji right">&#129514;</span>
       <span class="burst"></span>
     </div>
     <div class="chem-intro-content">
