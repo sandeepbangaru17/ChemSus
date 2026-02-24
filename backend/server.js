@@ -254,7 +254,7 @@ function getAllowedRequestOrigins(req) {
       origins.add(`${u.protocol.toLowerCase()}//127.0.0.1:${port}`);
     if (u.hostname === "127.0.0.1")
       origins.add(`${u.protocol.toLowerCase()}//localhost:${port}`);
-  } catch {}
+  } catch { }
 
   return origins;
 }
@@ -437,8 +437,95 @@ app.get("/api/products-page", async (req, res) => {
       []
     );
     res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
+  } catch (e) {
+    console.error("Products page fetch error stack:", e);
+    res.status(500).json({ error: "DB error", details: String(e.message || e) });
+  }
+});
+
+app.post("/api/otp/email/verify", async (req, res) => {
+  try {
+    await purgeOtpSessions();
+    const email = normalizeEmail(req.body?.email || "");
+    const challengeId = String(req.body?.challengeId || "").trim();
+    const otp = String(req.body?.otp || "").trim();
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: "Invalid email" });
+    }
+    if (!challengeId || !/^[a-f0-9]{20,}$/i.test(challengeId)) {
+      return res.status(400).json({ error: "Invalid challenge" });
+    }
+    if (!/^[0-9]{6}$/.test(otp)) {
+      return res.status(400).json({ error: "Invalid OTP format" });
+    }
+
+    const row = await get(
+      `SELECT id, otp_hash, attempts, max_attempts, verified_at, used_at,
+              CAST((julianday(expires_at) - julianday('now')) * 86400 AS INTEGER) AS expires_in_sec
+       FROM email_otp_sessions
+       WHERE challenge_id=? AND email=?
+       LIMIT 1`,
+      [challengeId, email]
+    );
+
+    if (!row) return res.status(400).json({ error: "OTP session not found" });
+    if (row.used_at) return res.status(400).json({ error: "OTP session already used" });
+    if (row.verified_at)
+      return res.status(400).json({ error: "OTP already verified. Please request a new OTP." });
+    if (Number(row.expires_in_sec) <= 0)
+      return res.status(400).json({ error: "OTP expired. Request a new OTP." });
+    if (Number(row.attempts) >= Number(row.max_attempts)) {
+      return res.status(429).json({ error: "Maximum OTP attempts exceeded. Request a new OTP." });
+    }
+
+    const expectedHash = hashOtp(email, otp, challengeId);
+    if (expectedHash !== row.otp_hash) {
+      await run(
+        `UPDATE email_otp_sessions
+         SET attempts = attempts + 1, updated_at=datetime('now')
+         WHERE id=?`,
+        [row.id]
+      );
+      return res.status(400).json({ error: "Invalid OTP" });
+    }
+
+    const verificationToken = crypto.randomBytes(24).toString("hex");
+    await run(
+      `UPDATE email_otp_sessions
+       SET verified_at=datetime('now'),
+           verification_token=?,
+           token_expires_at=datetime('now', ?),
+           updated_at=datetime('now')
+       WHERE id=?`,
+      [verificationToken, `+${OTP_TOKEN_TTL_MIN} minutes`, row.id]
+    );
+
+    return res.json({
+      ok: true,
+      verificationToken,
+      tokenExpiresInSec: OTP_TOKEN_TTL_MIN * 60,
+    });
+  } catch (e) {
+    console.error("OTP verify error stack:", e);
+    res.status(500).json({ error: "OTP verification failed", details: String(e.message || e) });
+  }
+});
+
+app.get("/api/test", (req, res) =>
+  res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
+);
+
+app.post("/api/orders", async (req, res) => {
+  try {
+    const rows = await all(
+      `SELECT * FROM shop_items WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
+      []
+    );
+    res.json(rows);
+  } catch (e) {
+    console.error("Shop items fetch error stack:", e);
+    res.status(500).json({ error: "DB error", details: String(e.message || e) });
   }
 });
 
@@ -754,8 +841,8 @@ app.post("/api/otp/email/send", async (req, res) => {
     }
     res.json(out);
   } catch (e) {
-    console.error("OTP send error:", e);
-    res.status(500).json({ error: "OTP send failed" });
+    console.error("OTP send error stack:", e);
+    res.status(500).json({ error: "OTP send failed", details: String(e.stack || e.message || e) });
   }
 });
 
@@ -823,8 +910,8 @@ app.post("/api/otp/email/verify", async (req, res) => {
       tokenExpiresInSec: OTP_TOKEN_TTL_MIN * 60,
     });
   } catch (e) {
-    console.error("OTP verify error:", e);
-    res.status(500).json({ error: "OTP verification failed" });
+    console.error("OTP verify error stack:", e);
+    res.status(500).json({ error: "OTP verification failed", details: String(e.stack || e.message || e) });
   }
 });
 
