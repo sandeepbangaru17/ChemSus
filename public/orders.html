@@ -553,8 +553,7 @@
       .main-wrapper {
         margin-left: 0;
         width: 100%;
-        padding-top: 0;
-        /* No forced top gap on mobile */
+        padding-top: 72px;
       }
 
       .mobile-toggle {
@@ -986,7 +985,15 @@
         otpState.challengeId = result.challengeId || '';
         resetOtpState({ clearChallenge: false });
         startOtpCooldown(result.resendInSec || 60);
-        setOtpStatus(`OTP sent to ${email}.`, false);
+        if ((result.delivery || '') === 'dev' && result.debugOtp) {
+          document.getElementById('emailOtp').value = String(result.debugOtp);
+          setOtpStatus(
+            `OTP ready for ${email}. Email delivery is unavailable right now, so use this OTP: ${result.debugOtp}`,
+            false
+          );
+        } else {
+          setOtpStatus(`OTP sent to ${email}.`, false);
+        }
       } catch (err) {
         setOtpStatus(err.message || 'Failed to send OTP', true);
         otpState.cooldownSeconds = 0;

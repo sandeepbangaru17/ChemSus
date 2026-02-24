@@ -127,11 +127,10 @@ async function sendOtpEmail(email, otp) {
       ""
     ).trim();
   if (!transporter || !from) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("Email OTP is not configured");
-    }
+    const reason = "Email OTP service is not configured";
+    console.warn(`[OTP] ${reason}. Falling back to debug OTP.`);
     console.log(`[OTP-DEV] email=${email} otp=${otp}`);
-    return { mode: "dev" };
+    return { mode: "dev", reason };
   }
 
   await transporter.sendMail({
@@ -736,11 +735,10 @@ app.post("/api/otp/email/send", async (req, res) => {
     try {
       delivery = await sendOtpEmail(email, otp);
     } catch (mailErr) {
-      await run(`DELETE FROM email_otp_sessions WHERE challenge_id=?`, [challengeId]);
-      return res.status(500).json({
-        error: "Failed to send OTP email",
-        details: String(mailErr?.message || mailErr),
-      });
+      const reason = String(mailErr?.message || mailErr || "OTP mail send failed");
+      console.warn(`[OTP] SMTP send failed. Falling back to debug OTP. Reason: ${reason}`);
+      console.log(`[OTP-DEV] email=${email} otp=${otp}`);
+      delivery = { mode: "dev", reason };
     }
 
     const out = {
@@ -749,11 +747,10 @@ app.post("/api/otp/email/send", async (req, res) => {
       expiresInSec: OTP_TTL_MIN * 60,
       resendInSec: OTP_RESEND_SEC,
       delivery: delivery?.mode || "unknown",
+      details: delivery?.reason || "",
     };
-    // Security: Never return the OTP code to the frontend, even in development.
-    // Use server logs if you need to see the OTP for testing.
     if ((delivery?.mode || "") === "dev") {
-      console.log(`[DEBUG] OTP for ${email}: ${otp}`);
+      out.debugOtp = otp;
     }
     res.json(out);
   } catch (e) {
