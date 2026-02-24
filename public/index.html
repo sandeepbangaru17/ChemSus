@@ -200,6 +200,26 @@
       pointer-events: none;
     }
 
+    .chem-intro-brand-bg {
+      --brand-logo-size: 64%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(94vw, 1120px);
+      height: min(94vw, 1120px);
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      opacity: 0.2;
+      background:
+        radial-gradient(circle at center, rgba(255, 148, 35, 0.2) 0%, rgba(255, 148, 35, 0.03) 36%, transparent 62%),
+        radial-gradient(circle at center, rgba(66, 174, 255, 0.2) 0%, rgba(66, 174, 255, 0.03) 40%, transparent 66%),
+        url("assets/logo.jpg") center/var(--brand-logo-size) no-repeat;
+      mix-blend-mode: screen;
+      filter: saturate(1.22) contrast(1.08) drop-shadow(0 0 38px rgba(11, 78, 130, 0.4));
+      pointer-events: none;
+      animation: brandPulse 6s ease-in-out infinite;
+    }
+
     .chem-intro-content {
       position: relative;
       z-index: 1;
@@ -211,41 +231,30 @@
       box-shadow: none;
       backdrop-filter: none;
       animation: introPop 0.9s ease;
-      width: min(96vw, 980px);
+      width: min(96vw, 1080px);
     }
 
     .chem-intro-logo-wrap {
-      position: relative;
-      width: 178px;
-      height: 178px;
-      margin: 0 auto 10px;
-      display: grid;
-      place-items: center;
+      display: none;
     }
 
     .chem-intro-logo {
-      width: 162px;
-      height: 162px;
-      object-fit: contain;
-      border-radius: 0;
-      border: none;
-      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.48);
-      margin: 0 auto;
+      display: none;
     }
 
     .chem-intro-title {
       font-family: "Montserrat", sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.01em;
+      font-weight: 800;
+      letter-spacing: 0.012em;
       line-height: 1.08;
-      background: linear-gradient(90deg, #00d9cf 0%, #5fd8ff 38%, #0074c7 74%, #00d9cf 100%);
-      background-size: 210% 100%;
+      background: linear-gradient(94deg, #ff8610 0%, #ffaf38 24%, #1da0ff 54%, #005fd6 78%, #2f9fff 100%);
+      background-size: 240% 100%;
       color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
-      font-size: clamp(40px, 7vw, 76px);
+      font-size: clamp(46px, 8.4vw, 102px);
       margin-bottom: 6px;
-      text-shadow: 0 2px 20px rgba(70, 196, 255, 0.24);
+      text-shadow: 0 4px 22px rgba(255, 152, 36, 0.32), 0 4px 22px rgba(56, 174, 255, 0.32);
       animation: titleShimmer 4.2s linear infinite;
     }
 
@@ -375,6 +384,19 @@
       }
     }
 
+    @keyframes brandPulse {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(0.98);
+        opacity: 0.17;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.03);
+        opacity: 0.24;
+      }
+    }
+
     @keyframes emojiFall {
       0% {
         transform: translateY(-10vh) rotate(0deg);
@@ -427,6 +449,12 @@
     }
 
     @media (max-width: 600px) {
+      .chem-intro-brand-bg {
+        --brand-logo-size: 72%;
+        width: min(130vw, 760px);
+        height: min(130vw, 760px);
+      }
+
       .chem-intro-content {
         padding: 10px 10px 8px;
       }
@@ -1154,6 +1182,7 @@
       <span style="--x:90%;--size:28px;--duration:11.7s;--delay:-5.4s;">🧬</span>
     </div>
     <div class="chem-intro-grid" aria-hidden="true"></div>
+    <div class="chem-intro-brand-bg" aria-hidden="true"></div>
     <div class="chem-intro-content">
       <div class="chem-intro-logo-wrap" aria-hidden="true">
         <img src="assets/logo.jpg" alt="ChemSus Logo" class="chem-intro-logo">
