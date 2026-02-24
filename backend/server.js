@@ -223,11 +223,59 @@ function purgeExpiredSessions() {
   }
 }
 
+function normalizeOrigin(input) {
+  try {
+    const u = new URL(String(input || ""));
+    const proto = u.protocol.toLowerCase();
+    const host = u.hostname.toLowerCase();
+    const port = u.port || (proto === "https:" ? "443" : "80");
+    return `${proto}//${host}:${port}`;
+  } catch {
+    return null;
+  }
+}
+
+function getAllowedRequestOrigins(req) {
+  const protoRaw = String(
+    req.headers["x-forwarded-proto"] || req.protocol || "http"
+  );
+  const hostRaw = String(req.headers["x-forwarded-host"] || req.get("host") || "");
+  const proto = protoRaw.split(",")[0].trim() || "http";
+  const host = hostRaw.split(",")[0].trim();
+  const origins = new Set();
+
+  const primary = normalizeOrigin(`${proto}://${host}`);
+  if (primary) origins.add(primary);
+
+  // Dev convenience: treat localhost and 127.0.0.1 as equivalent.
+  try {
+    const u = new URL(`${proto}://${host}`);
+    const port = u.port || (u.protocol === "https:" ? "443" : "80");
+    if (u.hostname === "localhost")
+      origins.add(`${u.protocol.toLowerCase()}//127.0.0.1:${port}`);
+    if (u.hostname === "127.0.0.1")
+      origins.add(`${u.protocol.toLowerCase()}//localhost:${port}`);
+  } catch {}
+
+  return origins;
+}
+
 function isSameOrigin(req) {
-  const origin = req.headers.origin || req.headers.referer;
-  if (!origin) return true;
-  const host = `${req.protocol}://${req.get("host")}`;
-  return origin.startsWith(host);
+  const secFetchSite = String(req.headers["sec-fetch-site"] || "").toLowerCase();
+  if (
+    secFetchSite &&
+    !["same-origin", "same-site", "none"].includes(secFetchSite)
+  ) {
+    return false;
+  }
+
+  const source = req.headers.origin || req.headers.referer;
+  if (!source) return true;
+
+  const sourceOrigin = normalizeOrigin(source);
+  if (!sourceOrigin) return false;
+
+  return getAllowedRequestOrigins(req).has(sourceOrigin);
 }
 
 function requireAdminCsrf(req, res, next) {
