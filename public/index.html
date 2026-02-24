@@ -330,81 +330,22 @@
 
     .chem-intro-title {
       font-family: "Montserrat", sans-serif;
-      font-weight: 800;
-      letter-spacing: 0.012em;
-      line-height: 1.08;
-      background: linear-gradient(96deg, #1f0b00 0%, #2d1000 28%, #0c2c19 58%, #071b0f 100%);
-      background-size: 220% 100%;
+      display: inline-block;
+      font-weight: 900;
+      letter-spacing: 0.016em;
+      line-height: 1.02;
+      background: linear-gradient(96deg, #ff9b2a 0%, #ffc66f 26%, #66d3ff 58%, #0064c8 100%);
+      background-size: 240% 100%;
       color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
-      font-size: clamp(46px, 8.4vw, 102px);
-      margin-bottom: 6px;
-      -webkit-text-stroke: 1.1px rgba(0, 0, 0, 0.66);
-      text-shadow: 0 8px 26px rgba(0, 0, 0, 0.76), 0 2px 7px rgba(124, 67, 19, 0.2), 0 2px 7px rgba(26, 85, 53, 0.24);
-      animation: titleShimmer 5s linear infinite;
-    }
-
-    .chem-intro-molecule {
-      position: relative;
-      width: 150px;
-      height: 70px;
-      margin: 0 auto;
-      animation: moleculePulse 2.4s ease-in-out infinite;
-    }
-
-    .chem-intro-molecule .atom {
-      position: absolute;
-      border-radius: 50%;
-    }
-
-    .chem-intro-molecule .a1 {
-      width: 28px;
-      height: 28px;
-      left: 0;
-      top: 22px;
-      background: #00b8b0;
-      box-shadow: 0 0 14px rgba(0, 184, 176, 0.6);
-    }
-
-    .chem-intro-molecule .a2 {
-      width: 22px;
-      height: 22px;
-      left: 56px;
-      top: 0;
-      background: #45c4ff;
-      box-shadow: 0 0 12px rgba(69, 196, 255, 0.55);
-    }
-
-    .chem-intro-molecule .a3 {
-      width: 34px;
-      height: 34px;
-      left: 110px;
-      top: 18px;
-      background: #0074c7;
-      box-shadow: 0 0 14px rgba(0, 116, 199, 0.55);
-    }
-
-    .chem-intro-molecule .bond {
-      position: absolute;
-      height: 3px;
-      border-radius: 999px;
-      background: rgba(201, 237, 255, 0.8);
-      transform-origin: left center;
-    }
-
-    .chem-intro-molecule .b1 {
-      left: 24px;
-      top: 32px;
-      width: 44px;
-      transform: rotate(-26deg);
-    }
-
-    .chem-intro-molecule .b2 {
-      left: 74px;
-      top: 21px;
-      width: 45px;
-      transform: rotate(21deg);
+      font-size: clamp(48px, 8.6vw, 108px);
+      margin-bottom: 0;
+      padding: 2px 16px 8px;
+      border-radius: 14px;
+      -webkit-text-stroke: 1px rgba(3, 19, 36, 0.42);
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.66), 0 2px 8px rgba(255, 169, 69, 0.2), 0 2px 8px rgba(72, 192, 255, 0.26);
+      animation: titleShimmer 4.8s linear infinite;
     }
 
     @keyframes atomFloat {
@@ -668,17 +609,6 @@
       }
     }
 
-    @keyframes moleculePulse {
-      0%,
-      100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.05);
-      }
-    }
-
     @media (max-width: 600px) {
       .chem-intro-collision .emoji {
         top: 40%;
@@ -696,10 +626,6 @@
 
       .chem-intro-content {
         padding: 10px 10px 8px;
-      }
-
-      .chem-intro-molecule {
-        transform: scale(1);
       }
     }
 
@@ -1434,13 +1360,6 @@
         <img src="assets/logo.jpg" alt="ChemSus Logo" class="chem-intro-logo">
       </div>
       <div class="chem-intro-title">ChemSus Technologies Private Limited</div>
-      <div class="chem-intro-molecule" aria-hidden="true">
-        <span class="atom a1"></span>
-        <span class="bond b1"></span>
-        <span class="atom a2"></span>
-        <span class="bond b2"></span>
-        <span class="atom a3"></span>
-      </div>
     </div>
   </div>
 
