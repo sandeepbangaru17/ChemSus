@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ChemSus | Login or Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0074c7;
+            --primary-dark: #00508a;
+            --accent: #00b8b0;
+            --bg: #F3F7FB;
+            --ink: #1f2933;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Open Sans", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .auth-container img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        .auth-container h2 {
+            font-family: "Montserrat", sans-serif;
+            color: var(--primary-dark);
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .input-grp {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .input-grp label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #4b5563;
+        }
+
+        .input-grp input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-grp input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: #f0f7ff;
+        }
+
+        .btn-oauth {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-oauth:hover {
+            background: #f9fafb;
+        }
+
+        .btn-oauth img {
+            width: 18px;
+            margin: 0;
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        #msg {
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            min-height: 20px;
+        }
+
+        .msg-err {
+            color: #dc2626;
+        }
+
+        .msg-ok {
+            color: #16a34a;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            font-size: 13px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <a href="/index.html">
+            <img src="assets/logo.jpg" alt="ChemSus">
+        </a>
+        <h2 id="auth-title">Log In</h2>
+
+        <div id="msg"></div>
+
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="input-grp">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="you@example.com">
+            </div>
+            <div class="input-grp">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn" id="submitBtn">Log In</button>
+            <button type="button" class="btn btn-outline" id="toggleBtn" onclick="toggleMode()">Create an
+                Account</button>
+        </form>
+
+        <div class="divider"><span>OR</span></div>
+
+        <button class="btn btn-oauth" onclick="handleGoogleOAuth()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18px" height="18px">
+                <path fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                <path fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                <path fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                <path fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+            </svg>
+            Continue with Google
+        </button>
+
+        <a href="/index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script>
+        let isLogin = true;
+
+        function toggleMode() {
+            isLogin = !isLogin;
+            document.getElementById('auth-title').innerText = isLogin ? 'Log In' : 'Sign Up';
+            document.getElementById('submitBtn').innerText = isLogin ? 'Log In' : 'Sign Up';
+            document.getElementById('toggleBtn').innerText = isLogin ? 'Create an Account' : 'Back to Log In';
+            document.getElementById('msg').innerText = '';
+        }
+
+        function showMsg(text, isError) {
+            const el = document.getElementById('msg');
+            el.innerText = text;
+            el.className = isError ? 'msg-err' : 'msg-ok';
+        }
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            if (!window.supabaseClient) {
+                showMsg("Supabase client not loaded.", true);
+                return;
+            }
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "Please wait...";
+
+            try {
+                if (isLogin) {
+                    const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    handleSuccess(data.user.email);
+                } else {
+                    const { data, error } = await window.supabaseClient.auth.signUp({ email, password });
+                    if (error) throw error;
+                    showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
+                    if (data.session) {
+                        setTimeout(() => handleSuccess(data.user.email), 1500);
+                    } else {
+                        btn.disabled = false;
+                        btn.innerText = "Sign Up";
+                    }
+                }
+            } catch (err) {
+                showMsg(err.message, true);
+                btn.disabled = false;
+                btn.innerText = isLogin ? "Log In" : "Sign Up";
+            }
+        }
+
+        async function handleGoogleOAuth() {
+            if (!window.supabaseClient) return;
+            try {
+                const { error } = await window.supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/login.html'
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                showMsg(err.message, true);
+            }
+        }
+
+        function handleSuccess(email) {
+            if (email === window.ADMIN_EMAIL) {
+                window.location.href = "/admin/admin.html";
+            } else {
+                window.location.href = "/index.html"; // Or user-orders.html
+            }
+        }
+
+        // Check if already logged in or returning from OAuth
+        document.addEventListener("DOMContentLoaded", async () => {
+            if (!window.supabaseClient) return;
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session) {
+                handleSuccess(session.user.email);
+            }
+        });
+
+        // Check for hash OAuth redirect errors
+        window.addEventListener('hashchange', function () {
+            // Supabase OAuth error parsing could be done here if needed
+        });
+    </script>
+</body>
+
+</html>

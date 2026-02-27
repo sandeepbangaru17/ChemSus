@@ -1389,16 +1389,17 @@
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
+      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
 
-    <!-- ADMIN LOGIN BUTTON -->
+        <!-- AUTH BUTTON -->
     <div class="admin-login">
-      <a href="/admin/admin.html">
+      <a href="/login.html" id="nav-auth-link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path
             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
         </svg>
-        <span>Admin Login</span>
+        <span id="nav-auth-text">Log In / Sign Up</span>
       </a>
     </div>
 
@@ -1704,6 +1705,10 @@
       }, { once: true });
     })();
   </script>
+
+  <!-- Supabase & Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>
