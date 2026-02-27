@@ -651,6 +651,34 @@
       overflow-x: hidden;
       background: var(--bg, #F3F7FB);
     }
+  
+    /* AUTH BUTTON */
+    .admin-login {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0;
+    }
+    .admin-login a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      padding: 14px 20px;
+      font-size: 13.5px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .admin-login a:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-left-color: var(--accent);
+    }
+    .admin-login svg {
+      width: 16px;
+      height: 16px;
+      fill: #ffffff;
+      opacity: 0.9;
+    }
   </style>
 </head>
 
@@ -682,7 +710,19 @@
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
+      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
+
+    
+    <!-- AUTH BUTTON -->
+    <div class="admin-login">
+      <a href="/login.html" id="nav-auth-link">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+        </svg>
+        <span id="nav-auth-text">Log In / Sign Up</span>
+      </a>
+    </div>
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
@@ -946,6 +986,10 @@
       }
     }
   </script>
+
+  <!-- Supabase & Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>
