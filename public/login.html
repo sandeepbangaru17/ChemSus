@@ -223,7 +223,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/supabase-client.js?v=20260228"></script>
     <script>
         // Wait for supabaseReady (async config loader in supabase-client.js)
         async function getClient() {
@@ -246,13 +246,53 @@
             el.className = isError ? 'msg-err' : 'msg-ok';
         }
 
+        function isLikelyNetworkError(err) {
+            const msg = String(err?.message || err || '').toLowerCase();
+            return msg.includes('failed to fetch')
+                || msg.includes('networkerror')
+                || msg.includes('connection')
+                || msg.includes('timed out')
+                || msg.includes('fetch');
+        }
+
+        function storeFallbackSession(session) {
+            try {
+                if (window.chemsusAuthFallback?.writeSession) {
+                    window.chemsusAuthFallback.writeSession(session);
+                    return;
+                }
+                localStorage.setItem('chemsus_supabase_session_fallback', JSON.stringify(session));
+            } catch (e) { }
+        }
+
+        function readFallbackSession() {
+            try {
+                if (window.chemsusAuthFallback?.readSession) {
+                    return window.chemsusAuthFallback.readSession();
+                }
+                return JSON.parse(localStorage.getItem('chemsus_supabase_session_fallback') || 'null');
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function backendPasswordAuth(route, email, password) {
+            const r = await fetch(route, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            let payload = null;
+            try { payload = await r.json(); } catch { payload = null; }
+            if (!r.ok) {
+                const msg = payload?.error || payload?.msg || `Auth failed (${r.status})`;
+                throw new Error(msg);
+            }
+            return payload || {};
+        }
+
         async function handleAuth(e) {
             e.preventDefault();
-            const client = await getClient();
-            if (!client) {
-                showMsg("Supabase client not loaded. Check server config.", true);
-                return;
-            }
 
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -262,18 +302,55 @@
 
             try {
                 if (isLogin) {
-                    const { data, error } = await client.auth.signInWithPassword({ email, password });
-                    if (error) throw error;
-                    handleSuccess(data.user.email);
+                    try {
+                        const data = await backendPasswordAuth('/api/auth/password-login', email, password);
+                        if (data?.session) storeFallbackSession(data.session);
+                        const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                        handleSuccess(userEmail);
+                    } catch (backendErr) {
+                        // Fallback to direct Supabase client only if backend path is unreachable.
+                        const msg = String(backendErr?.message || '');
+                        const retryDirect = msg.includes('Unable to reach Supabase auth')
+                            || msg.includes('Auth failed (5')
+                            || isLikelyNetworkError(backendErr);
+                        if (!retryDirect) throw backendErr;
+                        const client = await getClient();
+                        if (!client) throw backendErr;
+                        const { data, error } = await client.auth.signInWithPassword({ email, password });
+                        if (error) throw error;
+                        if (data?.session) storeFallbackSession(data.session);
+                        handleSuccess(data.user.email);
+                    }
                 } else {
-                    const { data, error } = await client.auth.signUp({ email, password });
-                    if (error) throw error;
-                    showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
-                    if (data.session) {
-                        setTimeout(() => handleSuccess(data.user.email), 1500);
-                    } else {
-                        btn.disabled = false;
-                        btn.innerText = "Sign Up";
+                    try {
+                        const data = await backendPasswordAuth('/api/auth/password-signup', email, password);
+                        showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
+                        if (data.session) {
+                            storeFallbackSession(data.session);
+                            const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                            setTimeout(() => handleSuccess(userEmail), 1500);
+                        } else {
+                            btn.disabled = false;
+                            btn.innerText = "Sign Up";
+                        }
+                    } catch (backendErr) {
+                        const msg = String(backendErr?.message || '');
+                        const retryDirect = msg.includes('Unable to reach Supabase auth')
+                            || msg.includes('Auth failed (5')
+                            || isLikelyNetworkError(backendErr);
+                        if (!retryDirect) throw backendErr;
+                        const client = await getClient();
+                        if (!client) throw backendErr;
+                        const { data, error } = await client.auth.signUp({ email, password });
+                        if (error) throw error;
+                        showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
+                        if (data.session) {
+                            storeFallbackSession(data.session);
+                            setTimeout(() => handleSuccess(data.user.email), 1500);
+                        } else {
+                            btn.disabled = false;
+                            btn.innerText = "Sign Up";
+                        }
                     }
                 }
             } catch (err) {
@@ -310,8 +387,14 @@
         // Check if already logged in or returning from OAuth
         document.addEventListener("DOMContentLoaded", async () => {
             const client = await getClient();
-            if (!client) return;
-            const { data: { session } } = await client.auth.getSession();
+            let session = null;
+            if (client) {
+                try {
+                    const res = await client.auth.getSession();
+                    session = res?.data?.session || null;
+                } catch (e) { }
+            }
+            if (!session) session = readFallbackSession();
             if (session) {
                 handleSuccess(session.user.email);
             }
