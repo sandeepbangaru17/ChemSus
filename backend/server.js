@@ -2,6 +2,7 @@ try { require("dotenv").config(); } catch { /* dotenv optional */ }
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
+const https = require("https");
 const multer = require("multer");
 const fs = require("fs");
 let nodemailer = null;
@@ -190,6 +191,143 @@ app.get("/config.json", (_req, res) => {
   });
 });
 
+const SUPABASE_AUTH_IP_FALLBACK = ["104.18.38.10", "172.64.149.246"];
+let supabaseIpCache = {
+  host: "",
+  ips: [],
+  expiresAt: 0,
+};
+
+async function resolveSupabaseIps(host) {
+  const now = Date.now();
+  if (
+    supabaseIpCache.host === host &&
+    now < supabaseIpCache.expiresAt &&
+    supabaseIpCache.ips.length
+  ) {
+    return supabaseIpCache.ips;
+  }
+
+  const dohUrl = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(
+    host
+  )}&type=A`;
+  const r = await fetch(dohUrl, {
+    headers: { accept: "application/dns-json" },
+  });
+  if (!r.ok) {
+    throw new Error(`DoH lookup failed (${r.status})`);
+  }
+  const payload = await r.json();
+  const ips = (payload?.Answer || [])
+    .filter((ans) => Number(ans?.type) === 1 && typeof ans?.data === "string")
+    .map((ans) => ans.data.trim())
+    .filter((ip) => /^[0-9.]+$/.test(ip));
+
+  if (!ips.length) {
+    throw new Error("DoH returned no A records");
+  }
+
+  supabaseIpCache = {
+    host,
+    ips: [...new Set(ips)],
+    expiresAt: now + 5 * 60 * 1000,
+  };
+  return supabaseIpCache.ips;
+}
+
+function requestSupabaseViaIp({
+  ip,
+  host,
+  requestPath,
+  method = "POST",
+  headers = {},
+  body = "",
+  timeoutMs = 15000,
+}) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        hostname: ip,
+        port: 443,
+        path: requestPath,
+        method,
+        servername: host,
+        headers: {
+          Host: host,
+          ...headers,
+        },
+      },
+      (upstreamRes) => {
+        const chunks = [];
+        upstreamRes.on("data", (chunk) => chunks.push(chunk));
+        upstreamRes.on("end", () => {
+          const text = Buffer.concat(chunks).toString("utf8");
+          let json = null;
+          try {
+            json = JSON.parse(text);
+          } catch {
+            json = null;
+          }
+          resolve({
+            status: upstreamRes.statusCode || 500,
+            text,
+            json,
+          });
+        });
+      }
+    );
+
+    req.on("error", reject);
+    req.setTimeout(timeoutMs, () => req.destroy(new Error("Supabase request timed out")));
+    if (body) req.write(body);
+    req.end();
+  });
+}
+
+async function proxySupabasePasswordAuth(routePath, payload) {
+  const supabaseUrlRaw = String(process.env.SUPABASE_URL || "").trim();
+  const supabaseAnonKey = String(process.env.SUPABASE_ANON_KEY || "").trim();
+  if (!supabaseUrlRaw || !supabaseAnonKey) {
+    throw new Error("SUPABASE_URL or SUPABASE_ANON_KEY is missing");
+  }
+
+  const supabaseHost = new URL(supabaseUrlRaw).host;
+  const body = JSON.stringify(payload || {});
+  const headers = {
+    "Content-Type": "application/json",
+    apikey: supabaseAnonKey,
+    Authorization: `Bearer ${supabaseAnonKey}`,
+    "Content-Length": Buffer.byteLength(body),
+  };
+
+  let ips = [];
+  try {
+    ips = await resolveSupabaseIps(supabaseHost);
+  } catch (err) {
+    console.warn("[SUPABASE-DNS] DoH lookup failed, using fallback IPs:", err?.message || err);
+  }
+  if (!ips.length) ips = SUPABASE_AUTH_IP_FALLBACK;
+
+  let lastErr = null;
+  for (const ip of ips) {
+    try {
+      return await requestSupabaseViaIp({
+        ip,
+        host: supabaseHost,
+        requestPath: routePath,
+        method: "POST",
+        headers,
+        body,
+      });
+    } catch (err) {
+      lastErr = err;
+      console.warn(`[SUPABASE-AUTH] Request failed via ${ip}:`, err?.message || err);
+    }
+  }
+
+  throw lastErr || new Error("Unable to reach Supabase auth");
+}
+
 // ---------------- Static ----------------
 app.use("/assets", express.static(path.join(PUBLIC, "assets")));
 app.use("/products", express.static(path.join(PUBLIC, "products")));
@@ -297,6 +435,46 @@ function requireUser(req, res, next) {
 app.post("/api/admin/login", (req, res) => res.json({ ok: false, message: "Use Supabase login" }));
 app.post("/api/admin/logout", (req, res) => res.json({ ok: true }));
 app.get("/api/admin/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.supabaseUser?.email }));
+
+app.post("/api/auth/password-login", async (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email || "");
+    const password = String(req.body?.password || "");
+    if (!isValidEmail(email) || password.length < 6) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    const upstream = await proxySupabasePasswordAuth(
+      "/auth/v1/token?grant_type=password",
+      { email, password }
+    );
+    if (upstream.json) return res.status(upstream.status).json(upstream.json);
+    return res.status(upstream.status).send(upstream.text);
+  } catch (err) {
+    console.error("[AUTH-LOGIN] Proxy failed:", err?.message || err);
+    return res.status(502).json({ error: "Unable to reach Supabase auth" });
+  }
+});
+
+app.post("/api/auth/password-signup", async (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email || "");
+    const password = String(req.body?.password || "");
+    if (!isValidEmail(email) || password.length < 6) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    const upstream = await proxySupabasePasswordAuth("/auth/v1/signup", {
+      email,
+      password,
+    });
+    if (upstream.json) return res.status(upstream.status).json(upstream.json);
+    return res.status(upstream.status).send(upstream.text);
+  } catch (err) {
+    console.error("[AUTH-SIGNUP] Proxy failed:", err?.message || err);
+    return res.status(502).json({ error: "Unable to reach Supabase auth" });
+  }
+});
 
 // ---------------- Uploads ----------------
 const ADMIN_UPLOAD_DIR = path.join(PUBLIC, "assets", "uploads");
