@@ -1,5 +1,4 @@
-
-> chemsus-website@1.0.0 start
-> node backend/server.js
-
+[dotenv@17.3.1] injecting env (3) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[DB] SQLite path: C:\Users\LENOVO\Desktop\project_chem\db\chemsus.sqlite
 ✅ SQLite ready with pack_pricing table
+Server running on http://localhost:5000
