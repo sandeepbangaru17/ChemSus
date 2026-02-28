@@ -6,6 +6,98 @@
 // ============================================================
 
 const CONFIG_ENDPOINT = "/config.json";
+const FALLBACK_SESSION_KEY = "chemsus_supabase_session_fallback";
+
+function readFallbackSession() {
+  try {
+    const raw = localStorage.getItem(FALLBACK_SESSION_KEY);
+    if (!raw) return null;
+    const session = JSON.parse(raw);
+    if (!session || !session.access_token || !session.user?.email) return null;
+    if (session.expires_at && Date.now() / 1000 > Number(session.expires_at)) {
+      localStorage.removeItem(FALLBACK_SESSION_KEY);
+      return null;
+    }
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+function writeFallbackSession(session) {
+  try {
+    if (!session || !session.access_token || !session.user?.email) return;
+    localStorage.setItem(FALLBACK_SESSION_KEY, JSON.stringify(session));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+function clearFallbackSession() {
+  try {
+    localStorage.removeItem(FALLBACK_SESSION_KEY);
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+function patchAuthWithFallback(client) {
+  if (!client || !client.auth || client.__chemsusFallbackPatched) return client;
+  client.__chemsusFallbackPatched = true;
+
+  const originalGetSession = client.auth.getSession?.bind(client.auth);
+  const originalSignOut = client.auth.signOut?.bind(client.auth);
+  const originalSetSession = client.auth.setSession?.bind(client.auth);
+
+  if (originalGetSession) {
+    client.auth.getSession = async (...args) => {
+      try {
+        const res = await originalGetSession(...args);
+        const liveSession = res?.data?.session || null;
+        if (liveSession) {
+          writeFallbackSession(liveSession);
+          return res;
+        }
+        const fallback = readFallbackSession();
+        if (fallback) return { data: { session: fallback }, error: null };
+        return res;
+      } catch (err) {
+        const fallback = readFallbackSession();
+        if (fallback) return { data: { session: fallback }, error: null };
+        throw err;
+      }
+    };
+  }
+
+  if (originalSignOut) {
+    client.auth.signOut = async (...args) => {
+      clearFallbackSession();
+      try {
+        return await originalSignOut(...args);
+      } catch {
+        return { error: null };
+      }
+    };
+  }
+
+  if (originalSetSession) {
+    client.auth.setSession = async (...args) => {
+      const res = await originalSetSession(...args);
+      const liveSession = res?.data?.session || null;
+      if (liveSession) writeFallbackSession(liveSession);
+      return res;
+    };
+  }
+
+  return client;
+}
+
+window.chemsusAuthFallback = {
+  key: FALLBACK_SESSION_KEY,
+  readSession: readFallbackSession,
+  writeSession: writeFallbackSession,
+  clearSession: clearFallbackSession,
+};
 
 async function loadSupabaseConfig() {
   if (window.__CHEMSUS_CONFIG) return window.__CHEMSUS_CONFIG;
@@ -32,7 +124,9 @@ window.supabaseReady = (async () => {
     return null;
   }
 
-  window.supabaseClient = supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+  window.supabaseClient = patchAuthWithFallback(
+    supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey)
+  );
   window.ADMIN_EMAIL = cfg.adminEmail || "";
   return window.supabaseClient;
 })();
