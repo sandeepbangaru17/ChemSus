@@ -341,6 +341,18 @@ async function initDb() {
 
     CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
     CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+
+    CREATE TABLE IF NOT EXISTS auth_users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL UNIQUE,
+      password_salt TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      last_login_at TEXT DEFAULT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_auth_users_email ON auth_users(email);
   `);
 
   await seed();

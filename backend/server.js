@@ -383,6 +383,127 @@ async function proxySupabasePasswordAuth(routePath, payload) {
   throw lastErr || new Error("Unable to reach Supabase auth");
 }
 
+const LOCAL_AUTH_JWT_SECRET = String(
+  process.env.LOCAL_AUTH_JWT_SECRET || process.env.OTP_HASH_SECRET || "change_me_for_production"
+).trim();
+
+function hashLocalPassword(password, saltHex) {
+  const salt = Buffer.from(String(saltHex || ""), "hex");
+  return crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+}
+
+function safeEqualHex(a, b) {
+  try {
+    const left = Buffer.from(String(a || ""), "hex");
+    const right = Buffer.from(String(b || ""), "hex");
+    if (!left.length || !right.length || left.length !== right.length) return false;
+    return crypto.timingSafeEqual(left, right);
+  } catch {
+    return false;
+  }
+}
+
+function buildLocalAccessToken(email, userId) {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const expSec = nowSec + SESSION_TTL_SEC;
+  const headerB64 = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const payloadObj = {
+    iss: "chemsus-local-auth",
+    aud: "authenticated",
+    role: "authenticated",
+    email: normalizeEmail(email),
+    sub: `local-${Number(userId || 0)}`,
+    iat: nowSec,
+    exp: expSec,
+    app_metadata: { provider: "email", providers: ["email"] },
+    user_metadata: {},
+  };
+  const payloadB64 = Buffer.from(JSON.stringify(payloadObj)).toString("base64url");
+  const sigB64 = crypto
+    .createHmac("sha256", LOCAL_AUTH_JWT_SECRET)
+    .update(`${headerB64}.${payloadB64}`)
+    .digest("base64url");
+  return {
+    accessToken: `${headerB64}.${payloadB64}.${sigB64}`,
+    expSec,
+  };
+}
+
+async function findLocalAuthUserByEmail(email) {
+  return get(
+    `SELECT id, email, password_salt, password_hash
+       FROM auth_users
+      WHERE email=?`,
+    [normalizeEmail(email)]
+  );
+}
+
+async function upsertLocalAuthUser(email, password) {
+  const emailNorm = normalizeEmail(email);
+  const existing = await findLocalAuthUserByEmail(emailNorm);
+  const saltHex = crypto.randomBytes(16).toString("hex");
+  const hashHex = hashLocalPassword(password, saltHex);
+  if (existing?.id) {
+    await run(
+      `UPDATE auth_users
+          SET password_salt=?,
+              password_hash=?,
+              updated_at=datetime('now')
+        WHERE id=?`,
+      [saltHex, hashHex, existing.id]
+    );
+    return { id: existing.id, email: emailNorm };
+  }
+  const r = await run(
+    `INSERT INTO auth_users(email, password_salt, password_hash)
+     VALUES (?, ?, ?)`,
+    [emailNorm, saltHex, hashHex]
+  );
+  return { id: r.lastID, email: emailNorm };
+}
+
+async function createLocalAuthUser(email, password) {
+  const emailNorm = normalizeEmail(email);
+  const existing = await findLocalAuthUserByEmail(emailNorm);
+  if (existing?.id) return null;
+  return upsertLocalAuthUser(emailNorm, password);
+}
+
+async function verifyLocalAuthUser(email, password) {
+  const user = await findLocalAuthUserByEmail(email);
+  if (!user) return null;
+  const incomingHash = hashLocalPassword(password, user.password_salt);
+  if (!safeEqualHex(incomingHash, user.password_hash)) return null;
+  await run(
+    `UPDATE auth_users
+        SET last_login_at=datetime('now'),
+            updated_at=datetime('now')
+      WHERE id=?`,
+    [user.id]
+  );
+  return { id: user.id, email: normalizeEmail(user.email) };
+}
+
+function buildLocalAuthPayload(user) {
+  const emailNorm = normalizeEmail(user?.email || "");
+  const token = buildLocalAccessToken(emailNorm, user?.id);
+  return {
+    access_token: token.accessToken,
+    token_type: "bearer",
+    expires_in: SESSION_TTL_SEC,
+    expires_at: token.expSec,
+    refresh_token: crypto.randomBytes(24).toString("hex"),
+    user: {
+      id: `local-${Number(user?.id || 0)}`,
+      email: emailNorm,
+      aud: "authenticated",
+      role: "authenticated",
+      app_metadata: { provider: "email", providers: ["email"] },
+      user_metadata: {},
+    },
+  };
+}
+
 // ---------------- Static ----------------
 app.use("/assets", express.static(path.join(PUBLIC, "assets")));
 app.use("/products", express.static(path.join(PUBLIC, "products")));
@@ -503,10 +624,36 @@ app.post("/api/auth/password-login", async (req, res) => {
       "/auth/v1/token?grant_type=password",
       { email, password }
     );
+    if (upstream.status >= 200 && upstream.status < 300) {
+      try {
+        await upsertLocalAuthUser(email, password);
+      } catch (syncErr) {
+        console.warn("[AUTH-LOGIN] Local auth sync failed:", syncErr?.message || syncErr);
+      }
+      if (upstream.json) return res.status(upstream.status).json(upstream.json);
+      return res.status(upstream.status).send(upstream.text);
+    }
+
+    // Supabase may reject when offline-created local users log in.
+    try {
+      const localUser = await verifyLocalAuthUser(email, password);
+      if (localUser) return res.status(200).json(buildLocalAuthPayload(localUser));
+    } catch (localErr) {
+      console.warn("[AUTH-LOGIN] Local fallback failed:", localErr?.message || localErr);
+    }
+
     if (upstream.json) return res.status(upstream.status).json(upstream.json);
     return res.status(upstream.status).send(upstream.text);
   } catch (err) {
     console.error("[AUTH-LOGIN] Proxy failed:", err?.message || err);
+    try {
+      const email = normalizeEmail(req.body?.email || "");
+      const password = String(req.body?.password || "");
+      const localUser = await verifyLocalAuthUser(email, password);
+      if (localUser) return res.status(200).json(buildLocalAuthPayload(localUser));
+    } catch (localErr) {
+      console.warn("[AUTH-LOGIN] Local fallback failed after proxy error:", localErr?.message || localErr);
+    }
     return res.status(502).json({ error: "Unable to reach Supabase auth" });
   }
 });
@@ -523,10 +670,29 @@ app.post("/api/auth/password-signup", async (req, res) => {
       email,
       password,
     });
+    if (upstream.status >= 200 && upstream.status < 300) {
+      try {
+        await upsertLocalAuthUser(email, password);
+      } catch (syncErr) {
+        console.warn("[AUTH-SIGNUP] Local auth sync failed:", syncErr?.message || syncErr);
+      }
+      if (upstream.json) return res.status(upstream.status).json(upstream.json);
+      return res.status(upstream.status).send(upstream.text);
+    }
+
     if (upstream.json) return res.status(upstream.status).json(upstream.json);
     return res.status(upstream.status).send(upstream.text);
   } catch (err) {
     console.error("[AUTH-SIGNUP] Proxy failed:", err?.message || err);
+    try {
+      const email = normalizeEmail(req.body?.email || "");
+      const password = String(req.body?.password || "");
+      const localUser = await createLocalAuthUser(email, password);
+      if (!localUser) return res.status(409).json({ error: "User already exists" });
+      return res.status(200).json(buildLocalAuthPayload(localUser));
+    } catch (localErr) {
+      console.warn("[AUTH-SIGNUP] Local fallback failed:", localErr?.message || localErr);
+    }
     return res.status(502).json({ error: "Unable to reach Supabase auth" });
   }
 });
