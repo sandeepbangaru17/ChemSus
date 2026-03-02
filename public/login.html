@@ -276,6 +276,44 @@
             }
         }
 
+        function normalizeSessionFromPayload(payload, fallbackEmail = '') {
+            if (!payload || typeof payload !== 'object') return null;
+            if (payload.session?.access_token) return payload.session;
+            if (!payload.access_token) return null;
+            const expiresIn = Number(payload.expires_in || 0);
+            const expiresAt = Number(payload.expires_at || 0);
+            return {
+                access_token: payload.access_token,
+                refresh_token: payload.refresh_token || null,
+                token_type: payload.token_type || 'bearer',
+                expires_in: expiresIn,
+                expires_at: expiresAt || (expiresIn ? Math.floor(Date.now() / 1000) + expiresIn : null),
+                user: payload.user || (fallbackEmail ? { email: fallbackEmail } : null)
+            };
+        }
+
+        async function persistSessionFromPayload(payload, fallbackEmail = '') {
+            const session = normalizeSessionFromPayload(payload, fallbackEmail);
+            if (!session) return null;
+
+            const client = await getClient();
+            if (client?.auth?.setSession && session.access_token && session.refresh_token) {
+                try {
+                    const { data, error } = await client.auth.setSession({
+                        access_token: session.access_token,
+                        refresh_token: session.refresh_token
+                    });
+                    if (!error && data?.session) {
+                        storeFallbackSession(data.session);
+                        return data.session;
+                    }
+                } catch (e) { }
+            }
+
+            storeFallbackSession(session);
+            return session;
+        }
+
         async function backendPasswordAuth(route, email, password) {
             const r = await fetch(route, {
                 method: 'POST',
@@ -304,8 +342,8 @@
                 if (isLogin) {
                     try {
                         const data = await backendPasswordAuth('/api/auth/password-login', email, password);
-                        if (data?.session) storeFallbackSession(data.session);
-                        const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                        const session = await persistSessionFromPayload(data, email);
+                        const userEmail = session?.user?.email || data?.user?.email || email;
                         handleSuccess(userEmail);
                     } catch (backendErr) {
                         // Fallback to direct Supabase client only if backend path is unreachable.
@@ -325,9 +363,9 @@
                     try {
                         const data = await backendPasswordAuth('/api/auth/password-signup', email, password);
                         showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
-                        if (data.session) {
-                            storeFallbackSession(data.session);
-                            const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                        const session = await persistSessionFromPayload(data, email);
+                        if (session) {
+                            const userEmail = session?.user?.email || data?.user?.email || email;
                             setTimeout(() => handleSuccess(userEmail), 1500);
                         } else {
                             btn.disabled = false;
@@ -377,7 +415,9 @@
         }
 
         function handleSuccess(email) {
-            if (email === window.ADMIN_EMAIL) {
+            const normalizedEmail = String(email || '').trim().toLowerCase();
+            const normalizedAdminEmail = String(window.ADMIN_EMAIL || '').trim().toLowerCase();
+            if (normalizedAdminEmail && normalizedEmail === normalizedAdminEmail) {
                 window.location.href = "/admin/admin.html";
             } else {
                 window.location.href = "/index.html"; // Or user-orders.html
