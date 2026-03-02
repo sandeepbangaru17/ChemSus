@@ -284,6 +284,46 @@ function requestSupabaseViaIp({
   });
 }
 
+async function requestSupabaseDirect({
+  baseUrl,
+  requestPath,
+  method = "POST",
+  headers = {},
+  body = "",
+  timeoutMs = 15000,
+}) {
+  const base = new URL(baseUrl);
+  const pathPart = String(requestPath || "").startsWith("/")
+    ? String(requestPath || "")
+    : `/${String(requestPath || "")}`;
+  const url = `${base.origin}${pathPart}`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, {
+      method,
+      headers,
+      body,
+      signal: controller.signal,
+    });
+    const text = await r.text();
+    let json = null;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      json = null;
+    }
+    return {
+      status: r.status || 500,
+      text,
+      json,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function proxySupabasePasswordAuth(routePath, payload) {
   const supabaseUrlRaw = String(process.env.SUPABASE_URL || "").trim();
   const supabaseAnonKey = String(process.env.SUPABASE_ANON_KEY || "").trim();
@@ -300,6 +340,21 @@ async function proxySupabasePasswordAuth(routePath, payload) {
     "Content-Length": Buffer.byteLength(body),
   };
 
+  // First try normal HTTPS to the Supabase host.
+  // This is the most reliable path when DNS/network is healthy.
+  try {
+    return await requestSupabaseDirect({
+      baseUrl: supabaseUrlRaw,
+      requestPath: routePath,
+      method: "POST",
+      headers,
+      body,
+    });
+  } catch (err) {
+    console.warn("[SUPABASE-AUTH] Direct request failed:", err?.message || err);
+  }
+
+  // Fallback: resolve A records and try pinned IPs (helps in some DNS edge cases).
   let ips = [];
   try {
     ips = await resolveSupabaseIps(supabaseHost);
