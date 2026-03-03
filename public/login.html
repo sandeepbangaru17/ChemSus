@@ -255,6 +255,15 @@
                 || msg.includes('fetch');
         }
 
+        function shouldRetryDirectAuth(err) {
+            const msg = String(err?.message || err || '').toLowerCase();
+            return msg.includes('unable to reach supabase auth')
+                || msg.includes('auth failed (5')
+                || msg.includes('auth failed (404)')
+                || msg.includes('not found')
+                || isLikelyNetworkError(err);
+        }
+
         function storeFallbackSession(session) {
             try {
                 if (window.chemsusAuthFallback?.writeSession) {
@@ -347,10 +356,7 @@
                         handleSuccess(userEmail);
                     } catch (backendErr) {
                         // Fallback to direct Supabase client only if backend path is unreachable.
-                        const msg = String(backendErr?.message || '');
-                        const retryDirect = msg.includes('Unable to reach Supabase auth')
-                            || msg.includes('Auth failed (5')
-                            || isLikelyNetworkError(backendErr);
+                        const retryDirect = shouldRetryDirectAuth(backendErr);
                         if (!retryDirect) throw backendErr;
                         const client = await getClient();
                         if (!client) throw backendErr;
@@ -372,10 +378,7 @@
                             btn.innerText = "Sign Up";
                         }
                     } catch (backendErr) {
-                        const msg = String(backendErr?.message || '');
-                        const retryDirect = msg.includes('Unable to reach Supabase auth')
-                            || msg.includes('Auth failed (5')
-                            || isLikelyNetworkError(backendErr);
+                        const retryDirect = shouldRetryDirectAuth(backendErr);
                         if (!retryDirect) throw backendErr;
                         const client = await getClient();
                         if (!client) throw backendErr;
