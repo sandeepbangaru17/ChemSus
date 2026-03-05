@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -787,7 +787,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
@@ -807,7 +807,7 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -837,8 +837,8 @@
           </div>
           <div>
             <div class="price-line" id="priceLineTop">
-              <div class="price-left" id="unitPriceText">₹0</div>
-              <div class="biofm-compare" id="biofmLine">BioFM: – —— Our Price: –</div>
+              <div class="price-left" id="unitPriceText">â‚¹0</div>
+              <div class="biofm-compare" id="biofmLine">BioFM: â€“ â€”â€” Our Price: â€“</div>
             </div>
           </div>
         </div>
@@ -854,7 +854,7 @@
         <div class="q-row" id="packRow">
           <span class="q-label">Pack size</span>
           <span class="q-pill">fixed from Shop</span>
-          <span id="packNameText" style="font-weight:700;color:#1d4ed8;">–</span>
+          <span id="packNameText" style="font-weight:700;color:#1d4ed8;">â€“</span>
         </div>
 
         <div class="qty-input-row">
@@ -863,13 +863,13 @@
         </div>
 
         <div class="price-line" style="margin-top:8px;">
-          <div class="price-left" id="subtotalText">Subtotal: ₹0</div>
-          <div class="biofm-compare" id="perPackText">Per pack: ₹0</div>
+          <div class="price-left" id="subtotalText">Subtotal: â‚¹0</div>
+          <div class="biofm-compare" id="perPackText">Per pack: â‚¹0</div>
         </div>
 
         <div class="totals-row">
-          <div>Grand total (₹, excl. taxes &amp; shipping)</div>
-          <strong id="totalText">₹0</strong>
+          <div>Grand total (â‚¹, excl. taxes &amp; shipping)</div>
+          <strong id="totalText">â‚¹0</strong>
         </div>
 
         <div class="payment-box">
@@ -883,7 +883,7 @@
 
         <div class="actions-row">
           <button class="btn-primary" id="confirmBtn">Confirm &amp; Go to Orders</button>
-          <button class="btn-secondary" onclick="window.history.back()">← Back</button>
+          <button class="btn-secondary" onclick="window.history.back()">â† Back</button>
         </div>
       </div>
     </main>
@@ -899,7 +899,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam – 781030
+            North Guwahati, Assam â€“ 781030
           </p>
         </div>
 
@@ -916,11 +916,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -944,7 +944,7 @@
     <div id="ib-wa-popup">
       <header>
         <span>Chat with ChemSus</span>
-        <span onclick="ibToggleWA()">✕</span>
+        <span onclick="ibToggleWA()">âœ•</span>
       </header>
       <div class="body">
         <p style="font-size:13px;margin-bottom:10px;">Scan to chat on mobile</p>
@@ -1091,8 +1091,8 @@
       if (!nameParam || !priceParam) {
         heroNameEl.textContent = 'Invalid Buy Request';
         headingEl.textContent = 'Order Summary';
-        unitPriceText.textContent = '₹0';
-        totalText.textContent = '₹0';
+        unitPriceText.textContent = 'â‚¹0';
+        totalText.textContent = 'â‚¹0';
         qtyInput.value = 0;
         confirmBtn.disabled = true;
         return;
@@ -1107,18 +1107,18 @@
       packNameText.textContent = pack || 'N/A';
 
       const unit = our || priceParam;
-      unitPriceText.textContent = 'Our Price: ₹' + unit.toLocaleString('en-IN') + ' / pack';
+      unitPriceText.textContent = 'Our Price: â‚¹' + unit.toLocaleString('en-IN') + ' / pack';
       biofmLine.innerHTML =
-        'BioFM: <span>₹' + (biofm || 0).toLocaleString('en-IN') +
-        '</span> —— Our Price: <span>₹' + unit.toLocaleString('en-IN') + '</span>';
+        'BioFM: <span>â‚¹' + (biofm || 0).toLocaleString('en-IN') +
+        '</span> â€”â€” Our Price: <span>â‚¹' + unit.toLocaleString('en-IN') + '</span>';
 
       function recalc() {
         let q = parseInt(qtyInput.value, 10);
         if (!Number.isFinite(q) || q <= 0) { q = 1; qtyInput.value = 1; }
         const sub = unit * q;
-        subtotalText.textContent = 'Subtotal: ₹' + sub.toLocaleString('en-IN');
-        perPackText.textContent = 'Per pack: ₹' + unit.toLocaleString('en-IN');
-        totalText.textContent = '₹' + sub.toLocaleString('en-IN');
+        subtotalText.textContent = 'Subtotal: â‚¹' + sub.toLocaleString('en-IN');
+        perPackText.textContent = 'Per pack: â‚¹' + unit.toLocaleString('en-IN');
+        totalText.textContent = 'â‚¹' + sub.toLocaleString('en-IN');
       }
 
       qtyInput.addEventListener('input', recalc);

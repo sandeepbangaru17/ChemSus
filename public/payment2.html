@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -853,7 +853,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html" class="active">Orders</a></li>
@@ -872,7 +872,7 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -908,30 +908,30 @@
             </p>
             <div class="amount-summary">
               Total Amount to Pay:
-              <span id="orderTotalText">₹0</span>
+              <span id="orderTotalText">â‚¹0</span>
             </div>
           </div>
 
           <div>
             <div class="section-title">1. Upload Payment Receipt</div>
             <div class="upload-box">
-              <p>📸 Please upload a screenshot or PDF of the successful transaction.</p>
+              <p>ðŸ“¸ Please upload a screenshot or PDF of the successful transaction.</p>
               <label class="upload-label" for="receiptInput">Choose File</label>
               <input type="file" id="receiptInput" accept="image/*,.pdf">
 
               <img id="receiptPreview" class="preview-img" alt="Receipt preview">
               <div id="receiptError" class="error-text">Please upload a valid image or PDF.</div>
-              <div id="receiptSuccess" class="success-text">✓ File selected</div>
+              <div id="receiptSuccess" class="success-text">âœ“ File selected</div>
             </div>
 
             <div class="section-title">2. Rate Your Experience</div>
             <div class="rating-row">
               <div class="stars" id="starContainer">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
+                <span class="star" data-value="1">â˜…</span>
+                <span class="star" data-value="2">â˜…</span>
+                <span class="star" data-value="3">â˜…</span>
+                <span class="star" data-value="4">â˜…</span>
+                <span class="star" data-value="5">â˜…</span>
               </div>
               <div id="ratingError" class="error-text">Please select a star rating.</div>
               <textarea id="feedbackInput" class="feedback-textarea"
@@ -939,8 +939,8 @@
             </div>
 
             <div class="actions-row">
-              <button class="btn-primary" id="submitBtn" onclick="confirmPayment()">✓ Confirm Payment & Finish</button>
-              <button class="btn-secondary" onclick="window.location.href='cart.html'">← Cancel & Go Back</button>
+              <button class="btn-primary" id="submitBtn" onclick="confirmPayment()">âœ“ Confirm Payment & Finish</button>
+              <button class="btn-secondary" onclick="window.location.href='cart.html'">â† Cancel & Go Back</button>
             </div>
           </div>
         </div>
@@ -949,7 +949,7 @@
       <div class="empty-cart-message" id="emptyMessage" style="display: none;">
         <h2>No Pending Order Found</h2>
         <p>It seems you haven't placed an order yet.</p>
-        <a href="shop.html">🛍️ Browse Shop</a>
+        <a href="shop.html">ðŸ›ï¸ Browse Shop</a>
       </div>
     </main>
 
@@ -964,7 +964,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam – 781030
+            North Guwahati, Assam â€“ 781030
           </p>
         </div>
 
@@ -981,11 +981,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -1009,7 +1009,7 @@
     <div id="ib-wa-popup">
       <header>
         <span>Chat with ChemSus</span>
-        <span onclick="ibToggleWA()">✕</span>
+        <span onclick="ibToggleWA()">âœ•</span>
       </header>
 
       <div class="body">
@@ -1135,7 +1135,7 @@
       }
 
       const total = parseFloat(orderTotal);
-      document.getElementById('orderTotalText').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('orderTotalText').textContent = 'â‚¹' + total.toLocaleString('en-IN');
     }
 
     // File Upload Handling
@@ -1166,7 +1166,7 @@
         receiptPreview.style.display = 'block';
       }
 
-      receiptSuccess.textContent = `✓ ${file.name} selected`;
+      receiptSuccess.textContent = `âœ“ ${file.name} selected`;
       receiptSuccess.style.display = 'block';
     });
 
@@ -1195,7 +1195,7 @@
       const receiptFile = receiptInput.files[0];
 
       if (!orderId || !orderDetailsRaw) {
-        alert('❌ No active order found. Please start from the beginning.');
+        alert('âŒ No active order found. Please start from the beginning.');
         window.location.href = 'shop.html';
         return;
       }
@@ -1215,7 +1215,7 @@
 
       try {
         submitBtn.disabled = true;
-        submitBtn.textContent = '⏳ Uploading...';
+        submitBtn.textContent = 'â³ Uploading...';
 
         const orderDetails = JSON.parse(orderDetailsRaw);
         const feedback = document.getElementById('feedbackInput').value.trim();
@@ -1231,7 +1231,7 @@
         formData.append('feedback', feedback || '');
         formData.append('receiptimage', receiptFile);
 
-        console.log('📤 Uploading receipt to:', API_BASE + '/receipts');
+        console.log('ðŸ“¤ Uploading receipt to:', API_BASE + '/receipts');
 
         const receiptResponse = await fetch(API_BASE + '/receipts', {
           method: 'POST',
@@ -1244,7 +1244,7 @@
         }
 
         const receiptResult = await receiptResponse.json();
-        console.log('✅ Success:', receiptResult);
+        console.log('âœ… Success:', receiptResult);
 
         // Save Order ID for success page
         sessionStorage.setItem('lastOrderId', orderId);
@@ -1263,10 +1263,10 @@
         window.location.href = 'success.html';
 
       } catch (error) {
-        console.error('❌ Upload failed:', error);
+        console.error('âŒ Upload failed:', error);
         alert('Upload failed: ' + error.message);
         submitBtn.disabled = false;
-        submitBtn.textContent = '✓ Confirm Payment & Finish';
+        submitBtn.textContent = 'âœ“ Confirm Payment & Finish';
       }
     }
 

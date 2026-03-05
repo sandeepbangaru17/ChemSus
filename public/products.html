@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -673,7 +673,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
@@ -693,7 +693,7 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -752,7 +752,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam – 781030
+            North Guwahati, Assam â€“ 781030
           </p>
         </div>
 
@@ -769,11 +769,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -790,7 +790,7 @@
     <div id="ib-wa-popup">
       <header>
         <span>Chat with ChemSus</span>
-        <span onclick="ibToggleWA()">✕</span>
+        <span onclick="ibToggleWA()">âœ•</span>
       </header>
 
       <div class="body">
@@ -990,10 +990,10 @@
 
         const data = await res.json();
 
-        // ✅ Filter only active products
+        // âœ… Filter only active products
         const activeProducts = data.filter(p => p.is_active === 1 || p.is_active === true);
 
-        // ✅ Sort by sort_order, then by id
+        // âœ… Sort by sort_order, then by id
         activeProducts.sort((a, b) => {
           const orderDiff = (a.sort_order || 0) - (b.sort_order || 0);
           if (orderDiff !== 0) return orderDiff;

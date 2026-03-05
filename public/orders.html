@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,7 +38,7 @@
       color: inherit;
     }
 
-    /* ── Sidebar ── */
+    /* â”€â”€ Sidebar â”€â”€ */
     .sidebar {
       width: 240px;
       background: var(--primary);
@@ -73,7 +73,7 @@
       opacity: 1;
     }
 
-    /* ── LOGO — identical to request-sample.html ── */
+    /* â”€â”€ LOGO â€” identical to request-sample.html â”€â”€ */
     .nav-logo {
       display: inline-flex;
       align-items: center;
@@ -93,7 +93,7 @@
       width: auto;
     }
 
-    /* ── Nav menu ── */
+    /* â”€â”€ Nav menu â”€â”€ */
     .nav-menu {
       list-style: none;
       padding: 8px 0;
@@ -126,7 +126,7 @@
       margin-left: 8px;
     }
 
-    /* ── Search ── */
+    /* â”€â”€ Search â”€â”€ */
     .search-section {
       padding: 12px 20px 16px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -162,7 +162,7 @@
       pointer-events: none;
     }
 
-    /* ── Main wrapper ── */
+    /* â”€â”€ Main wrapper â”€â”€ */
     .main-wrapper {
       margin-left: 240px;
       width: calc(100% - 240px);
@@ -173,7 +173,7 @@
       transition: margin-left 0.3s ease;
     }
 
-    /* ── Hero ── */
+    /* â”€â”€ Hero â”€â”€ */
     .hero {
       position: relative;
       overflow: hidden;
@@ -230,7 +230,7 @@
       color: #e2f3ff;
     }
 
-    /* ── Main ── */
+    /* â”€â”€ Main â”€â”€ */
     main {
       max-width: 1000px;
       margin: 0 auto;
@@ -257,7 +257,7 @@
       color: var(--primary-dark);
     }
 
-    /* ── Order summary ── */
+    /* â”€â”€ Order summary â”€â”€ */
     .order-summary {
       background: #f9fbff;
       padding: 18px 20px 20px;
@@ -329,7 +329,7 @@
       color: var(--primary);
     }
 
-    /* ── Info banner ── */
+    /* â”€â”€ Info banner â”€â”€ */
     .info-banner {
       margin: 0 0 16px;
       padding: 10px 12px;
@@ -357,7 +357,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Form ── */
+    /* â”€â”€ Form â”€â”€ */
     .form-group {
       margin-bottom: 18px;
     }
@@ -404,7 +404,7 @@
       min-height: 80px;
     }
 
-    /* ── OTP ── */
+    /* â”€â”€ OTP â”€â”€ */
     .otp-actions {
       display: flex;
       gap: 10px;
@@ -459,7 +459,7 @@
       color: #b91c1c;
     }
 
-    /* ── Submit button ── */
+    /* â”€â”€ Submit button â”€â”€ */
     .btn-submit {
       background: linear-gradient(135deg, var(--accent), #00d4cc);
       color: white;
@@ -486,7 +486,7 @@
       transform: none;
     }
 
-    /* ── Alert messages ── */
+    /* â”€â”€ Alert messages â”€â”€ */
     .error-message {
       background: #fee2e2;
       color: #991b1b;
@@ -507,7 +507,7 @@
       border-left: 4px solid #22c55e;
     }
 
-    /* ── Mobile toggle ── */
+    /* â”€â”€ Mobile toggle â”€â”€ */
     .mobile-toggle {
       display: none;
       position: fixed;
@@ -529,7 +529,7 @@
       display: block;
     }
 
-    /* ── Responsive ── */
+    /* â”€â”€ Responsive â”€â”€ */
     @media (max-width: 1050px) {
       .sidebar {
         transform: translateX(-100%);
@@ -637,7 +637,7 @@
     </svg>
   </button>
 
-  <!-- ── Sidebar — logo matches request-sample.html exactly ── -->
+  <!-- â”€â”€ Sidebar â€” logo matches request-sample.html exactly â”€â”€ -->
   <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-logo">
       <img src="assets/logo.jpg" alt="ChemSus Logo" class="nav-logo-img">
@@ -652,7 +652,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html" class="active">Orders</a></li>
@@ -672,7 +672,7 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -686,7 +686,7 @@
 
   <div class="main-wrapper">
 
-    <!-- ── Hero ── -->
+    <!-- â”€â”€ Hero â”€â”€ -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-kicker">Secure Checkout</div>
@@ -716,26 +716,26 @@
         <div class="order-summary">
           <div class="order-summary-header">
             <div class="order-summary-title">
-              <span class="icon">📦</span>
+              <span class="icon">ðŸ“¦</span>
               <span>Order Summary</span>
             </div>
           </div>
           <div class="order-summary-line"></div>
           <div class="summary-row">
             <span class="summary-row-label">Product</span>
-            <span id="summaryProduct" class="summary-row-value">–</span>
+            <span id="summaryProduct" class="summary-row-value">â€“</span>
           </div>
           <div class="summary-row">
             <span class="summary-row-label">Quantity (packs)</span>
-            <span id="summaryQuantity" class="summary-row-value">–</span>
+            <span id="summaryQuantity" class="summary-row-value">â€“</span>
           </div>
           <div class="summary-row">
             <span class="summary-row-label">Unit Price per pack</span>
-            <span id="summaryUnitPrice" class="summary-row-value">–</span>
+            <span id="summaryUnitPrice" class="summary-row-value">â€“</span>
           </div>
           <div class="summary-total">
             <span>Total:</span>
-            <span id="totalAmount">₹0</span>
+            <span id="totalAmount">â‚¹0</span>
           </div>
         </div>
 
@@ -809,7 +809,7 @@
       </section>
     </main>
 
-    <!-- ── Footer ── -->
+    <!-- â”€â”€ Footer â”€â”€ -->
     <footer
       style="background:#06121f; color:#cbd5f5; padding:20px 0; text-align:left; margin-top:40px; font-size:12px;">
       <div
@@ -819,7 +819,7 @@
             Office</h4>
           <p style="font-size:12px; line-height:1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam – 781030
+            North Guwahati, Assam â€“ 781030
           </p>
         </div>
         <div>
@@ -833,11 +833,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size:14px;">Contact</h4>
           <p style="font-size:12px; margin-bottom:6px;">
-            <span style="font-size:14px;">📞</span>
+            <span style="font-size:14px;">ðŸ“ž</span>
             <a href="tel:+918486877575" style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size:12px;">
-            <span style="font-size:14px;">✉️</span>
+            <span style="font-size:14px;">âœ‰ï¸</span>
             <a href="mailto:info@chemsus.in" style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -864,7 +864,7 @@
       }
     }
 
-    /* ── Sidebar ── */
+    /* â”€â”€ Sidebar â”€â”€ */
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
 
@@ -886,7 +886,7 @@
       });
     });
 
-    /* ── Load order data from sessionStorage ── */
+    /* â”€â”€ Load order data from sessionStorage â”€â”€ */
     function loadOrderData() {
       const buyNowDataRaw = sessionStorage.getItem('buyNowData');
       const cartItemsRaw = sessionStorage.getItem('cartItems');
@@ -900,7 +900,7 @@
         const mainSection = document.querySelector('.section');
         mainSection.innerHTML = `
           <div style="text-align:center; padding:40px 20px;">
-            <div style="font-size:64px; margin-bottom:20px;">🛒</div>
+            <div style="font-size:64px; margin-bottom:20px;">ðŸ›’</div>
             <h3 style="font-family:'Montserrat',sans-serif; color:var(--primary-dark); margin-bottom:10px;">No Orders</h3>
             <p style="color:#6b7280; margin-bottom:24px;">It looks like you haven't placed any orders yet.</p>
             <a href="shop.html" style="display:inline-block; background:var(--accent); color:white; padding:12px 24px; border-radius:50px; font-weight:600; box-shadow:0 4px 12px rgba(0,184,176,0.25);">Browse Shop</a>
@@ -927,7 +927,7 @@
             totalPrice = quantity * unitPrice;
 
             qtyEl.textContent = quantity + ' pack(s)';
-            unitEl.textContent = '₹' + unitPrice.toLocaleString('en-IN');
+            unitEl.textContent = 'â‚¹' + unitPrice.toLocaleString('en-IN');
           } else {
             productName = cartItems.length + ' items from Cart';
             quantity = cartItems.reduce((sum, item) => sum + (parseFloat(item.quantity) || 1), 0);
@@ -944,23 +944,23 @@
           totalPrice = quantity * unitPrice;
 
           qtyEl.textContent = quantity + ' pack(s)';
-          unitEl.textContent = '₹' + unitPrice.toLocaleString('en-IN');
+          unitEl.textContent = 'â‚¹' + unitPrice.toLocaleString('en-IN');
         }
 
         productEl.textContent = productName;
-        totalEl.textContent = '₹' + Math.round(totalPrice).toLocaleString('en-IN');
+        totalEl.textContent = 'â‚¹' + Math.round(totalPrice).toLocaleString('en-IN');
         sessionStorage.setItem('orderTotal', totalPrice);
 
       } catch (e) {
         productEl.textContent = 'Invalid product data';
-        qtyEl.textContent = '–';
-        unitEl.textContent = '₹0';
-        totalEl.textContent = '₹0';
+        qtyEl.textContent = 'â€“';
+        unitEl.textContent = 'â‚¹0';
+        totalEl.textContent = 'â‚¹0';
         document.getElementById('checkoutForm').style.display = 'none';
       }
     }
 
-    /* ── OTP state ── */
+    /* â”€â”€ OTP state â”€â”€ */
     const otpState = {
       challengeId: '',
       verified: false,
@@ -1042,7 +1042,7 @@
 
         if ((result.delivery || '') === 'dev' && result.debugOtp) {
           document.getElementById('emailOtp').value = String(result.debugOtp);
-          setOtpStatus(`OTP ready for ${email}. Email delivery unavailable — use this OTP: ${result.debugOtp}`, false);
+          setOtpStatus(`OTP ready for ${email}. Email delivery unavailable â€” use this OTP: ${result.debugOtp}`, false);
         } else {
           setOtpStatus(`OTP sent to ${email}.`, false);
         }
@@ -1089,7 +1089,7 @@
       }
     }
 
-    /* ── Place order ── */
+    /* â”€â”€ Place order â”€â”€ */
     async function placeBuyNowOrderAndProceed() {
       const submitBtn = document.getElementById('submitBtn');
       const errorMsg = document.getElementById('errorMessage');
@@ -1161,7 +1161,7 @@
         sessionStorage.setItem('orderId', result.orderId);
 
         errorMsg.style.display = 'none';
-        successMsg.textContent = `✅ Order #${result.orderId} placed successfully! Redirecting to payment...`;
+        successMsg.textContent = `âœ… Order #${result.orderId} placed successfully! Redirecting to payment...`;
         successMsg.style.display = 'block';
 
         sessionStorage.removeItem('buyNowData');
@@ -1171,14 +1171,14 @@
 
       } catch (error) {
         console.error('Order failed:', error);
-        errorMsg.textContent = `❌ Order failed: ${error.message}`;
+        errorMsg.textContent = `âŒ Order failed: ${error.message}`;
         errorMsg.style.display = 'block';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Place Order & Proceed to Payment';
       }
     }
 
-    /* ── Form validation & submit ── */
+    /* â”€â”€ Form validation & submit â”€â”€ */
     document.getElementById('checkoutForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -1195,16 +1195,16 @@
       const showError = (msg) => { errEl.textContent = msg; errEl.style.display = 'block'; };
 
       if (!fullName || !email || !mobile || !address || !city || !region || !pincode || !country) {
-        showError('❌ Please fill in all required fields.'); return;
+        showError('âŒ Please fill in all required fields.'); return;
       }
       if (mobile.length !== 10 || isNaN(mobile)) {
-        showError('❌ Please enter a valid 10-digit mobile number.'); return;
+        showError('âŒ Please enter a valid 10-digit mobile number.'); return;
       }
       if (pincode.length !== 6 || isNaN(pincode)) {
-        showError('❌ Please enter a valid 6-digit pincode.'); return;
+        showError('âŒ Please enter a valid 6-digit pincode.'); return;
       }
       if (!otpState.verified || !document.getElementById('emailOtpToken').value.trim()) {
-        showError('❌ Please verify your email OTP before placing order.'); return;
+        showError('âŒ Please verify your email OTP before placing order.'); return;
       }
 
       errEl.style.display = 'none';
@@ -1218,7 +1218,7 @@
       placeBuyNowOrderAndProceed();
     });
 
-    /* ── Cart badge ── */
+    /* â”€â”€ Cart badge â”€â”€ */
     function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -1226,7 +1226,7 @@
       if (badge) badge.textContent = count;
     }
 
-    /* ── Site search ── */
+    /* â”€â”€ Site search â”€â”€ */
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
@@ -1237,7 +1237,7 @@
       else window.location.href = 'index.html';
     });
 
-    /* ── Init ── */
+    /* â”€â”€ Init â”€â”€ */
     window.addEventListener('DOMContentLoaded', async function () {
       await initBackend();
       loadOrderData();
