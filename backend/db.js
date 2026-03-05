@@ -364,6 +364,7 @@ async function initDb() {
   await migrateCol("orders", "user_id", "TEXT DEFAULT NULL");
   await migrateCol("orders", "order_status", "TEXT NOT NULL DEFAULT 'Processing'");
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id)"); } catch (_) { }
+  try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
 
   console.log("✅ SQLite ready with pack_pricing table");
 }

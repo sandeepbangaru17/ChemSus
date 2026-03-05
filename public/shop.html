@@ -952,18 +952,16 @@
 
     async function loadPricingData() {
       try {
-        const shopRes = await fetch("/api/shop-items");
-        if (!shopRes.ok) throw new Error();
-        const items = await shopRes.json();
+        // Use bulk endpoint to get all pricing in one request (fixes N+1 query)
+        const res = await fetch("/api/pack-pricing-all");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
 
-        for (const item of items) {
-          const packRes = await fetch(`/api/pack-pricing/${item.id}`);
-          if (!packRes.ok) continue;
-          const packs = await packRes.json();
-
-          PRODUCT_PRICING[item.id] = {};
+        // Transform data to match expected format
+        for (const [shopItemId, packs] of Object.entries(data)) {
+          PRODUCT_PRICING[shopItemId] = {};
           packs.forEach(p => {
-            PRODUCT_PRICING[item.id][p.pack_size] = {
+            PRODUCT_PRICING[shopItemId][p.pack_size] = {
               biofmUsd: p.biofm_usd || 0,
               biofmInr: p.biofm_inr || 0,
               our: p.our_price || 0
@@ -972,6 +970,29 @@
         }
       } catch (e) {
         console.error('Failed to load pricing:', e);
+        // Fallback: try old method if bulk endpoint fails
+        try {
+          const shopRes = await fetch("/api/shop-items");
+          if (!shopRes.ok) throw new Error();
+          const items = await shopRes.json();
+
+          for (const item of items) {
+            const packRes = await fetch(`/api/pack-pricing/${item.id}`);
+            if (!packRes.ok) continue;
+            const packs = await packRes.json();
+
+            PRODUCT_PRICING[item.id] = {};
+            packs.forEach(p => {
+              PRODUCT_PRICING[item.id][p.pack_size] = {
+                biofmUsd: p.biofm_usd || 0,
+                biofmInr: p.biofm_inr || 0,
+                our: p.our_price || 0
+              };
+            });
+          }
+        } catch (fallbackErr) {
+          console.error('Fallback also failed:', fallbackErr);
+        }
       }
     }
 

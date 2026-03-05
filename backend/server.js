@@ -30,6 +30,43 @@ const OTP_HASH_SECRET =
 
 app.use(express.json({ limit: "2mb" }));
 
+// ---------------- Security Headers ----------------
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.qrserver.com;");
+  next();
+});
+
+// ---------------- In-Memory Rate Limiter ----------------
+const _rateLimitStore = new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of _rateLimitStore.entries()) {
+    if (now > v.reset) _rateLimitStore.delete(k);
+  }
+}, 5 * 60 * 1000); // Cleanup every 5 minutes
+
+function rateLimiter(windowMs, max) {
+  return (req, res, next) => {
+    const key = (req.ip || 'unknown') + ':' + req.path;
+    const now = Date.now();
+    const entry = _rateLimitStore.get(key);
+    if (!entry || now > entry.reset) {
+      _rateLimitStore.set(key, { count: 1, reset: now + windowMs });
+      return next();
+    }
+    if (entry.count >= max) {
+      const retryAfter = Math.ceil((entry.reset - now) / 1000);
+      return res.status(429).json({ error: 'Too many requests', retryAfterSec: retryAfter });
+    }
+    entry.count++;
+    next();
+  };
+}
+
 // ---------------- Helpers: Promise wrappers ----------------
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
@@ -889,17 +926,10 @@ app.get("/api/test", (req, res) =>
   res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
 );
 
-app.post("/api/orders", async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM shop_items WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("Shop items fetch error stack:", e);
-    res.status(500).json({ error: "DB error", details: String(e.message || e) });
-  }
+// NOTE: POST /api/orders is handled by the OTP-verified checkout route below.
+// This stub returns a clear error to avoid silent failures if called incorrectly.
+app.post("/api/orders", (req, res) => {
+  res.status(405).json({ error: "Use /api/otp/email/send + /api/otp/email/verify + checkout endpoint for orders" });
 });
 
 app.get("/api/shop-items", async (req, res) => {
@@ -1192,8 +1222,36 @@ app.get("/api/pack-pricing/:shopItemId", async (req, res) => {
   }
 });
 
+// ---------------- Bulk Pack Pricing (avoids N+1 queries on shop page) ----------------
+app.get("/api/pack-pricing-all", async (req, res) => {
+  try {
+    const rows = await all(
+      `SELECT shop_item_id, pack_size, biofm_usd, biofm_inr, our_price
+       FROM pack_pricing
+       WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
+      []
+    );
+    // Group by shop_item_id for easy lookup in the frontend
+    const grouped = {};
+    rows.forEach(row => {
+      if (!grouped[row.shop_item_id]) grouped[row.shop_item_id] = [];
+      grouped[row.shop_item_id].push({
+        pack_size: row.pack_size,
+        biofm_usd: row.biofm_usd,
+        biofm_inr: row.biofm_inr,
+        our_price: row.our_price
+      });
+    });
+    res.json(grouped);
+  } catch (e) {
+    console.error("Pack pricing all error:", e);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 // ---------------- Orders API ----------------
-app.post("/api/otp/email/send", async (req, res) => {
+// Rate limit OTP sends: 5 per 15 minutes per IP
+app.post("/api/otp/email/send", rateLimiter(15 * 60 * 1000, 5), async (req, res) => {
   try {
     await purgeOtpSessions();
     const email = normalizeEmail(req.body?.email || "");

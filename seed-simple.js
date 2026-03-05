@@ -38,7 +38,7 @@ async function seed() {
       { name: '5-HMF', subtitle: 'Bio-based intermediate', features: '["High reactivity","Resins & coatings","Sustainable building block"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/5-hmf.html', image: 'assets/5hmf.jpeg' },
       { name: 'Ethyl Levulinate', subtitle: 'Green solvent & fuel additive', features: '["Bio-based ester","Flavors & fragrances","Low toxicity"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/ethyl-levulinate.html', image: 'assets/el.jpeg' },
       { name: 'Methyl Levulinate', subtitle: 'Renewable solvent & intermediate', features: '["Biofuel additive","Performance solvent","Chemical intermediate"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/methyl-levulinate.html', image: 'assets/ml.jpeg' },
-      { name: 'DALA', subtitle: 'Delta-aminolevulinic acid', features: '["Pharmaceutical grade","Agricultural applications","High purity >98%"]', stockStatus: 'in-stock', badge: 'Limited stock', showBadge: 1, moreLink: 'products/dala.html', image: 'assets/dala.jpeg' }
+      { name: 'DALA', subtitle: 'Delta-aminolevulinic acid', features: '["Pharmaceutical grade","Agricultural applications","High purity >98%"]', stockStatus: 'in-stock', badge: 'Limited stock', showBadge: 1, moreLink: 'products/dala.html', image: 'assets/dala.jpg' }
     ];
 
     const insertedIds = [];
@@ -115,7 +115,7 @@ async function seed() {
       ['5-HMF', 'High-purity pharmaceutical intermediate', 'assets/5hmf.jpeg', 'products/5-hmf.html'],
       ['Ethyl Levulinate', 'Bio-based green solvent', 'assets/el.jpeg', 'products/ethyl-levulinate.html'],
       ['Methyl Levulinate', 'Renewable ester solvent', 'assets/ml.jpeg', 'products/methyl-levulinate.html'],
-      ['DALA', 'Delta-aminolevulinic acid', 'assets/dala.jpeg', 'products/dala.html']
+      ['DALA', 'Delta-aminolevulinic acid', 'assets/dala.jpg', 'products/dala.html']
     ];
 
     for (const prod of products) {
