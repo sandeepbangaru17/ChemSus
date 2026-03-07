@@ -252,6 +252,27 @@
       border-radius: 10px
     }
 
+    .map-frame-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .map-fallback {
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .map-fallback a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .map-fallback a:hover {
+      text-decoration: underline;
+    }
+
     .contact-info h3 {
       font-family: "Montserrat", sans-serif;
       color: var(--primary-dark);
@@ -697,9 +718,20 @@
     <main>
       <section class="section">
         <div class="contact-card">
-          <iframe src="https://www.google.com/maps?q=Technology%20Incubation%20Centre%20IIT%20Guwahati&output=embed"
-            loading="lazy">
-          </iframe>
+          <div class="map-frame-wrap">
+            <iframe
+              src="https://maps.google.com/maps?hl=en&q=Technology%20Incubation%20Centre%20IIT%20Guwahati&z=15&output=embed"
+              title="ChemSus location map"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen>
+            </iframe>
+            <p class="map-fallback">
+              If the map does not load, open location directly:
+              <a href="https://www.google.com/maps/search/?api=1&query=Technology+Incubation+Centre+IIT+Guwahati"
+                target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+            </p>
+          </div>
 
           <div class="contact-info">
             <h3>Registered Office</h3>
@@ -913,5 +945,4 @@
 </body>
 
 </html>
-
 
