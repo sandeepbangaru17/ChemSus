@@ -813,7 +813,7 @@
             <li><a href="collaboration.html">Collaboration</a></li>
             <li><a href="recognitions.html">Recognitions</a></li>
             <li><a href="investors.html">Investors</a></li>
-            <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
+            <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
             <li><a href="contact.html">Contact us</a></li>
             <li><a href="request-sample.html">Request for Sample</a></li>
             <li><a href="orders.html">Orders</a></li>
@@ -859,7 +859,7 @@
         <main>
             <!-- Shown when not logged in -->
             <div id="authNotice" class="info-section" style="display:none; text-align:center;">
-                <h2 class="section-title" style="border:none; text-align:center;">ðŸ”’ Login Required</h2>
+                <h2 class="section-title" style="border:none; text-align:center;">🔒 Login Required</h2>
                 <p style="color:#6b7280; font-size:15px; margin-bottom:20px;">Please log in to view your order history
                     and track your deliveries.</p>
                 <a href="/login.html" class="btn-login">Log In / Sign Up</a>
@@ -878,7 +878,7 @@
                         style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
                         <h2 class="section-title" style="margin-bottom:0; border:none; padding:0;">Your Order History
                         </h2>
-                        <button class="refresh-btn" onclick="loadOrders()">ðŸ”„ Refresh</button>
+                        <button class="refresh-btn" onclick="loadOrders()">🔄 Refresh</button>
                     </div>
                     <div id="ordersList"></div>
                 </div>
@@ -906,7 +906,7 @@
                         Office</h4>
                     <p style="font-size: 12px; line-height: 1.5;">
                         House No. 555, GNB Road,<br>
-                        North Guwahati, Assam â€“ 781030
+                        North Guwahati, Assam – 781030
                     </p>
                 </div>
 
@@ -925,11 +925,11 @@
                     <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">
                         Contact</h4>
                     <p style="font-size: 12px; margin-bottom:6px;">
-                        <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
+                        <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
                             style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
                     </p>
                     <p style="font-size: 12px;">
-                        <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
+                        <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
                             style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
                     </p>
                 </div>
@@ -947,7 +947,7 @@
         <div id="ib-wa-popup">
             <header>
                 <span>Chat with ChemSus</span>
-                <span onclick="ibToggleWA()">âœ•</span>
+                <span onclick="ibToggleWA()">✕</span>
             </header>
 
             <div class="body">
@@ -1051,7 +1051,7 @@
             }
         });
 
-        // â”€â”€ Order display helpers â”€â”€
+        // ── Order display helpers ──
         function statusBadge(status) {
             const cls = 'status-badge status-' + (status || 'Processing');
             return `<span class="${cls}">${status || 'Processing'}</span>`;
@@ -1061,17 +1061,17 @@
             return `<span class="${cls}">${status || 'PENDING'}</span>`;
         }
         function fmtDate(dt) {
-            if (!dt) return 'â€”';
+            if (!dt) return '—';
             try { return new Date(dt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); } catch { return dt; }
         }
-        function fmtINR(v) { return 'â‚¹' + Number(v || 0).toLocaleString('en-IN'); }
+        function fmtINR(v) { return '₹' + Number(v || 0).toLocaleString('en-IN'); }
 
         function renderOrders(orders) {
             const list = document.getElementById('ordersList');
             if (!orders.length) {
                 list.innerHTML = `
           <div class="empty-state">
-            <div class="icon">ðŸ“­</div>
+            <div class="icon">📭</div>
             <h3>No orders yet</h3>
             <p>You haven't placed any orders. <a href="/shop.html">Browse our shop</a> to get started.</p>
           </div>`;
@@ -1092,7 +1092,7 @@
           <div class="order-body">
             <div class="order-field">
               <label>Product</label>
-              <p>${o.productname || 'â€”'}</p>
+              <p>${o.productname || '—'}</p>
             </div>
             <div class="order-field">
               <label>Quantity</label>
@@ -1104,15 +1104,15 @@
             </div>
             <div class="order-field">
               <label>Payment Mode</label>
-              <p>${o.paymentmode || 'â€”'}</p>
+              <p>${o.paymentmode || '—'}</p>
             </div>
             <div class="order-field">
               <label>Delivery Address</label>
-              <p>${[o.address, o.city, o.region, o.country].filter(Boolean).join(', ') || 'â€”'}</p>
+              <p>${[o.address, o.city, o.region, o.country].filter(Boolean).join(', ') || '—'}</p>
             </div>
             <div class="order-field">
               <label>Notes</label>
-              <p>${o.notes || 'â€”'}</p>
+              <p>${o.notes || '—'}</p>
             </div>
           </div>
         </div>`).join('');
@@ -1146,7 +1146,7 @@
                 document.getElementById('ordersSection').style.display = 'block';
                 document.getElementById('ordersList').innerHTML = `
                     <div class="empty-state" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; margin-top: 20px;">
-                        <div class="icon" style="font-size: 48px; margin-bottom: 10px;">âš ï¸</div>
+                        <div class="icon" style="font-size: 48px; margin-bottom: 10px;">⚠️</div>
                         <h3 style="color: #991b1b; margin-bottom: 8px;">Connection Failed</h3>
                         <p style="color: #b91c1c; margin-bottom: 20px;">We couldn't reach the server: ${e.message}</p>
                         <button class="refresh-btn" style="border-color: #dc2626; color: #dc2626;" onclick="loadOrders()">Try Again</button>
