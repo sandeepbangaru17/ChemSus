@@ -408,7 +408,7 @@
     }
 
     .product-features li::before {
-      content: "âœ“ ";
+      content: "✓ ";
       color: var(--accent);
       font-weight: 700
     }
@@ -810,7 +810,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
@@ -883,7 +883,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam â€“ 781030
+            North Guwahati, Assam – 781030
           </p>
         </div>
 
@@ -900,11 +900,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -1190,7 +1190,7 @@
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
         const featuresHTML = item.features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
         const safeMore = safeUrl(item.moreLink || '');
-        const moreHTML = safeMore ? `<a class="more-details" href="${safeMore}">More Details â†—</a>` : '';
+        const moreHTML = safeMore ? `<a class="more-details" href="${safeMore}">More Details ↗</a>` : '';
         const outMsg = !isInStock ? '<div class="out-of-stock-message">Currently Out of Stock</div>' : '';
 
         const chemicalEmojis = ['&#x1F9EA;', '&#x2697;&#xFE0F;', '&#x1F52C;', '&#x1F9EB;', '&#x1F9EC;', '&#x1F97C;'];
@@ -1228,15 +1228,15 @@
           ${packSelectHTML}
 
           <div class="product-price" data-price-display>
-            ${basePriceInitial ? `â‚¹${basePriceInitial.toLocaleString('en-IN')} / pack` : 'â€“'}
+            ${basePriceInitial ? `₹${basePriceInitial.toLocaleString('en-IN')} / pack` : '–'}
           </div>
 
           <div class="product-actions">
             <button class="btn-buy" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : 'Buy Now'}</button>
             <div class="cart-btn-container">
-              <button class="btn-cart" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : 'ðŸ›’'}</button>
+              <button class="btn-cart" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : '🛒'}</button>
               <div class="qty-selector">
-                <button class="qty-btn">âˆ’</button>
+                <button class="qty-btn">−</button>
                 <span class="qty-value">0</span>
                 <button class="qty-btn">+</button>
               </div>
@@ -1265,7 +1265,7 @@
             biofmDisplay.style.display = 'none';
           }
           if (priceDisplay) {
-            priceDisplay.textContent = basePrice ? `â‚¹${basePrice.toLocaleString('en-IN')} / pack` : '-';
+            priceDisplay.textContent = basePrice ? `₹${basePrice.toLocaleString('en-IN')} / pack` : '-';
           }
           const dis = !isInStock || !basePrice;
           if (buyBtn) {
@@ -1274,7 +1274,7 @@
           }
           if (cartBtn) {
             cartBtn.disabled = dis;
-            cartBtn.textContent = dis ? 'Unavailable' : 'ðŸ›’';
+            cartBtn.textContent = dis ? 'Unavailable' : '🛒';
           }
         }
 
