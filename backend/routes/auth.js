@@ -8,7 +8,7 @@ module.exports = function (deps) {
         requestSupabaseDirect, proxySupabasePasswordAuth,
         generateOtpCode, sendOtpEmail, hashOtp,
         purgeOtpSessions, rateLimiter,
-        OTP_TOKEN_TTL_MIN
+        OTP_TOKEN_TTL_MIN, OTP_TTL_MIN, OTP_MAX_ATTEMPTS, OTP_RESEND_SEC
     } = deps;
 
     // Login (Path: /api/auth/password-login)
@@ -40,7 +40,7 @@ module.exports = function (deps) {
                     const localPayload = await deps.verifyLocalAuthUser(email, password);
                     if (localPayload) {
                         console.log(`[AUTH-LOGIN] successful fallback local login for ${email}`);
-                        return res.status(200).json(localPayload);
+                        return res.status(200).json(deps.buildLocalAuthPayload(localPayload));
                     }
                 } catch (localErr) {
                     console.warn("[AUTH-LOGIN] Local fallback failed:", localErr?.message || localErr);
@@ -57,7 +57,11 @@ module.exports = function (deps) {
                 const localPayload = await deps.verifyLocalAuthUser(email, password);
                 if (localPayload) {
                     console.log(`[AUTH-LOGIN] successful fallback local login (proxy err) for ${email}`);
-                    return res.status(200).json(localPayload);
+                    return res.status(200).json(deps.buildLocalAuthPayload(localPayload));
+                }
+                const localUser = await deps.findLocalAuthUserByEmail(email);
+                if (localUser) {
+                    return res.status(401).json({ error: "Invalid email or password" });
                 }
             } catch (localErr) {
                 console.warn("[AUTH-LOGIN] Local fallback failed after proxy error:", localErr?.message || localErr);
@@ -86,8 +90,15 @@ module.exports = function (deps) {
                 );
             } else {
                 try {
-                    await deps.createLocalAuthUser(email, password);
-                    return res.status(200).json({ local_fallback: true, msg: "Signup via fallback" });
+                    const created = await deps.createLocalAuthUser(email, password);
+                    if (!created) {
+                        if (upstream.json) return res.status(upstream.status).json(upstream.json);
+                        return res.status(upstream.status).send(upstream.text);
+                    }
+                    const payload = deps.buildLocalAuthPayload(created);
+                    payload.local_fallback = true;
+                    payload.msg = "Signup via fallback";
+                    return res.status(200).json(payload);
                 } catch (localErr) {
                     console.warn("[AUTH-SIGNUP] Local fallback failed:", localErr?.message || localErr);
                 }
@@ -100,8 +111,14 @@ module.exports = function (deps) {
             try {
                 const email = normalizeEmail(req.body?.email || "");
                 const password = String(req.body?.password || "");
-                await deps.createLocalAuthUser(email, password);
-                return res.status(200).json({ local_fallback: true, msg: "Signup via fallback" });
+                const created = await deps.createLocalAuthUser(email, password);
+                if (!created) {
+                    return res.status(409).json({ error: "User already exists" });
+                }
+                const payload = deps.buildLocalAuthPayload(created);
+                payload.local_fallback = true;
+                payload.msg = "Signup via fallback";
+                return res.status(200).json(payload);
             } catch (localErr) {
                 console.warn("[AUTH-SIGNUP] Local fallback failed:", localErr?.message || localErr);
             }
@@ -122,9 +139,17 @@ module.exports = function (deps) {
             const hash = hashOtp(email, otp, challengeId);
 
             await run(
-                `INSERT INTO email_otp_sessions (email, challenge_id, otp_hash, expires_at)
-             VALUES (?, ?, ?, datetime('now', '+15 minutes'))`,
-                [email, challengeId, hash]
+                `INSERT INTO email_otp_sessions
+             (email, challenge_id, otp_hash, attempts, max_attempts, expires_at, cooldown_until)
+             VALUES (?, ?, ?, 0, ?, datetime('now', ?), datetime('now', ?))`,
+                [
+                    email,
+                    challengeId,
+                    hash,
+                    Number(OTP_MAX_ATTEMPTS || 5),
+                    `+${Number(OTP_TTL_MIN || 15)} minutes`,
+                    `+${Number(OTP_RESEND_SEC || 60)} seconds`,
+                ]
             );
 
             await sendOtpEmail(email, otp);
@@ -132,7 +157,7 @@ module.exports = function (deps) {
             res.json({
                 ok: true,
                 challengeId,
-                message: "OTP sent (expires in 15m).",
+                message: `OTP sent (expires in ${Number(OTP_TTL_MIN || 15)}m).`,
             });
         } catch (e) {
             if (e.message && e.message.includes("SQLITE_READONLY")) {
@@ -169,7 +194,7 @@ module.exports = function (deps) {
             if (!row) {
                 return res.status(400).json({ error: "Invalid or expired OTP session." });
             }
-            if (row.verified) {
+            if (row.verified_at) {
                 return res.status(400).json({ error: "This OTP was already verified." });
             }
 
@@ -195,7 +220,7 @@ module.exports = function (deps) {
             const verificationToken = deps.crypto.randomUUID();
             await run(
                 `UPDATE email_otp_sessions
-             SET verified=1,
+             SET verified_at=datetime('now'),
                  verification_token=?,
                  token_expires_at=datetime('now', ?),
                  updated_at=datetime('now')
