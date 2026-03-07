@@ -532,7 +532,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html" class="active">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html" class="active">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
@@ -593,7 +593,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam â€“ 781030
+            North Guwahati, Assam – 781030
           </p>
         </div>
 
@@ -610,11 +610,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -706,15 +706,15 @@
                 </div>
               </div>
             </td>
-            <td class="price">â‚¹${item.price.toLocaleString('en-IN')}</td>
+            <td class="price">₹${item.price.toLocaleString('en-IN')}</td>
             <td>
               <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(${index}, -1)">âˆ’</button>
+                <button class="qty-btn" onclick="updateQty(${index}, -1)">−</button>
                 <input type="text" class="qty-input" value="${item.quantity}" readonly>
                 <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
               </div>
             </td>
-            <td class="price">â‚¹${itemTotal.toLocaleString('en-IN')}</td>
+            <td class="price">₹${itemTotal.toLocaleString('en-IN')}</td>
             <td>
               <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
             </td>
@@ -728,7 +728,7 @@
           <div class="cart-summary">
             <div class="summary-row">
               <span>Subtotal</span>
-              <span>â‚¹${subtotal.toLocaleString('en-IN')}</span>
+              <span>₹${subtotal.toLocaleString('en-IN')}</span>
             </div>
             <div class="summary-row">
               <span>Shipping</span>
@@ -736,7 +736,7 @@
             </div>
             <div class="summary-total">
               <span>Total</span>
-              <span>â‚¹${subtotal.toLocaleString('en-IN')}</span>
+              <span>₹${subtotal.toLocaleString('en-IN')}</span>
             </div>
             <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
           </div>
