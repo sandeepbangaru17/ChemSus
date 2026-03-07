@@ -173,7 +173,6 @@
       display: flex;
       flex-direction: column;
       transition: margin-left .3s ease;
-      width: 100%;
     }
 
     /* HERO */
@@ -384,40 +383,67 @@
     }
 
     /* NEW PUB CHEM BUTTON */
-    .pubchem-link-container {
-      text-align: center;
-      margin: 40px 0 30px;
-    }
+        .pubchem-link-container {
+          display: flex;
+          justify-content: center;
+          margin: 40px 0 34px;
+        }
 
-    .btn-pubchem {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, #6c8ebf, #4a6fa5);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: "Montserrat", sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(106, 142, 191, 0.4);
-    }
+        .btn-pubchem {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 15px 28px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          background: linear-gradient(135deg, #1186d1 0%, #0d5fb3 52%, #09387f 100%);
+          color: #fff;
+          font-family: "Montserrat", sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: .04em;
+          text-decoration: none;
+          text-transform: uppercase;
+          white-space: nowrap;
+          cursor: pointer;
+          box-shadow: 0 10px 26px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+          transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
+        }
 
-    .btn-pubchem:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(106, 142, 191, 0.5);
-      background: linear-gradient(135deg, #5a7cad, #3a5a8a);
-    }
+        .btn-pubchem::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+          transform: translateX(-75%);
+          transition: transform 0.42s ease;
+        }
 
-    .btn-pubchem svg {
-      width: 20px;
-      height: 20px;
-    }
+        .btn-pubchem:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 30px rgba(9, 56, 127, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+          filter: saturate(1.06);
+        }
+
+        .btn-pubchem:hover::before {
+          transform: translateX(0);
+        }
+
+        .btn-pubchem:active {
+          transform: translateY(0);
+          box-shadow: 0 8px 20px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-pubchem svg {
+          width: 18px;
+          height: 18px;
+          flex: 0 0 auto;
+        }
 
     footer {
       background: #06121f;
@@ -460,7 +486,6 @@
 
       .main-wrapper {
         margin-left: 0;
-        width: 100%;
         padding-top: 0;
       }
 
