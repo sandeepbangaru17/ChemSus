@@ -21,7 +21,7 @@ module.exports = function (deps) {
            ON CONFLICT(key) DO UPDATE SET value=excluded.value`,
                     [url]
                 );
-                res.json({ ok: true, url });
+                res.json({ ok: true, path: url }); // Frontend expects 'path' in some places, but others use 'url'. Let's provide both or check admin.html.
             } catch (e) {
                 console.error("Upload error:", e);
                 res.status(500).json({ error: "DB error" });
@@ -61,10 +61,10 @@ module.exports = function (deps) {
             const b = req.body || {};
             const r = await run(
                 `INSERT INTO products_page
-         (title, description, image, link, is_active, sort_order)
+         (name, description, image, link, is_active, sort_order)
          VALUES (?,?,?,?,?,?)`,
                 [
-                    b.title || "",
+                    b.name || "",
                     b.description || "",
                     b.image || "",
                     b.link || "",
@@ -74,6 +74,7 @@ module.exports = function (deps) {
             );
             res.json({ ok: true, id: r.lastID });
         } catch (e) {
+            console.error("Save product error:", e);
             res.status(500).json({ error: "DB error", details: String(e) });
         }
     });
@@ -84,10 +85,10 @@ module.exports = function (deps) {
             const b = req.body || {};
             const r = await run(
                 `UPDATE products_page
-         SET title=?, description=?, image=?, link=?, is_active=?, sort_order=?
+         SET name=?, description=?, image=?, link=?, is_active=?, sort_order=?, updated_at=datetime('now')
          WHERE id=?`,
                 [
-                    b.title || "",
+                    b.name || "",
                     b.description || "",
                     b.image || "",
                     b.link || "",
@@ -131,22 +132,25 @@ module.exports = function (deps) {
             const features_json = JSON.stringify(b.features || []);
             const r = await run(
                 `INSERT INTO shop_items
-         (name, category, price, moq, description, features_json, image, is_active, sort_order)
-         VALUES (?,?,?,?,?,?,?,?,?)`,
+         (name, subtitle, price, features_json, image, is_active, sort_order, stockStatus, showBadge, badge, moreLink)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
                 [
                     b.name || "",
-                    b.category || "",
+                    b.subtitle || "",
                     Number(b.price || 0),
-                    b.moq || "",
-                    b.description || "",
                     features_json,
                     b.image || "",
                     b.isactive ? 1 : 0,
                     Number(b.sortorder || 0),
+                    b.stockStatus || "in-stock",
+                    b.showBadge ? 1 : 0,
+                    b.badge || "",
+                    b.moreLink || "",
                 ]
             );
             res.json({ ok: true, id: r.lastID });
         } catch (e) {
+            console.error("Save shop item error:", e);
             res.status(500).json({ error: "DB error", details: String(e) });
         }
     });
@@ -158,18 +162,20 @@ module.exports = function (deps) {
             const features_json = JSON.stringify(b.features || []);
             const r = await run(
                 `UPDATE shop_items
-         SET name=?, category=?, price=?, moq=?, description=?, features_json=?, image=?, is_active=?, sort_order=?
+         SET name=?, subtitle=?, price=?, features_json=?, image=?, is_active=?, sort_order=?, stockStatus=?, showBadge=?, badge=?, moreLink=?, updated_at=datetime('now')
          WHERE id=?`,
                 [
                     b.name || "",
-                    b.category || "",
+                    b.subtitle || "",
                     Number(b.price || 0),
-                    b.moq || "",
-                    b.description || "",
                     features_json,
                     b.image || "",
                     b.isactive ? 1 : 0,
                     Number(b.sortorder || 0),
+                    b.stockStatus || "in-stock",
+                    b.showBadge ? 1 : 0,
+                    b.badge || "",
+                    b.moreLink || "",
                     id,
                 ]
             );
@@ -204,19 +210,42 @@ module.exports = function (deps) {
         }
     });
 
+    // RESTful version
     router.post("/pack-pricing/:shopItemId", requireAdmin, async (req, res) => {
         try {
             const shopItemId = Number(req.params.shopItemId);
             const b = req.body || {};
             const r = await run(
                 `INSERT INTO pack_pricing
-         (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order)
-         VALUES (?,?,?,?,?,?,?)`,
+         (shop_item_id, pack_size, our_price, is_active, sort_order)
+         VALUES (?,?,?,?,?)`,
                 [
                     shopItemId,
                     b.packSize || "",
-                    Number(b.biofmUsd || 0),
-                    Number(b.biofmInr || 0),
+                    Number(b.ourPrice || 0),
+                    b.isActive ? 1 : 0,
+                    Number(b.sortOrder || 0),
+                ]
+            );
+            res.json({ ok: true, id: r.lastID });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // Legacy compatibility for POST /api/admin/pack-pricing
+    router.post("/pack-pricing", requireAdmin, async (req, res) => {
+        try {
+            const b = req.body || {};
+            const shopItemId = Number(b.shopItemId);
+            if (!shopItemId) return res.status(400).json({ error: "shopItemId required" });
+            const r = await run(
+                `INSERT INTO pack_pricing
+         (shop_item_id, pack_size, our_price, is_active, sort_order)
+         VALUES (?,?,?,?,?)`,
+                [
+                    shopItemId,
+                    b.packSize || "",
                     Number(b.ourPrice || 0),
                     b.isActive ? 1 : 0,
                     Number(b.sortOrder || 0),
@@ -234,12 +263,10 @@ module.exports = function (deps) {
             const b = req.body || {};
             const r = await run(
                 `UPDATE pack_pricing
-         SET pack_size=?, biofm_usd=?, biofm_inr=?, our_price=?, is_active=?, sort_order=?, updated_at=datetime('now')
+         SET pack_size=?, our_price=?, is_active=?, sort_order=?, updated_at=datetime('now')
          WHERE id=?`,
                 [
                     b.packSize || "",
-                    Number(b.biofmUsd || 0),
-                    Number(b.biofmInr || 0),
                     Number(b.ourPrice || 0),
                     b.isActive ? 1 : 0,
                     Number(b.sortOrder || 0),
@@ -287,11 +314,6 @@ module.exports = function (deps) {
             const id = Number(req.params.id);
             const { order_status } = req.body;
             if (!order_status) return res.status(400).json({ error: "Status required" });
-
-            const validStatuses = ['Processing', 'Shipped', 'Delivered', 'Cancelled'];
-            if (!validStatuses.includes(order_status)) {
-                return res.status(400).json({ error: "Invalid status" });
-            }
 
             await run(
                 `UPDATE orders SET order_status=?, updated_at=datetime('now') WHERE id=?`,
@@ -358,6 +380,7 @@ module.exports = function (deps) {
         }
     });
 
+    // RESTful version
     router.post("/payments/:id/success", requireAdmin, async (req, res) => {
         const id = Number(req.params.id);
         try {
@@ -385,6 +408,27 @@ module.exports = function (deps) {
             await run(
                 `UPDATE orders SET payment_status = 'FAILED', updated_at=datetime('now') WHERE id = ?`,
                 [pay.order_id]
+            );
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // Legacy compatibility for POST /api/admin/payment-status
+    router.post("/payment-status", requireAdmin, async (req, res) => {
+        try {
+            const paymentId = Number(req.body?.paymentId);
+            const status = (req.body?.status || "").toUpperCase();
+            if (!paymentId || !status) return res.status(400).json({ error: "paymentId and status required" });
+
+            const pay = await get(`SELECT order_id FROM payments WHERE id = ?`, [paymentId]);
+            if (!pay) return res.status(404).json({ error: "Payment not found" });
+
+            await run(`UPDATE payments SET status = ? WHERE id = ?`, [status, paymentId]);
+            await run(
+                `UPDATE orders SET payment_status = ?, updated_at=datetime('now') WHERE id = ?`,
+                [status, pay.order_id]
             );
             res.json({ ok: true });
         } catch (e) {

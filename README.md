@@ -93,7 +93,12 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 ```
 ChemSus/
 ├── backend/
-│   ├── server.js               # Express server + API routes + Supabase JWT middleware
+│   ├── routes/                 # Modular API route handlers
+│   │   ├── admin.js
+│   │   ├── auth.js
+│   │   ├── orders.js
+│   │   └── public.js
+│   ├── server.js               # Express server entry point (injects routes)
 │   └── db.js                   # SQLite schema, migrations, and seeding
 ├── public/
 │   ├── admin/
@@ -113,7 +118,7 @@ ChemSus/
 │   └── chemsus.sqlite          # SQLite database (auto-created)
 ├── .env                        # Environment variables
 ├── package.json
-├── seed.js / seed-data.sql     # Database seeding scripts
+├── seed.js / seed-data.sql     # Database seeding scripts (for local dev)
 └── README.md
 ```
 
@@ -137,14 +142,13 @@ OTP_SMTP_USER=your_smtp_user
 OTP_SMTP_PASS=your_smtp_password
 OTP_EMAIL_FROM=no-reply@yourdomain.com
 OTP_HASH_SECRET=change_this_secret
-OTP_TTL_MIN=10
+OTP_TTL_MIN=15
 OTP_RESEND_SEC=60
 OTP_MAX_ATTEMPTS=5
 OTP_TOKEN_TTL_MIN=30
 ```
 
 Supabase values come from **Supabase Dashboard → Settings → API**.  
-The backend now exposes `/config.json` using these env vars so the public anon key never lives in git; `public/assets/js/supabase-client.js` fetches that endpoint at runtime.
 
 ---
 
@@ -155,13 +159,13 @@ The backend now exposes `/config.json` using these env vars so the public anon k
 | `products_page` | Product catalogue cards |
 | `shop_items` | Shop items with pricing |
 | `pack_pricing` | Pack sizes and tiered pricing |
-| `orders` | Customer orders (with `user_id` and `order_status`) |
+| `orders` | Customer orders (with `order_status` and `payment_status`) |
 | `order_items` | Order line items |
 | `payments` | Payment records and receipts |
 | `site_settings` | Brochure URL and site configuration |
 | `email_otp_sessions` | Email OTP sessions for checkout verification |
 
-Database auto-migrates on startup — new columns (`user_id`, `order_status`) are added automatically to existing databases.
+Database auto-migrates on startup — new columns (`order_status`, etc.) and indexes are added automatically.
 
 ---
 
@@ -183,11 +187,12 @@ Database auto-migrates on startup — new columns (`user_id`, `order_status`) ar
 | GET | `/api/admin/pack-pricing/:shopItemId` | List pack prices |
 | GET | `/api/admin/orders` | List all orders |
 | DELETE | `/api/admin/orders/:id` | Delete order |
-| PATCH | `/api/admin/orders/:id/status` | Update order status |
+| PUT | `/api/admin/orders/:id/status` | Update order delivery status |
 | GET | `/api/admin/payments` | List payments |
 | DELETE | `/api/admin/payments/:id` | Delete payment |
-| POST | `/api/admin/payment-status` | Mark payment SUCCESS/FAILED |
-| POST | `/api/admin/upload` | Upload file |
+| POST | `/api/admin/payments/:id/success` | Mark payment as SUCCESS |
+| POST | `/api/admin/payments/:id/failed` | Mark payment as FAILED |
+| POST | `/api/admin/upload` | Upload site assets |
 | POST | `/api/admin/brochure` | Save brochure URL |
 
 ### User APIs (require Supabase JWT)
@@ -200,13 +205,17 @@ Database auto-migrates on startup — new columns (`user_id`, `order_status`) ar
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/otp/email/send` | Send OTP to email |
-| POST | `/api/otp/email/verify` | Verify OTP |
+| POST | `/api/auth/password-login` | Email/Password login (with local fallback) |
+| POST | `/api/auth/password-signup` | Email/Password signup (with local fallback) |
+| POST | `/api/otp/email/send` | Send order verification OTP |
+| POST | `/api/otp/email/verify` | Verify order OTP |
 | POST | `/api/orders` | Place an order |
 | POST | `/api/receipts` | Upload payment receipt |
 | GET | `/api/site/brochure` | Get brochure URL |
 | GET | `/api/shop-items` | List active shop items |
-| GET | `/api/pack-pricing/:shopItemId` | Get pack pricing |
+| GET | `/api/pack-pricing-all` | Bulk load pack prices (Fast) |
+| GET | `/api/pack-pricing/:shopItemId`| Get specific pack pricing |
+
 
 ---
 

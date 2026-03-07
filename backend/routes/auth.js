@@ -11,6 +11,7 @@ module.exports = function (deps) {
         OTP_TOKEN_TTL_MIN
     } = deps;
 
+    // Login (Path: /api/auth/password-login)
     router.post("/auth/password-login", async (req, res) => {
         try {
             const email = normalizeEmail(req.body?.email || "");
@@ -65,6 +66,7 @@ module.exports = function (deps) {
         }
     });
 
+    // Signup (Path: /api/auth/password-signup)
     router.post("/auth/password-signup", async (req, res) => {
         try {
             const email = normalizeEmail(req.body?.email || "");
@@ -107,6 +109,7 @@ module.exports = function (deps) {
         }
     });
 
+    // OTP Send (Path: /api/otp/email/send)
     router.post("/otp/email/send", rateLimiter(15 * 60 * 1000, 5), async (req, res) => {
         try {
             await purgeOtpSessions();
@@ -120,7 +123,7 @@ module.exports = function (deps) {
 
             await run(
                 `INSERT INTO email_otp_sessions (email, challenge_id, otp_hash, expires_at)
-         VALUES (?, ?, ?, datetime('now', '+15 minutes'))`,
+             VALUES (?, ?, ?, datetime('now', '+15 minutes'))`,
                 [email, challengeId, hash]
             );
 
@@ -143,6 +146,7 @@ module.exports = function (deps) {
         }
     });
 
+    // OTP Verify (Path: /api/otp/email/verify)
     router.post("/otp/email/verify", async (req, res) => {
         try {
             await purgeOtpSessions();
@@ -181,8 +185,8 @@ module.exports = function (deps) {
             if (expectedHash !== row.otp_hash) {
                 await run(
                     `UPDATE email_otp_sessions
-           SET attempts = attempts + 1, updated_at=datetime('now')
-           WHERE id=?`,
+               SET attempts = attempts + 1, updated_at=datetime('now')
+               WHERE id=?`,
                     [row.id]
                 );
                 return res.status(400).json({ error: "Incorrect OTP." });
@@ -191,11 +195,11 @@ module.exports = function (deps) {
             const verificationToken = deps.crypto.randomUUID();
             await run(
                 `UPDATE email_otp_sessions
-         SET verified=1,
-             verification_token=?,
-             token_expires_at=datetime('now', ?),
-             updated_at=datetime('now')
-         WHERE id=?`,
+             SET verified=1,
+                 verification_token=?,
+                 token_expires_at=datetime('now', ?),
+                 updated_at=datetime('now')
+             WHERE id=?`,
                 [verificationToken, `+${OTP_TOKEN_TTL_MIN} minutes`, row.id]
             );
 
