@@ -175,14 +175,21 @@ async function sendOtpEmail(email, otp) {
     return { mode: "dev", reason };
   }
 
-  await transporter.sendMail({
-    from,
-    to: email,
-    subject: "ChemSus Order Verification OTP",
-    text: `Your ChemSus OTP is ${otp}. It expires in ${OTP_TTL_MIN} minutes.`,
-    html: `<p>Your ChemSus OTP is <b>${otp}</b>.</p><p>This OTP expires in ${OTP_TTL_MIN} minutes.</p>`,
-  });
-  return { mode: "smtp" };
+  try {
+    await transporter.sendMail({
+      from,
+      to: email,
+      subject: "ChemSus Order Verification OTP",
+      text: `Your ChemSus OTP is ${otp}. It expires in ${OTP_TTL_MIN} minutes.`,
+      html: `<p>Your ChemSus OTP is <b>${otp}</b>.</p><p>This OTP expires in ${OTP_TTL_MIN} minutes.</p>`,
+    });
+    return { mode: "smtp" };
+  } catch (err) {
+    const reason = `SMTP send failed (${err?.message || err})`;
+    console.warn(`[OTP] ${reason}. Falling back to debug OTP.`);
+    console.log(`[OTP-DEV] email=${email} otp=${otp}`);
+    return { mode: "dev", reason };
+  }
 }
 
 async function purgeOtpSessions() {
