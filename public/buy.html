@@ -577,7 +577,7 @@
       <li><a href="collaboration.html">Collaboration</a></li>
       <li><a href="recognitions.html">Recognitions</a></li>
       <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart ðŸ›’ <span id="cart-count">0</span></a></li>
+      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
       <li><a href="contact.html">Contact us</a></li>
       <li><a href="request-sample.html">Request for Sample</a></li>
       <li><a href="orders.html">Orders</a></li>
@@ -629,7 +629,7 @@
           </div>
           <div>
             <div class="price-line">
-              <div class="price-left" id="unitPriceText">Our Price: â‚¹0 / pack</div>
+              <div class="price-left" id="unitPriceText">Our Price: ₹0 / pack</div>
             </div>
           </div>
         </div>
@@ -644,7 +644,7 @@
         <div class="q-row">
           <span class="q-label">Pack size</span>
           <span class="q-pill">from Shop</span>
-          <span id="packNameText" style="font-weight:700;color:#1d4ed8;">â€“</span>
+          <span id="packNameText" style="font-weight:700;color:#1d4ed8;">–</span>
         </div>
 
         <div class="qty-input-row">
@@ -653,13 +653,13 @@
         </div>
 
         <div class="price-line" style="margin-top:8px;">
-          <div class="price-left" id="subtotalText">Subtotal: â‚¹0</div>
-          <div style="font-size:13px;color:#4b5563;" id="perPackText">Per pack: â‚¹0</div>
+          <div class="price-left" id="subtotalText">Subtotal: ₹0</div>
+          <div style="font-size:13px;color:#4b5563;" id="perPackText">Per pack: ₹0</div>
         </div>
 
         <div class="totals-row">
-          <div>Grand total (â‚¹, excl. taxes &amp; shipping)</div>
-          <strong id="totalText">â‚¹0</strong>
+          <div>Grand total (₹, excl. taxes &amp; shipping)</div>
+          <strong id="totalText">₹0</strong>
         </div>
 
         <div class="payment-box">
@@ -673,7 +673,7 @@
 
         <div class="actions-row">
           <button class="btn-primary" id="confirmBtn">Confirm &amp; Go to Orders</button>
-          <button class="btn-secondary" onclick="window.location.href='shop.html'">â† Back to Shop</button>
+          <button class="btn-secondary" onclick="window.location.href='shop.html'">← Back to Shop</button>
         </div>
       </div>
     </main>
@@ -689,7 +689,7 @@
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
             House No. 555, GNB Road,<br>
-            North Guwahati, Assam â€“ 781030
+            North Guwahati, Assam – 781030
           </p>
         </div>
 
@@ -706,11 +706,11 @@
         <div>
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Contact</h4>
           <p style="font-size: 12px; margin-bottom:6px;">
-            <span style="font-size:14px;">ðŸ“ž</span> <a href="tel:+918486877575"
+            <span style="font-size:14px;">📞</span> <a href="tel:+918486877575"
               style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
           </p>
           <p style="font-size: 12px;">
-            <span style="font-size:14px;">âœ‰ï¸</span> <a href="mailto:info@chemsus.in"
+            <span style="font-size:14px;">✉️</span> <a href="mailto:info@chemsus.in"
               style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
           </p>
         </div>
@@ -835,15 +835,15 @@
         packLabelTag.textContent = pack ? 'Pack: ' + pack : 'Single product';
         packNameText.textContent = pack || 'N/A';
 
-        unitPriceText.textContent = 'Our Price: â‚¹' + buyNowPrice.toLocaleString('en-IN') + ' / pack';
+        unitPriceText.textContent = 'Our Price: ₹' + buyNowPrice.toLocaleString('en-IN') + ' / pack';
 
         function recalc() {
           let q = parseInt(qtyInput.value, 10);
           if (!Number.isFinite(q) || q <= 0) { q = 1; qtyInput.value = 1; }
           const subtotal = buyNowPrice * q;
-          subtotalText.textContent = 'Subtotal: â‚¹' + subtotal.toLocaleString('en-IN');
-          perPackText.textContent = 'Per pack: â‚¹' + buyNowPrice.toLocaleString('en-IN');
-          totalText.textContent = 'â‚¹' + subtotal.toLocaleString('en-IN');
+          subtotalText.textContent = 'Subtotal: ₹' + subtotal.toLocaleString('en-IN');
+          perPackText.textContent = 'Per pack: ₹' + buyNowPrice.toLocaleString('en-IN');
+          totalText.textContent = '₹' + subtotal.toLocaleString('en-IN');
         }
 
         qtyInput.addEventListener('input', recalc);
@@ -880,16 +880,16 @@
       if (!cart.length) {
         heroTitle.textContent = 'No items in cart';
         heading.textContent = 'Order Summary';
-        unitPriceText.textContent = 'Our Price: â‚¹0 / pack';
-        subtotalText.textContent = 'Subtotal: â‚¹0';
-        totalText.textContent = 'â‚¹0';
+        unitPriceText.textContent = 'Our Price: ₹0 / pack';
+        subtotalText.textContent = 'Subtotal: ₹0';
+        totalText.textContent = '₹0';
         packLabelTag.textContent = 'Cart empty';
-        packNameText.textContent = 'â€“';
+        packNameText.textContent = '–';
         qtyInput.value = 0;
         qtyInput.disabled = true;
         confirmBtn.disabled = true;
         itemsListBoxFallback.innerHTML = `
-          <p style="color:#d32f2f;font-weight:600;">âš ï¸ Your cart is empty.
+          <p style="color:#d32f2f;font-weight:600;">⚠️ Your cart is empty.
             <a href="shop.html" style="color:var(--accent);">Go to Shop</a>
           </p>`;
         return;
