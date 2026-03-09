@@ -1248,6 +1248,7 @@
         };
         const isCL = item.name.toLowerCase().includes('calcium levulinate') || item.name.toUpperCase() === 'CL';
         const isInStock = isCL; // Force only CL to be in stock
+        if (isInStock) inStockCount++;
 
         // Full form for 5-HMF
         if (item.name.includes('5-HMF')) {
@@ -1296,20 +1297,20 @@
         const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>`;
 
         const LABEL_IMAGES = {
-          'Sodium Levulinate': 'assets/sod-label.jpeg',
-          'Methyl Levulinate': 'assets/methyl-label.jpeg',
-          'Ethyl Levulinate': 'assets/ethyl-label.jpeg',
-          'Calcium Levulinate': 'assets/cal-label.jpeg',
-          'DALA': 'assets/dala-label.jpeg',
-          '5-HMF': 'assets/5hmf-label.jpeg',
-          'Levulinic Acid': 'assets/levuli-llabel.jpeg',
-          'Calcium Levulinate (CL)': 'assets/cal-label.jpeg',
-          'Sodium Levulinate (SL)': 'assets/sod-label.jpeg',
-          'Ethyl Levulinate (EL)': 'assets/ethyl-label.jpeg',
-          'Methyl Levulinate (ML)': 'assets/methyl-label.jpeg',
-          'Levulinic Acid (LA)': 'assets/levuli-llabel.jpeg',
-          'Delta-aminolevulinic acid (DALA)': 'assets/dala-label.jpeg',
-          '5-Hydroxymethylfurfural (5-HMF)': 'assets/5hmf-label.jpeg'
+          'Sodium Levulinate': 'assets/3ai.png',
+          'Methyl Levulinate': 'assets/5ai.png',
+          'Ethyl Levulinate': 'assets/4ai.png',
+          'Calcium Levulinate': 'assets/calcium.png',
+          'DALA': 'assets/11ai.png',
+          '5-HMF': 'assets/1ai.png',
+          'Levulinic Acid': 'assets/6ai.png',
+          'Calcium Levulinate (CL)': 'assets/calcium.png',
+          'Sodium Levulinate (SL)': 'assets/3ai.png',
+          'Ethyl Levulinate (EL)': 'assets/4ai.png',
+          'Methyl Levulinate (ML)': 'assets/5ai.png',
+          'Levulinic Acid (LA)': 'assets/6ai.png',
+          'Delta-aminolevulinic acid (DALA)': 'assets/11ai.png',
+          '5-Hydroxymethylfurfural (5-HMF)': 'assets/1ai.png'
         };
 
         const labelImg = LABEL_IMAGES[item.name] || LABEL_IMAGES[raw.name] || 'assets/logo.jpg';
