@@ -4,7 +4,8 @@ module.exports = function (deps) {
     const router = express.Router();
     const {
         run, get, all, requireAdmin,
-        adminUpload, deleteReceiptFile
+        adminUpload, deleteReceiptFile,
+        rateLimiter
     } = deps;
 
     // ---------------- Admin upload (site images/pdfs) ----------------
@@ -436,8 +437,26 @@ module.exports = function (deps) {
         }
     });
 
-    // Legacy admin endpoints
-    router.post("/login", (req, res) => res.json({ ok: false, message: "Use Supabase login" }));
+    // Admin login endpoint
+    router.post("/login", rateLimiter(15 * 60 * 1000, 10), async (req, res) => {
+        try {
+            const email = (req.body?.email || "").trim().toLowerCase();
+            const password = String(req.body?.password || "");
+            const payload = await deps.verifyLocalAuthUser(email, password);
+            if (payload) {
+                // Must be the configured ADMIN_EMAIL
+                if (email !== (process.env.ADMIN_EMAIL || "").toLowerCase()) {
+                    return res.status(403).json({ error: "Access denied. Admin only." });
+                }
+                const tokenResponse = deps.buildLocalAuthPayload(payload);
+                return res.json({ ok: true, session: tokenResponse.session });
+            }
+            res.status(401).json({ error: "Invalid credentials" });
+        } catch (e) {
+            console.error("Admin Login Error:", e);
+            res.status(500).json({ error: "Login failed" });
+        }
+    });
     router.post("/logout", (req, res) => res.json({ ok: true }));
     router.get("/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.supabaseUser?.email }));
 
