@@ -1295,17 +1295,32 @@
 
         const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>`;
 
+        const LABEL_IMAGES = {
+          'Sodium Levulinate': 'assets/sod-label.jpeg',
+          'Methyl Levulinate': 'assets/methyl-label.jpeg',
+          'Ethyl Levulinate': 'assets/ethyl-label.jpeg',
+          'Calcium Levulinate': 'assets/cal-label.jpeg',
+          'DALA': 'assets/dala-label.jpeg',
+          '5-HMF': 'assets/5hmf-label.jpeg',
+          'Levulinic Acid': 'assets/levuli-llabel.jpeg',
+          'Calcium Levulinate (CL)': 'assets/cal-label.jpeg',
+          'Sodium Levulinate (SL)': 'assets/sod-label.jpeg',
+          'Ethyl Levulinate (EL)': 'assets/ethyl-label.jpeg',
+          'Methyl Levulinate (ML)': 'assets/methyl-label.jpeg',
+          'Levulinic Acid (LA)': 'assets/levuli-llabel.jpeg',
+          'Delta-aminolevulinic acid (DALA)': 'assets/dala-label.jpeg',
+          '5-Hydroxymethylfurfural (5-HMF)': 'assets/5hmf-label.jpeg'
+        };
+
+        const labelImg = LABEL_IMAGES[item.name] || LABEL_IMAGES[raw.name] || 'assets/logo.jpg';
+
         card.innerHTML = `
           ${stockBadgeHTML}
           ${badgeHTML}
           ${outMsg}
 
           <div class="product-image">
-            <div class="product-label-box">
-              <div class="label-brand">ChemSus</div>
-              <div class="label-name">${safeName}</div>
-              <div class="label-note">For R&D use only</div>
-            </div>
+            <img src="${labelImg}" alt="${safeName} label" class="product-label-img">
           </div>
 
           <h3 class="product-title">${safeName}</h3>
