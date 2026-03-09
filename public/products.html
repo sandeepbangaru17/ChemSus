@@ -385,7 +385,7 @@
         margin-left: 0;
         width: 100%;
         padding-top: 0;
-/* No forced top gap on mobile */
+        /* No forced top gap on mobile */
       }
 
       .mobile-toggle {
@@ -596,14 +596,14 @@
       margin-top: 10px;
       box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
     }
-  
+
     @media (max-width: 1050px) {
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -618,12 +618,13 @@
       overflow-x: hidden;
       background: var(--bg, #F3F7FB);
     }
-  
+
     /* AUTH BUTTON */
     .admin-login {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0;
     }
+
     .admin-login a {
       display: flex;
       align-items: center;
@@ -636,10 +637,12 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+
     .admin-login a:hover {
       background: rgba(255, 255, 255, 0.15);
       border-left-color: var(--accent);
     }
+
     .admin-login svg {
       width: 16px;
       height: 16px;
@@ -680,12 +683,13 @@
       <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
 
-    
+
     <!-- AUTH BUTTON -->
     <div class="admin-login">
       <a href="/login.html" id="nav-auth-link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
         <span id="nav-auth-text">Log In / Sign Up</span>
       </a>
@@ -693,7 +697,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+          aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -711,8 +716,8 @@
         <div class="hero-kicker">Bio-based Specialty Chemicals</div>
         <h1 class="hero-title">Products</h1>
         <p class="hero-subtitle">
-          High-purity, sustainable chemicals derived from renewable lignocellulosic biomass for
-          nutraceutical, food, cosmetic and industrial applications.
+          High-purity, sustainable chemicals derived from renewable lignocellulosic biomass.<br>
+          All products are manufactured in FDA-approved GMP site.
         </p>
       </div>
     </section>
@@ -760,7 +765,7 @@
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Branch
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
-            11-2, Gavara jaggayyapalem,<br>
+            Gavara jaggayyapalem,<br>
             BHPV, Visakhapatnam 530012
           </p>
         </div>
@@ -855,49 +860,49 @@
         {
           id: 1,
           name: '5-Hydroxymethylfurfural (5-HMF)',
-          description: 'Biomass-derived platform molecule used in fuels, polymers and pharma.',
+          description: 'For R&D use only.',
           image: 'assets/chemical1.avif',
           link: 'products/5-hmf.html'
         },
         {
           id: 2,
-          name: 'Calcium Levulinate',
-          description: 'Highly bioavailable calcium salt for nutraceutical applications.',
+          name: 'Calcium Levulinate (CL)',
+          description: 'Calcium supplement. For R&D use only.',
           image: 'assets/chemical2.png',
           link: 'products/calcium-levulinate.html'
         },
         {
           id: 3,
-          name: 'Sodium Levulinate',
-          description: 'Biodegradable preservative for food and cosmetics.',
+          name: 'Sodium Levulinate (SL)',
+          description: 'Natural preservative and skin toner in cosmetics. For R&D use only.',
           image: 'assets/chemical3.jpg',
           link: 'products/sodium-levulinate.html'
         },
         {
           id: 4,
-          name: 'Ethyl Levulinate',
-          description: 'Green solvent and fragrance ingredient.',
+          name: 'Ethyl Levulinate (EL)',
+          description: 'Bio-based fragrance. For R&D use only.',
           image: 'assets/chemical4.jpeg',
           link: 'products/ethyl-levulinate.html'
         },
         {
           id: 5,
-          name: 'Methyl Levulinate',
-          description: 'Bio-based ester used in fuels and fine chemicals.',
+          name: 'Methyl Levulinate (ML)',
+          description: 'For R&D use only.',
           image: 'assets/chemical5.jpeg',
           link: 'products/methyl-levulinate.html'
         },
         {
           id: 6,
-          name: 'Levulinic Acid',
-          description: 'Key bio-platform chemical derived from biomass.',
+          name: 'Levulinic Acid (LA)',
+          description: 'For R&D use only.',
           image: 'assets/chemical6.jpeg',
           link: 'products/levulinic-acid.html'
         },
         {
           id: 7,
           name: 'Delta-aminolevulinic acid (DALA)',
-          description: 'Plant growth regulator and PDT precursor.',
+          description: 'Oncology API for both therapeutic and diagnostic applications. For R&D use only.',
           image: 'assets/dala.jpg',
           link: 'products/dala.html'
         }
@@ -1083,6 +1088,3 @@
 </body>
 
 </html>
-
-
-
