@@ -397,7 +397,7 @@
         margin-left: 0;
         width: 100%;
         padding-top: 0;
-/* No forced top gap on mobile */
+        /* No forced top gap on mobile */
       }
 
       .mobile-toggle {
@@ -637,14 +637,14 @@
       margin-top: 10px;
       box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
     }
-  
+
     @media (max-width: 1050px) {
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -659,12 +659,13 @@
       overflow-x: hidden;
       background: var(--bg, #F3F7FB);
     }
-  
+
     /* AUTH BUTTON */
     .admin-login {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0;
     }
+
     .admin-login a {
       display: flex;
       align-items: center;
@@ -677,10 +678,12 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+
     .admin-login a:hover {
       background: rgba(255, 255, 255, 0.15);
       border-left-color: var(--accent);
     }
+
     .admin-login svg {
       width: 16px;
       height: 16px;
@@ -721,12 +724,13 @@
       <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
 
-    
+
     <!-- AUTH BUTTON -->
     <div class="admin-login">
       <a href="/login.html" id="nav-auth-link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
         <span id="nav-auth-text">Log In / Sign Up</span>
       </a>
@@ -734,7 +738,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+          aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
             viewBox="0 0 16 16">
@@ -764,8 +769,8 @@
         <span class="section-chip">Evaluation Samples</span>
       </div>
       <p class="section-intro">
-        Fill out the form below to request evaluation samples of our product.
-        Our team will review and discuss with you and dispatch the sample.
+        Request evaluation samples and product information for our sustainable specialty chemicals.
+        <strong>Note: Samples are available only for Calcium Levulinate (CL).</strong>
       </p>
 
       <div class="form-container">
@@ -791,19 +796,24 @@
               <input type="email" id="email" class="form-input" name="email" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="phone">Phone No</label>
-              <input type="tel" id="phone" class="form-input" name="phone" required>
+              <label class="form-label" for="phone">Phone Number *</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="countryCode" class="form-input" name="countryCode" placeholder="+91"
+                  style="width: 85px;" required>
+                <input type="tel" id="phone" class="form-input" name="phone" placeholder="Phone Number" required
+                  style="flex:1;">
+              </div>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="designation">Designation</label>
-              <input type="text" id="designation" class="form-input" name="designation">
+              <label class="form-label" for="designation">Designation *</label>
+              <input type="text" id="designation" class="form-input" name="designation" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="website">Company Website</label>
-              <input type="url" id="website" class="form-input" name="website" placeholder="https://">
+              <label class="form-label" for="website">Company Website *</label>
+              <input type="url" id="website" class="form-input" name="website" placeholder="https://" required>
             </div>
           </div>
 
@@ -818,15 +828,19 @@
             <div class="form-group">
               <label class="form-label" for="quantity">Anticipated Quantity required *</label>
               <select id="quantity" class="form-select" name="quantity" required>
-                <option value="">Select quantity (kg)...</option>
-                <option value="1 kg">1 kg</option>
-                <option value="2 kg">2 kg</option>
-                <option value="5 kg">5 kg</option>
-                <option value="10 kg">10 kg</option>
-                <option value="other">Other (type required quantity)</option>
+                <option value="">Select quantity...</option>
+                <option value="100 kg">100 kg</option>
+                <option value="500 kg">500 kg</option>
+                <option value="tons">Tons (Select below)</option>
               </select>
-              <input type="text" id="quantityOther" class="form-input" name="quantityOther"
-                placeholder="Enter required quantity (e.g., 750 kg)" style="display:none; margin-top:10px;">
+              <select id="tonsQuantity" class="form-select" name="tonsQuantity" style="display:none; margin-top:10px;">
+                <option value="">Select number of tons...</option>
+                <option value="1 ton">1 ton</option>
+                <option value="2 tons">2 tons</option>
+                <option value="5 tons">5 tons</option>
+                <option value="10 tons">10 tons</option>
+                <option value="more than 10 tons">More than 10 tons</option>
+              </select>
             </div>
             <div class="form-group">
               <label class="form-label" for="timeline">Time Line</label>
@@ -876,7 +890,7 @@
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Branch
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
-            11-2, Gavara jaggayyapalem,<br>
+            Gavara jaggayyapalem,<br>
             BHPV, Visakhapatnam 530012
           </p>
         </div>
@@ -1014,13 +1028,13 @@
     }
 
     const quantitySelect = document.getElementById("quantity");
-    const quantityOtherInput = document.getElementById("quantityOther");
+    const tonsSelect = document.getElementById("tonsQuantity");
 
     function toggleCustomQuantityField() {
-      const isOther = quantitySelect.value === "other";
-      quantityOtherInput.style.display = isOther ? "block" : "none";
-      quantityOtherInput.required = isOther;
-      if (!isOther) quantityOtherInput.value = "";
+      const isTons = quantitySelect.value === "tons";
+      tonsSelect.style.display = isTons ? "block" : "none";
+      tonsSelect.required = isTons;
+      if (!isTons) tonsSelect.value = "";
     }
 
     quantitySelect.addEventListener("change", toggleCustomQuantityField);
@@ -1035,11 +1049,14 @@
       const companyName = document.getElementById("companyName").value.trim();
       const individualName = document.getElementById("individualName").value.trim();
       const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+      const countryCode = document.getElementById("countryCode").value.trim();
+      const phoneNum = document.getElementById("phone").value.trim();
+      const phone = countryCode + " " + phoneNum;
+
       const intendedUse = document.getElementById("intendedUse").value.trim();
       const quantityValue = document.getElementById("quantity").value.trim();
-      const quantityOther = document.getElementById("quantityOther").value.trim();
-      const quantity = quantityValue === "other" ? quantityOther : quantityValue;
+      const tonsValue = document.getElementById("tonsQuantity").value.trim();
+      const quantity = quantityValue === "tons" ? tonsValue : quantityValue;
       const timeline = document.getElementById("timeline").value.trim();
       const orderFrequency = document.getElementById("orderFrequency").value;
 
@@ -1092,6 +1109,3 @@ Thank you.`;
 </body>
 
 </html>
-
-
-
