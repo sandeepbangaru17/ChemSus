@@ -1246,8 +1246,7 @@
           image: raw.image || '',
           price: safeNumber(raw.price || 0)
         };
-        const isCL = item.name.toLowerCase().includes('calcium levulinate') || item.name.toUpperCase() === 'CL';
-        const isInStock = isCL; // Force only CL to be in stock
+        const isInStock = item.stockStatus === 'in-stock';
         if (isInStock) inStockCount++;
 
         // Full form for 5-HMF
@@ -1272,14 +1271,14 @@
         const safeName = escapeHtml(item.name);
         const safeSubtitle = escapeHtml(item.subtitle);
 
-        // Badge only for CL
-        const badgeHTML = isCL ? `<span class="product-badge">Free sample available</span>` : '';
+        // Dynamic badge from API
+        const badgeHTML = item.showBadge && item.badge ? `<span class="product-badge">${escapeHtml(item.badge)}</span>` : '';
 
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
         const featuresHTML = item.features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
         const safeMore = safeUrl(item.moreLink || '');
         const moreHTML = safeMore ? `<a class="more-details" href="${safeMore}">More Details ↗</a>` : '';
-        const outMsg = !isInStock ? '<div class="out-of-stock-message">Currently Out of Stock</div>' : '';
+        const outMsg = '';
 
         const packSelectHTML = pricingTable && packOptions.length > 0 ? `
           <div class="pack-row">
@@ -1318,7 +1317,6 @@
         card.innerHTML = `
           ${stockBadgeHTML}
           ${badgeHTML}
-          ${outMsg}
 
           <div class="product-image">
             <img src="${labelImg}" alt="${safeName} label" class="product-label-img">
