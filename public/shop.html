@@ -666,11 +666,81 @@
     }
 
     .floating-cart-btn span {
-      background: rgba(255, 255, 255, .25);
+      background: #fff;
+      color: var(--primary);
       padding: 2px 8px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 800;
+    }
+
+    /* Label-style product "images" */
+    .product-label-box {
+      width: 140px;
+      height: 180px;
+      background: #fff;
+      border: 2px solid #334155;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .product-label-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #334155;
+    }
+
+    .label-brand {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: #334155;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+
+    .label-name {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      color: #1e293b;
+      margin: 10px 0;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label-note {
+      font-size: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 4px;
+    }
+
+    /* Cart Button Icon fix */
+    .btn-cart svg {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    .btn-cart {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @media(max-width:1050px) {
@@ -741,7 +811,7 @@
         height: 170px
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -756,12 +826,13 @@
       overflow-x: hidden;
       background: var(--bg, #F3F7FB);
     }
-  
+
     /* AUTH BUTTON */
     .admin-login {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0;
     }
+
     .admin-login a {
       display: flex;
       align-items: center;
@@ -774,10 +845,12 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+
     .admin-login a:hover {
       background: rgba(255, 255, 255, 0.15);
       border-left-color: var(--accent);
     }
+
     .admin-login svg {
       width: 16px;
       height: 16px;
@@ -817,12 +890,13 @@
       <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
 
-    
+
     <!-- AUTH BUTTON -->
     <div class="admin-login">
       <a href="/login.html" id="nav-auth-link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
         <span id="nav-auth-text">Log In / Sign Up</span>
       </a>
@@ -830,7 +904,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search products..." aria-label="Search pages">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search products..."
+          aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -891,7 +966,7 @@
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Branch
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
-            11-2, Gavara jaggayyapalem,<br>
+            Gavara jaggayyapalem,<br>
             BHPV, Visakhapatnam 530012
           </p>
         </div>
@@ -918,6 +993,11 @@
   </div>
 
   <button class="floating-cart-btn" onclick="window.location.href='cart.html'" aria-label="Open Cart">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+      style="margin-right:4px;">
+      <path
+        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </svg>
     Cart <span id="floating-cart-count">0</span>
   </button>
 
@@ -1166,8 +1246,13 @@
           image: raw.image || '',
           price: safeNumber(raw.price || 0)
         };
-        const isInStock = item.stockStatus === 'in-stock';
-        if (isInStock) inStockCount++;
+        const isCL = item.name.toLowerCase().includes('calcium levulinate') || item.name.toUpperCase() === 'CL';
+        const isInStock = isCL; // Force only CL to be in stock
+
+        // Full form for 5-HMF
+        if (item.name.includes('5-HMF')) {
+          item.name = '5-Hydroxymethylfurfural (5-HMF)';
+        }
 
         const card = document.createElement('div');
         card.className = `product-card ${!isInStock ? 'out-of-stock' : ''}`;
@@ -1185,21 +1270,19 @@
 
         const safeName = escapeHtml(item.name);
         const safeSubtitle = escapeHtml(item.subtitle);
-        const safeBadge = escapeHtml(item.badge);
-        const badgeHTML = (item.showBadge && item.badge) ? `<span class="product-badge">${safeBadge}</span>` : '';
+
+        // Badge only for CL
+        const badgeHTML = isCL ? `<span class="product-badge">Free sample available</span>` : '';
+
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
         const featuresHTML = item.features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
         const safeMore = safeUrl(item.moreLink || '');
         const moreHTML = safeMore ? `<a class="more-details" href="${safeMore}">More Details ↗</a>` : '';
         const outMsg = !isInStock ? '<div class="out-of-stock-message">Currently Out of Stock</div>' : '';
 
-        const chemicalEmojis = ['&#x1F9EA;', '&#x2697;&#xFE0F;', '&#x1F52C;', '&#x1F9EB;', '&#x1F9EC;', '&#x1F97C;'];
-        const productEmoji = chemicalEmojis[index % chemicalEmojis.length];
-
         const packSelectHTML = pricingTable && packOptions.length > 0 ? `
           <div class="pack-row">
             <span class="pack-label">SELECT PACK SIZE</span>
-            <!-- <span class="pack-label-badge">Required for price update</span> -->
             <select class="pack-select">
               ${packOptions.map(p => {
           const safeP = escapeHtml(p);
@@ -1210,20 +1293,24 @@
 
         const disabledInitial = !isInStock || !basePriceInitial;
 
+        const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>`;
+
         card.innerHTML = `
           ${stockBadgeHTML}
           ${badgeHTML}
           ${outMsg}
 
           <div class="product-image">
-            <span class="product-emoji" aria-hidden="true">${productEmoji}</span>
+            <div class="product-label-box">
+              <div class="label-brand">ChemSus</div>
+              <div class="label-name">${safeName}</div>
+              <div class="label-note">For R&D use only</div>
+            </div>
           </div>
 
           <h3 class="product-title">${safeName}</h3>
           <p class="product-subtitle">${safeSubtitle}</p>
           ${moreHTML}
-
-          <!-- Features removed as per request -->
 
           ${packSelectHTML}
 
@@ -1234,7 +1321,7 @@
           <div class="product-actions">
             <button class="btn-buy" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : 'Buy Now'}</button>
             <div class="cart-btn-container">
-              <button class="btn-cart" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : '🛒'}</button>
+              <button class="btn-cart" ${disabledInitial ? 'disabled' : ''}>${disabledInitial ? 'Unavailable' : cartIconSvg}</button>
               <div class="qty-selector">
                 <button class="qty-btn">−</button>
                 <span class="qty-value">0</span>
@@ -1274,7 +1361,7 @@
           }
           if (cartBtn) {
             cartBtn.disabled = dis;
-            cartBtn.textContent = dis ? 'Unavailable' : '🛒';
+            cartBtn.innerHTML = dis ? 'Unavailable' : cartIconSvg;
           }
         }
 
