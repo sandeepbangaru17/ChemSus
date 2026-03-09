@@ -384,7 +384,7 @@
         margin-left: 0;
         width: 100%;
         padding-top: 0;
-/* No forced top gap on mobile */
+        /* No forced top gap on mobile */
       }
 
       .mobile-toggle {
@@ -599,14 +599,14 @@
         height: 50px;
       }
     }
-  
+
     @media (max-width: 1050px) {
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -621,12 +621,13 @@
       overflow-x: hidden;
       background: var(--bg, #F3F7FB);
     }
-  
+
     /* AUTH BUTTON */
     .admin-login {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0;
     }
+
     .admin-login a {
       display: flex;
       align-items: center;
@@ -639,10 +640,12 @@
       border-left: 3px solid transparent;
       transition: all 0.2s ease;
     }
+
     .admin-login a:hover {
       background: rgba(255, 255, 255, 0.15);
       border-left-color: var(--accent);
     }
+
     .admin-login svg {
       width: 16px;
       height: 16px;
@@ -683,12 +686,13 @@
       <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
     </ul>
 
-    
+
     <!-- AUTH BUTTON -->
     <div class="admin-login">
       <a href="/login.html" id="nav-auth-link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
         <span id="nav-auth-text">Log In / Sign Up</span>
       </a>
@@ -696,7 +700,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+          aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -720,16 +725,14 @@
         <div class="contact-card">
           <div class="map-frame-wrap">
             <iframe
-              src="https://www.openstreetmap.org/export/embed.html?bbox=91.6780%2C26.1700%2C91.7120%2C26.1960&layer=mapnik&marker=26.1830%2C91.6950"
-              title="ChemSus location map (OpenStreetMap)"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=91.688,26.188,91.696,26.196&layer=mapnik&marker=26.1925,91.6917"
+              title="ChemSus location map (OpenStreetMap)" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen>
             </iframe>
             <p class="map-fallback">
               If this map does not load, open location directly:
-              <a href="https://www.google.com/maps/search/?api=1&query=Technology+Incubation+Centre+IIT+Guwahati"
-                target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+              <a href="https://www.google.com/maps?q=26.1925,91.6917" target="_blank" rel="noopener noreferrer">Open in
+                Google Maps</a>
             </p>
           </div>
 
@@ -742,7 +745,7 @@
 
             <h3>Branch Office (South India)</h3>
             <p>
-              11-2, Gavara jaggayyapalem,<br>
+              Gavara jaggayyapalem,<br>
               BHPV, Visakhapatnam 530012
             </p>
 
@@ -803,7 +806,7 @@
           <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:10px; font-size: 14px;">Branch
             Office</h4>
           <p style="font-size: 12px; line-height: 1.5;">
-            11-2, Gavara jaggayyapalem,<br>
+            Gavara jaggayyapalem,<br>
             BHPV, Visakhapatnam 530012
           </p>
         </div>
