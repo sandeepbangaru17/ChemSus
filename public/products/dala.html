@@ -167,7 +167,7 @@
         /* WRAPPER */
         .main-wrapper {
             margin-left: 240px;
-      width: calc(100% - 240px);
+            width: calc(100% - 240px);
             flex: 1;
             min-height: 100vh;
             display: flex;
@@ -266,6 +266,25 @@
             gap: 14px;
             padding: 14px;
             box-shadow: 0 8px 24px rgba(0, 116, 199, .15);
+        }
+
+        .product-label-box {
+            background: #fff;
+            border: 1.5px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-label-box span {
+            display: block;
+            font-weight: 800;
+            color: #d32f2f;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .product-image::before {
@@ -383,67 +402,67 @@
         }
 
         /* NEW PUB CHEM BUTTON */
-                .pubchem-link-container {
-              display: flex;
-              justify-content: center;
-              margin: 40px 0 34px;
-            }
+        .pubchem-link-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 34px;
+        }
 
-            .btn-pubchem {
-              position: relative;
-              isolation: isolate;
-              overflow: hidden;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              gap: 10px;
-              padding: 15px 28px;
-              border-radius: 999px;
-              border: 1px solid rgba(255, 255, 255, 0.28);
-              background: linear-gradient(135deg, #1186d1 0%, #0d5fb3 52%, #09387f 100%);
-              color: #fff;
-              font-family: "Montserrat", sans-serif;
-              font-size: 14px;
-              font-weight: 700;
-              letter-spacing: .04em;
-              text-decoration: none;
-              text-transform: uppercase;
-              white-space: nowrap;
-              cursor: pointer;
-              box-shadow: 0 10px 26px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-              transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
-            }
+        .btn-pubchem {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 28px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: linear-gradient(135deg, #1186d1 0%, #0d5fb3 52%, #09387f 100%);
+            color: #fff;
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-decoration: none;
+            text-transform: uppercase;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 10px 26px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
+        }
 
-            .btn-pubchem::before {
-              content: "";
-              position: absolute;
-              inset: 0;
-              z-index: -1;
-              background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
-              transform: translateX(-75%);
-              transition: transform 0.42s ease;
-            }
+        .btn-pubchem::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+            transform: translateX(-75%);
+            transition: transform 0.42s ease;
+        }
 
-            .btn-pubchem:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 14px 30px rgba(9, 56, 127, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.42);
-              filter: saturate(1.06);
-            }
+        .btn-pubchem:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(9, 56, 127, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+            filter: saturate(1.06);
+        }
 
-            .btn-pubchem:hover::before {
-              transform: translateX(0);
-            }
+        .btn-pubchem:hover::before {
+            transform: translateX(0);
+        }
 
-            .btn-pubchem:active {
-              transform: translateY(0);
-              box-shadow: 0 8px 20px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            }
+        .btn-pubchem:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
 
-            .btn-pubchem svg {
-              width: 18px;
-              height: 18px;
-              flex: 0 0 auto;
-            }
+        .btn-pubchem svg {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 auto;
+        }
 
         footer {
             background: #06121f;
@@ -486,7 +505,7 @@
 
             .main-wrapper {
                 margin-left: 0;
-        padding-top: 0;
+                padding-top: 0;
             }
 
             .mobile-toggle {
@@ -681,29 +700,29 @@
                 font-size: 14px;
             }
         }
-  
-    @media (max-width: 1050px) {
-      body.no-scroll .mobile-toggle {
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
-  
-    /* Mobile viewport fix */
-    html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg, #F3F7FB);
-    }
 
-    body {
-      min-height: 100dvh;
-      overflow-x: hidden;
-      background: var(--bg, #F3F7FB);
-    }
-  </style>
+        @media (max-width: 1050px) {
+            body.no-scroll .mobile-toggle {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        /* Mobile viewport fix */
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: var(--bg, #F3F7FB);
+        }
+
+        body {
+            min-height: 100dvh;
+            overflow-x: hidden;
+            background: var(--bg, #F3F7FB);
+        }
+    </style>
 </head>
 
 <body>
@@ -737,7 +756,8 @@
 
         <div class="search-section">
             <form class="search-form" id="siteSearchForm">
-                <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
+                <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+                    aria-label="Search pages">
                 <span class="search-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         viewBox="0 0 16 16">
@@ -766,6 +786,9 @@
             <div class="product-card">
                 <div class="product-image">
                     <img src="../assets/dala-bottle.svg" alt="Delta-aminolevulinic acid (DALA) - ChemSus Technologies">
+                    <div class="product-label-box">
+                        <span>For R&D use only</span>
+                    </div>
                 </div>
 
                 <div class="content-section">
@@ -821,7 +844,7 @@
                         <path
                             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                     </svg>
-                    View Detailed Information
+                    View Details @PubChem
                 </a>
             </div>
         </main>
@@ -835,17 +858,17 @@
 
         // Open Sidebar
         function toggleSidebar() {
-      const isOpen = sidebar.classList.toggle('open');
-      overlay.classList.toggle('active', isOpen);
-      document.body.classList.toggle('no-scroll', isOpen);
-    }
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.classList.toggle('active', isOpen);
+            document.body.classList.toggle('no-scroll', isOpen);
+        }
 
         // Close Sidebar (Explicit)
         function closeSidebar() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('active');
-      document.body.classList.remove('no-scroll');
-    }
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
 
         // Close mobile menu automatically when a link inside it is clicked
         const navLinks = document.querySelectorAll('.nav-menu a');
@@ -942,5 +965,3 @@
 </body>
 
 </html>
-
-
