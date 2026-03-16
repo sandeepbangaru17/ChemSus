@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -222,6 +222,53 @@
         <a href="/index.html" class="back-link">← Back to Home</a>
     </div>
 
+    <footer
+        style="background:#06121f; color:#cbd5f5; padding: 40px 0 20px; text-align: center; margin-top: 40px; width: 100%;">
+        <div
+            style="max-width:1100px; margin:0 auto; padding: 0 20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:40px; margin-bottom: 30px;">
+
+            <!-- Address Section -->
+            <div>
+                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
+                    Registered
+                    Office</h4>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    House No. 555, GNB Road,<br>
+                    North Guwahati, Assam – 781030
+                </p>
+            </div>
+
+            <div>
+                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">Branch
+                    Office</h4>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Gavara jaggayyapalem,<br>
+                    BHPV, Visakhapatnam 530012
+                </p>
+            </div>
+
+            <!-- Contact Section -->
+            <div>
+                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
+                    Contact</h4>
+                <p style="font-size: 14px; margin-bottom:10px;">
+                    <span style="font-size:16px;">📞</span> <a href="tel:+918486877575"
+                        style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
+                </p>
+                <p style="font-size: 14px;">
+                    <span style="font-size:16px;">✉️</span> <a href="mailto:info@chemsus.in"
+                        style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
+                </p>
+            </div>
+
+        </div>
+
+        <div
+            style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align:center; font-size: 13px;">
+            &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/assets/js/supabase-client.js?v=20260228"></script>
     <script>
@@ -255,6 +302,15 @@
                 || msg.includes('fetch');
         }
 
+        function shouldRetryDirectAuth(err) {
+            const msg = String(err?.message || err || '').toLowerCase();
+            return msg.includes('unable to reach supabase auth')
+                || msg.includes('auth failed (5')
+                || msg.includes('auth failed (404)')
+                || msg.includes('not found')
+                || isLikelyNetworkError(err);
+        }
+
         function storeFallbackSession(session) {
             try {
                 if (window.chemsusAuthFallback?.writeSession) {
@@ -274,6 +330,44 @@
             } catch (e) {
                 return null;
             }
+        }
+
+        function normalizeSessionFromPayload(payload, fallbackEmail = '') {
+            if (!payload || typeof payload !== 'object') return null;
+            if (payload.session?.access_token) return payload.session;
+            if (!payload.access_token) return null;
+            const expiresIn = Number(payload.expires_in || 0);
+            const expiresAt = Number(payload.expires_at || 0);
+            return {
+                access_token: payload.access_token,
+                refresh_token: payload.refresh_token || null,
+                token_type: payload.token_type || 'bearer',
+                expires_in: expiresIn,
+                expires_at: expiresAt || (expiresIn ? Math.floor(Date.now() / 1000) + expiresIn : null),
+                user: payload.user || (fallbackEmail ? { email: fallbackEmail } : null)
+            };
+        }
+
+        async function persistSessionFromPayload(payload, fallbackEmail = '') {
+            const session = normalizeSessionFromPayload(payload, fallbackEmail);
+            if (!session) return null;
+
+            const client = await getClient();
+            if (client?.auth?.setSession && session.access_token && session.refresh_token) {
+                try {
+                    const { data, error } = await client.auth.setSession({
+                        access_token: session.access_token,
+                        refresh_token: session.refresh_token
+                    });
+                    if (!error && data?.session) {
+                        storeFallbackSession(data.session);
+                        return data.session;
+                    }
+                } catch (e) { }
+            }
+
+            storeFallbackSession(session);
+            return session;
         }
 
         async function backendPasswordAuth(route, email, password) {
@@ -304,15 +398,12 @@
                 if (isLogin) {
                     try {
                         const data = await backendPasswordAuth('/api/auth/password-login', email, password);
-                        if (data?.session) storeFallbackSession(data.session);
-                        const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                        const session = await persistSessionFromPayload(data, email);
+                        const userEmail = session?.user?.email || data?.user?.email || email;
                         handleSuccess(userEmail);
                     } catch (backendErr) {
                         // Fallback to direct Supabase client only if backend path is unreachable.
-                        const msg = String(backendErr?.message || '');
-                        const retryDirect = msg.includes('Unable to reach Supabase auth')
-                            || msg.includes('Auth failed (5')
-                            || isLikelyNetworkError(backendErr);
+                        const retryDirect = shouldRetryDirectAuth(backendErr);
                         if (!retryDirect) throw backendErr;
                         const client = await getClient();
                         if (!client) throw backendErr;
@@ -325,19 +416,16 @@
                     try {
                         const data = await backendPasswordAuth('/api/auth/password-signup', email, password);
                         showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
-                        if (data.session) {
-                            storeFallbackSession(data.session);
-                            const userEmail = data?.user?.email || data?.session?.user?.email || email;
+                        const session = await persistSessionFromPayload(data, email);
+                        if (session) {
+                            const userEmail = session?.user?.email || data?.user?.email || email;
                             setTimeout(() => handleSuccess(userEmail), 1500);
                         } else {
                             btn.disabled = false;
                             btn.innerText = "Sign Up";
                         }
                     } catch (backendErr) {
-                        const msg = String(backendErr?.message || '');
-                        const retryDirect = msg.includes('Unable to reach Supabase auth')
-                            || msg.includes('Auth failed (5')
-                            || isLikelyNetworkError(backendErr);
+                        const retryDirect = shouldRetryDirectAuth(backendErr);
                         if (!retryDirect) throw backendErr;
                         const client = await getClient();
                         if (!client) throw backendErr;
@@ -377,7 +465,9 @@
         }
 
         function handleSuccess(email) {
-            if (email === window.ADMIN_EMAIL) {
+            const normalizedEmail = String(email || '').trim().toLowerCase();
+            const normalizedAdminEmail = String(window.ADMIN_EMAIL || '').trim().toLowerCase();
+            if (normalizedAdminEmail && normalizedEmail === normalizedAdminEmail) {
                 window.location.href = "/admin/admin.html";
             } else {
                 window.location.href = "/index.html"; // Or user-orders.html

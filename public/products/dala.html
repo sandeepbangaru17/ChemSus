@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,6 +17,10 @@
             --accent: #00b8b0;
             --bg: #F3F7FB;
             --ink: #1f2933;
+            --fab-size: 60px;
+            --fab-right: 25px;
+            --fab-bottom: calc(25px + env(safe-area-inset-bottom));
+            --fab-gap: 10px;
         }
 
         * {
@@ -167,13 +171,12 @@
         /* WRAPPER */
         .main-wrapper {
             margin-left: 240px;
-      width: calc(100% - 240px);
+            width: calc(100% - 240px);
             flex: 1;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             transition: margin-left .3s ease;
-            width: 100%;
         }
 
         /* HERO */
@@ -267,6 +270,25 @@
             gap: 14px;
             padding: 14px;
             box-shadow: 0 8px 24px rgba(0, 116, 199, .15);
+        }
+
+        .product-label-box {
+            background: #fff;
+            border: 1.5px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-label-box span {
+            display: block;
+            font-weight: 800;
+            color: #d32f2f;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .product-image::before {
@@ -385,38 +407,65 @@
 
         /* NEW PUB CHEM BUTTON */
         .pubchem-link-container {
-            text-align: center;
-            margin: 40px 0 30px;
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 34px;
         }
 
         .btn-pubchem {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 16px 32px;
-            background: linear-gradient(135deg, #6c8ebf, #4a6fa5);
+            padding: 15px 28px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: linear-gradient(135deg, #1186d1 0%, #0d5fb3 52%, #09387f 100%);
             color: #fff;
-            border: none;
-            border-radius: 12px;
             font-family: "Montserrat", sans-serif;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .04em;
             text-decoration: none;
+            text-transform: uppercase;
+            white-space: nowrap;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(106, 142, 191, 0.4);
+            box-shadow: 0 10px 26px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
+        }
+
+        .btn-pubchem::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+            transform: translateX(-75%);
+            transition: transform 0.42s ease;
         }
 
         .btn-pubchem:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(106, 142, 191, 0.5);
-            background: linear-gradient(135deg, #5a7cad, #3a5a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(9, 56, 127, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+            filter: saturate(1.06);
+        }
+
+        .btn-pubchem:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn-pubchem:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .btn-pubchem svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
+            flex: 0 0 auto;
         }
 
         footer {
@@ -460,8 +509,7 @@
 
             .main-wrapper {
                 margin-left: 0;
-        width: 100%;
-        padding-top: 0;
+                padding-top: 0;
             }
 
             .mobile-toggle {
@@ -486,8 +534,8 @@
             .product-card {
                 display: flex;
                 flex-direction: column;
-                gap: 18px;
-                padding: 18px;
+                gap: 20px;
+                padding: 22px 16px;
             }
 
             .product-image {
@@ -497,6 +545,11 @@
 
             .actions {
                 flex-direction: column
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                min-width: 100%
             }
 
             .btn-pubchem {
@@ -612,8 +665,8 @@
         .download-section {
             width: auto;
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+            bottom: var(--fab-bottom);
+            right: var(--fab-right);
             z-index: 99998;
         }
 
@@ -621,8 +674,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
+            width: var(--fab-size);
+            height: var(--fab-size);
             border-radius: 50%;
             background: #ffffff;
             color: var(--primary);
@@ -643,6 +696,32 @@
             background: var(--primary);
             color: #ffffff;
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tooltip style label */
+        .download-btn::before {
+            content: "Brochure";
+            position: absolute;
+            bottom: 75px;
+            right: 50%;
+            transform: translateX(50%);
+            background: var(--ink);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover::before {
+            opacity: 1;
+            visibility: visible;
+            bottom: 70px;
         }
 
         @media (max-width:900px) {
@@ -651,29 +730,29 @@
                 font-size: 14px;
             }
         }
-  
-    @media (max-width: 1050px) {
-      body.no-scroll .mobile-toggle {
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
-  
-    /* Mobile viewport fix */
-    html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg, #F3F7FB);
-    }
 
-    body {
-      min-height: 100dvh;
-      overflow-x: hidden;
-      background: var(--bg, #F3F7FB);
-    }
-  </style>
+        @media (max-width: 1050px) {
+            body.no-scroll .mobile-toggle {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        /* Mobile viewport fix */
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: var(--bg, #F3F7FB);
+        }
+
+        body {
+            min-height: 100dvh;
+            overflow-x: hidden;
+            background: var(--bg, #F3F7FB);
+        }
+    </style>
 </head>
 
 <body>
@@ -707,7 +786,8 @@
 
         <div class="search-section">
             <form class="search-form" id="siteSearchForm">
-                <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+                <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+                    aria-label="Search pages">
                 <span class="search-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         viewBox="0 0 16 16">
@@ -735,8 +815,10 @@
         <main>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="../assets/dala-bottle.svg" alt="Delta-aminolevulinic acid (DALA) - ChemSus Technologies"
-                        style="max-width: 400px; margin: 0 auto;">
+                    <img src="../assets/dalaa.jpeg" alt="Delta-aminolevulinic acid (DALA) - ChemSus Technologies">
+                    <div class="product-label-box">
+                        <span>For R&D use only</span>
+                    </div>
                 </div>
 
                 <div class="content-section">
@@ -785,14 +867,6 @@
                 </div>
             </div>
 
-            <div style="text-align:center;font-size:14px;color:#64748b;margin-top:20px;">
-                Ref:
-                <a href="https://en.wikipedia.org/wiki/Aminolevulinic_acid" target="_blank"
-                    style="color:var(--primary);font-weight:600;">
-                    Aminolevulinic Acid (Wikipedia)
-                </a>
-            </div>
-
             <!-- PubChem link button -->
             <div class="pubchem-link-container">
                 <a href="https://pubchem.ncbi.nlm.nih.gov/compound/137" target="_blank" class="btn-pubchem">
@@ -800,12 +874,57 @@
                         <path
                             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                     </svg>
-                    View Detailed Information
+                    View Details @PubChem
                 </a>
             </div>
         </main>
 
-        <footer style="text-align: center;">© 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</footer>
+        <footer style="background:#06121f; color:#cbd5f5; padding: 40px 0 20px; text-align: center; margin-top: 40px;">
+            <div
+                style="max-width:1100px; margin:0 auto; padding: 0 20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:40px; margin-bottom: 30px;">
+
+                <!-- Address Section -->
+                <div>
+                    <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
+                        Registered
+                        Office</h4>
+                    <p style="font-size: 14px; line-height: 1.6;">
+                        House No. 555, GNB Road,<br>
+                        North Guwahati, Assam – 781030
+                    </p>
+                </div>
+
+                <div>
+                    <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
+                        Branch
+                        Office</h4>
+                    <p style="font-size: 14px; line-height: 1.6;">
+                        Gavara jaggayyapalem,<br>
+                        BHPV, Visakhapatnam 530012
+                    </p>
+                </div>
+
+                <!-- Contact Section -->
+                <div>
+                    <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
+                        Contact</h4>
+                    <p style="font-size: 14px; margin-bottom:10px;">
+                        <span style="font-size:16px;">📞</span> <a href="tel:+918486877575"
+                            style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
+                    </p>
+                    <p style="font-size: 14px;">
+                        <span style="font-size:16px;">✉️</span> <a href="mailto:info@chemsus.in"
+                            style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
+                    </p>
+                </div>
+
+            </div>
+
+            <div
+                style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align:center; font-size: 13px;">
+                &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -814,17 +933,17 @@
 
         // Open Sidebar
         function toggleSidebar() {
-      const isOpen = sidebar.classList.toggle('open');
-      overlay.classList.toggle('active', isOpen);
-      document.body.classList.toggle('no-scroll', isOpen);
-    }
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.classList.toggle('active', isOpen);
+            document.body.classList.toggle('no-scroll', isOpen);
+        }
 
         // Close Sidebar (Explicit)
         function closeSidebar() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('active');
-      document.body.classList.remove('no-scroll');
-    }
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
 
         // Close mobile menu automatically when a link inside it is clicked
         const navLinks = document.querySelectorAll('.nav-menu a');
@@ -921,5 +1040,3 @@
 </body>
 
 </html>
-
-

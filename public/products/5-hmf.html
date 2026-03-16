@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -206,7 +206,8 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 720px
+      max-width: 720px;
+      padding: 0 18px
     }
 
     .hero-kicker {
@@ -263,6 +264,25 @@
       gap: 14px;
       padding: 14px;
       box-shadow: 0 8px 24px rgba(0, 116, 199, .15);
+    }
+
+    .product-label-box {
+      background: #fff;
+      border: 1.5px solid var(--primary);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .product-label-box span {
+      display: block;
+      font-weight: 800;
+      color: #d32f2f;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .product-image::before {
@@ -376,38 +396,65 @@
 
     /* NEW PUB CHEM BUTTON */
     .pubchem-link-container {
-      text-align: center;
-      margin: 40px 0 30px;
+      display: flex;
+      justify-content: center;
+      margin: 40px 0 34px;
     }
 
     .btn-pubchem {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, #6c8ebf, #4a6fa5);
+      padding: 15px 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: linear-gradient(135deg, #1186d1 0%, #0d5fb3 52%, #09387f 100%);
       color: #fff;
-      border: none;
-      border-radius: 12px;
       font-family: "Montserrat", sans-serif;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .04em;
       text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(106, 142, 191, 0.4);
+      box-shadow: 0 10px 26px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
+    }
+
+    .btn-pubchem::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+      transform: translateX(-75%);
+      transition: transform 0.42s ease;
     }
 
     .btn-pubchem:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(106, 142, 191, 0.5);
-      background: linear-gradient(135deg, #5a7cad, #3a5a8a);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(9, 56, 127, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      filter: saturate(1.06);
+    }
+
+    .btn-pubchem:hover::before {
+      transform: translateX(0);
+    }
+
+    .btn-pubchem:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 20px rgba(9, 56, 127, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .btn-pubchem svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
     }
 
     footer {
@@ -451,7 +498,6 @@
 
       .main-wrapper {
         margin-left: 0;
-        width: 100%;
         padding-top: 0;
       }
 
@@ -640,14 +686,14 @@
       color: #ffffff;
       transform: translateY(-5px);
     }
-  
+
     @media (max-width: 1050px) {
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
       }
     }
-  
+
     /* Mobile viewport fix */
     html {
       margin: 0;
@@ -696,7 +742,8 @@
 
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
-        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages...">
+        <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
+          aria-label="Search pages">
         <span class="search-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -723,8 +770,10 @@
     <main>
       <div class="product-card">
         <div class="product-image">
-          <img src="../assets/5hmfff.png" alt="5-HMF – biomass-derived platform chemical">
-
+          <img src="../assets/5-hmf.jpeg" alt="5-HMF – biomass-derived platform chemical">
+          <div class="product-label-box">
+            <span>For R&D use only</span>
+          </div>
         </div>
 
         <div class="content-section">
@@ -736,29 +785,29 @@
           </p>
 
           <div class="section-group">
-            <h3 class="section-title">Chemical &amp; Materials Uses</h3>
+            <h3 class="section-title">Industrial Applications</h3>
             <ul class="features-list">
-              <li>Precursor to 2,5-furandicarboxylic acid (FDCA) for producing PEF bioplastics</li>
-              <li>Conversion into bio-based solvents and fuel components such as 2,5-dimethylfuran (DMF)</li>
-              <li>Building block for fine chemicals, functional materials, and nanomaterials</li>
+              <li>Intermediate for producing high-performance polymers like PEF (polyethylene furanoate).</li>
+              <li>Used in the synthesis of resins, adhesives, and bio-based plastics.</li>
+              <li>Precursor for specialty solvents and coating additives in green chemistry.</li>
             </ul>
           </div>
 
           <div class="section-group">
-            <h3 class="section-title">Resins, Coatings &amp; Construction</h3>
+            <h3 class="section-title">Pharmaceutical & Healthcare</h3>
             <ul class="features-list">
-              <li>Alternative to formaldehyde in resins, adhesives, and coatings</li>
-              <li>Used in wood adhesives and foundry binders from bio-derived sources</li>
-              <li>Industrial-scale plants under development for construction and electronics uses</li>
+              <li>Precursor for various Active Pharmaceutical Ingredients (APIs) and fine chemicals.</li>
+              <li>Used in the development of antioxidant and therapeutic compounds.</li>
+              <li>Functional ingredient in personal care and nutraceutical formulations.</li>
             </ul>
           </div>
 
           <div class="section-group">
-            <h3 class="section-title">Biofuels &amp; Energy</h3>
+            <h3 class="section-title">Research & Development</h3>
             <ul class="features-list">
-              <li>Intermediate in advanced biofuel production from sugars and cellulose</li>
-              <li>Precursor to energy-dense blending components improving gasoline quality</li>
-              <li>Supports renewable diesel- and jet-fuel pathways</li>
+              <li>Versatile building block for synthesizing new furan-derived molecules.</li>
+              <li>Used in catalysis research for biomass conversion and sustainable synthesis.</li>
+              <li>Essential for R&D labs exploring next-generation carbon-neutral chemicals.</li>
             </ul>
           </div>
 
@@ -776,12 +825,53 @@
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
           </svg>
-          View Detailed Information
+          View Details @PubChem
         </a>
       </div>
     </main>
 
-    <footer style="text-align: center;">© 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</footer>
+    <footer style="background:#06121f; color:#cbd5f5; padding: 40px 0 20px; text-align: center; margin-top: 40px;">
+      <div
+        style="max-width:1100px; margin:0 auto; padding: 0 20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:40px; margin-bottom: 30px;">
+
+        <!-- Address Section -->
+        <div>
+          <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">Registered
+            Office</h4>
+          <p style="font-size: 14px; line-height: 1.6;">
+            House No. 555, GNB Road,<br>
+            North Guwahati, Assam – 781030
+          </p>
+        </div>
+
+        <div>
+          <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">Branch
+            Office</h4>
+          <p style="font-size: 14px; line-height: 1.6;">
+            Gavara jaggayyapalem,<br>
+            BHPV, Visakhapatnam 530012
+          </p>
+        </div>
+
+        <!-- Contact Section -->
+        <div>
+          <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">Contact</h4>
+          <p style="font-size: 14px; margin-bottom:10px;">
+            <span style="font-size:16px;">📞</span> <a href="tel:+918486877575"
+              style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
+          </p>
+          <p style="font-size: 14px;">
+            <span style="font-size:16px;">✉️</span> <a href="mailto:info@chemsus.in"
+              style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
+          </p>
+        </div>
+
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align:center; font-size: 13px;">
+        &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+      </div>
+    </footer>
   </div>
 
   <script>
@@ -898,5 +988,3 @@
 </body>
 
 </html>
-
-

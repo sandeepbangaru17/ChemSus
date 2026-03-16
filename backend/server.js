@@ -30,6 +30,46 @@ const OTP_HASH_SECRET =
 
 app.use(express.json({ limit: "2mb" }));
 
+// ---------------- Security Headers ----------------
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.qrserver.com https://*.supabase.co wss://*.supabase.co; frame-src 'self' https://www.openstreetmap.org https://www.google.com https://maps.google.com;"
+  );
+  next();
+});
+
+// ---------------- In-Memory Rate Limiter ----------------
+const _rateLimitStore = new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of _rateLimitStore.entries()) {
+    if (now > v.reset) _rateLimitStore.delete(k);
+  }
+}, 5 * 60 * 1000); // Cleanup every 5 minutes
+
+function rateLimiter(windowMs, max) {
+  return (req, res, next) => {
+    const key = (req.ip || 'unknown') + ':' + req.path;
+    const now = Date.now();
+    const entry = _rateLimitStore.get(key);
+    if (!entry || now > entry.reset) {
+      _rateLimitStore.set(key, { count: 1, reset: now + windowMs });
+      return next();
+    }
+    if (entry.count >= max) {
+      const retryAfter = Math.ceil((entry.reset - now) / 1000);
+      return res.status(429).json({ error: 'Too many requests', retryAfterSec: retryAfter });
+    }
+    entry.count++;
+    next();
+  };
+}
+
 // ---------------- Helpers: Promise wrappers ----------------
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
@@ -135,14 +175,21 @@ async function sendOtpEmail(email, otp) {
     return { mode: "dev", reason };
   }
 
-  await transporter.sendMail({
-    from,
-    to: email,
-    subject: "ChemSus Order Verification OTP",
-    text: `Your ChemSus OTP is ${otp}. It expires in ${OTP_TTL_MIN} minutes.`,
-    html: `<p>Your ChemSus OTP is <b>${otp}</b>.</p><p>This OTP expires in ${OTP_TTL_MIN} minutes.</p>`,
-  });
-  return { mode: "smtp" };
+  try {
+    await transporter.sendMail({
+      from,
+      to: email,
+      subject: "ChemSus Order Verification OTP",
+      text: `Your ChemSus OTP is ${otp}. It expires in ${OTP_TTL_MIN} minutes.`,
+      html: `<p>Your ChemSus OTP is <b>${otp}</b>.</p><p>This OTP expires in ${OTP_TTL_MIN} minutes.</p>`,
+    });
+    return { mode: "smtp" };
+  } catch (err) {
+    const reason = `SMTP send failed (${err?.message || err})`;
+    console.warn(`[OTP] ${reason}. Falling back to debug OTP.`);
+    console.log(`[OTP-DEV] email=${email} otp=${otp}`);
+    return { mode: "dev", reason };
+  }
 }
 
 async function purgeOtpSessions() {
@@ -284,6 +331,46 @@ function requestSupabaseViaIp({
   });
 }
 
+async function requestSupabaseDirect({
+  baseUrl,
+  requestPath,
+  method = "POST",
+  headers = {},
+  body = "",
+  timeoutMs = 15000,
+}) {
+  const base = new URL(baseUrl);
+  const pathPart = String(requestPath || "").startsWith("/")
+    ? String(requestPath || "")
+    : `/${String(requestPath || "")}`;
+  const url = `${base.origin}${pathPart}`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, {
+      method,
+      headers,
+      body,
+      signal: controller.signal,
+    });
+    const text = await r.text();
+    let json = null;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      json = null;
+    }
+    return {
+      status: r.status || 500,
+      text,
+      json,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function proxySupabasePasswordAuth(routePath, payload) {
   const supabaseUrlRaw = String(process.env.SUPABASE_URL || "").trim();
   const supabaseAnonKey = String(process.env.SUPABASE_ANON_KEY || "").trim();
@@ -300,6 +387,21 @@ async function proxySupabasePasswordAuth(routePath, payload) {
     "Content-Length": Buffer.byteLength(body),
   };
 
+  // First try normal HTTPS to the Supabase host.
+  // This is the most reliable path when DNS/network is healthy.
+  try {
+    return await requestSupabaseDirect({
+      baseUrl: supabaseUrlRaw,
+      requestPath: routePath,
+      method: "POST",
+      headers,
+      body,
+    });
+  } catch (err) {
+    console.warn("[SUPABASE-AUTH] Direct request failed:", err?.message || err);
+  }
+
+  // Fallback: resolve A records and try pinned IPs (helps in some DNS edge cases).
   let ips = [];
   try {
     ips = await resolveSupabaseIps(supabaseHost);
@@ -326,6 +428,127 @@ async function proxySupabasePasswordAuth(routePath, payload) {
   }
 
   throw lastErr || new Error("Unable to reach Supabase auth");
+}
+
+const LOCAL_AUTH_JWT_SECRET = String(
+  process.env.LOCAL_AUTH_JWT_SECRET || process.env.OTP_HASH_SECRET || "change_me_for_production"
+).trim();
+
+function hashLocalPassword(password, saltHex) {
+  const salt = Buffer.from(String(saltHex || ""), "hex");
+  return crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+}
+
+function safeEqualHex(a, b) {
+  try {
+    const left = Buffer.from(String(a || ""), "hex");
+    const right = Buffer.from(String(b || ""), "hex");
+    if (!left.length || !right.length || left.length !== right.length) return false;
+    return crypto.timingSafeEqual(left, right);
+  } catch {
+    return false;
+  }
+}
+
+function buildLocalAccessToken(email, userId) {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const expSec = nowSec + SESSION_TTL_SEC;
+  const headerB64 = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const payloadObj = {
+    iss: "chemsus-local-auth",
+    aud: "authenticated",
+    role: "authenticated",
+    email: normalizeEmail(email),
+    sub: `local-${Number(userId || 0)}`,
+    iat: nowSec,
+    exp: expSec,
+    app_metadata: { provider: "email", providers: ["email"] },
+    user_metadata: {},
+  };
+  const payloadB64 = Buffer.from(JSON.stringify(payloadObj)).toString("base64url");
+  const sigB64 = crypto
+    .createHmac("sha256", LOCAL_AUTH_JWT_SECRET)
+    .update(`${headerB64}.${payloadB64}`)
+    .digest("base64url");
+  return {
+    accessToken: `${headerB64}.${payloadB64}.${sigB64}`,
+    expSec,
+  };
+}
+
+async function findLocalAuthUserByEmail(email) {
+  return get(
+    `SELECT id, email, password_salt, password_hash
+       FROM auth_users
+      WHERE email=?`,
+    [normalizeEmail(email)]
+  );
+}
+
+async function upsertLocalAuthUser(email, password) {
+  const emailNorm = normalizeEmail(email);
+  const existing = await findLocalAuthUserByEmail(emailNorm);
+  const saltHex = crypto.randomBytes(16).toString("hex");
+  const hashHex = hashLocalPassword(password, saltHex);
+  if (existing?.id) {
+    await run(
+      `UPDATE auth_users
+          SET password_salt=?,
+              password_hash=?,
+              updated_at=datetime('now')
+        WHERE id=?`,
+      [saltHex, hashHex, existing.id]
+    );
+    return { id: existing.id, email: emailNorm };
+  }
+  const r = await run(
+    `INSERT INTO auth_users(email, password_salt, password_hash)
+     VALUES (?, ?, ?)`,
+    [emailNorm, saltHex, hashHex]
+  );
+  return { id: r.lastID, email: emailNorm };
+}
+
+async function createLocalAuthUser(email, password) {
+  const emailNorm = normalizeEmail(email);
+  const existing = await findLocalAuthUserByEmail(emailNorm);
+  if (existing?.id) return null;
+  return upsertLocalAuthUser(emailNorm, password);
+}
+
+async function verifyLocalAuthUser(email, password) {
+  const user = await findLocalAuthUserByEmail(email);
+  if (!user) return null;
+  const incomingHash = hashLocalPassword(password, user.password_salt);
+  if (!safeEqualHex(incomingHash, user.password_hash)) return null;
+  await run(
+    `UPDATE auth_users
+        SET last_login_at=datetime('now'),
+            updated_at=datetime('now')
+      WHERE id=?`,
+    [user.id]
+  );
+  return { id: user.id, email: normalizeEmail(user.email) };
+}
+
+function buildLocalAuthPayload(user) {
+  const emailNorm = normalizeEmail(user?.email || "");
+  const token = buildLocalAccessToken(emailNorm, user?.id);
+  return {
+    access_token: token.accessToken,
+    token_type: "bearer",
+    expires_in: SESSION_TTL_SEC,
+    expires_at: token.expSec,
+    refresh_token: crypto.randomBytes(24).toString("hex"),
+    user: {
+      id: `local-${Number(user?.id || 0)}`,
+      email: emailNorm,
+      aud: "authenticated",
+      role: "authenticated",
+      app_metadata: { provider: "email", providers: ["email"] },
+      user_metadata: {},
+    },
+  };
 }
 
 // ---------------- Static ----------------
@@ -431,50 +654,6 @@ function requireUser(req, res, next) {
   });
 }
 
-// Legacy stubs — kept so any cached bookmarks keep working
-app.post("/api/admin/login", (req, res) => res.json({ ok: false, message: "Use Supabase login" }));
-app.post("/api/admin/logout", (req, res) => res.json({ ok: true }));
-app.get("/api/admin/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.supabaseUser?.email }));
-
-app.post("/api/auth/password-login", async (req, res) => {
-  try {
-    const email = normalizeEmail(req.body?.email || "");
-    const password = String(req.body?.password || "");
-    if (!isValidEmail(email) || password.length < 6) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    const upstream = await proxySupabasePasswordAuth(
-      "/auth/v1/token?grant_type=password",
-      { email, password }
-    );
-    if (upstream.json) return res.status(upstream.status).json(upstream.json);
-    return res.status(upstream.status).send(upstream.text);
-  } catch (err) {
-    console.error("[AUTH-LOGIN] Proxy failed:", err?.message || err);
-    return res.status(502).json({ error: "Unable to reach Supabase auth" });
-  }
-});
-
-app.post("/api/auth/password-signup", async (req, res) => {
-  try {
-    const email = normalizeEmail(req.body?.email || "");
-    const password = String(req.body?.password || "");
-    if (!isValidEmail(email) || password.length < 6) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    const upstream = await proxySupabasePasswordAuth("/auth/v1/signup", {
-      email,
-      password,
-    });
-    if (upstream.json) return res.status(upstream.status).json(upstream.json);
-    return res.status(upstream.status).send(upstream.text);
-  } catch (err) {
-    console.error("[AUTH-SIGNUP] Proxy failed:", err?.message || err);
-    return res.status(502).json({ error: "Unable to reach Supabase auth" });
-  }
-});
 
 // ---------------- Uploads ----------------
 const ADMIN_UPLOAD_DIR = path.join(PUBLIC, "assets", "uploads");
@@ -544,977 +723,11 @@ const receiptUpload = multer({
 });
 
 // Admin upload (site images/pdfs)
-app.post(
-  "/api/admin/upload",
-  requireAdmin,
-  adminUpload.single("file"),
-  (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-    res.json({ ok: true, path: `assets/uploads/${req.file.filename}` });
-  }
-);
-
-// ---------------- Site settings (brochure) ----------------
-app.get("/api/site/brochure", async (req, res) => {
-  try {
-    const row = await get(
-      `SELECT value FROM site_settings WHERE key='brochure_url'`,
-      []
-    );
-    res.json({ url: row?.value || "" });
-  } catch (e) {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-app.post("/api/admin/brochure", requireAdmin, async (req, res) => {
-  try {
-    const url = (req.body?.url || "").trim();
-    await run(
-      `INSERT INTO site_settings(key,value) VALUES('brochure_url', ?)
-       ON CONFLICT(key) DO UPDATE SET value=excluded.value`,
-      [url]
-    );
-    res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// ---------------- Public APIs ----------------
-app.get("/api/products-page", async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM products_page WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("Products page fetch error stack:", e);
-    res.status(500).json({ error: "DB error", details: String(e.message || e) });
-  }
-});
-
-app.post("/api/otp/email/verify", async (req, res) => {
-  try {
-    await purgeOtpSessions();
-    const email = normalizeEmail(req.body?.email || "");
-    const challengeId = String(req.body?.challengeId || "").trim();
-    const otp = String(req.body?.otp || "").trim();
-
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ error: "Invalid email" });
-    }
-    if (!challengeId || !/^[a-f0-9]{20,}$/i.test(challengeId)) {
-      return res.status(400).json({ error: "Invalid challenge" });
-    }
-    if (!/^[0-9]{6}$/.test(otp)) {
-      return res.status(400).json({ error: "Invalid OTP format" });
-    }
-
-    const row = await get(
-      `SELECT id, otp_hash, attempts, max_attempts, verified_at, used_at,
-              CAST((julianday(expires_at) - julianday('now')) * 86400 AS INTEGER) AS expires_in_sec
-       FROM email_otp_sessions
-       WHERE challenge_id=? AND email=?
-       LIMIT 1`,
-      [challengeId, email]
-    );
-
-    if (!row) return res.status(400).json({ error: "OTP session not found" });
-    if (row.used_at) return res.status(400).json({ error: "OTP session already used" });
-    if (row.verified_at)
-      return res.status(400).json({ error: "OTP already verified. Please request a new OTP." });
-    if (Number(row.expires_in_sec) <= 0)
-      return res.status(400).json({ error: "OTP expired. Request a new OTP." });
-    if (Number(row.attempts) >= Number(row.max_attempts)) {
-      return res.status(429).json({ error: "Maximum OTP attempts exceeded. Request a new OTP." });
-    }
-
-    const expectedHash = hashOtp(email, otp, challengeId);
-    if (expectedHash !== row.otp_hash) {
-      await run(
-        `UPDATE email_otp_sessions
-         SET attempts = attempts + 1, updated_at=datetime('now')
-         WHERE id=?`,
-        [row.id]
-      );
-      return res.status(400).json({ error: "Invalid OTP" });
-    }
-
-    const verificationToken = crypto.randomBytes(24).toString("hex");
-    await run(
-      `UPDATE email_otp_sessions
-       SET verified_at=datetime('now'),
-           verification_token=?,
-           token_expires_at=datetime('now', ?),
-           updated_at=datetime('now')
-       WHERE id=?`,
-      [verificationToken, `+${OTP_TOKEN_TTL_MIN} minutes`, row.id]
-    );
-
-    return res.json({
-      ok: true,
-      verificationToken,
-      tokenExpiresInSec: OTP_TOKEN_TTL_MIN * 60,
-    });
-  } catch (e) {
-    console.error("OTP verify error stack:", e);
-    res.status(500).json({ error: "OTP verification failed", details: String(e.message || e) });
-  }
-});
-
-app.get("/api/test", (req, res) =>
-  res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
-);
-
-app.post("/api/orders", async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM shop_items WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("Shop items fetch error stack:", e);
-    res.status(500).json({ error: "DB error", details: String(e.message || e) });
-  }
-});
-
-app.get("/api/shop-items", async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM shop_items WHERE is_active=1 ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// ---------------- User Orders API ----------------
-// GET /api/user/orders — returns order history for the logged-in user
-app.get("/api/user/orders", requireUser, async (req, res) => {
-  try {
-    const userId = req.supabaseUser.sub; // Supabase UID
-    const rows = await all(
-      `SELECT o.id, o.productname, o.quantity, o.unitprice, o.totalprice,
-              o.payment_status, o.order_status, o.created_at, o.address, o.city,
-              o.region, o.country, o.pincode, o.paymentmode, o.notes,
-              p.status as payment_verified, p.receipt_path
-       FROM orders o
-       LEFT JOIN payments p ON p.order_id = o.id
-       WHERE o.user_id = ?
-       ORDER BY o.created_at DESC`,
-      [userId]
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("User orders error:", e);
-    res.status(500).json({ error: "DB error", details: String(e.message || e) });
-  }
-});
-
-// PATCH /api/admin/orders/:id/status — admin can update order_status
-app.patch("/api/admin/orders/:id/status", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const { order_status } = req.body || {};
-    const allowed = ["Processing", "Confirmed", "Shipped", "Delivered", "Cancelled"];
-    if (!allowed.includes(order_status)) {
-      return res.status(400).json({ error: "Invalid status value" });
-    }
-    await run(
-      `UPDATE orders SET order_status=?, updated_at=datetime('now') WHERE id=?`,
-      [order_status, id]
-    );
-    res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e.message || e) });
-  }
-});
-
-// ---------------- Admin CRUD: Products Page ----------------
-
-app.get("/api/admin/products-page", requireAdmin, async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM products_page ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-app.post("/api/admin/products-page", requireAdmin, async (req, res) => {
-  try {
-    const b = req.body || {};
-    const r = await run(
-      `INSERT INTO products_page (name, description, image, link, is_active, sort_order, updated_at)
-       VALUES (?,?,?,?,?,?,datetime('now'))`,
-      [
-        b.name || "",
-        b.description || "",
-        b.image || "",
-        b.link || "",
-        b.isactive ? 1 : 0,
-        Number(b.sortorder || 0),
-      ]
-    );
-    res.json({ ok: true, id: r.lastID });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.put("/api/admin/products-page/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const b = req.body || {};
-    const r = await run(
-      `UPDATE products_page
-       SET name=?, description=?, image=?, link=?, is_active=?, sort_order=?, updated_at=datetime('now')
-       WHERE id=?`,
-      [
-        b.name || "",
-        b.description || "",
-        b.image || "",
-        b.link || "",
-        b.isactive ? 1 : 0,
-        Number(b.sortorder || 0),
-        id,
-      ]
-    );
-    res.json({ ok: true, changed: r.changes });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.delete("/api/admin/products-page/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const r = await run(`DELETE FROM products_page WHERE id=?`, [id]);
-    res.json({ ok: true, deleted: r.changes });
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// ---------------- Admin CRUD: Shop Items ----------------
-app.get("/api/admin/shop-items", requireAdmin, async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT * FROM shop_items ORDER BY sort_order ASC, id ASC`,
-      []
-    );
-    res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-app.post("/api/admin/shop-items", requireAdmin, async (req, res) => {
-  try {
-    const b = req.body || {};
-    const features_json = JSON.stringify(b.features || []);
-    const r = await run(
-      `INSERT INTO shop_items
-       (name, subtitle, features_json, price, stockStatus, showBadge, badge, moreLink, image, is_active, sort_order, updated_at)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,datetime('now'))`,
-      [
-        b.name || "",
-        b.subtitle || "",
-        features_json,
-        Number(b.price || 0),
-        b.stockStatus || "in-stock",
-        b.showBadge ? 1 : 0,
-        b.badge || "",
-        b.moreLink || "",
-        b.image || "",
-        b.isactive ? 1 : 0,
-        Number(b.sortorder || 0),
-      ]
-    );
-    res.json({ ok: true, id: r.lastID });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.put("/api/admin/shop-items/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const b = req.body || {};
-    const features_json = JSON.stringify(b.features || []);
-    const r = await run(
-      `UPDATE shop_items
-       SET name=?, subtitle=?, features_json=?, price=?, stockStatus=?, showBadge=?, badge=?, moreLink=?, image=?, is_active=?, sort_order=?, updated_at=datetime('now')
-       WHERE id=?`,
-      [
-        b.name || "",
-        b.subtitle || "",
-        features_json,
-        Number(b.price || 0),
-        b.stockStatus || "in-stock",
-        b.showBadge ? 1 : 0,
-        b.badge || "",
-        b.moreLink || "",
-        b.image || "",
-        b.isactive ? 1 : 0,
-        Number(b.sortorder || 0),
-        id,
-      ]
-    );
-    res.json({ ok: true, changed: r.changes });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.delete("/api/admin/shop-items/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const r = await run(`DELETE FROM shop_items WHERE id=?`, [id]);
-    res.json({ ok: true, deleted: r.changes });
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// ---------------- Admin CRUD: Pack Pricing ----------------
-app.get("/api/admin/pack-pricing/:shopItemId", requireAdmin, async (req, res) => {
-  try {
-    const shopItemId = Number(req.params.shopItemId);
-    const rows = await all(
-      `SELECT * FROM pack_pricing WHERE shop_item_id=? ORDER BY sort_order ASC, id ASC`,
-      [shopItemId]
-    );
-    res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-app.post("/api/admin/pack-pricing", requireAdmin, async (req, res) => {
-  try {
-    const b = req.body || {};
-    const r = await run(
-      `INSERT INTO pack_pricing
-       (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order, updated_at)
-       VALUES (?,?,?,?,?,?,?,datetime('now'))`,
-      [
-        Number(b.shopItemId || 0),
-        b.packSize || "",
-        Number(b.biofmUsd || 0),
-        Number(b.biofmInr || 0),
-        Number(b.ourPrice || 0),
-        b.isActive ? 1 : 0,
-        Number(b.sortOrder || 0),
-      ]
-    );
-    res.json({ ok: true, id: r.lastID });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.put("/api/admin/pack-pricing/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const b = req.body || {};
-    const r = await run(
-      `UPDATE pack_pricing
-       SET pack_size=?, biofm_usd=?, biofm_inr=?, our_price=?, is_active=?, sort_order=?, updated_at=datetime('now')
-       WHERE id=?`,
-      [
-        b.packSize || "",
-        Number(b.biofmUsd || 0),
-        Number(b.biofmInr || 0),
-        Number(b.ourPrice || 0),
-        b.isActive ? 1 : 0,
-        Number(b.sortOrder || 0),
-        id,
-      ]
-    );
-    res.json({ ok: true, changed: r.changes });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.delete("/api/admin/pack-pricing/:id", requireAdmin, async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const r = await run(`DELETE FROM pack_pricing WHERE id=?`, [id]);
-    res.json({ ok: true, deleted: r.changes });
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// Public API: Get pack pricing for shop page
-app.get("/api/pack-pricing/:shopItemId", async (req, res) => {
-  try {
-    const shopItemId = Number(req.params.shopItemId);
-    const rows = await all(
-      `SELECT pack_size, biofm_usd, biofm_inr, our_price FROM pack_pricing 
-       WHERE shop_item_id=? AND is_active=1 ORDER BY sort_order ASC, id ASC`,
-      [shopItemId]
-    );
-    res.json(rows);
-  } catch {
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// ---------------- Orders API ----------------
-app.post("/api/otp/email/send", async (req, res) => {
-  try {
-    await purgeOtpSessions();
-    const email = normalizeEmail(req.body?.email || "");
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ error: "Invalid email" });
-    }
-
-    const cooldownRow = await get(
-      `SELECT CAST((julianday(cooldown_until) - julianday('now')) * 86400 AS INTEGER) AS wait_sec
-       FROM email_otp_sessions
-       WHERE email=? AND verified_at IS NULL AND used_at IS NULL
-       ORDER BY id DESC
-       LIMIT 1`,
-      [email]
-    );
-    if (cooldownRow && Number(cooldownRow.wait_sec) > 0) {
-      return res.status(429).json({
-        error: "Please wait before requesting another OTP",
-        retryAfterSec: Number(cooldownRow.wait_sec),
-      });
-    }
-
-    const challengeId = crypto.randomBytes(18).toString("hex");
-    const otp = generateOtpCode();
-    const otpHash = hashOtp(email, otp, challengeId);
-
-    await run(
-      `INSERT INTO email_otp_sessions
-       (challenge_id,email,otp_hash,attempts,max_attempts,expires_at,cooldown_until,created_at,updated_at)
-       VALUES (?,?,?,0,?,datetime('now', ?),datetime('now', ?),datetime('now'),datetime('now'))`,
-      [
-        challengeId,
-        email,
-        otpHash,
-        OTP_MAX_ATTEMPTS,
-        `+${OTP_TTL_MIN} minutes`,
-        `+${OTP_RESEND_SEC} seconds`,
-      ]
-    );
-
-    let delivery;
-    try {
-      delivery = await sendOtpEmail(email, otp);
-    } catch (mailErr) {
-      const reason = String(mailErr?.message || mailErr || "OTP mail send failed");
-      console.warn(`[OTP] SMTP send failed. Falling back to debug OTP. Reason: ${reason}`);
-      console.log(`[OTP-DEV] email=${email} otp=${otp}`);
-      delivery = { mode: "dev", reason };
-    }
-
-    const out = {
-      ok: true,
-      challengeId,
-      expiresInSec: OTP_TTL_MIN * 60,
-      resendInSec: OTP_RESEND_SEC,
-      delivery: delivery?.mode || "unknown",
-      details: delivery?.reason || "",
-    };
-    if ((delivery?.mode || "") === "dev") {
-      out.debugOtp = otp;
-    }
-    res.json(out);
-  } catch (e) {
-    console.error("OTP send error stack:", e);
-    const activePath = typeof getActivePath === 'function' ? getActivePath() : 'unknown';
-    res.status(500).json({
-      error: "OTP send failed",
-      details: String(e.stack || e.message || e),
-      dbPath: activePath
-    });
-  }
-});
-
-app.post("/api/otp/email/verify", async (req, res) => {
-  try {
-    await purgeOtpSessions();
-    const email = normalizeEmail(req.body?.email || "");
-    const challengeId = String(req.body?.challengeId || "").trim();
-    const otp = String(req.body?.otp || "").trim();
-
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ error: "Invalid email" });
-    }
-    if (!challengeId || !/^[a-f0-9]{20,}$/i.test(challengeId)) {
-      return res.status(400).json({ error: "Invalid challenge" });
-    }
-    if (!/^[0-9]{6}$/.test(otp)) {
-      return res.status(400).json({ error: "Invalid OTP format" });
-    }
-
-    const row = await get(
-      `SELECT id, otp_hash, attempts, max_attempts, verified_at, used_at,
-              CAST((julianday(expires_at) - julianday('now')) * 86400 AS INTEGER) AS expires_in_sec
-       FROM email_otp_sessions
-       WHERE challenge_id=? AND email=?
-       LIMIT 1`,
-      [challengeId, email]
-    );
-
-    if (!row) return res.status(400).json({ error: "OTP session not found" });
-    if (row.used_at) return res.status(400).json({ error: "OTP session already used" });
-    if (row.verified_at)
-      return res.status(400).json({ error: "OTP already verified. Please request a new OTP." });
-    if (Number(row.expires_in_sec) <= 0)
-      return res.status(400).json({ error: "OTP expired. Request a new OTP." });
-    if (Number(row.attempts) >= Number(row.max_attempts)) {
-      return res.status(429).json({ error: "Maximum OTP attempts exceeded. Request a new OTP." });
-    }
-
-    const expectedHash = hashOtp(email, otp, challengeId);
-    if (expectedHash !== row.otp_hash) {
-      await run(
-        `UPDATE email_otp_sessions
-         SET attempts = attempts + 1, updated_at=datetime('now')
-         WHERE id=?`,
-        [row.id]
-      );
-      return res.status(400).json({ error: "Invalid OTP" });
-    }
-
-    const verificationToken = crypto.randomBytes(24).toString("hex");
-    await run(
-      `UPDATE email_otp_sessions
-       SET verified_at=datetime('now'),
-           verification_token=?,
-           token_expires_at=datetime('now', ?),
-           updated_at=datetime('now')
-       WHERE id=?`,
-      [verificationToken, `+${OTP_TOKEN_TTL_MIN} minutes`, row.id]
-    );
-
-    return res.json({
-      ok: true,
-      verificationToken,
-      tokenExpiresInSec: OTP_TOKEN_TTL_MIN * 60,
-    });
-  } catch (e) {
-    console.error("OTP verify error stack:", e);
-    res.status(500).json({ error: "OTP verification failed", details: String(e.stack || e.message || e) });
-  }
-});
-
-app.get("/api/test", (req, res) =>
-  res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
-);
-
-app.post("/api/orders", async (req, res) => {
-  try {
-    await purgeOtpSessions();
-    const b = req.body || {};
-
-    const customername = (b.customername || "").trim();
-    const email = (b.email || "").trim();
-    const emailNorm = normalizeEmail(email);
-    const phone = (b.phone || "").trim();
-    const emailOtpToken = String(b.emailOtpToken || "").trim();
-    const companyName = (b.companyName || "").trim();
-
-    if (!customername || !email || !phone) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ error: "Invalid email" });
-    }
-    if (!isValidPhone(phone)) {
-      return res.status(400).json({ error: "Invalid phone" });
-    }
-    if (!emailOtpToken) {
-      return res.status(400).json({ error: "Email OTP verification required" });
-    }
-
-    const otpSession = await get(
-      `SELECT id
-       FROM email_otp_sessions
-       WHERE email=?
-         AND verification_token=?
-         AND verified_at IS NOT NULL
-         AND used_at IS NULL
-         AND datetime(token_expires_at) > datetime('now')
-       LIMIT 1`,
-      [emailNorm, emailOtpToken]
-    );
-    if (!otpSession) {
-      return res.status(400).json({ error: "Invalid or expired email OTP verification" });
-    }
-
-    const address = (
-      b.address ||
-      b.fullAddress ||
-      b.fulladdress ||
-      b.deliveryAddress ||
-      b.shippingAddress ||
-      ""
-    ).trim();
-
-    const city = (b.city || "").trim();
-    const region = (b.region || "").trim();
-    const pincode = (b.pincode || "").trim();
-    const country = (b.country || "India").trim();
-
-    const itemsIn = Array.isArray(b.items) ? b.items : [];
-    let items = [];
-    let totalprice = 0;
-    let totalQty = 0;
-    let productname = (b.productname || "").trim();
-
-    if (itemsIn.length > 0) {
-      for (const it of itemsIn) {
-        const shopItemId = Number(it.shopItemId || it.shop_item_id || it.id || 0);
-        const packSize = String(it.packSize || it.pack || "").trim();
-        const quantity = safeNumber(it.quantity || 0, 0);
-        if (!shopItemId || quantity <= 0) {
-          return res.status(400).json({ error: "Invalid items" });
-        }
-        const shop = await get(
-          `SELECT id, name, price FROM shop_items WHERE id=? AND is_active=1`,
-          [shopItemId]
-        );
-        if (!shop) return res.status(400).json({ error: "Invalid item" });
-
-        let unitPrice = 0;
-        if (packSize) {
-          const pack = await get(
-            `SELECT our_price FROM pack_pricing WHERE shop_item_id=? AND pack_size=? AND is_active=1`,
-            [shopItemId, packSize]
-          );
-          if (!pack) return res.status(400).json({ error: "Invalid pack" });
-          unitPrice = safeNumber(pack.our_price, 0);
-        } else {
-          unitPrice = safeNumber(shop.price, 0);
-        }
-        if (unitPrice <= 0) {
-          return res.status(400).json({ error: "Invalid pricing" });
-        }
-        const lineTotal = unitPrice * quantity;
-        totalprice += lineTotal;
-        totalQty += quantity;
-        items.push({
-          shop_item_id: shopItemId,
-          product_name: shop.name || "",
-          pack_size: packSize,
-          unit_price: unitPrice,
-          quantity,
-          total_price: lineTotal,
-        });
-      }
-
-      if (items.length === 1) {
-        const one = items[0];
-        productname = `${one.product_name}${one.pack_size ? " (" + one.pack_size + ")" : ""}`;
-      } else {
-        productname = `${items.length} item(s) from Cart`;
-      }
-    } else {
-      if (!productname) {
-        return res.status(400).json({ error: "Missing productname" });
-      }
-      const quantity = safeNumber(b.quantity || 1, 1);
-      const total = safeNumber(b.totalprice || 0, 0);
-      if (quantity <= 0 || total <= 0) {
-        return res.status(400).json({ error: "Invalid quantity or price" });
-      }
-      totalprice = total;
-      totalQty = quantity;
-
-      const shopItemId = Number(b.shopItemId || 0);
-      const packSize = String(b.packSize || b.pack || "").trim();
-      if (shopItemId) {
-        const shop = await get(
-          `SELECT id, name, price FROM shop_items WHERE id=? AND is_active=1`,
-          [shopItemId]
-        );
-        if (shop) {
-          let unitPrice = 0;
-          if (packSize) {
-            const pack = await get(
-              `SELECT our_price FROM pack_pricing WHERE shop_item_id=? AND pack_size=? AND is_active=1`,
-              [shopItemId, packSize]
-            );
-            unitPrice = safeNumber(pack?.our_price || 0, 0);
-          } else {
-            unitPrice = safeNumber(shop.price, 0);
-          }
-          if (unitPrice > 0) {
-            totalprice = unitPrice * quantity;
-            items.push({
-              shop_item_id: shopItemId,
-              product_name: shop.name || "",
-              pack_size: packSize,
-              unit_price: unitPrice,
-              quantity,
-              total_price: totalprice,
-            });
-            productname = `${shop.name || productname}${packSize ? " (" + packSize + ")" : ""
-              }`;
-          }
-        }
-      }
-    }
-
-    const unitprice = totalQty > 0 ? totalprice / totalQty : 0;
-    const r = await run(
-      `INSERT INTO orders
-        (customername,email,phone,companyName,address,city,region,pincode,country,
-         productname,quantity,unitprice,totalprice,payment_status,paymentmode,updated_at)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'PENDING','PENDING',datetime('now'))`,
-      [
-        customername,
-        email,
-        phone,
-        companyName,
-        address,
-        city,
-        region,
-        pincode,
-        country,
-        productname,
-        totalQty || 1,
-        unitprice,
-        totalprice,
-      ]
-    );
-
-    if (items.length > 0) {
-      for (const it of items) {
-        await run(
-          `INSERT INTO order_items
-           (order_id, shop_item_id, product_name, pack_size, unit_price, quantity, total_price)
-           VALUES (?,?,?,?,?,?,?)`,
-          [
-            r.lastID,
-            it.shop_item_id,
-            it.product_name,
-            it.pack_size,
-            it.unit_price,
-            it.quantity,
-            it.total_price,
-          ]
-        );
-      }
-    }
-
-    await run(
-      `UPDATE email_otp_sessions
-       SET used_at=datetime('now'), order_id=?, updated_at=datetime('now')
-       WHERE id=? AND used_at IS NULL`,
-      [r.lastID, otpSession.id]
-    );
-
-    res.json({ orderId: r.lastID });
-  } catch (e) {
-    console.error("Order creation error:", e);
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-// ---------------- Receipts API ----------------
-app.post(
-  "/api/receipts",
-  receiptUpload.single("receiptimage"),
-  async (req, res) => {
-    try {
-      const body = req.body || {};
-      const orderId = Number(body.orderid);
-
-      if (!orderId)
-        return res.status(400).json({ error: "orderid required" });
-      if (!req.file)
-        return res.status(400).json({ error: "receiptimage required" });
-
-      const amount = safeNumber(body.amount || 0, 0);
-      const ratingRaw = Number(body.rating || 0);
-      if (!ratingRaw) return res.status(400).json({ error: "rating required" });
-      const rating = clampInt(ratingRaw, 1, 5);
-      const feedback = (body.feedback || "").toString().slice(0, 2000);
-      const receipt_path = `receipts/${req.file.filename}`;
-
-      const order = await get(`SELECT * FROM orders WHERE id=?`, [orderId]);
-      if (!order) return res.status(404).json({ error: "Order not found" });
-
-      const existing = await get(
-        `SELECT id FROM payments WHERE order_id=? LIMIT 1`,
-        [orderId]
-      );
-      if (existing)
-        return res.status(409).json({ error: "Payment already submitted" });
-
-      const expectedTotal = safeNumber(order.totalprice || 0, 0);
-      if (Math.abs(expectedTotal - amount) > 0.01) {
-        return res.status(400).json({ error: "Amount mismatch" });
-      }
-
-      const payInsert = await run(
-        `INSERT INTO payments
-        (order_id,provider,payment_ref,amount,currency,status,receipt_path,rating,feedback,customername,email,phone)
-       VALUES (?, 'UPI', '', ?, 'INR', 'PENDING', ?, ?, ?, ?, ?, ?)`,
-        [
-          orderId,
-          amount,
-          receipt_path,
-          rating,
-          feedback,
-          body.customername || order.customername || "",
-          body.email || order.email || "",
-          body.phone || order.phone || "",
-        ]
-      );
-
-      await run(
-        `UPDATE orders SET payment_status='VERIFYING', updated_at=datetime('now') WHERE id=?`,
-        [orderId]
-      );
-
-      res.json({
-        ok: true,
-        paymentId: payInsert.lastID,
-        receipt_path: `assets/${receipt_path}`,
-      });
-    } catch (e) {
-      console.error("Receipt upload error:", e);
-      res.status(500).json({ error: "DB error", details: String(e) });
-    }
-  }
-);
-
-// Delete an order (also delete linked payments)
-app.delete("/api/admin/orders/:id", requireAdmin, async (req, res) => {
-  const id = Number(req.params.id);
-  try {
-    const pays = await all(`SELECT receipt_path FROM payments WHERE order_id = ?`, [id]);
-    pays.forEach((p) => deleteReceiptFile(p.receipt_path));
-    await run("DELETE FROM payments WHERE order_id = ?", [id]);
-    await run("DELETE FROM orders WHERE id = ?", [id]);
-    res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-// Delete payment/receipt
-app.delete("/api/admin/payments/:id", requireAdmin, async (req, res) => {
-  const id = Number(req.params.id);
-  try {
-    const pay = await get(`SELECT receipt_path FROM payments WHERE id = ?`, [id]);
-    if (pay?.receipt_path) deleteReceiptFile(pay.receipt_path);
-    await run("DELETE FROM payments WHERE id = ?", [id]);
-    res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-// ---------------- Admin: Orders + Payments ----------------
-app.get("/api/admin/orders", requireAdmin, async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT
-         id, payment_status AS paymentstatus, customername, email, phone,
-         companyName, address, city, region, pincode, country,
-         productname, quantity, unitprice, totalprice, paymentmode,
-         created_at AS createdat, updated_at AS updatedat
-       FROM orders
-       ORDER BY id DESC`,
-      []
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("Admin orders error:", e);
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-app.get("/api/admin/payments", requireAdmin, async (req, res) => {
-  try {
-    const rows = await all(
-      `SELECT 
-         p.id, 
-         p.order_id AS orderid, 
-         p.status, 
-         p.amount, 
-         p.rating, 
-         p.receipt_path AS receiptpath, 
-         p.feedback,
-         p.customername,
-         p.email,
-         p.phone,
-         p.created_at AS createdat,
-         o.productname, 
-         o.totalprice, 
-         o.payment_status
-       FROM payments p
-       LEFT JOIN orders o ON o.id = p.order_id
-       ORDER BY p.id DESC`,
-      []
-    );
-    res.json(rows);
-  } catch (e) {
-    console.error("Admin payments error:", e);
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
-// Admin: Mark payment SUCCESS/FAILED and sync order
-app.post("/api/admin/payment-status", requireAdmin, async (req, res) => {
-  try {
-    const paymentId = Number(req.body?.paymentId);
-    const newStatus = (req.body?.status || "").toUpperCase();
-
-    if (!paymentId)
-      return res.status(400).json({ error: "paymentId required" });
-    if (!["SUCCESS", "FAILED"].includes(newStatus))
-      return res
-        .status(400)
-        .json({ error: "status must be SUCCESS or FAILED" });
-
-    const pay = await get(`SELECT * FROM payments WHERE id=?`, [paymentId]);
-    if (!pay) return res.status(404).json({ error: "Payment not found" });
-
-    await run(`UPDATE payments SET status=? WHERE id=?`, [
-      newStatus,
-      paymentId,
-    ]);
-
-    const orderStatus = newStatus === "SUCCESS" ? "PAID" : "FAILED";
-    await run(
-      `UPDATE orders SET payment_status=?, paymentmode=?, updated_at=datetime('now') WHERE id=?`,
-      [orderStatus, newStatus === "SUCCESS" ? "UPI" : "FAILED", pay.order_id]
-    );
-
-    res.json({
-      ok: true,
-      paymentId,
-      status: newStatus,
-      orderId: pay.order_id,
-      orderStatus,
-    });
-  } catch (e) {
-    console.error("Payment status update error:", e);
-    res.status(500).json({ error: "DB error", details: String(e) });
-  }
-});
-
+const deps = { run, get, all, db, normalizeEmail, isValidEmail, isValidPhone, safeNumber, purgeOtpSessions, requireUser, receiptUpload, clampInt, requestSupabaseDirect, proxySupabasePasswordAuth, generateOtpCode, sendOtpEmail, hashOtp, rateLimiter, OTP_TOKEN_TTL_MIN, OTP_TTL_MIN, OTP_MAX_ATTEMPTS, OTP_RESEND_SEC, resolveSupabaseIps, requestSupabaseViaIp, hashLocalPassword, safeEqualHex, buildLocalAccessToken, findLocalAuthUserByEmail, upsertLocalAuthUser, createLocalAuthUser, verifyLocalAuthUser, buildLocalAuthPayload, parseCookies, setCookie, clearCookie, decodeJwtPayload, getTokenFromRequest, requireAdmin, extractUser, adminUpload, deleteReceiptFile, crypto, path, fs };
+app.use('/api', require('./routes/auth')(deps));
+app.use('/api', require('./routes/public')(deps));
+app.use('/api', require('./routes/orders')(deps));
+app.use('/api/admin', require('./routes/admin')(deps));
 app.use((err, req, res, next) => {
   if (!err) return next();
   if (err.message === "Invalid file type") {

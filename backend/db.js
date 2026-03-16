@@ -341,6 +341,18 @@ async function initDb() {
 
     CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
     CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+
+    CREATE TABLE IF NOT EXISTS auth_users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL UNIQUE,
+      password_salt TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      last_login_at TEXT DEFAULT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_auth_users_email ON auth_users(email);
   `);
 
   await seed();
@@ -352,6 +364,7 @@ async function initDb() {
   await migrateCol("orders", "user_id", "TEXT DEFAULT NULL");
   await migrateCol("orders", "order_status", "TEXT NOT NULL DEFAULT 'Processing'");
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id)"); } catch (_) { }
+  try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
 
   console.log("✅ SQLite ready with pack_pricing table");
 }
