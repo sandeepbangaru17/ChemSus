@@ -45,589 +45,295 @@
       pointer-events: none;
     }
 
+    /* --- PREMIUM HERO ANIMATIONS --- */
+    .hero-content>* {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: heroFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hero-content .hero-kicker {
+      animation-delay: 0.2s;
+    }
+
+    .hero-content .hero-title {
+      animation-delay: 0.4s;
+    }
+
+    .hero-content .hero-subtitle {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes heroFadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ------------------------------- */
+
+    /* --- ULTRA-PREMIUM SPLASH SCREEN --- */
     #chemIntro {
       position: fixed;
       inset: 0;
       z-index: 5000;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 16% 22%, rgba(25, 184, 114, 0.28), transparent 35%),
-        radial-gradient(circle at 82% 76%, rgba(74, 168, 97, 0.24), transparent 34%),
-        linear-gradient(135deg, #041a12 0%, #063222 50%, #02130d 100%);
       display: grid;
       place-items: center;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.85s ease, visibility 0.85s ease;
+      background: #01040a;
+      /* Darker, richer slate black */
+      transition: opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1), transform 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+      overflow: hidden;
     }
 
-    #chemIntro::before {
-      content: "";
-      position: absolute;
-      inset: -40% -10%;
-      background:
-        radial-gradient(circle, rgba(25, 184, 114, 0.18) 0%, rgba(25, 184, 114, 0) 55%),
-        radial-gradient(circle, rgba(138, 212, 92, 0.16) 0%, rgba(138, 212, 92, 0) 60%);
-      transform: rotate(0deg);
-      animation: introFieldSpin 18s linear infinite;
-      pointer-events: none;
-    }
-
-    #chemIntro::after {
-      content: "";
+    .intro-bg-video-wrapper {
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, transparent 0%, rgba(183, 244, 211, 0.11) 48%, transparent 63%);
-      transform: translateX(-120%);
-      animation: introSweep 2.5s ease-out 1;
-      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .intro-bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 110vw;
+      /* Slightly oversized to allow for zoom */
+      height: 110vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%) scale(1.05);
+      /* Start slightly zoomed in */
+      opacity: 0;
+      filter: saturate(1.2) contrast(1.1);
+      animation: cinematicVideoReveal 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .intro-overlay {
+      position: absolute;
+      inset: 0;
+      /* Complex sophisticated gradient to focus center */
+      background: radial-gradient(circle at center, rgba(1, 4, 10, 0.65) 0%, rgba(1, 4, 10, 0.95) 100%);
+      backdrop-filter: blur(12px) saturate(1.2);
+      /* Deep elegant blur */
     }
 
     #chemIntro.hide {
       opacity: 0;
-      visibility: hidden;
       pointer-events: none;
-    }
-
-    .chem-intro-atoms {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .chem-intro-atoms span {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(0, 184, 176, 0.75);
-      box-shadow: 0 0 16px rgba(0, 184, 176, 0.55);
-      animation: atomFloat 7s linear infinite;
-    }
-
-    .chem-intro-atoms span:nth-child(2n) {
-      background: rgba(59, 173, 255, 0.75);
-      box-shadow: 0 0 16px rgba(59, 173, 255, 0.5);
-      animation-duration: 9s;
-    }
-
-    .chem-intro-atoms span:nth-child(1) {
-      left: 8%;
-      bottom: -24px;
-      animation-delay: -0.1s;
-    }
-
-    .chem-intro-atoms span:nth-child(2) {
-      left: 19%;
-      bottom: -40px;
-      animation-delay: -1.2s;
-    }
-
-    .chem-intro-atoms span:nth-child(3) {
-      left: 31%;
-      bottom: -18px;
-      animation-delay: -2s;
-    }
-
-    .chem-intro-atoms span:nth-child(4) {
-      left: 44%;
-      bottom: -30px;
-      animation-delay: -3s;
-    }
-
-    .chem-intro-atoms span:nth-child(5) {
-      left: 58%;
-      bottom: -26px;
-      animation-delay: -1.8s;
-    }
-
-    .chem-intro-atoms span:nth-child(6) {
-      left: 70%;
-      bottom: -22px;
-      animation-delay: -0.8s;
-    }
-
-    .chem-intro-atoms span:nth-child(7) {
-      left: 82%;
-      bottom: -36px;
-      animation-delay: -2.7s;
-    }
-
-    .chem-intro-atoms span:nth-child(8) {
-      left: 92%;
-      bottom: -14px;
-      animation-delay: -1.1s;
-    }
-
-    .chem-intro-emojis,
-    .chem-intro-molecules {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.52;
-    }
-
-    .chem-intro-emojis span,
-    .chem-intro-molecules span {
-      position: absolute;
-      left: var(--x, 50%);
-      top: -14%;
-      font-size: var(--size, 26px);
-      opacity: 0.68;
-      filter: drop-shadow(0 0 10px rgba(146, 238, 188, 0.24));
-      animation: emojiFall var(--duration, 10s) linear infinite;
-      animation-delay: var(--delay, -1s);
-    }
-
-    .chem-intro-molecules span {
-      opacity: 0.56;
-      filter: drop-shadow(0 0 11px rgba(125, 224, 176, 0.3));
-      animation-name: moleculeFloat;
-    }
-
-    .chem-intro-grid {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.13;
-      background-image:
-        linear-gradient(rgba(159, 236, 186, 0.24) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(159, 236, 186, 0.22) 1px, transparent 1px);
-      background-size: 42px 42px;
-      transform: perspective(520px) rotateX(58deg) translateY(36%);
-      transform-origin: center bottom;
-      animation: gridDrift 14s linear infinite;
-      pointer-events: none;
-    }
-
-    .chem-intro-collision {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .chem-intro-collision .reactor {
-      position: absolute;
-      left: 50%;
-      top: 44%;
-      width: clamp(94px, 10vw, 156px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      border: 1px solid rgba(150, 255, 195, 0.35);
-      background: radial-gradient(circle, rgba(187, 255, 218, 0.78) 0%, rgba(118, 219, 162, 0.26) 48%, rgba(0, 0, 0, 0) 70%);
-      box-shadow: 0 0 44px rgba(91, 219, 149, 0.38);
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.35);
-      animation: reactorCharge 1.35s cubic-bezier(0.2, 0.9, 0.25, 1) 1.2s forwards;
-    }
-
-    .chem-intro-collision .reactor::before,
-    .chem-intro-collision .reactor::after {
-      content: "";
-      position: absolute;
-      inset: 11%;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .chem-intro-collision .reactor::before {
-      border: 1px solid rgba(210, 255, 228, 0.42);
-      animation: reactorRing 1.8s linear 1.15s forwards;
-    }
-
-    .chem-intro-collision .reactor::after {
-      inset: 31%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.92) 0%, rgba(200, 255, 226, 0.48) 56%, rgba(0, 0, 0, 0) 100%);
-      box-shadow: 0 0 24px rgba(183, 255, 220, 0.5);
-      animation: reactorCore 1.2s ease-out 1.25s forwards;
-    }
-
-    .chem-intro-collision .emoji {
-      position: absolute;
-      left: 50%;
-      top: 41.8%;
-      font-size: clamp(106px, 15vw, 196px);
-      line-height: 1;
-      opacity: 0;
-      filter: drop-shadow(0 0 22px rgba(140, 255, 194, 0.36));
-      will-change: transform, opacity;
-    }
-
-    .chem-intro-collision .left {
-      transform: translate(-286%, -54%) rotate(28deg) scale(0.9);
-      animation: collideLeft 2.2s cubic-bezier(0.2, 0.88, 0.24, 1) forwards;
-    }
-
-    .chem-intro-collision .right {
-      transform: translate(186%, -54%) rotate(-28deg) scale(-0.9, 0.9);
-      animation: collideRight 2.2s cubic-bezier(0.2, 0.88, 0.24, 1) forwards;
-    }
-
-    .chem-intro-collision .stream {
-      position: absolute;
-      left: 50%;
-      top: 43.5%;
-      width: clamp(8px, 0.8vw, 12px);
-      height: clamp(116px, 15vw, 174px);
-      border-radius: 999px;
-      opacity: 0;
-      filter: drop-shadow(0 0 10px rgba(168, 255, 210, 0.42));
-      transform-origin: top center;
-      will-change: transform, opacity;
-    }
-
-    .chem-intro-collision .left-stream {
-      background: linear-gradient(180deg, rgba(238, 255, 245, 0.95) 0%, rgba(122, 226, 169, 0.95) 52%, rgba(56, 173, 110, 0.24) 100%);
-      transform: translate(-52px, -4px) rotate(18deg) scaleY(0.1);
-      animation: streamPourLeft 1.35s ease-out 1.05s forwards;
-    }
-
-    .chem-intro-collision .right-stream {
-      background: linear-gradient(180deg, rgba(238, 255, 245, 0.95) 0%, rgba(122, 226, 169, 0.95) 52%, rgba(56, 173, 110, 0.24) 100%);
-      transform: translate(52px, -4px) rotate(-18deg) scaleY(0.1);
-      animation: streamPourRight 1.35s ease-out 1.08s forwards;
-    }
-
-    .chem-intro-collision .burst {
-      position: absolute;
-      left: 50%;
-      top: 44%;
-      width: clamp(18px, 2vw, 28px);
-      height: clamp(18px, 2vw, 28px);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 250, 220, 0.95) 0%, rgba(181, 255, 218, 0.78) 42%, rgba(0, 0, 0, 0) 72%);
-      transform: translate(-50%, -50%) scale(0.2);
-      opacity: 0;
-      box-shadow: 0 0 34px rgba(172, 255, 207, 0.45);
-      animation: collisionBurst 0.78s ease-out 2.02s forwards;
+      transform: scale(1.08);
+      /* Zoom out smoothly upon exit */
+      backdrop-filter: blur(0px);
     }
 
     .chem-intro-content {
       position: relative;
       z-index: 2;
       text-align: center;
-      padding: 18px 12px 14px;
-      border-radius: 0;
-      border: none;
-      background: transparent;
-      box-shadow: none;
-      backdrop-filter: none;
-      opacity: 0;
-      transform: translateY(16px) scale(0.94);
-      animation: introNameReveal 0.82s cubic-bezier(0.18, 0.9, 0.25, 1) 2.45s forwards;
-      width: min(96vw, 1080px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .chem-intro-logo-wrap {
-      display: none;
+    /* Soft glowing aura behind the main content */
+    .chem-intro-content::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 184, 176, 0.15) 0%, rgba(0, 116, 199, 0.05) 50%, transparent 80%);
+      transform: translate(-50%, -50%);
+      filter: blur(40px);
+      z-index: -1;
+      opacity: 0;
+      animation: auraGlow 3s ease 0.5s forwards;
     }
 
     .chem-intro-logo {
-      display: none;
+      height: 85px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+      /* Elegant shadow & subtle border */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      animation: ultraReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
     }
 
     .chem-intro-title {
       font-family: "Montserrat", sans-serif;
-      display: inline-block;
-      font-weight: 900;
-      letter-spacing: 0.016em;
-      line-height: 1.02;
-      background: linear-gradient(96deg, #ff9b2a 0%, #ffc66f 26%, #66d3ff 58%, #0064c8 100%);
-      background-size: 240% 100%;
-      color: transparent;
+      font-weight: 300;
+      font-size: clamp(38px, 7vw, 64px);
+      letter-spacing: 12px;
+      color: #ffffff;
+      margin: 0 0 0 12px;
+      /* Offset the tracking slightly */
+      text-transform: uppercase;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: ultraReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+
+    .chem-intro-title span {
+      font-weight: 700;
+      background: linear-gradient(135deg, #0cebeb, #20e3b2, #29ffc6);
+      /* Vibrant, lively premium gradient */
       -webkit-background-clip: text;
       background-clip: text;
-      font-size: clamp(48px, 8.6vw, 108px);
-      margin-bottom: 0;
-      padding: 2px 16px 8px;
-      border-radius: 14px;
-      -webkit-text-stroke: 1px rgba(3, 19, 36, 0.42);
-      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.66), 0 2px 8px rgba(255, 169, 69, 0.2), 0 2px 8px rgba(72, 192, 255, 0.26);
-      animation: titleShimmer 4.8s linear infinite;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      position: relative;
     }
 
-    @keyframes atomFloat {
-      0% {
-        transform: translateY(0) scale(0.8);
-        opacity: 0;
-      }
-
-      12% {
-        opacity: 0.9;
-      }
-
-      85% {
-        opacity: 0.5;
-      }
-
-      100% {
-        transform: translateY(-108vh) scale(1.18);
-        opacity: 0;
-      }
+    /* Subtle light sweep across the "Sus" part */
+    .chem-intro-title span::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      transform: translateX(-100%);
+      animation: sweepLight 2.5s ease-in-out 1.5s forwards;
     }
 
-    @keyframes introNameReveal {
-      from {
-        transform: translateY(16px) scale(0.94);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
+    .chem-intro-subtitle {
+      font-family: "Open Sans", sans-serif;
+      font-size: clamp(11px, 2.5vw, 15px);
+      letter-spacing: 7px;
+      color: #b4c6d8;
+      margin-top: 24px;
+      margin-left: 7px;
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: ultraReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
     }
 
-    @keyframes collideLeft {
-      0% {
-        opacity: 0;
-        transform: translate(-286%, -54%) rotate(28deg) scale(0.9);
-      }
-
-      18% {
-        opacity: 1;
-      }
-
-      56% {
-        opacity: 1;
-        transform: translate(-82%, -52%) rotate(16deg) scale(1.02);
-      }
-
-      71% {
-        opacity: 1;
-        transform: translate(-64%, -54%) rotate(36deg) scale(1.07);
-      }
-
-      81% {
-        opacity: 1;
-        transform: translate(-70%, -53%) rotate(32deg) scale(1.03);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(-230%, -58%) rotate(42deg) scale(0.82);
-      }
+    .intro-progress-bar-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      /* Track background */
+      z-index: 10;
     }
 
-    @keyframes collideRight {
+    .intro-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0074c7, #00b8b0, #29ffc6);
+      background-size: 200% 100%;
+      width: 0%;
+      box-shadow: 0 0 15px rgba(0, 184, 176, 0.6);
+      animation: progressLoadPremium 3.9s cubic-bezier(0.8, 0, 0.2, 1) forwards, gradientFlow 2s linear infinite;
+    }
+
+    @keyframes cinematicVideoReveal {
       0% {
         opacity: 0;
-        transform: translate(186%, -54%) rotate(-28deg) scale(-0.9, 0.9);
-      }
-
-      18% {
-        opacity: 1;
-      }
-
-      56% {
-        opacity: 1;
-        transform: translate(-18%, -52%) rotate(-16deg) scale(-1.02, 1.02);
-      }
-
-      71% {
-        opacity: 1;
-        transform: translate(-36%, -54%) rotate(-36deg) scale(-1.07, 1.07);
-      }
-
-      81% {
-        opacity: 1;
-        transform: translate(-30%, -53%) rotate(-32deg) scale(-1.03, 1.03);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(130%, -58%) rotate(-42deg) scale(-0.82, 0.82);
-      }
-    }
-
-    @keyframes collisionBurst {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.2);
-      }
-
-      38% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(2.8);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(4.6);
-      }
-    }
-
-    @keyframes streamPourLeft {
-      0% {
-        opacity: 0;
-        transform: translate(-52px, -4px) rotate(18deg) scaleY(0.08);
-      }
-
-      18% {
-        opacity: 0.9;
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(-16px, 112px) rotate(6deg) scaleY(1.12);
-      }
-    }
-
-    @keyframes streamPourRight {
-      0% {
-        opacity: 0;
-        transform: translate(52px, -4px) rotate(-18deg) scaleY(0.08);
-      }
-
-      18% {
-        opacity: 0.9;
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate(16px, 112px) rotate(-6deg) scaleY(1.12);
-      }
-    }
-
-    @keyframes reactorCharge {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.35);
-      }
-
-      44% {
-        opacity: 0.96;
         transform: translate(-50%, -50%) scale(1.08);
       }
 
       100% {
-        opacity: 0.18;
-        transform: translate(-50%, -50%) scale(0.98);
+        opacity: 0.45;
+        transform: translate(-50%, -50%) scale(1);
       }
+
+      /* Slow zoom out */
     }
 
-    @keyframes reactorRing {
-      0% {
+    @keyframes ultraReveal {
+      from {
         opacity: 0;
-        transform: rotate(0deg) scale(0.6);
+        transform: translateY(40px) scale(0.95);
       }
 
-      100% {
-        opacity: 0.82;
-        transform: rotate(188deg) scale(1.08);
-      }
-    }
-
-    @keyframes reactorCore {
-      0% {
-        opacity: 0;
-        transform: scale(0.6);
-      }
-
-      58% {
+      to {
         opacity: 1;
-        transform: scale(1.1);
-      }
-
-      100% {
-        opacity: 0.52;
-        transform: scale(0.9);
+        transform: translateY(0) scale(1);
       }
     }
 
-    @keyframes introFieldSpin {
+    @keyframes auraGlow {
       from {
-        transform: rotate(0deg) scale(1);
-      }
-
-      to {
-        transform: rotate(360deg) scale(1.05);
-      }
-    }
-
-    @keyframes introSweep {
-      to {
-        transform: translateX(115%);
-      }
-    }
-
-    @keyframes gridDrift {
-      from {
-        background-position: 0 0, 0 0;
-      }
-
-      to {
-        background-position: 0 84px, 84px 0;
-      }
-    }
-
-    @keyframes titleShimmer {
-      to {
-        background-position: -210% 0;
-      }
-    }
-
-    @keyframes emojiFall {
-      0% {
-        transform: translateY(-10vh) rotate(0deg);
         opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
       }
 
-      10% {
-        opacity: 0.85;
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
       }
+    }
 
-      55% {
-        transform: translateY(45vh) rotate(80deg);
+    @keyframes sweepLight {
+      0% {
+        transform: translateX(-100%);
       }
 
       100% {
-        transform: translateY(110vh) rotate(170deg);
-        opacity: 0;
+        transform: translateX(100%);
       }
     }
 
-    @keyframes moleculeFloat {
+    @keyframes progressLoadPremium {
       0% {
-        transform: translateY(-14vh) translateX(0) rotate(0deg) scale(0.9);
-        opacity: 0;
+        width: 0%;
+        box-shadow: 0 0 5px rgba(0, 184, 176, 0.2);
       }
 
-      12% {
-        opacity: 0.75;
+      35% {
+        width: 40%;
+        box-shadow: 0 0 10px rgba(0, 184, 176, 0.4);
       }
 
-      50% {
-        transform: translateY(36vh) translateX(14px) rotate(32deg) scale(1.05);
+      75% {
+        width: 85%;
+        box-shadow: 0 0 20px rgba(0, 184, 176, 0.8);
       }
 
       100% {
-        transform: translateY(108vh) translateX(-16px) rotate(64deg) scale(0.92);
-        opacity: 0;
+        width: 100%;
+        box-shadow: 0 0 25px rgba(0, 184, 176, 1);
+      }
+    }
+
+    @keyframes gradientFlow {
+      0% {
+        background-position: 100% 0;
+      }
+
+      100% {
+        background-position: -100% 0;
       }
     }
 
     @media (max-width: 600px) {
-      .chem-intro-collision .emoji {
-        top: 40%;
-        font-size: clamp(92px, 20vw, 144px);
+      .chem-intro-logo {
+        height: 65px;
+        margin-bottom: 30px;
       }
 
-      .chem-intro-collision .stream {
-        height: clamp(94px, 22vw, 132px);
+      .chem-intro-title {
+        letter-spacing: 6px;
+        margin-left: 6px;
       }
 
-      .chem-intro-collision .reactor {
-        top: 43%;
-        width: clamp(84px, 22vw, 132px);
-      }
-
-      .chem-intro-content {
-        padding: 10px 10px 8px;
+      .chem-intro-subtitle {
+        letter-spacing: 4px;
+        margin-left: 4px;
+        margin-top: 20px;
       }
     }
+
+    /* --- END ULTRA-PREMIUM SPLASH SCREEN --- */
 
     a {
       text-decoration: none;
@@ -1313,53 +1019,19 @@
 
 <body>
   <div id="chemIntro" aria-hidden="true">
-    <div class="chem-intro-atoms">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+    <div class="intro-bg-video-wrapper">
+      <video class="intro-bg-video" autoplay muted loop playsinline preload="auto">
+        <source src="assets/vid-logo.mp4" type="video/mp4">
+      </video>
     </div>
-    <div class="chem-intro-emojis" aria-hidden="true">
-      <span style="--x:6%;--size:24px;--duration:8.8s;--delay:-0.8s;">🧪</span>
-      <span style="--x:12%;--size:22px;--duration:9.6s;--delay:-3.1s;">⚗️</span>
-      <span style="--x:19%;--size:26px;--duration:9.2s;--delay:-4.2s;">🧫</span>
-      <span style="--x:27%;--size:24px;--duration:8.6s;--delay:-1.7s;">🧪</span>
-      <span style="--x:36%;--size:22px;--duration:9.8s;--delay:-5.8s;">⚗️</span>
-      <span style="--x:45%;--size:26px;--duration:9.4s;--delay:-2.6s;">🧫</span>
-      <span style="--x:53%;--size:24px;--duration:8.9s;--delay:-6.4s;">🧪</span>
-      <span style="--x:61%;--size:23px;--duration:9.7s;--delay:-3.8s;">⚗️</span>
-      <span style="--x:69%;--size:25px;--duration:8.7s;--delay:-5.1s;">🧪</span>
-      <span style="--x:76%;--size:22px;--duration:9.9s;--delay:-2.2s;">🧫</span>
-      <span style="--x:84%;--size:24px;--duration:9.3s;--delay:-6.7s;">⚗️</span>
-      <span style="--x:92%;--size:23px;--duration:8.5s;--delay:-4.6s;">🧪</span>
-    </div>
-    <div class="chem-intro-molecules" aria-hidden="true">
-      <span style="--x:9%;--size:28px;--duration:11.2s;--delay:-1.2s;">🧬</span>
-      <span style="--x:22%;--size:26px;--duration:12s;--delay:-3.9s;">⚛️</span>
-      <span style="--x:34%;--size:29px;--duration:10.8s;--delay:-6.1s;">🧬</span>
-      <span style="--x:48%;--size:27px;--duration:11.4s;--delay:-2.5s;">⚛️</span>
-      <span style="--x:63%;--size:30px;--duration:12.2s;--delay:-4.8s;">🧬</span>
-      <span style="--x:77%;--size:26px;--duration:10.9s;--delay:-7.0s;">⚛️</span>
-      <span style="--x:90%;--size:28px;--duration:11.7s;--delay:-5.4s;">🧬</span>
-    </div>
-    <div class="chem-intro-grid" aria-hidden="true"></div>
-    <div class="chem-intro-collision" aria-hidden="true">
-      <span class="reactor"></span>
-      <span class="emoji left">&#129514;</span>
-      <span class="emoji right">&#129514;</span>
-      <span class="stream left-stream"></span>
-      <span class="stream right-stream"></span>
-      <span class="burst"></span>
-    </div>
+    <div class="intro-overlay"></div>
     <div class="chem-intro-content">
-      <div class="chem-intro-logo-wrap" aria-hidden="true">
-        <img src="assets/logo.jpg" alt="ChemSus Logo" class="chem-intro-logo">
-      </div>
-      <div class="chem-intro-title">ChemSus Technologies Private Limited</div>
+      <img src="assets/logo.jpg" alt="ChemSus Logo" class="chem-intro-logo">
+      <h1 class="chem-intro-title">Chem<span>Sus</span></h1>
+      <p class="chem-intro-subtitle">Renewable Biomass to Chemistry</p>
+    </div>
+    <div class="intro-progress-bar-container">
+      <div class="intro-progress-bar"></div>
     </div>
   </div>
 
@@ -1422,13 +1094,6 @@
   <div class="main-wrapper">
     <section class="hero">
       <div class="hero-content">
-        <!-- <<<<<<< HEAD:index.html -->
-        <!-- <img src="assets/logo.png" alt="ChemSus Logo" -->
-        <!-- style="height: 80px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));"> -->
-        <!-- ======= -->
-        <img src="assets/logo.jpg" alt="ChemSus Logo"
-          style="height: 80px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
-        <!-- >>>>>>> a0861c58cc14aa5c28293641dc71256974f4c598:public/index.html -->
         <div class="hero-kicker">RENEWABLE BIOMASS TO CHEMISTRY</div>
         <h1 class="hero-title">Lignocellulose-based Specialty Chemicals</h1>
         <p class="hero-subtitle">
