@@ -353,6 +353,20 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_auth_users_email ON auth_users(email);
+    CREATE TABLE IF NOT EXISTS sample_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      company_name TEXT NOT NULL,
+      individual_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      designation TEXT NOT NULL,
+      website TEXT NOT NULL,
+      intended_use TEXT NOT NULL,
+      quantity TEXT NOT NULL,
+      timeline TEXT NOT NULL,
+      order_frequency TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   await seed();
