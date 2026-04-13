@@ -78,6 +78,58 @@ module.exports = function (deps) {
         }
     });
 
+    router.post("/sample-request", async (req, res) => {
+        try {
+            const {
+                companyName,
+                individualName,
+                email: rawEmail,
+                phone,
+                designation,
+                website,
+                intendedUse,
+                quantity,
+                timeline,
+                orderFrequency,
+                verificationToken
+            } = req.body;
+
+            const email = deps.normalizeEmail(rawEmail);
+
+            if (!companyName || !individualName || !deps.isValidEmail(email) || !phone || !designation || !website || !intendedUse || !quantity || !timeline || !orderFrequency) {
+                return res.status(400).json({ error: "Missing required fields or invalid email." });
+            }
+
+            // Verify OTP token
+            const otpSession = await deps.get(
+                `SELECT * FROM email_otp_sessions WHERE email=? AND verification_token=? AND token_expires_at > datetime('now')`,
+                [email, verificationToken]
+            );
+
+            if (!otpSession) {
+                return res.status(401).json({ error: "Email not verified or verification expired." });
+            }
+
+            // Save to database
+            await deps.run(
+                `INSERT INTO sample_requests (company_name, individual_name, email, phone, designation, website, intended_use, quantity, timeline, order_frequency)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [companyName, individualName, email, phone, designation, website, intendedUse, quantity, timeline, orderFrequency]
+            );
+
+            // Mark OTP as used
+            await deps.run(
+                `UPDATE email_otp_sessions SET used_at=datetime('now') WHERE id=?`,
+                [otpSession.id]
+            );
+
+            res.json({ ok: true, message: "Sample request submitted successfully." });
+        } catch (e) {
+            console.error("Sample request submit error:", e);
+            res.status(500).json({ error: "Failed to submit sample request." });
+        }
+    });
+
     router.get("/test", (req, res) =>
         res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
     );

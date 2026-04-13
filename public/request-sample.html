@@ -690,6 +690,53 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Verification Status */
+    .verification-group {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .otp-input-wrap {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-otp {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .btn-otp:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .verify-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .verify-badge.unverified {
+      color: #ef4444;
+    }
+
+    .verify-badge.verified {
+      color: #10b981;
+    }
   </style>
 </head>
 
@@ -793,7 +840,24 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="email">Email ID</label>
-              <input type="email" id="email" class="form-input" name="email" required>
+              <div style="display: flex; gap: 10px;">
+                <input type="email" id="email" class="form-input" name="email" required>
+                <button type="button" id="sendOtpBtn" class="btn-otp" onclick="handleSendOtp()">Send OTP</button>
+              </div>
+              <div id="emailVerifyStatus" class="verify-badge unverified">
+                <span>✕ Email Not Verified</span>
+              </div>
+
+              <!-- OTP Verification Section -->
+              <div id="otpSection" class="verification-group">
+                <label class="form-label" style="font-size: 12px; margin-top: 8px;">Enter 6-Digit OTP</label>
+                <div class="otp-input-wrap">
+                  <input type="text" id="otpCode" class="form-input" maxlength="6" placeholder="######"
+                    style="letter-spacing: 4px; text-align: center; font-weight: bold;">
+                  <button type="button" id="verifyOtpBtn" class="btn-otp" onclick="handleVerifyOtp()">Verify</button>
+                </div>
+                <p id="otpTimer" style="font-size: 11px; color: #64748b; margin-top: 4px;"></p>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label" for="phone">Phone Number *</label>
@@ -913,6 +977,13 @@
         &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
       </div>
     </footer>
+    <div class="download-section">
+      <a href="assets/brochure.pdf" download="ChemSus_Brochure.pdf" class="download-btn" title="Download Brochure">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+        </svg>
+      </a>
+    </div>
   </div>
 
   <div id="ib-wa">
@@ -1033,11 +1104,121 @@
     quantitySelect.addEventListener("change", toggleCustomQuantityField);
     toggleCustomQuantityField();
 
+    // OTP LOGIC
+    let otpChallengeId = null;
+    let isEmailVerified = false;
+    let verificationToken = null;
+    let resendCooldown = 0;
+    let timerInterval = null;
+
+    async function handleSendOtp() {
+      const email = document.getElementById('email').value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      const btn = document.getElementById('sendOtpBtn');
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try {
+        const res = await fetch('/api/otp/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+
+        otpChallengeId = data.challengeId;
+        document.getElementById('otpSection').style.display = 'block';
+        alert("OTP sent to your email. Please check your inbox (and spam).");
+
+        startResendTimer(60);
+      } catch (err) {
+        alert(err.message);
+        btn.disabled = false;
+        btn.textContent = "Send OTP";
+      }
+    }
+
+    function startResendTimer(seconds) {
+      resendCooldown = seconds;
+      const btn = document.getElementById('sendOtpBtn');
+      const timerEl = document.getElementById('otpTimer');
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        resendCooldown--;
+        if (resendCooldown <= 0) {
+          clearInterval(timerInterval);
+          btn.disabled = false;
+          btn.textContent = "Resend OTP";
+          timerEl.textContent = "";
+        } else {
+          btn.disabled = true;
+          btn.textContent = `Resend in ${resendCooldown}s`;
+          timerEl.textContent = `You can resend the OTP in ${resendCooldown} seconds.`;
+        }
+      }, 1000);
+    }
+
+    async function handleVerifyOtp() {
+      const email = document.getElementById('email').value.trim();
+      const otp = document.getElementById('otpCode').value.trim();
+
+      if (!otp || otp.length !== 6) {
+        alert("Please enter the 6-digit code.");
+        return;
+      }
+
+      const btn = document.getElementById('verifyOtpBtn');
+      btn.disabled = true;
+      btn.textContent = "Verifying...";
+
+      try {
+        const res = await fetch('/api/otp/email/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, challengeId: otpChallengeId, otp })
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Verification failed");
+
+        isEmailVerified = true;
+        verificationToken = data.verificationToken;
+
+        // Update UI
+        document.getElementById('emailVerifyStatus').innerHTML = '<span>✓ Email Verified</span>';
+        document.getElementById('emailVerifyStatus').className = 'verify-badge verified';
+        document.getElementById('otpSection').style.display = 'none';
+        document.getElementById('sendOtpBtn').style.display = 'none';
+        document.getElementById('email').readOnly = true;
+
+        alert("Email verified successfully!");
+      } catch (err) {
+        alert(err.message);
+        btn.disabled = false;
+        btn.textContent = "Verify";
+      }
+    }
+
     // Send form details to WhatsApp on submit
-    document.getElementById('sampleRequestForm').addEventListener('submit', function (e) {
+    document.getElementById('sampleRequestForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const waNumber = "918486877575"; // WhatsApp number with country code (no +)
+      if (!isEmailVerified) {
+        alert("Please verify your email address with the OTP first.");
+        return;
+      }
+
+      const formSubmitBtn = e.target.querySelector('.form-submit');
+      formSubmitBtn.disabled = true;
+      formSubmitBtn.textContent = "Submitting...";
 
       const companyName = document.getElementById("companyName").value.trim();
       const individualName = document.getElementById("individualName").value.trim();
@@ -1046,6 +1227,8 @@
       const phoneNum = document.getElementById("phone").value.trim();
       const phone = countryCode + " " + phoneNum;
 
+      const designation = document.getElementById("designation").value.trim();
+      const website = document.getElementById("website").value.trim();
       const intendedUse = document.getElementById("intendedUse").value.trim();
       const quantityValue = document.getElementById("quantity").value.trim();
       const tonsValue = document.getElementById("tonsQuantity").value.trim();
@@ -1053,14 +1236,38 @@
       const timeline = document.getElementById("timeline").value.trim();
       const orderFrequency = document.getElementById("orderFrequency").value;
 
-      const designation = document.getElementById("designation").value.trim();
-      const website = document.getElementById("website").value.trim();
+      const payload = {
+        companyName,
+        individualName,
+        email,
+        phone,
+        designation,
+        website,
+        intendedUse,
+        quantity,
+        timeline,
+        orderFrequency,
+        verificationToken
+      };
 
-      const safe = (v) => (v && String(v).trim() ? String(v).trim() : 'N/A');
-      const prettyFrequency = orderFrequency ? orderFrequency.replace(/-/g, ' ') : '';
+      try {
+        // 1. Save to Database
+        const res = await fetch('/api/sample-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
 
-      const message =
-        `Hello ChemSus Team,
+        if (!res.ok) throw new Error(data.error || "Failed to save request");
+
+        // 2. Open WhatsApp (Secondary Action)
+        const waNumber = "918486877575";
+        const safe = (v) => (v && String(v).trim() ? String(v).trim() : 'N/A');
+        const prettyFrequency = orderFrequency ? orderFrequency.replace(/-/g, ' ') : '';
+
+        const message =
+          `Hello ChemSus Team,
 
 I am interested in ChemSus' sustainable specialty chemicals and would like to request evaluation samples and product information.
 
@@ -1084,15 +1291,20 @@ Kindly share specifications (COA/SDS), pricing, MOQ, and lead times.
 
 Thank you.`;
 
-      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+        const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, "_blank");
 
-      // Open WhatsApp (user will tap Send)
-      window.open(waUrl, "_blank");
-
-      // Optional: show success message on the page too
-      document.getElementById('successMessage').style.display = 'block';
-      document.getElementById('sampleRequestForm').style.opacity = '0.7';
-      document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('sampleRequestForm').style.opacity = '0.5';
+        document.getElementById('sampleRequestForm').reset();
+        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        formSubmitBtn.textContent = "Submitted";
+      } catch (err) {
+        alert("Error: " + err.message);
+        formSubmitBtn.disabled = false;
+        formSubmitBtn.textContent = "Send Sample Request";
+      }
     });
   </script>
 
