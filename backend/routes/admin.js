@@ -5,8 +5,114 @@ module.exports = function (deps) {
     const {
         run, get, all, requireAdmin,
         adminUpload, deleteReceiptFile,
-        rateLimiter
+        rateLimiter, normalizeEmail,
+        ADMIN_EMAIL, ADMIN_PASSWORD,
+        buildLocalAccessToken, crypto,
+        hashLocalPassword, safeEqualHex,
+        getEffectiveAdminEmail
     } = deps;
+
+    // ---------------- Admin Login (no auth required) ----------------
+    router.post("/login", rateLimiter(15 * 60 * 1000, 10), async (req, res) => {
+        try {
+            const emailOrUsername = normalizeEmail(req.body?.email || req.body?.username || "");
+            const password = String(req.body?.password || "");
+
+            // Get effective admin email (DB override or env)
+            const effectiveEmail = await getEffectiveAdminEmail();
+            if (!effectiveEmail) {
+                return res.status(503).json({ error: "Admin credentials not configured on server" });
+            }
+
+            if (emailOrUsername !== effectiveEmail) {
+                return res.status(401).json({ error: "Invalid credentials" });
+            }
+
+            // Check DB-stored hashed password first, then fall back to env plain-text
+            let isPasswordMatch = false;
+            const dbPassRow = await get(`SELECT value FROM site_settings WHERE key='admin_password_hash'`);
+            if (dbPassRow?.value) {
+                const [saltHex, hashHex] = String(dbPassRow.value).split(":");
+                const inputHash = hashLocalPassword(password, saltHex);
+                isPasswordMatch = safeEqualHex(inputHash, hashHex);
+            } else {
+                if (!ADMIN_PASSWORD) return res.status(503).json({ error: "Admin credentials not configured on server" });
+                try {
+                    const a = Buffer.from(password);
+                    const b = Buffer.from(ADMIN_PASSWORD);
+                    isPasswordMatch = a.length === b.length && crypto.timingSafeEqual(a, b);
+                } catch { isPasswordMatch = false; }
+            }
+
+            if (!isPasswordMatch) {
+                return res.status(401).json({ error: "Invalid credentials" });
+            }
+
+            const tokenData = buildLocalAccessToken(effectiveEmail, 0);
+            return res.json({
+                ok: true,
+                token: tokenData.accessToken,
+                expiresAt: tokenData.expSec
+            });
+        } catch (e) {
+            console.error("[ADMIN-LOGIN]", e);
+            return res.status(500).json({ error: "Login failed" });
+        }
+    });
+
+    // ---------------- Change Admin Credentials ----------------
+    router.post("/change-credentials", requireAdmin, async (req, res) => {
+        try {
+            const { currentPassword, newEmail, newPassword } = req.body || {};
+            if (!currentPassword) return res.status(400).json({ error: "Current password required" });
+
+            // Verify current password
+            const effectiveEmail = await getEffectiveAdminEmail();
+            let isPasswordMatch = false;
+            const dbPassRow = await get(`SELECT value FROM site_settings WHERE key='admin_password_hash'`);
+            if (dbPassRow?.value) {
+                const [saltHex, hashHex] = String(dbPassRow.value).split(":");
+                const inputHash = hashLocalPassword(String(currentPassword), saltHex);
+                isPasswordMatch = safeEqualHex(inputHash, hashHex);
+            } else {
+                try {
+                    const a = Buffer.from(String(currentPassword));
+                    const b = Buffer.from(ADMIN_PASSWORD || "");
+                    isPasswordMatch = a.length === b.length && a.length > 0 && crypto.timingSafeEqual(a, b);
+                } catch { isPasswordMatch = false; }
+            }
+
+            if (!isPasswordMatch) return res.status(401).json({ error: "Current password is incorrect" });
+
+            // Update email if provided
+            if (newEmail) {
+                const emailNorm = normalizeEmail(newEmail);
+                if (!emailNorm) return res.status(400).json({ error: "Invalid email" });
+                await run(
+                    `INSERT INTO site_settings (key, value) VALUES ('admin_email_override', ?)
+                     ON CONFLICT(key) DO UPDATE SET value=excluded.value`,
+                    [emailNorm]
+                );
+            }
+
+            // Update password if provided
+            if (newPassword) {
+                if (String(newPassword).length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+                const saltHex = crypto.randomBytes(16).toString("hex");
+                const hashHex = hashLocalPassword(String(newPassword), saltHex);
+                await run(
+                    `INSERT INTO site_settings (key, value) VALUES ('admin_password_hash', ?)
+                     ON CONFLICT(key) DO UPDATE SET value=excluded.value`,
+                    [`${saltHex}:${hashHex}`]
+                );
+            }
+
+            return res.json({ ok: true });
+        } catch (e) {
+            console.error("[CHANGE-CREDENTIALS]", e);
+            return res.status(500).json({ error: "Failed to update credentials" });
+        }
+    });
 
     // ---------------- Admin upload (site images/pdfs) ----------------
     router.post(
@@ -218,12 +324,14 @@ module.exports = function (deps) {
             const b = req.body || {};
             const r = await run(
                 `INSERT INTO pack_pricing
-         (shop_item_id, pack_size, our_price, is_active, sort_order)
-         VALUES (?,?,?,?,?)`,
+         (shop_item_id, pack_size, our_price, biofm_usd, biofm_inr, is_active, sort_order)
+         VALUES (?,?,?,?,?,?,?)`,
                 [
                     shopItemId,
                     b.packSize || "",
                     Number(b.ourPrice || 0),
+                    Number(b.biofmUsd || 0),
+                    Number(b.biofmInr || 0),
                     b.isActive ? 1 : 0,
                     Number(b.sortOrder || 0),
                 ]
@@ -242,12 +350,14 @@ module.exports = function (deps) {
             if (!shopItemId) return res.status(400).json({ error: "shopItemId required" });
             const r = await run(
                 `INSERT INTO pack_pricing
-         (shop_item_id, pack_size, our_price, is_active, sort_order)
-         VALUES (?,?,?,?,?)`,
+         (shop_item_id, pack_size, our_price, biofm_usd, biofm_inr, is_active, sort_order)
+         VALUES (?,?,?,?,?,?,?)`,
                 [
                     shopItemId,
                     b.packSize || "",
                     Number(b.ourPrice || 0),
+                    Number(b.biofmUsd || 0),
+                    Number(b.biofmInr || 0),
                     b.isActive ? 1 : 0,
                     Number(b.sortOrder || 0),
                 ]
@@ -264,11 +374,13 @@ module.exports = function (deps) {
             const b = req.body || {};
             const r = await run(
                 `UPDATE pack_pricing
-         SET pack_size=?, our_price=?, is_active=?, sort_order=?, updated_at=datetime('now')
+         SET pack_size=?, our_price=?, biofm_usd=?, biofm_inr=?, is_active=?, sort_order=?, updated_at=datetime('now')
          WHERE id=?`,
                 [
                     b.packSize || "",
                     Number(b.ourPrice || 0),
+                    Number(b.biofmUsd || 0),
+                    Number(b.biofmInr || 0),
                     b.isActive ? 1 : 0,
                     Number(b.sortOrder || 0),
                     id,
@@ -295,7 +407,7 @@ module.exports = function (deps) {
         try {
             const rows = await all(
                 `SELECT
-           id, payment_status AS paymentstatus, customername, email, phone,
+           id, purchase_id AS purchaseid, payment_status AS paymentstatus, customername, email, phone,
            companyName, address, city, region, pincode, country,
            productname, quantity, unitprice, totalprice, paymentmode,
            created_at AS createdat, updated_at AS updatedat, order_status
@@ -319,6 +431,24 @@ module.exports = function (deps) {
             await run(
                 `UPDATE orders SET order_status=?, updated_at=datetime('now') WHERE id=?`,
                 [order_status, id]
+            );
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e.message || e) });
+        }
+    });
+
+    router.put("/orders/:id/payment-status", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            const { payment_status } = req.body;
+            const allowed = ['PENDING', 'PROFORMA_SENT', 'PAYMENT_RECEIVED', 'CONFIRMED', 'FAILED'];
+            if (!payment_status || !allowed.includes(payment_status)) {
+                return res.status(400).json({ error: "Invalid payment_status. Allowed: " + allowed.join(', ') });
+            }
+            await run(
+                `UPDATE orders SET payment_status=?, updated_at=datetime('now') WHERE id=?`,
+                [payment_status, id]
             );
             res.json({ ok: true });
         } catch (e) {
@@ -362,8 +492,30 @@ module.exports = function (deps) {
             const pays = await all(`SELECT receipt_path FROM payments WHERE order_id = ?`, [id]);
             pays.forEach((p) => deleteReceiptFile(p.receipt_path));
             await run("DELETE FROM payments WHERE order_id = ?", [id]);
+            await run("DELETE FROM order_items WHERE order_id = ?", [id]);
             await run("DELETE FROM orders WHERE id = ?", [id]);
+            // Reset auto-increment sequences when tables are empty
+            const remaining = await get(`SELECT COUNT(*) AS c FROM orders`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name IN ('orders','order_items','payments','email_otp_sessions')`);
+            }
             res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // Delete ALL orders and reset sequences
+    router.delete("/orders", requireAdmin, async (req, res) => {
+        try {
+            const allPays = await all(`SELECT receipt_path FROM payments`);
+            allPays.forEach((p) => deleteReceiptFile(p.receipt_path));
+            await run("DELETE FROM payments");
+            await run("DELETE FROM order_items");
+            await run("DELETE FROM orders");
+            await run("DELETE FROM email_otp_sessions");
+            await run(`DELETE FROM sqlite_sequence WHERE name IN ('orders','order_items','payments','email_otp_sessions')`);
+            res.json({ ok: true, message: "All orders deleted and ID sequences reset." });
         } catch (e) {
             res.status(500).json({ error: "DB error", details: String(e) });
         }
@@ -375,6 +527,10 @@ module.exports = function (deps) {
             const pay = await get(`SELECT receipt_path FROM payments WHERE id = ?`, [id]);
             if (pay?.receipt_path) deleteReceiptFile(pay.receipt_path);
             await run("DELETE FROM payments WHERE id = ?", [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM payments`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='payments'`);
+            }
             res.json({ ok: true });
         } catch (e) {
             res.status(500).json({ error: "DB error", details: String(e) });
@@ -437,28 +593,114 @@ module.exports = function (deps) {
         }
     });
 
-    // Admin login endpoint
-    router.post("/login", rateLimiter(15 * 60 * 1000, 10), async (req, res) => {
+    // ---------------- Sample Requests ----------------
+    router.get("/sample-requests", requireAdmin, async (req, res) => {
         try {
-            const email = (req.body?.email || "").trim().toLowerCase();
-            const password = String(req.body?.password || "");
-            const payload = await deps.verifyLocalAuthUser(email, password);
-            if (payload) {
-                // Must be the configured ADMIN_EMAIL
-                if (email !== (process.env.ADMIN_EMAIL || "").toLowerCase()) {
-                    return res.status(403).json({ error: "Access denied. Admin only." });
-                }
-                const tokenResponse = deps.buildLocalAuthPayload(payload);
-                return res.json({ ok: true, session: tokenResponse.session });
-            }
-            res.status(401).json({ error: "Invalid credentials" });
+            const rows = await all(`SELECT * FROM sample_requests ORDER BY created_at DESC`);
+            res.json(rows);
         } catch (e) {
-            console.error("Admin Login Error:", e);
-            res.status(500).json({ error: "Login failed" });
+            res.status(500).json({ error: "DB error", details: String(e) });
         }
     });
+
+    router.delete("/sample-requests/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM sample_requests WHERE id = ?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM sample_requests`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='sample_requests'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // ---------------- Contact Messages ----------------
+    router.get("/contact-messages", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(`SELECT * FROM contact_messages ORDER BY created_at DESC`);
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.patch("/contact-messages/:id/read", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`UPDATE contact_messages SET status='read' WHERE id=?`, [id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.delete("/contact-messages/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM contact_messages WHERE id=?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM contact_messages`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='contact_messages'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // ---------------- Customers ----------------
+
+    router.get("/customers", requireAdmin, async (req, res) => {
+        try {
+            const customers = await all(`
+                SELECT
+                    cu.id,
+                    cu.email,
+                    cu.name,
+                    cu.phone,
+                    cu.company_name,
+                    cu.city,
+                    cu.region,
+                    cu.country,
+                    cu.is_verified,
+                    cu.created_at,
+                    cu.last_login_at,
+                    COUNT(o.id) AS order_count,
+                    SUM(CASE WHEN o.payment_status IN ('SUCCESS','PAID','CONFIRMED','PAYMENT_RECEIVED') THEN o.totalprice ELSE 0 END) AS total_spent
+                FROM customer_users cu
+                LEFT JOIN orders o ON LOWER(o.email) = LOWER(cu.email)
+                GROUP BY cu.id
+                ORDER BY cu.created_at DESC
+            `);
+            res.json(customers);
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.delete("/customers/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM customer_users WHERE id=?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM customer_users`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='customer_users'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
     router.post("/logout", (req, res) => res.json({ ok: true }));
-    router.get("/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.supabaseUser?.email }));
+    router.get("/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.adminUser?.email }));
 
     return router;
 };
