@@ -8,9 +8,9 @@ A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a *
 
 | | URL |
 |---|---|
-| **Customer site** | [https://19062002.xyz](https://19062002.xyz) |
-| **Admin login** | [https://19062002.xyz/admin/login.html](https://19062002.xyz/admin/login.html) |
-| **Admin dashboard** | [https://19062002.xyz/admin/admin.html](https://19062002.xyz/admin/admin.html) |
+| **Customer site** | [https://chemsus.in](https://chemsus.in) · [https://www.chemsus.in](https://www.chemsus.in) |
+| **Admin login** | [https://chemsus.in/admin/login.html](https://chemsus.in/admin/login.html) |
+| **Admin dashboard** | [https://chemsus.in/admin/admin.html](https://chemsus.in/admin/admin.html) |
 
 > Hosted on Ubuntu 24.04 · Nginx reverse proxy · PM2 process manager · SSL via Let's Encrypt
 

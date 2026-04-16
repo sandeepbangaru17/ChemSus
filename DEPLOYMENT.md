@@ -1,7 +1,7 @@
 # ChemSus — Deployment Guide
 
 > **Server:** Ubuntu 24.04 LTS · IP `104.168.54.192`  
-> **Domain:** `19062002.xyz` (managed via Cloudflare)  
+> **Domain:** `chemsus.in` · `www.chemsus.in` (managed via Cloudflare)  
 > **Project:** `/home/pavankumar/ChemSus` · Port `5656`  
 > **Tools already installed:** Nginx 1.24 · PM2 6 · Certbot 2.9 · Node.js 20
 
@@ -11,27 +11,30 @@
 
 | | URL |
 |---|---|
-| **Customer site** | `https://19062002.xyz` |
-| **Admin login** | `https://19062002.xyz/admin/login.html` |
-| **Admin dashboard** | `https://19062002.xyz/admin/admin.html` |
+| **Customer site** | `https://chemsus.in` · `https://www.chemsus.in` |
+| **Admin login** | `https://chemsus.in/admin/login.html` |
+| **Admin dashboard** | `https://chemsus.in/admin/admin.html` |
 
 ---
 
 ## Step 1 — Cloudflare DNS setup
 
-Log in to [dash.cloudflare.com](https://dash.cloudflare.com) → select `19062002.xyz` → **DNS** tab.
+Log in to [dash.cloudflare.com](https://dash.cloudflare.com) → select `chemsus.in` → **DNS** tab.
 
-Add one record:
+Add two records:
 
 | Type | Name | IPv4 address | Proxy status |
 |------|------|--------------|--------------|
 | A | `@` | `104.168.54.192` | **DNS only** (grey cloud) |
+| A | `www` | `104.168.54.192` | **DNS only** (grey cloud) |
 
 > ⚠️ **Keep proxy OFF (grey cloud).** Cloudflare's orange-cloud proxy blocks Certbot's SSL verification in Step 4. You can turn it back on after getting the certificate.
 
 Check propagation (takes 1–5 minutes with Cloudflare):
 ```bash
-dig +short 19062002.xyz
+dig +short chemsus.in
+# Should return: 104.168.54.192
+dig +short www.chemsus.in
 # Should return: 104.168.54.192
 ```
 
@@ -91,10 +94,10 @@ sudo systemctl reload nginx
 
 ## Step 5 — Get a free SSL certificate
 
-> Run this only after DNS is propagated (`dig +short 19062002.xyz` returns `104.168.54.192`).
+> Run this only after DNS is propagated (`dig +short chemsus.in` returns `104.168.54.192`).
 
 ```bash
-sudo certbot --nginx -d 19062002.xyz
+sudo certbot --nginx -d chemsus.in -d www.chemsus.in
 ```
 
 When prompted:
@@ -115,17 +118,18 @@ sudo certbot renew --dry-run
 ## Step 6 — Final verification
 
 ```bash
-pm2 status                          # chemsus = online
-sudo systemctl status nginx         # active (running)
-ss -tlnp | grep 5656                # port listening
-curl https://19062002.xyz/api/test  # {"ok":true,...}
+pm2 status                        # chemsus = online
+sudo systemctl status nginx       # active (running)
+ss -tlnp | grep 5656              # port listening
+curl https://chemsus.in/api/test  # {"ok":true,...}
 ```
 
 Open in browser:
-- `https://19062002.xyz` → homepage loads
-- `https://19062002.xyz/shop.html` → products load
-- `https://19062002.xyz/admin/login.html` → login works
-- `https://19062002.xyz/admin/admin.html` → dashboard works
+- `https://chemsus.in` → homepage loads
+- `https://www.chemsus.in` → redirects to chemsus.in
+- `https://chemsus.in/shop.html` → products load
+- `https://chemsus.in/admin/login.html` → login works
+- `https://chemsus.in/admin/admin.html` → dashboard works
 
 ---
 
@@ -172,12 +176,14 @@ sudo tail -f /var/log/nginx/error.log
 ## Deployment checklist
 
 - [ ] Cloudflare A record `@` → `104.168.54.192` (grey cloud / DNS only)
-- [ ] `dig +short 19062002.xyz` returns `104.168.54.192`
+- [ ] Cloudflare A record `www` → `104.168.54.192` (grey cloud / DNS only)
+- [ ] `dig +short chemsus.in` returns `104.168.54.192`
 - [ ] `npm install --omit=dev` completed
 - [ ] `pm2 start backend/server.js --name chemsus` → status **online**
 - [ ] `pm2 save` and `pm2 startup` done
 - [ ] Nginx config copied, enabled, `sudo nginx -t` passes
-- [ ] `sudo certbot --nginx -d 19062002.xyz` succeeded
-- [ ] `https://19062002.xyz` loads
-- [ ] `https://19062002.xyz/admin/login.html` login works
+- [ ] `sudo certbot --nginx -d chemsus.in -d www.chemsus.in` succeeded
+- [ ] `https://chemsus.in` loads
+- [ ] `https://www.chemsus.in` loads / redirects correctly
+- [ ] `https://chemsus.in/admin/login.html` login works
 - [ ] OTP email arrives when testing checkout
