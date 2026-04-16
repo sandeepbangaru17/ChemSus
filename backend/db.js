@@ -367,6 +367,39 @@ async function initDb() {
       order_frequency TEXT NOT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS contact_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      subject TEXT NOT NULL DEFAULT '',
+      message TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'unread',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
+
+    CREATE TABLE IF NOT EXISTS customer_users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL UNIQUE,
+      password_salt TEXT NOT NULL DEFAULT '',
+      password_hash TEXT NOT NULL DEFAULT '',
+      is_verified INTEGER NOT NULL DEFAULT 0,
+      name TEXT NOT NULL DEFAULT '',
+      phone TEXT NOT NULL DEFAULT '',
+      company_name TEXT NOT NULL DEFAULT '',
+      address TEXT NOT NULL DEFAULT '',
+      city TEXT NOT NULL DEFAULT '',
+      region TEXT NOT NULL DEFAULT '',
+      pincode TEXT NOT NULL DEFAULT '',
+      country TEXT NOT NULL DEFAULT 'India',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      last_login_at TEXT DEFAULT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_customer_users_email ON customer_users(email);
   `);
 
   await seed();
@@ -377,6 +410,8 @@ async function initDb() {
   };
   await migrateCol("orders", "user_id", "TEXT DEFAULT NULL");
   await migrateCol("orders", "order_status", "TEXT NOT NULL DEFAULT 'Processing'");
+  await migrateCol("orders", "purchase_id", "TEXT DEFAULT NULL");
+  try { await run("CREATE INDEX IF NOT EXISTS idx_orders_purchase_id ON orders(purchase_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
 
