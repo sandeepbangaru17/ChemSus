@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChemSus Admin Login</title>
+  <link rel="icon" type="image/png" href="../assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7;
+      --primary-dark: #00508a;
+      --accent: #00b8b0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Open Sans", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(0,184,176,0.15), transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0,116,199,0.15), transparent 40%),
+        linear-gradient(135deg, #e8f1f8 0%, #d0dde9 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.97);
+      border-radius: 22px;
+      box-shadow: 0 12px 40px rgba(15,23,42,0.14);
+      padding: 44px 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 28px rgba(0,116,199,0.2);
+    }
+    h2 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 22px;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+    .sub {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 28px;
+    }
+    .field {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .input-wrap {
+      position: relative;
+    }
+    .input-wrap input {
+      width: 100%;
+      height: 48px;
+      padding: 0 44px 0 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus,
+    .input-wrap input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,116,199,0.12);
+    }
+    .toggle-eye {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .toggle-eye:hover { color: var(--primary); }
+    .btn {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: "Montserrat", sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(0,116,199,0.3);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,116,199,0.35); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    #status {
+      margin-top: 14px;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: none;
+      text-align: left;
+    }
+    #status.err { display: block; background: #fee2e2; color: #7f1d1d; border-left: 4px solid #ef4444; }
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .back:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 24px 28px;
+        border-radius: 16px;
+      }
+      h2 { font-size: 19px; }
+    }
+
+    @media (max-width: 360px) {
+      .card {
+        padding: 24px 16px 20px;
+      }
+      .field input, .input-wrap input {
+        height: 44px;
+        font-size: 13px;
+      }
+      .btn { height: 44px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="../assets/logo.jpg" alt="ChemSus" class="logo" onerror="this.style.display='none'">
+    <h2>Admin Login</h2>
+    <p class="sub">ChemSus Admin Panel — Restricted Access</p>
+
+    <form onsubmit="doLogin(event)">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="adminEmail" required placeholder="Enter admin email" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="adminPass" required placeholder="Enter password" autocomplete="current-password">
+          <button type="button" class="toggle-eye" onclick="togglePassword()" id="eyeBtn" title="Show/Hide password">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn" id="loginBtn">🔐 Sign In</button>
+    </form>
+
+    <div id="status"></div>
+    <a href="../index.html" class="back">← Back to Site</a>
+  </div>
+
+  <script>
+    // If already logged in, go straight to dashboard
+    (function () {
+      const token = localStorage.getItem('chemsus_admin_token');
+      const exp = Number(localStorage.getItem('chemsus_admin_token_exp') || 0);
+      if (token && exp && Date.now() / 1000 < exp) {
+        window.location.href = '/admin/admin.html';
+      }
+    })();
+
+    function togglePassword() {
+      const input = document.getElementById('adminPass');
+      const icon = document.getElementById('eyeIcon');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      icon.innerHTML = isHidden
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-5 0-9.27-3.11-11-7.5a10.05 10.05 0 0 1 2.38-3.88M6.6 6.6A9.93 9.93 0 0 1 12 5c5 0 9.27 3.11 11 7.5a10.06 10.06 0 0 1-1.67 2.93M1 1l22 22M9.88 9.88a3 3 0 0 0 4.24 4.24"/>'
+        : '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>';
+    }
+
+    async function doLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPass').value;
+      const btn = document.getElementById('loginBtn');
+      const st = document.getElementById('status');
+      st.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      try {
+        const r = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Login failed');
+        localStorage.setItem('chemsus_admin_token', data.token);
+        localStorage.setItem('chemsus_admin_token_exp', String(data.expiresAt || 0));
+        window.location.href = '/admin/admin.html';
+      } catch (err) {
+        st.className = 'err';
+        st.textContent = '❌ ' + (err.message || 'Login failed');
+        st.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = '🔐 Sign In';
+      }
+    }
+  </script>
+</body>
+</html>
