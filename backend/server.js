@@ -38,7 +38,7 @@ app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' api.qrserver.com https://*.supabase.co wss://*.supabase.co; frame-src 'self' https://www.openstreetmap.org https://www.google.com https://maps.google.com;"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' api.qrserver.com cdn.jsdelivr.net https://*.supabase.co wss://*.supabase.co; frame-src 'self' https://www.openstreetmap.org https://www.google.com https://maps.google.com;"
   );
   next();
 });
@@ -189,6 +189,28 @@ async function sendOtpEmail(email, otp) {
     console.warn(`[OTP] ${reason}. Falling back to debug OTP.`);
     console.log(`[OTP-DEV] email=${email} otp=${otp}`);
     return { mode: "dev", reason };
+  }
+}
+
+async function sendTransactionalEmail(to, subject, html, text) {
+  const transporter = getOtpTransporter();
+  const from = (
+    process.env.OTP_EMAIL_FROM ||
+    process.env.FROM_EMAIL ||
+    process.env.OTP_SMTP_USER ||
+    process.env.SMTP_USER ||
+    ""
+  ).trim();
+  if (!transporter || !from) {
+    console.warn(`[EMAIL] Transporter not configured. Would have sent to ${to}: ${subject}`);
+    return { mode: "dev" };
+  }
+  try {
+    await transporter.sendMail({ from, to, subject, html, text: text || "" });
+    return { mode: "smtp" };
+  } catch (err) {
+    console.warn(`[EMAIL] Send failed to ${to}: ${err?.message || err}`);
+    return { mode: "error", reason: err?.message };
   }
 }
 
@@ -593,6 +615,7 @@ function clearCookie(res, name) {
 // links don't break.
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || "").trim();
 
 function decodeJwtPayload(token) {
   try {
@@ -611,26 +634,62 @@ function getTokenFromRequest(req) {
   return parseCookies(req).admin_session || null;
 }
 
-// Middleware: require valid Supabase JWT whose email matches ADMIN_EMAIL
-function requireAdmin(req, res, next) {
-  const token = getTokenFromRequest(req);
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
-
-  const payload = decodeJwtPayload(token);
-  if (!payload) return res.status(401).json({ error: "Invalid token" });
-
-  // Check expiry
-  if (payload.exp && Date.now() / 1000 > payload.exp) {
-    return res.status(401).json({ error: "Token expired" });
+// Verify locally-issued JWT signature (HMAC-SHA256)
+function verifyLocalJwt(token) {
+  try {
+    const parts = String(token || "").split(".");
+    if (parts.length !== 3) return null;
+    const expectedSig = crypto
+      .createHmac("sha256", LOCAL_AUTH_JWT_SECRET)
+      .update(`${parts[0]}.${parts[1]}`)
+      .digest("base64url");
+    // Timing-safe comparison
+    if (expectedSig.length !== parts[2].length) return null;
+    const a = Buffer.from(expectedSig);
+    const b = Buffer.from(parts[2]);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+    return JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8"));
+  } catch {
+    return null;
   }
+}
 
-  const email = (payload.email || "").toLowerCase();
-  if (!email || (ADMIN_EMAIL && email !== ADMIN_EMAIL)) {
-    return res.status(403).json({ error: "Forbidden: not admin" });
+// Get effective admin email — DB override takes priority over env var
+async function getEffectiveAdminEmail() {
+  try {
+    const row = await get(`SELECT value FROM site_settings WHERE key='admin_email_override'`);
+    return (row?.value || ADMIN_EMAIL || "").toLowerCase();
+  } catch {
+    return ADMIN_EMAIL;
   }
+}
 
-  req.supabaseUser = payload;
-  next();
+// Middleware: require valid locally-signed JWT whose email matches current admin email
+async function requireAdmin(req, res, next) {
+  try {
+    const token = getTokenFromRequest(req);
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+    const payload = verifyLocalJwt(token);
+    if (!payload) return res.status(401).json({ error: "Invalid or tampered token" });
+
+    if (payload.exp && Date.now() / 1000 > payload.exp) {
+      return res.status(401).json({ error: "Token expired" });
+    }
+
+    const email = (payload.email || "").toLowerCase();
+    if (!email) return res.status(403).json({ error: "Forbidden: not admin" });
+
+    const effectiveEmail = await getEffectiveAdminEmail();
+    if (effectiveEmail && email !== effectiveEmail) {
+      return res.status(403).json({ error: "Forbidden: not admin" });
+    }
+
+    req.adminUser = { email };
+    next();
+  } catch (e) {
+    return res.status(500).json({ error: "Auth error" });
+  }
 }
 
 // Middleware: extract any valid Supabase user (for user-facing protected routes)
@@ -654,6 +713,50 @@ function requireUser(req, res, next) {
   });
 }
 
+// ── Customer (shopper) JWT ──────────────────────────────────────
+const CUSTOMER_TOKEN_TTL_SEC = 7 * 24 * 60 * 60; // 7 days
+
+function buildCustomerAccessToken(email, userId) {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const expSec = nowSec + CUSTOMER_TOKEN_TTL_SEC;
+  const headerB64 = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const payloadObj = {
+    iss: "chemsus-customer",
+    sub: String(userId),
+    email: normalizeEmail(email),
+    role: "customer",
+    iat: nowSec,
+    exp: expSec,
+  };
+  const payloadB64 = Buffer.from(JSON.stringify(payloadObj)).toString("base64url");
+  const sigB64 = crypto
+    .createHmac("sha256", LOCAL_AUTH_JWT_SECRET)
+    .update(`${headerB64}.${payloadB64}`)
+    .digest("base64url");
+  return { accessToken: `${headerB64}.${payloadB64}.${sigB64}`, expSec };
+}
+
+function verifyCustomerToken(token) {
+  const payload = verifyLocalJwt(token);
+  if (!payload || payload.role !== "customer") return null;
+  if (payload.exp && Date.now() / 1000 > payload.exp) return null;
+  return payload;
+}
+
+async function requireCustomer(req, res, next) {
+  try {
+    const token = (req.headers["authorization"] || "").replace(/^Bearer\s+/i, "").trim();
+    if (!token) return res.status(401).json({ error: "Login required" });
+    const payload = verifyCustomerToken(token);
+    if (!payload) return res.status(401).json({ error: "Invalid or expired token" });
+    req.customerId = Number(payload.sub);
+    req.customerEmail = normalizeEmail(payload.email);
+    next();
+  } catch {
+    return res.status(401).json({ error: "Auth error" });
+  }
+}
+
 
 // ---------------- Uploads ----------------
 const ADMIN_UPLOAD_DIR = path.join(PUBLIC, "assets", "uploads");
@@ -674,13 +777,16 @@ const ADMIN_ALLOWED_MIME = new Set([
 ]);
 const RECEIPT_ALLOWED_MIME = new Set([
   "image/jpeg",
+  "image/jpg",
   "image/png",
   "image/webp",
   "image/gif",
+  "image/heic",
+  "image/heif",
   "application/pdf",
 ]);
 const ADMIN_ALLOWED_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf"]);
-const RECEIPT_ALLOWED_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf"]);
+const RECEIPT_ALLOWED_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf", ".heic", ".heif"]);
 
 function checkFile(file, allowedMime, allowedExt) {
   const ext = path.extname(file.originalname || "").toLowerCase();
@@ -723,11 +829,12 @@ const receiptUpload = multer({
 });
 
 // Admin upload (site images/pdfs)
-const deps = { run, get, all, db, normalizeEmail, isValidEmail, isValidPhone, safeNumber, purgeOtpSessions, requireUser, receiptUpload, clampInt, requestSupabaseDirect, proxySupabasePasswordAuth, generateOtpCode, sendOtpEmail, hashOtp, rateLimiter, OTP_TOKEN_TTL_MIN, OTP_TTL_MIN, OTP_MAX_ATTEMPTS, OTP_RESEND_SEC, resolveSupabaseIps, requestSupabaseViaIp, hashLocalPassword, safeEqualHex, buildLocalAccessToken, findLocalAuthUserByEmail, upsertLocalAuthUser, createLocalAuthUser, verifyLocalAuthUser, buildLocalAuthPayload, parseCookies, setCookie, clearCookie, decodeJwtPayload, getTokenFromRequest, requireAdmin, extractUser, adminUpload, deleteReceiptFile, crypto, path, fs };
+const deps = { run, get, all, db, normalizeEmail, isValidEmail, isValidPhone, safeNumber, purgeOtpSessions, requireUser, receiptUpload, clampInt, requestSupabaseDirect, proxySupabasePasswordAuth, generateOtpCode, sendOtpEmail, sendTransactionalEmail, hashOtp, rateLimiter, OTP_TOKEN_TTL_MIN, OTP_TTL_MIN, OTP_MAX_ATTEMPTS, OTP_RESEND_SEC, resolveSupabaseIps, requestSupabaseViaIp, hashLocalPassword, safeEqualHex, buildLocalAccessToken, buildCustomerAccessToken, verifyCustomerToken, requireCustomer, findLocalAuthUserByEmail, upsertLocalAuthUser, createLocalAuthUser, verifyLocalAuthUser, buildLocalAuthPayload, parseCookies, setCookie, clearCookie, decodeJwtPayload, getTokenFromRequest, requireAdmin, verifyLocalJwt, extractUser, adminUpload, deleteReceiptFile, crypto, path, fs, ADMIN_EMAIL, ADMIN_PASSWORD, getEffectiveAdminEmail, CUSTOMER_TOKEN_TTL_SEC };
 app.use('/api', require('./routes/auth')(deps));
 app.use('/api', require('./routes/public')(deps));
 app.use('/api', require('./routes/orders')(deps));
 app.use('/api/admin', require('./routes/admin')(deps));
+app.use('/api/customer', require('./routes/customer-auth')(deps));
 app.use((err, req, res, next) => {
   if (!err) return next();
   if (err.message === "Invalid file type") {
@@ -740,7 +847,7 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ error: "Server error" });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5656;
 async function start() {
   try {
     await initDb();
