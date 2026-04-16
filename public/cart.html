@@ -103,10 +103,22 @@
       transition: all 0.2s ease;
     }
 
-    .nav-menu li a:hover,
-    .nav-menu li a.active {
-      background: rgba(255, 255, 255, 0.1);
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
+    .nav-menu li a.active,
+    .nav-menu li a:hover {
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     #cart-count {
@@ -236,10 +248,17 @@
       border-top: 4px solid var(--accent);
     }
 
+    .cart-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 0;
+    }
+
     .cart-table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 24px;
+      min-width: 480px;
     }
 
     .cart-table th {
@@ -417,7 +436,7 @@
     }
 
     .mobile-toggle {
-      display: block;
+      display: none;
       position: fixed;
       top: 15px;
       left: 20px;
@@ -443,6 +462,10 @@
 
       .sidebar.open {
         transform: translateX(0);
+      }
+
+      .mobile-toggle {
+        display: block;
       }
 
       .main-wrapper {
@@ -527,32 +550,25 @@
       <img src="assets/logo.jpg" class="nav-logo-img" alt="ChemSus Logo">
       <span>ChemSus</span>
     </a>
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html" class="active">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html" class="active"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -683,6 +699,7 @@
       let subtotal = 0;
       let html = `
         <div class="cart-container">
+          <div class="cart-table-wrap">
           <table class="cart-table">
             <thead>
               <tr>
@@ -726,21 +743,29 @@
         `;
       });
 
+      const gst = subtotal * 0.18;
+      const grandTotal = subtotal + gst;
+
       html += `
             </tbody>
           </table>
+          </div>
           <div class="cart-summary">
             <div class="summary-row">
               <span>Subtotal</span>
-              <span>₹${subtotal.toLocaleString('en-IN')}</span>
+              <span>₹${subtotal.toLocaleString('en-IN', {maximumFractionDigits: 2})}</span>
+            </div>
+            <div class="summary-row">
+              <span>GST (18%)</span>
+              <span>₹${gst.toLocaleString('en-IN', {maximumFractionDigits: 2})}</span>
             </div>
             <div class="summary-row">
               <span>Shipping</span>
               <span style="color: #059669; font-weight: 600;">Calculated at checkout</span>
             </div>
             <div class="summary-total">
-              <span>Total</span>
-              <span>₹${subtotal.toLocaleString('en-IN')}</span>
+              <span>Total (incl. GST)</span>
+              <span>₹${grandTotal.toLocaleString('en-IN', {maximumFractionDigits: 2})}</span>
             </div>
             <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
           </div>
@@ -779,7 +804,10 @@
 
       sessionStorage.setItem('buyNowData', JSON.stringify(buyNowData));
       sessionStorage.setItem('cartItems', JSON.stringify(cart));
-      window.location.href = 'orders.html';
+
+      checkoutGate(function () {
+        window.location.href = 'orders.html';
+      });
     };
 
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
@@ -795,11 +823,29 @@
       normalizeCart();
       renderCart();
     });
+
+    // Update nav auth link
+    (function () {
+      const tok = localStorage.getItem('chemsus_customer_token');
+      const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = localStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
+  <script src="/assets/js/checkout-gate.js"></script>
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>
