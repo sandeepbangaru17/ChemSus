@@ -132,6 +132,14 @@
       user-select: none;
     }
 
+    .nav-icon {
+      margin-right: 6px;
+      font-size: 14px;
+      display: inline-block;
+      width: 18px;
+      text-align: center;
+    }
+
     #cart-count {
       background: var(--accent);
       color: #fff;
@@ -539,7 +547,7 @@
 
       .hero {
         height: auto;
-        padding: 26px 14px
+        padding: 72px 14px 26px;
       }
 
       .hero-title {
@@ -558,18 +566,30 @@
         height: auto;
       }
 
+      .product-image img {
+        max-height: 280px;
+        object-fit: contain;
+      }
+
       .actions {
-        flex-direction: column
+        flex-direction: column;
+        margin-top: 20px;
       }
 
       .btn-primary,
       .btn-secondary {
-        min-width: 100%
+        min-width: 100%;
+        flex: unset;
+        width: 100%;
+      }
+
+      .pubchem-link-container {
+        margin: 24px 0 20px;
       }
 
       .btn-pubchem {
-        padding: 14px 24px;
-        font-size: 14px;
+        padding: 13px 22px;
+        font-size: 13.5px;
       }
     }
 
@@ -581,7 +601,8 @@
       .lead { font-size: 14px; }
       .section-title { font-size: 16px; }
       .btn-primary, .btn-secondary { padding: 12px 16px; font-size: 13px; }
-      .btn-pubchem { padding: 12px 18px; font-size: 13px; }
+      .btn-pubchem { padding: 11px 14px; font-size: 12.5px; white-space: normal; text-align: center; }
+      .pubchem-link-container { margin: 16px 0; }
     }
 
     /* === WhatsApp QR Floating Widget (UPDATED) === */
