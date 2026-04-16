@@ -130,6 +130,28 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Contact Form ----------------
+    router.post("/contact", async (req, res) => {
+        try {
+            const { name, email: rawEmail, subject, message } = req.body || {};
+            const email = deps.normalizeEmail(rawEmail);
+
+            if (!name || !name.trim()) return res.status(400).json({ error: "Name is required." });
+            if (!deps.isValidEmail(email)) return res.status(400).json({ error: "Valid email is required." });
+            if (!message || !message.trim()) return res.status(400).json({ error: "Message is required." });
+
+            await deps.run(
+                `INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)`,
+                [name.trim(), email, (subject || '').trim(), message.trim()]
+            );
+
+            res.json({ ok: true, message: "Your message has been received. We'll get back to you soon!" });
+        } catch (e) {
+            console.error("Contact form error:", e);
+            res.status(500).json({ error: "Failed to send message. Please try again." });
+        }
+    });
+
     router.get("/test", (req, res) =>
         res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
     );
