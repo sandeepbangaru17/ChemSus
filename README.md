@@ -78,6 +78,7 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 | `/investors.html` | Investor information |
 | `/contact.html` | Contact details |
 | `/request-sample.html` | Sample request form (with email OTP) |
+| `/quotation.html` | Order Placed page — download/view quotation PDF |
 | `/thankyou.html` | Thank you / confirmation page |
 
 ### 🛠️ Admin Dashboard (`/admin/admin.html`)
@@ -137,8 +138,7 @@ ChemSus/
 │   │   └── login.html        # Admin login page
 │   ├── assets/
 │   │   ├── js/
-│   │   │   ├── checkout-gate.js   # Cart & checkout flow logic
-│   │   │   └── supabase-client.js # Supabase auth client (optional)
+│   │   │   └── checkout-gate.js   # Cart & checkout flow logic
 │   │   ├── uploads/          # Admin-uploaded product images
 │   │   └── receipts/         # Customer payment receipts
 │   ├── products/             # Individual product detail pages (8 products)
