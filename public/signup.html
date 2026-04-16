@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | ChemSus Technologies</title>
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7; --primary-dark: #00508a; --accent: #00b8b0;
+      --bg: #f3f7fb; --ink: #1f2933; --muted: #64748b; --border: #e2e8f0;
+      --err: #ef4444; --ok: #059669; --ok-bg: #ecfdf5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Open Sans", Arial, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .logo-wrap { margin-bottom: 28px; }
+    .logo-wrap img { height: 42px; }
+
+    .card { background: #fff; border-radius: 18px; box-shadow: 0 12px 40px rgba(15,23,42,.10); padding: 36px 32px 28px; width: 100%; max-width: 420px; }
+    .card-title { font-family: "Montserrat", sans-serif; font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 14px; color: var(--ink); outline: none; transition: border-color .2s; }
+    .field input:focus { border-color: var(--primary); }
+    .field input:disabled { background: #f8fafc; color: var(--muted); }
+
+    .btn-submit { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: "Montserrat", sans-serif; cursor: pointer; margin-top: 8px; transition: all .2s; }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,116,199,.3); }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .alert { padding: 11px 14px; border-radius: 9px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .alert.err { background: #fee2e2; color: var(--err); border: 1px solid #fecaca; display: block; }
+    .alert.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #6ee7b7; display: block; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .otp-hint { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .otp-hint b { color: var(--ink); }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 6px; }
+    .btn-sm { padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--muted); transition: all .2s; }
+    .btn-sm:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm:disabled { opacity: .5; cursor: not-allowed; }
+
+    .footer-links { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+    .footer-links a { font-weight: 600; }
+    .countdown { font-size: 12px; color: var(--muted); margin-top: 8px; text-align: center; }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px 22px; border-radius: 14px; }
+      .card-title { font-size: 19px; }
+    }
+
+    @media (max-width: 360px) {
+      body { padding: 16px 12px; }
+      .card { padding: 22px 16px 18px; }
+      .field input { padding: 9px 12px; }
+      .btn-submit { padding: 11px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-wrap">
+    <a href="index.html"><img src="assets/logo.jpg" alt="ChemSus"></a>
+  </div>
+
+  <div class="card">
+    <h1 class="card-title">Create account</h1>
+    <p class="card-sub">Sign up for faster checkout &amp; order tracking</p>
+
+    <div id="alertBox" class="alert"></div>
+
+    <!-- Step 1: Register form -->
+    <div id="step1" class="step active">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="regPass" placeholder="At least 6 characters" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="regPass2" placeholder="Repeat password" autocomplete="new-password"
+          onkeydown="if(event.key==='Enter')doSignup()">
+      </div>
+      <button class="btn-submit" id="signupBtn" onclick="doSignup()">Create Account &amp; Verify Email</button>
+    </div>
+
+    <!-- Step 2: OTP verification -->
+    <div id="step2" class="step">
+      <p class="otp-hint">We sent a 6-digit code to <b id="verifyEmailDisplay"></b>. Enter it below to verify your account.</p>
+      <div class="field">
+        <label>Verification Code</label>
+        <input type="text" id="otpInput" placeholder="6-digit code" inputmode="numeric" maxlength="6"
+          onkeydown="if(event.key==='Enter')doVerify()">
+      </div>
+      <div class="btn-row">
+        <button class="btn-sm" id="resendBtn" onclick="resendOtp()">Resend</button>
+        <button class="btn-submit" style="flex:1;margin-top:0;" id="verifyBtn" onclick="doVerify()">Verify &amp; Continue</button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div id="step3" class="step">
+      <div style="text-align:center;padding:20px 0;">
+        <div style="width:60px;height:60px;border-radius:50%;background:var(--ok-bg);border:2px solid #6ee7b7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <p style="font-weight:700;font-size:16px;color:#0f172a;margin-bottom:6px;">Account created!</p>
+        <p style="font-size:13px;color:var(--muted);">Redirecting you now…</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-links">
+    Already have an account? <a href="login.html">Log in</a>
+  </div>
+
+  <script>
+    const API = '/api/customer';
+    let challengeId = '';
+    let currentEmail = '';
+    let cooldownTimer = null;
+    let cooldownSec = 0;
+    const returnUrl = new URLSearchParams(location.search).get('return') || 'orders.html';
+
+    // Redirect if already logged in
+    (function () {
+      const tok = localStorage.getItem('chemsus_customer_token');
+      const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      if (tok && (!exp || Date.now() / 1000 < exp)) window.location.replace(returnUrl);
+    })();
+
+    function showAlert(msg, type = 'err') {
+      const el = document.getElementById('alertBox');
+      el.textContent = msg; el.className = 'alert ' + type;
+    }
+    function clearAlert() {
+      const el = document.getElementById('alertBox');
+      el.className = 'alert'; el.textContent = '';
+    }
+    function showStep(n) {
+      ['step1','step2','step3'].forEach((id, i) => {
+        document.getElementById(id).classList.toggle('active', i === n - 1);
+      });
+    }
+
+    async function doSignup() {
+      clearAlert();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPass').value;
+      const password2 = document.getElementById('regPass2').value;
+      if (!email) { showAlert('Email is required.'); return; }
+      if (!password || password.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
+      if (password !== password2) { showAlert('Passwords do not match.'); return; }
+
+      const btn = document.getElementById('signupBtn');
+      btn.disabled = true; btn.textContent = 'Creating account…';
+      try {
+        const r = await fetch(API + '/signup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Signup failed');
+        challengeId = d.challengeId;
+        currentEmail = email;
+        document.getElementById('verifyEmailDisplay').textContent = email;
+        showStep(2);
+        startCooldown(d.resendInSec || 60);
+        showAlert('OTP sent to ' + email, 'ok');
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false; btn.textContent = 'Create Account & Verify Email';
+      }
+    }
+
+    async function doVerify() {
+      clearAlert();
+      const otp = document.getElementById('otpInput').value.trim();
+      if (!otp || otp.length !== 6) { showAlert('Enter the 6-digit code.'); return; }
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true; btn.textContent = 'Verifying…';
+      try {
+        const r = await fetch(API + '/verify-email', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail, challengeId, otp })
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Verification failed');
+        localStorage.setItem('chemsus_customer_token', d.token);
+        localStorage.setItem('chemsus_customer_token_exp', String(d.expiresAt));
+        showStep(3);
+        setTimeout(() => window.location.replace(returnUrl), 1500);
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false; btn.textContent = 'Verify & Continue';
+      }
+    }
+
+    async function resendOtp() {
+      clearAlert();
+      const btn = document.getElementById('resendBtn');
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/signup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail, password: document.getElementById('regPass').value })
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Failed to resend');
+        challengeId = d.challengeId;
+        startCooldown(d.resendInSec || 60);
+        showAlert('New OTP sent to ' + currentEmail, 'ok');
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false;
+      }
+    }
+
+    function startCooldown(sec) {
+      if (cooldownTimer) clearInterval(cooldownTimer);
+      cooldownSec = sec;
+      const btn = document.getElementById('resendBtn');
+      const cd = document.getElementById('countdown');
+      btn.disabled = true;
+      cooldownTimer = setInterval(() => {
+        cooldownSec--;
+        cd.textContent = cooldownSec > 0 ? `Resend available in ${cooldownSec}s` : '';
+        if (cooldownSec <= 0) { clearInterval(cooldownTimer); btn.disabled = false; }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
