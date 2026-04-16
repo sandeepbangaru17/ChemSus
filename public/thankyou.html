@@ -94,7 +94,7 @@
 
     #ib-wa {
       position: fixed;
-      bottom: 95px;
+      bottom: 25px;
       right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -176,7 +176,7 @@
 
     .download-section {
       position: fixed;
-      bottom: 25px;
+      bottom: 95px;
       right: 25px;
       z-index: 99998;
     }
@@ -370,9 +370,9 @@
       </header>
       <div class="body">
         <p style="font-size:13px;margin-bottom:10px;">Scan to chat on mobile</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575"
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
-        <a href="https://wa.me/918486877575" target="_blank">Open WhatsApp</a>
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you." target="_blank">Open WhatsApp</a>
       </div>
     </div>
     <button id="ib-wa-btn" onclick="ibToggleWA()">
@@ -399,8 +399,6 @@
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>
