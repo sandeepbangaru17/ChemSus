@@ -5,29 +5,81 @@ module.exports = function (deps) {
     const {
         run, get, all,
         normalizeEmail, isValidEmail, isValidPhone, safeNumber,
-        purgeOtpSessions, requireUser, receiptUpload, clampInt
+        purgeOtpSessions, requireUser, clampInt,
+        sendTransactionalEmail, crypto, verifyCustomerToken
     } = deps;
 
-    router.get("/user/orders", requireUser, async (req, res) => {
-        try {
-            const userId = req.supabaseUser.sub; // Supabase UID
-            const rows = await all(
-                `SELECT o.id, o.productname, o.quantity, o.unitprice, o.totalprice,
-                o.paymentmode, o.payment_status, o.order_status,
-                o.address, o.city, o.region, o.country, o.notes,
-                o.created_at, o.updated_at
-         FROM orders o
-         JOIN email_otp_sessions e ON e.order_id = o.id
-         WHERE e.supabase_uid = ? OR o.email = ?
-         ORDER BY o.id DESC`,
-                [userId, req.supabaseUser.email]
-            );
-            res.json(rows);
-        } catch (e) {
-            console.error("User orders error:", e);
-            res.status(500).json({ error: "DB error" });
-        }
-    });
+    function generatePurchaseId() {
+        const now = new Date();
+        const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
+        const rand = crypto.randomBytes(3).toString('hex').toUpperCase();
+        return `CS-PND-${ymd}-${rand}`;
+    }
+
+    function buildOrderConfirmationEmail(customerName, purchaseId, productname, quantity, totalprice, country) {
+        const isIndia = String(country || '').toLowerCase().includes('india') || !country;
+        const shippingNote = isIndia
+            ? 'Shipping charges are included in the above price.'
+            : 'For international delivery, additional shipping charges will be intimated separately.';
+        const amountFormatted = Number(totalprice || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+
+        const html = `
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f3f7fb;padding:24px;border-radius:12px;">
+  <div style="background:#fff;border-radius:10px;padding:32px;">
+    <img src="https://chemsus.in/assets/logo.jpg" alt="ChemSus" style="height:44px;margin-bottom:20px;" onerror="this.style.display='none'">
+    <h2 style="color:#0074c7;margin:0 0 8px;">Order Received – Quotation Ready</h2>
+    <p style="color:#475569;margin:0 0 24px;">Dear ${customerName}, thank you for placing your order with ChemSus Technologies. Your quotation has been generated.</p>
+
+    <div style="background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+      <p style="margin:0;font-size:13px;color:#059669;font-weight:600;">Quotation ID</p>
+      <p style="margin:4px 0 0;font-size:22px;font-weight:700;color:#064e3b;letter-spacing:1px;">${purchaseId}</p>
+      <p style="margin:6px 0 0;font-size:12px;color:#6b7280;">Please save this Quotation ID for all future correspondence regarding this order.</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+      <tr style="background:#f8fafc;">
+        <td style="padding:10px 12px;font-size:13px;color:#64748b;width:40%;">Product</td>
+        <td style="padding:10px 12px;font-size:13px;font-weight:600;color:#1e293b;">${productname}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;font-size:13px;color:#64748b;">Quantity</td>
+        <td style="padding:10px 12px;font-size:13px;font-weight:600;color:#1e293b;">${quantity}</td>
+      </tr>
+      <tr style="background:#f8fafc;">
+        <td style="padding:10px 12px;font-size:13px;color:#64748b;">Quoted Amount (incl. 18% GST)</td>
+        <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#0074c7;">&#8377;${amountFormatted}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;font-size:13px;color:#64748b;">Shipping</td>
+        <td style="padding:10px 12px;font-size:13px;">${shippingNote}</td>
+      </tr>
+    </table>
+
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+      <p style="margin:0;font-size:14px;font-weight:600;color:#1d4ed8;">Next Steps</p>
+      <ol style="margin:10px 0 0;padding-left:18px;font-size:13px;color:#1e40af;line-height:1.8;">
+        <li>Download your <strong>Quotation PDF</strong> from the order confirmation page on our website.</li>
+        <li>Attach the Quotation PDF along with your <strong>Purchase Order</strong>.</li>
+        <li>Email both documents to <a href="mailto:sales@chemsus.in" style="color:#0074c7;">sales@chemsus.in</a></li>
+        <li>Our team will review and send you a <strong>Proforma Invoice</strong> with bank payment details.</li>
+        <li>Complete the bank transfer and send the payment receipt to sales@chemsus.in.</li>
+      </ol>
+    </div>
+
+    <div style="font-size:13px;color:#475569;">
+      <p style="margin:0 0 6px;font-weight:600;">Need help?</p>
+      <p style="margin:0;">&#128231; <a href="mailto:sales@chemsus.in" style="color:#0074c7;">sales@chemsus.in</a></p>
+      <p style="margin:4px 0 0;">&#128222; <a href="tel:+918486877575" style="color:#0074c7;">+91 84868 77575</a></p>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:16px;">&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</p>
+</div>`;
+
+        const text = `Dear ${customerName},\n\nThank you for your order with ChemSus Technologies! Your quotation has been generated.\n\nQuotation ID: ${purchaseId}\n\nProduct: ${productname}\nQuantity: ${quantity}\nQuoted Amount (incl. 18% GST): Rs.${amountFormatted}\n${shippingNote}\n\nNEXT STEPS:\n1. Download your Quotation PDF from the order confirmation page.\n2. Attach the Quotation PDF along with your Purchase Order.\n3. Email both to sales@chemsus.in\n4. Our team will send you a Proforma Invoice with bank payment details.\n5. Complete the bank transfer and send the receipt to sales@chemsus.in.\n\nNeed help? Contact sales@chemsus.in or +91 84868 77575\n\nThank you,\nChemSus Technologies Pvt Ltd`;
+
+        return { html, text };
+    }
+
 
     router.post("/orders", async (req, res) => {
         try {
@@ -39,6 +91,7 @@ module.exports = function (deps) {
             const emailNorm = normalizeEmail(email);
             const phone = (b.phone || "").trim();
             const emailOtpToken = String(b.emailOtpToken || "").trim();
+            const customerToken = String(b.customerToken || "").trim();
             const companyName = (b.companyName || "").trim();
 
             if (!customername || !email || !phone) {
@@ -50,23 +103,36 @@ module.exports = function (deps) {
             if (!isValidPhone(phone)) {
                 return res.status(400).json({ error: "Invalid phone" });
             }
-            if (!emailOtpToken) {
-                return res.status(400).json({ error: "Email OTP verification required" });
-            }
 
-            const otpSession = await get(
-                `SELECT id
-         FROM email_otp_sessions
-         WHERE email=?
-           AND verification_token=?
-           AND verified_at IS NOT NULL
-           AND used_at IS NULL
-           AND datetime(token_expires_at) > datetime('now')
-         LIMIT 1`,
-                [emailNorm, emailOtpToken]
-            );
-            if (!otpSession) {
-                return res.status(400).json({ error: "Invalid or expired email OTP verification" });
+            let customerId = null;
+            let otpSession = null;
+
+            // Auth path 1: logged-in customer JWT
+            if (customerToken) {
+                const payload = verifyCustomerToken(customerToken);
+                if (!payload || normalizeEmail(payload.email) !== emailNorm) {
+                    return res.status(401).json({ error: "Customer token does not match email" });
+                }
+                customerId = Number(payload.sub);
+            } else {
+                // Auth path 2: email OTP verification
+                if (!emailOtpToken) {
+                    return res.status(400).json({ error: "Email verification required" });
+                }
+                otpSession = await get(
+                    `SELECT id
+                     FROM email_otp_sessions
+                     WHERE email=?
+                       AND verification_token=?
+                       AND verified_at IS NOT NULL
+                       AND used_at IS NULL
+                       AND datetime(token_expires_at) > datetime('now')
+                     LIMIT 1`,
+                    [emailNorm, emailOtpToken]
+                );
+                if (!otpSession) {
+                    return res.status(400).json({ error: "Invalid or expired email OTP verification" });
+                }
             }
 
             const address = (
@@ -183,12 +249,17 @@ module.exports = function (deps) {
                 }
             }
 
+            // Apply 18% GST to get the final payable amount
+            const GST_RATE = 0.18;
+            const subtotal = totalprice;
+            totalprice = Math.round(subtotal * (1 + GST_RATE) * 100) / 100;
             const unitprice = totalQty > 0 ? totalprice / totalQty : 0;
+            const purchaseId = generatePurchaseId();
             const r = await run(
                 `INSERT INTO orders
           (customername,email,phone,companyName,address,city,region,pincode,country,
-           productname,quantity,unitprice,totalprice,payment_status,paymentmode,updated_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'PENDING','PENDING',datetime('now'))`,
+           productname,quantity,unitprice,totalprice,payment_status,paymentmode,purchase_id,user_id,updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'PENDING','PENDING',?,?,datetime('now'))`,
                 [
                     customername,
                     email,
@@ -203,6 +274,8 @@ module.exports = function (deps) {
                     totalQty || 1,
                     unitprice,
                     totalprice,
+                    purchaseId,
+                    customerId ? String(customerId) : null,
                 ]
             );
 
@@ -225,87 +298,62 @@ module.exports = function (deps) {
                 }
             }
 
-            await run(
-                `UPDATE email_otp_sessions
-         SET used_at=datetime('now'), order_id=?, updated_at=datetime('now')
-         WHERE id=? AND used_at IS NULL`,
-                [r.lastID, otpSession.id]
-            );
+            // Mark OTP session used (only for OTP auth path)
+            if (otpSession) {
+                await run(
+                    `UPDATE email_otp_sessions
+                     SET used_at=datetime('now'), order_id=?, updated_at=datetime('now')
+                     WHERE id=? AND used_at IS NULL`,
+                    [r.lastID, otpSession.id]
+                );
+            }
 
-            res.json({ orderId: r.lastID });
+            // Update customer profile with latest delivery details
+            if (customerId) {
+                run(
+                    `UPDATE customer_users SET
+                       name=COALESCE(NULLIF(?,''),(SELECT name FROM customer_users WHERE id=?)),
+                       phone=COALESCE(NULLIF(?,''),(SELECT phone FROM customer_users WHERE id=?)),
+                       company_name=COALESCE(NULLIF(?,''),(SELECT company_name FROM customer_users WHERE id=?)),
+                       address=COALESCE(NULLIF(?,''),(SELECT address FROM customer_users WHERE id=?)),
+                       city=COALESCE(NULLIF(?,''),(SELECT city FROM customer_users WHERE id=?)),
+                       region=COALESCE(NULLIF(?,''),(SELECT region FROM customer_users WHERE id=?)),
+                       pincode=COALESCE(NULLIF(?,''),(SELECT pincode FROM customer_users WHERE id=?)),
+                       country=COALESCE(NULLIF(?,''),(SELECT country FROM customer_users WHERE id=?)),
+                       updated_at=datetime('now')
+                     WHERE id=?`,
+                    [
+                        customername, customerId,
+                        phone, customerId,
+                        companyName, customerId,
+                        address, customerId,
+                        city, customerId,
+                        region, customerId,
+                        pincode, customerId,
+                        country, customerId,
+                        customerId
+                    ]
+                ).catch(() => { });
+            }
+
+            // Send quotation confirmation email (fire-and-forget)
+            const { html: confHtml, text: confText } = buildOrderConfirmationEmail(
+                customername, purchaseId, productname,
+                totalQty || 1, totalprice, country
+            );
+            sendTransactionalEmail(
+                email,
+                `Quotation Ready – ID: ${purchaseId} | ChemSus Technologies`,
+                confHtml,
+                confText
+            ).catch(e => console.warn('[ORDER-EMAIL] Confirmation send failed:', e?.message));
+
+            res.json({ orderId: r.lastID, purchaseId });
         } catch (e) {
             console.error("Order creation error:", e);
             res.status(500).json({ error: "DB error", details: String(e) });
         }
     });
-
-    router.post(
-        "/receipts",
-        receiptUpload.single("receiptimage"),
-        async (req, res) => {
-            try {
-                const body = req.body || {};
-                const orderId = Number(body.orderid);
-
-                if (!orderId)
-                    return res.status(400).json({ error: "orderid required" });
-                if (!req.file)
-                    return res.status(400).json({ error: "receiptimage required" });
-
-                const amount = safeNumber(body.amount || 0, 0);
-                const ratingRaw = Number(body.rating || 0);
-                if (!ratingRaw) return res.status(400).json({ error: "rating required" });
-                const rating = clampInt(ratingRaw, 1, 5);
-                const feedback = (body.feedback || "").toString().slice(0, 2000);
-                const receipt_path = `receipts/${req.file.filename}`;
-
-                const order = await get(`SELECT * FROM orders WHERE id=?`, [orderId]);
-                if (!order) return res.status(404).json({ error: "Order not found" });
-
-                const existing = await get(
-                    `SELECT id FROM payments WHERE order_id=? LIMIT 1`,
-                    [orderId]
-                );
-                if (existing)
-                    return res.status(409).json({ error: "Payment already submitted" });
-
-                const expectedTotal = safeNumber(order.totalprice || 0, 0);
-                if (Math.abs(expectedTotal - amount) > 0.01) {
-                    return res.status(400).json({ error: "Amount mismatch" });
-                }
-
-                const payInsert = await run(
-                    `INSERT INTO payments
-          (order_id,provider,payment_ref,amount,currency,status,receipt_path,rating,feedback,customername,email,phone)
-         VALUES (?, 'UPI', '', ?, 'INR', 'PENDING', ?, ?, ?, ?, ?, ?)`,
-                    [
-                        orderId,
-                        amount,
-                        receipt_path,
-                        rating,
-                        feedback,
-                        body.customername || order.customername || "",
-                        body.email || order.email || "",
-                        body.phone || order.phone || "",
-                    ]
-                );
-
-                await run(
-                    `UPDATE orders SET payment_status='VERIFYING', updated_at=datetime('now') WHERE id=?`,
-                    [orderId]
-                );
-
-                res.json({
-                    ok: true,
-                    paymentId: payInsert.lastID,
-                    receipt_path: `assets/${receipt_path}`,
-                });
-            } catch (e) {
-                console.error("Receipt upload error:", e);
-                res.status(500).json({ error: "DB error", details: String(e) });
-            }
-        }
-    );
 
     return router;
 };
