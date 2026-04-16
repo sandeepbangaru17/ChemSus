@@ -428,10 +428,22 @@
       transition: all 0.2s ease;
     }
 
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
     .nav-menu li a.active,
     .nav-menu li a:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     /* ADMIN LOGIN BUTTON */
@@ -816,7 +828,7 @@
     /* === WhatsApp QR Floating Widget (UPDATED) === */
     #ib-wa {
       position: fixed;
-      bottom: calc(var(--fab-bottom) + var(--fab-size) + var(--fab-gap));
+      bottom: var(--fab-bottom);
       right: var(--fab-right);
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -924,7 +936,7 @@
     .download-section {
       width: auto;
       position: fixed;
-      bottom: var(--fab-bottom);
+      bottom: calc(var(--fab-bottom) + var(--fab-size) + var(--fab-gap));
       right: var(--fab-right);
       z-index: 99998;
     }
@@ -1049,32 +1061,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html" class="active"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -1250,7 +1255,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
 
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
@@ -1259,7 +1264,7 @@
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
 
-        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank">
           Open WhatsApp
         </a>
@@ -1370,11 +1375,28 @@
         if (e.propertyName === 'opacity') intro.remove();
       }, { once: true });
     })();
+
+    // Update nav auth link
+    (function () {
+      const tok = localStorage.getItem('chemsus_customer_token');
+      const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = localStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>
