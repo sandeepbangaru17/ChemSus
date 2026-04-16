@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation | ChemSus Technologies</title>
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7;
+      --accent: #00b8b0;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f1f5f9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+    }
+
+    /* ── Action bar (outside document) ── */
+    .action-bar {
+      max-width: 800px;
+      margin: 0 auto 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .action-bar .status-badge {
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      color: #065f46;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      flex: 1;
+    }
+    .btn-primary {
+      padding: 10px 22px;
+      background: linear-gradient(135deg, #0074c7, #00b8b0);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-secondary {
+      padding: 10px 22px;
+      background: #fff;
+      color: #475569;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { background: #f1f5f9; }
+
+    /* ── Document shell ── */
+    .document {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 0;
+    }
+
+    /* ── Letterhead ── */
+    .letterhead {
+      background: var(--primary);
+      padding: 20px 32px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .letterhead .co-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .letterhead .co-tag {
+      font-size: 11px;
+      color: rgba(255,255,255,0.82);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+    .letterhead .doc-label {
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 8px 18px;
+      border-radius: 4px;
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    /* ── Body ── */
+    .doc-body { padding: 24px 32px; }
+
+    /* ── Ref / Date row ── */
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .meta-row .ref-label { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-row .ref-value { font-weight: 700; color: var(--ink); font-size: 13px; font-family: 'Montserrat', sans-serif; }
+
+    /* ── To block + intro ── */
+    .to-block {
+      margin-bottom: 16px;
+    }
+    .to-block .to-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .to-block .to-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .to-block .to-detail { font-size: 13px; color: #475569; line-height: 1.6; }
+
+    .salutation { font-size: 13px; color: var(--ink); margin-bottom: 6px; }
+    .intro-text { font-size: 12.5px; color: #475569; line-height: 1.65; margin-bottom: 18px; }
+
+    /* ── Section heading ── */
+    .section-heading {
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: underline;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Items table ── */
+    table.items-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    table.items-table thead tr {
+      background: var(--primary);
+      color: #fff;
+    }
+    table.items-table th {
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border: 1px solid #0064b0;
+    }
+    table.items-table th.center, table.items-table td.center { text-align: center; }
+    table.items-table th.right, table.items-table td.right { text-align: right; }
+    table.items-table td {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      color: var(--ink);
+      vertical-align: top;
+    }
+    table.items-table tbody tr:nth-child(even) td { background: #f8fafc; }
+    .prod-name { font-weight: 600; font-size: 12px; }
+    .prod-pack { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Totals ── */
+    .totals-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+    .totals-table {
+      width: 240px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .totals-table td {
+      padding: 5px 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .totals-table .t-label { color: #475569; }
+    .totals-table .t-value { text-align: right; font-weight: 600; }
+    .totals-table tr.grand td {
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── Notes ── */
+    .notes-section {
+      font-size: 12px;
+      color: var(--ink);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+    .notes-section strong { font-weight: 700; }
+
+    /* ── Steps box ── */
+    .steps-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+    .steps-box h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .steps-box ol {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .steps-box li {
+      font-size: 12px;
+      color: #1e40af;
+      padding: 3px 0;
+      line-height: 1.5;
+    }
+    .steps-box .email-link { font-weight: 700; }
+
+    /* ── Signature row ── */
+    .sig-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 4px;
+    }
+    .sig-left { font-size: 12px; color: #475569; line-height: 1.7; }
+    .sig-right {
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      font-size: 11.5px;
+      color: var(--ink);
+      line-height: 1.8;
+      min-width: 200px;
+      text-align: right;
+    }
+    .sig-right strong { font-weight: 700; }
+    .sig-name { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 6px; font-family: 'Montserrat', sans-serif; }
+    .sig-title { font-size: 12px; color: var(--muted); }
+    .sig-spacer { height: 36px; }
+
+    /* ── Footer strip ── */
+    .doc-footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 10px 32px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .doc-body { padding: 18px 16px; }
+      .letterhead { padding: 16px 16px 14px; flex-direction: column; gap: 10px; }
+      .letterhead .doc-label { align-self: flex-start; }
+      .meta-row { flex-direction: column; gap: 6px; }
+      .sig-row { flex-direction: column; }
+      .sig-right { min-width: unset; width: 100%; text-align: left; }
+    }
+
+    /* ═══════════════════════════════════
+       SIDEBAR + LAYOUT
+    ═══════════════════════════════════ */
+    .sidebar {
+      width: 240px;
+      background: var(--primary);
+      color: #fff;
+      border-right: 3px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: fixed;
+      left: 0; top: 0;
+      z-index: 1002;
+      transition: transform .3s ease;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1001;
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-logo-img { height: 24px; width: auto; }
+    .nav-menu { list-style: none; padding: 8px 0; flex: 1; overflow-y: auto; }
+    .nav-menu li a {
+      display: block;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 13.5px;
+      border-left: 3px solid transparent;
+      transition: all .2s ease;
+      text-decoration: none;
+    }
+    .nav-menu li a:hover, .nav-menu li a.active {
+      background: rgba(255,255,255,.1);
+      border-left-color: var(--accent);
+    }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      padding: 10px 20px 4px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .sidebar-search { padding: 12px 20px 16px; border-top: 1px solid rgba(255,255,255,.12); }
+    .main-wrapper {
+      margin-left: 240px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 16px; left: 16px;
+      z-index: 1003;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+    .mobile-toggle svg { width: 20px; height: 20px; }
+
+    /* ═══════════════════════════════════
+       ORDER PLACED HERO
+    ═══════════════════════════════════ */
+    .order-hero {
+      background: radial-gradient(circle at top left, rgba(0,184,176,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(0,116,199,0.2), transparent 55%),
+                  #041424;
+      color: #fff;
+      padding: 48px 24px 40px;
+      text-align: center;
+      border-top: 3px solid var(--accent);
+    }
+    .order-hero-inner { max-width: 680px; margin: 0 auto; }
+    .order-success-badge {
+      width: 72px; height: 72px;
+      background: rgba(34,197,94,0.18);
+      border: 3px solid #22c55e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+      color: #4ade80;
+    }
+    .order-hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+    .order-hero p {
+      font-size: 14.5px;
+      color: #c7e9f7;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .order-ref-chip {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #e2f3ff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+    }
+    .order-hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-hero-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: linear-gradient(135deg, var(--accent), #00d4cc);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,184,176,.35);
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none;
+    }
+    .btn-hero-download:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,184,176,.45); }
+    .btn-hero-view {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+    }
+    .btn-hero-view:hover { background: rgba(255,255,255,0.22); }
+    .btn-hero-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 22px;
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: color .2s, border-color .2s;
+      text-decoration: none;
+    }
+    .btn-hero-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+
+    /* ═══════════════════════════════════
+       QUOTATION SECTION DIVIDER
+    ═══════════════════════════════════ */
+    .quotation-section-header {
+      max-width: 860px;
+      margin: 36px auto 0;
+      padding: 0 16px;
+    }
+    .quotation-section-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    .quotation-section-header h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    /* ═══════════════════════════════════
+       DOC OUTER WRAPPER
+    ═══════════════════════════════════ */
+    .doc-outer {
+      max-width: 860px;
+      margin: 20px auto 48px;
+      padding: 0 16px;
+    }
+
+    /* ═══════════════════════════════════
+       SITE FOOTER
+    ═══════════════════════════════════ */
+    .site-footer {
+      background: #06121f;
+      color: #cbd5f5;
+      text-align: center;
+      padding: 36px 20px 18px;
+      margin-top: auto;
+      font-size: 13px;
+    }
+    .site-footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto 24px;
+      text-align: left;
+    }
+    .site-footer h4 { color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; margin-bottom: 10px; }
+    .site-footer a { color: #cbd5f5; text-decoration: none; }
+    .site-footer-copy {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 16px;
+      font-size: 12px;
+    }
+
+    /* ═══════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════ */
+    @media (max-width: 1050px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0; }
+      .mobile-toggle { display: flex; align-items: center; justify-content: center; }
+      .order-hero { padding-top: 72px; }
+    }
+    @media (max-width: 600px) {
+      .order-hero h1 { font-size: 24px; }
+      .order-hero p { font-size: 13.5px; }
+      .btn-hero-download, .btn-hero-view, .btn-hero-ghost { width: 100%; justify-content: center; }
+      .doc-outer { padding: 0 8px; }
+      .quotation-section-header { padding: 0 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Mobile toggle -->
+  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo.jpg" alt="ChemSus" class="nav-logo-img">
+      <span>ChemSus</span>
+    </a>
+    <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart</a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact Us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="my-orders.html" id="ordersNavLink"><span class="nav-icon">📦</span> My Orders</a></li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main wrapper -->
+  <div class="main-wrapper" id="mainWrapper">
+
+  <!-- ░░░  ORDER PLACED HERO  ░░░ -->
+  <section class="order-hero">
+    <div class="order-hero-inner">
+      <div class="order-success-badge">&#10003;</div>
+      <h1>Order Placed!</h1>
+      <p>Your quotation has been generated. Download the PDF, attach your Purchase Order,<br>
+         and email both to <strong>sales@chemsus.in</strong> to complete your purchase.</p>
+      <div class="order-ref-chip">Ref:&nbsp;<span id="refHero">—</span></div>
+      <div class="order-hero-actions">
+        <button class="btn-hero-download" id="downloadPdfBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Download Quotation PDF
+        </button>
+        <a class="btn-hero-view" href="#quotationSection">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          View Quotation
+        </a>
+        <a class="btn-hero-ghost" href="my-orders.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          My Orders
+        </a>
+        <a class="btn-hero-ghost" href="shop.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm0 10c-1.66 0-3-1.34-3-3h2c0 .55.45 1 1 1s1-.45 1-1h2c0 1.66-1.34 3-3 3z"/></svg>
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section heading above quotation doc -->
+  <div class="quotation-section-header" id="quotationSection">
+    <h2>Quotation Document</h2>
+  </div>
+
+  <!-- Quotation document wrapper -->
+  <div class="doc-outer">
+
+  <!-- Document -->
+  <div class="document" id="quotationDoc">
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+      <div>
+        <div class="co-name">ChemSus Technologies Pvt Ltd</div>
+        <div class="co-tag">
+          Sustainable Specialty Chemicals &nbsp;|&nbsp; www.chemsus.in &nbsp;|&nbsp; sales@chemsus.in<br>
+          House No. 555, GNB Road, North Guwahati, Assam – 781030 &nbsp;|&nbsp; Ph: +91 84868 77575
+        </div>
+      </div>
+      <div class="doc-label">QUOTATION</div>
+    </div>
+
+    <div class="doc-body">
+
+      <!-- Ref / Date -->
+      <div class="meta-row">
+        <div>
+          <div class="ref-label">Our Ref No.</div>
+          <div class="ref-value" id="refNo">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="ref-label">Date</div>
+          <div class="ref-value" id="quotationDate">—</div>
+        </div>
+      </div>
+
+      <!-- To block -->
+      <div class="to-block">
+        <div class="to-label">To</div>
+        <div class="to-name" id="toName">—</div>
+        <div class="to-detail" id="toCompany"></div>
+        <div class="to-detail" id="toAddress"></div>
+        <div class="to-detail" id="toEmailPhone"></div>
+      </div>
+
+      <!-- Salutation + intro -->
+      <p class="salutation">Dear Sir / Madam,</p>
+      <p class="intro-text">
+        We are pleased to submit our quotation for the below-mentioned sustainable specialty chemicals.
+        ChemSus Technologies Pvt Ltd is committed to delivering high-purity, bio-based chemical solutions
+        that meet the stringent requirements of research, industrial, and pharmaceutical customers.
+        We look forward to establishing a long and mutually beneficial relationship with your organization.
+      </p>
+
+      <!-- Table heading -->
+      <div class="section-heading">Quotation / Proforma</div>
+
+      <!-- Items table -->
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width:28px;">SL</th>
+            <th>Particulars</th>
+            <th style="width:88px;">HSN Code</th>
+            <th class="center" style="width:60px;">Qty (No)</th>
+            <th class="right" style="width:90px;">Rate (INR)</th>
+            <th class="right" style="width:90px;">Amount (INR)</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:16px;">Loading…</td></tr>
+        </tbody>
+        <tfoot id="tableFooter"></tfoot>
+      </table>
+
+      <!-- Totals -->
+      <div class="totals-wrapper">
+        <table class="totals-table">
+          <tbody>
+            <tr>
+              <td class="t-label">TOTAL</td>
+              <td class="t-value" id="subtotalAmt">—</td>
+            </tr>
+            <tr>
+              <td class="t-label">GST @ 18%</td>
+              <td class="t-value" id="gstAmt">—</td>
+            </tr>
+            <tr>
+              <td class="t-label">Total with GST</td>
+              <td class="t-value" id="totalGst">—</td>
+            </tr>
+            <tr class="grand">
+              <td>Round Off</td>
+              <td id="grandAmt" style="text-align:right;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Notes -->
+      <div class="notes-section">
+        <p>Please mention our quotation reference number while placing your order.</p>
+        <p><strong>N.B:</strong> Order once placed cannot be cancelled.</p>
+        <p><strong>Terms &amp; Conditions enclosed.</strong></p>
+      </div>
+
+      <!-- Next steps -->
+      <div class="steps-box">
+        <h4>Next Steps to Complete Your Order</h4>
+        <ol>
+          <li>Click <strong>"Download PDF"</strong> above to save this quotation.</li>
+          <li>Attach the Quotation PDF along with your <strong>Purchase Order</strong>.</li>
+          <li>Email both to <span class="email-link">sales@chemsus.in</span> mentioning Ref No. <strong id="refNoInline">—</strong></li>
+          <li>Our team will issue a <strong>Proforma Invoice</strong> with bank payment details.</li>
+          <li>Complete <strong>100% advance payment</strong> via bank transfer and send the receipt to <span class="email-link">sales@chemsus.in</span>.</li>
+        </ol>
+      </div>
+
+      <!-- Signature -->
+      <div class="sig-row">
+        <div class="sig-left">
+          <div class="sig-name">ChemSus Technologies Pvt Ltd</div>
+          <div class="sig-spacer"></div>
+          <div class="sig-title">Authorised Signatory</div>
+        </div>
+        <div class="sig-right">
+          <strong>GSTIN:</strong> 18AAHCC6831J1ZN<br>
+          <strong>PAN No.:</strong> AAHCC6831J<br>
+          <strong>CIN:</strong> U24100AS2023PTC024498
+        </div>
+      </div>
+
+    </div><!-- /doc-body -->
+
+    <div class="doc-footer">
+      ChemSus Technologies Pvt Ltd &nbsp;|&nbsp; sales@chemsus.in &nbsp;|&nbsp; +91 84868 77575 &nbsp;|&nbsp; www.chemsus.in
+    </div>
+
+  </div><!-- /document -->
+  </div><!-- /doc-outer -->
+
+  <!-- Site footer -->
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div>
+        <h4>Registered Office</h4>
+        <p style="font-size:13px;line-height:1.7;">House No. 555, GNB Road,<br>North Guwahati, Assam – 781030</p>
+      </div>
+      <div>
+        <h4>Branch Office</h4>
+        <p style="font-size:13px;line-height:1.7;">Gavara jaggayyapalem,<br>BHPV, Visakhapatnam 530012</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p style="font-size:13px;margin-bottom:6px;">📞 <a href="tel:+918486877575">+91 84868 77575</a></p>
+        <p style="font-size:13px;">✉️ <a href="mailto:info@chemsus.in">info@chemsus.in</a></p>
+      </div>
+    </div>
+    <div class="site-footer-copy">&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</div>
+  </footer>
+
+  </div><!-- /main-wrapper -->
+
+  <!-- jsPDF + AutoTable -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    /* ── Helpers ─────────────────────────────────────────────── */
+    const fmt  = n => Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtR = n => Math.round(Number(n || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* HSN code lookup by product name keywords */
+    function getHSN(name) {
+      const n = (name || '').toLowerCase();
+      if (n.includes('levulinic acid'))            return '29181990';
+      if (n.includes('5-hmf') || n.includes('hydroxymethyl')) return '29321990';
+      if (n.includes('calcium levulinate'))        return '29182000';
+      if (n.includes('sodium levulinate'))         return '29182000';
+      if (n.includes('ethyl levulinate'))          return '29181990';
+      if (n.includes('methyl levulinate'))         return '29181990';
+      if (n.includes('dala') || n.includes('aminolevulinic')) return '29224990';
+      return '29189090';
+    }
+
+    /* ── Load quotation data ─────────────────────────────────── */
+    let Q = null;
+    try { const r = sessionStorage.getItem('quotationData'); if (r) Q = JSON.parse(r); } catch {}
+
+    if (!Q || !Q.quotationId) {
+      window.location.replace('shop.html');
+    } else {
+      /* Populate meta */
+      document.getElementById('refNo').textContent        = Q.quotationId;
+      document.getElementById('quotationDate').textContent = Q.date;
+      document.getElementById('refNoInline').textContent  = Q.quotationId;
+      document.getElementById('refHero').textContent      = Q.quotationId;
+
+      /* To block */
+      document.getElementById('toName').textContent = Q.customerName || '—';
+      if (Q.companyName) document.getElementById('toCompany').textContent = Q.companyName;
+      const addrParts = [Q.address, Q.city, Q.region, Q.pincode, Q.country].filter(Boolean);
+      if (addrParts.length) document.getElementById('toAddress').textContent = addrParts.join(', ');
+      const ep = [Q.email && ('Email: ' + Q.email), Q.phone && ('Ph: ' + Q.phone)].filter(Boolean);
+      if (ep.length) document.getElementById('toEmailPhone').textContent = ep.join('  |  ');
+
+      /* Items table */
+      const tbody = document.getElementById('itemsBody');
+      tbody.innerHTML = '';
+      if (Q.items && Q.items.length > 0) {
+        Q.items.forEach((item, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="center">${i + 1}</td>
+            <td>
+              <div class="prod-name">${item.name || '—'}</div>
+              ${item.packSize ? `<div class="prod-pack">Pack: ${item.packSize}</div>` : ''}
+            </td>
+            <td>${getHSN(item.name)}</td>
+            <td class="center">${item.quantity}</td>
+            <td class="right">${fmt(item.unitPrice)}</td>
+            <td class="right" style="font-weight:600;">${fmt(item.total)}</td>`;
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:16px;">No items</td></tr>';
+      }
+
+      /* Totals */
+      const rounded = Math.round(Q.grandTotal);
+      document.getElementById('subtotalAmt').textContent = 'INR ' + fmt(Q.subtotal);
+      document.getElementById('gstAmt').textContent      = 'INR ' + fmt(Q.gst);
+      document.getElementById('totalGst').textContent    = 'INR ' + fmt(Q.grandTotal);
+      document.getElementById('grandAmt').textContent    = 'INR ' + fmtR(rounded);
+    }
+
+    /* ── PDF Generation ──────────────────────────────────────── */
+    document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+      if (!Q) return;
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pw = doc.internal.pageSize.getWidth();   // 210
+      const ph = doc.internal.pageSize.getHeight();  // 297
+      const m  = 18; // margin
+
+      /* ════════════════════════════════════════════
+         PAGE 1 — QUOTATION
+         ════════════════════════════════════════════ */
+      let y = 0;
+
+      /* Header bar */
+      doc.setFillColor(0, 116, 199);
+      doc.rect(0, 0, pw, 32, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(255, 255, 255);
+      doc.text('ChemSus Technologies Pvt Ltd', m, 11);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(220, 236, 255);
+      doc.text('Sustainable Specialty Chemicals  |  www.chemsus.in  |  sales@chemsus.in', m, 17);
+      doc.text('House No. 555, GNB Road, North Guwahati, Assam \u2013 781030  |  Ph: +91 84868 77575', m, 22);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.text('QUOTATION', pw - m, 18, { align: 'right' });
+
+      y = 40;
+
+      /* Ref / Date row */
+      doc.setFontSize(8.5);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Our Ref No.:', m, y);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 41, 59);
+      doc.text(Q.quotationId, m + 24, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Date:', pw - m - 36, y);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 41, 59);
+      doc.text(Q.date, pw - m, y, { align: 'right' });
+      y += 5;
+
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.3);
+      doc.line(m, y, pw - m, y);
+      y += 6;
+
+      /* To block */
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(100, 116, 139);
+      doc.text('TO', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(30, 41, 59);
+      doc.text(Q.customerName || '', m, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105);
+      if (Q.companyName) { doc.text(Q.companyName, m, y); y += 5; }
+      const addrLine = [Q.address, Q.city, Q.region, Q.pincode].filter(Boolean).join(', ');
+      if (addrLine) {
+        const wrapped = doc.splitTextToSize(addrLine, 110);
+        doc.text(wrapped, m, y); y += wrapped.length * 4.5;
+      }
+      if (Q.country) { doc.text(Q.country, m, y); y += 5; }
+      if (Q.email)   { doc.text('Email: ' + Q.email, m, y); y += 4.5; }
+      if (Q.phone)   { doc.text('Phone: ' + Q.phone, m, y); y += 6; }
+
+      /* Salutation */
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(30, 41, 59);
+      doc.text('Dear Sir / Madam,', m, y);
+      y += 5;
+      const introLines = doc.splitTextToSize(
+        'We are pleased to submit our quotation for the below-mentioned sustainable specialty chemicals. ' +
+        'ChemSus Technologies Pvt Ltd is committed to delivering high-purity, bio-based chemical solutions. ' +
+        'We look forward to a long and mutually beneficial relationship with your organization.',
+        pw - 2 * m
+      );
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text(introLines, m, y);
+      y += introLines.length * 4.5 + 5;
+
+      /* Section heading */
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(30, 41, 59);
+      const heading = 'QUOTATION / PROFORMA';
+      const hw = doc.getTextWidth(heading);
+      const hx = pw / 2;
+      doc.text(heading, hx, y, { align: 'center' });
+      doc.setDrawColor(30, 41, 59);
+      doc.setLineWidth(0.3);
+      doc.line(hx - hw / 2, y + 1, hx + hw / 2, y + 1);
+      y += 7;
+
+      /* Items table */
+      const tableHead = [['SL', 'Particulars', 'HSN Code', 'Qty\n(No)', 'Rate\n(INR)', 'Amount\n(INR)']];
+      const tableBody = (Q.items || []).map((item, i) => [
+        String(i + 1),
+        item.name + (item.packSize ? '\nPack: ' + item.packSize : ''),
+        getHSN(item.name),
+        String(item.quantity),
+        fmt(item.unitPrice),
+        fmt(item.total)
+      ]);
+
+      doc.autoTable({
+        startY: y,
+        head: tableHead,
+        body: tableBody,
+        margin: { left: m, right: m },
+        headStyles: {
+          fillColor: [0, 116, 199], textColor: 255,
+          fontStyle: 'bold', fontSize: 8, halign: 'center'
+        },
+        bodyStyles: { fontSize: 8.5, textColor: [30, 41, 59] },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        columnStyles: {
+          0: { cellWidth: 10, halign: 'center' },
+          2: { cellWidth: 22, halign: 'center' },
+          3: { cellWidth: 14, halign: 'center' },
+          4: { cellWidth: 28, halign: 'right' },
+          5: { cellWidth: 28, halign: 'right', fontStyle: 'bold' }
+        },
+        theme: 'grid',
+        tableLineColor: [226, 232, 240],
+        tableLineWidth: 0.2,
+      });
+
+      y = doc.lastAutoTable.finalY + 4;
+
+      /* Totals block */
+      const rounded = Math.round(Q.grandTotal);
+      const tx = pw - m - 72;
+      const tw = 72;
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.2);
+      doc.rect(tx, y, tw, 34, 'FD');
+
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(71, 85, 105);
+      doc.text('TOTAL',          tx + 4, y + 7);  doc.text('INR ' + fmt(Q.subtotal), tx + tw - 4, y + 7,  { align: 'right' });
+      doc.text('GST @ 18%',      tx + 4, y + 14); doc.text('INR ' + fmt(Q.gst),      tx + tw - 4, y + 14, { align: 'right' });
+      doc.text('Total with GST', tx + 4, y + 21); doc.text('INR ' + fmt(Q.grandTotal),tx + tw - 4, y + 21, { align: 'right' });
+
+      /* Grand total row */
+      doc.setFillColor(0, 116, 199);
+      doc.rect(tx, y + 24, tw, 10, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Round Off', tx + 4, y + 30);
+      doc.text('INR ' + fmtR(rounded), tx + tw - 4, y + 30, { align: 'right' });
+      y += 40;
+
+      /* Notes */
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text('Please mention our quotation reference number while placing your valuable order.', m, y); y += 5;
+      doc.setFont('helvetica', 'bold');
+      doc.text('N.B: Order once placed cannot be cancelled.', m, y); y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.text('Terms & Conditions enclosed.', m, y); y += 8;
+
+      /* Steps box */
+      const steps = [
+        '1. Attach this Quotation PDF with your Purchase Order.',
+        '2. Email both to: sales@chemsus.in  (mention Ref No. ' + Q.quotationId + ')',
+        '3. Our team will issue a Proforma Invoice with bank payment details.',
+        '4. Complete 100% advance payment via bank transfer and send receipt to sales@chemsus.in.',
+      ];
+      const boxH = 10 + steps.length * 6;
+      doc.setFillColor(239, 246, 255);
+      doc.setDrawColor(191, 219, 254);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(m, y, pw - 2 * m, boxH, 2, 2, 'FD');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(29, 78, 216);
+      doc.text('NEXT STEPS TO COMPLETE YOUR ORDER:', m + 4, y + 7);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(30, 64, 175);
+      steps.forEach((s, i) => { doc.text(s, m + 4, y + 14 + i * 6); });
+      y += boxH + 8;
+
+      /* Signature / Tax box */
+      const sigY = y;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(0, 116, 199);
+      doc.text('ChemSus Technologies Pvt Ltd', m, sigY);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text('Authorised Signatory', m, sigY + 18);
+
+      const taxBoxW = 72; const taxBoxX = pw - m - taxBoxW;
+      doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+      doc.rect(taxBoxX, sigY - 4, taxBoxW, 22, 'D');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+      doc.text('GSTIN  : 18AAHCC6831J1ZN', taxBoxX + 4, sigY + 3);
+      doc.text('PAN No.: AAHCC6831J',      taxBoxX + 4, sigY + 9);
+      doc.text('CIN    : U24100AS2023PTC024498', taxBoxX + 4, sigY + 15);
+
+      /* Page 1 footer */
+      doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+      doc.line(m, ph - 12, pw - m, ph - 12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(148, 163, 184);
+      doc.text(
+        'ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in  |  Page 1 of 2',
+        pw / 2, ph - 7, { align: 'center' }
+      );
+
+      /* ════════════════════════════════════════════
+         PAGE 2 — TERMS & CONDITIONS
+         ════════════════════════════════════════════ */
+      doc.addPage();
+      y = 0;
+
+      /* T&C Header */
+      doc.setFillColor(0, 116, 199);
+      doc.rect(0, 0, pw, 20, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(255, 255, 255);
+      doc.text('ChemSus Technologies Pvt Ltd', m, 9);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(220, 236, 255);
+      doc.text('Sustainable Specialty Chemicals  |  sales@chemsus.in  |  +91 84868 77575', m, 15);
+      y = 30;
+
+      /* Heading */
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(30, 41, 59);
+      doc.text('Terms & Conditions', pw / 2, y, { align: 'center' });
+      const tcHW = doc.getTextWidth('Terms & Conditions');
+      doc.setDrawColor(30, 41, 59); doc.setLineWidth(0.4);
+      doc.line(pw / 2 - tcHW / 2, y + 1, pw / 2 + tcHW / 2, y + 1);
+      y += 12;
+
+      /* T&C items */
+      const tcItems = [
+        {
+          title: 'Order to be placed in favour of:',
+          body: 'ChemSus Technologies Pvt Ltd\nHouse No. 555, GNB Road, North Guwahati, Assam \u2013 781030'
+        },
+        {
+          title: 'Validity:',
+          body: 'The prices mentioned in this quotation are valid for 30 days from the date of issue. Revisions may occur due to changes in raw material costs, Government policy, or other reasons beyond our control.'
+        },
+        {
+          title: 'Delivery:',
+          body: '3\u20134 weeks from receipt of confirmed Purchase Order and advance payment. While every effort will be made to dispatch the order in full, partial deliveries may be necessary due to reasons beyond our control. We shall not be penalised for delays caused by force majeure events including riots, strikes, Government restrictions, or acts of God.'
+        },
+        {
+          title: 'Payment:',
+          body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank details will be shared upon receipt of Purchase Order.'
+        },
+        {
+          title: 'Taxes:',
+          body: 'GST @ 18% is applicable and included in the quoted price as indicated.'
+        },
+        {
+          title: 'Freight:',
+          body: 'Shipping charges are included in the quoted price for deliveries within India. For international shipments, additional freight and customs charges will be applicable and will be intimated separately.'
+        },
+        {
+          title: 'Replacement:',
+          body: 'In the event of a dispute at the time of delivery, replacement may be arranged upon submission of valid justification and supporting documentation. Replacement decisions are subject to quality assessment by ChemSus Technologies Pvt Ltd.'
+        },
+        {
+          title: 'Quality / Certificate of Analysis:',
+          body: 'All products are tested against stated specifications. A Certificate of Analysis (CoA) will be provided with each shipment.'
+        },
+        {
+          title: 'Warranty / Guarantee:',
+          body: 'Products conform to the specifications stated in the CoA. No warranty is provided for uses outside the stated scope or for mishandling after delivery.'
+        },
+        {
+          title: 'Cancellation:',
+          body: 'Order once placed and payment received cannot be cancelled.'
+        },
+      ];
+
+      tcItems.forEach(item => {
+        /* Bullet circle */
+        doc.setFillColor(0, 116, 199);
+        doc.circle(m + 2, y - 1.5, 1.5, 'F');
+
+        /* Title */
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(30, 41, 59);
+        doc.text(item.title, m + 6, y);
+
+        /* Body */
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
+        const bodyLines = doc.splitTextToSize(item.body, pw - 2 * m - 6);
+        doc.text(bodyLines, m + 6, y + 5);
+        y += 5 + bodyLines.length * 4.5 + 5;
+
+        /* Guard — add page if needed */
+        if (y > ph - 25) {
+          doc.addPage();
+          y = 20;
+        }
+      });
+
+      /* Page 2 footer */
+      doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+      doc.line(m, ph - 12, pw - m, ph - 12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(148, 163, 184);
+      doc.text(
+        'ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in  |  Page 2 of 2',
+        pw / 2, ph - 7, { align: 'center' }
+      );
+
+      /* Save */
+      doc.save('Quotation_' + Q.quotationId + '.pdf');
+    });
+  </script>
+
+  <script>
+    /* ── Sidebar toggle ── */
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      const isOpen = sidebar.classList.toggle('open');
+      overlay.classList.toggle('active', isOpen);
+      document.body.classList.toggle('no-scroll', isOpen);
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    }
+    document.querySelectorAll('.nav-menu a').forEach(a =>
+      a.addEventListener('click', () => { if (window.innerWidth <= 1050) closeSidebar(); })
+    );
+
+    /* ── Auth nav link ── */
+    (function () {
+      const tok  = localStorage.getItem('chemsus_customer_token');
+      const exp  = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const auth = document.getElementById('authNavLink');
+      if (!auth) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = localStorage.getItem('chemsus_customer_name');
+        auth.innerHTML = '<span class="nav-icon">👤</span> ' + (name || 'My Account');
+        auth.href = 'profile.html';
+      }
+    })();
+  </script>
+</body>
+</html>
