@@ -58,7 +58,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -636,6 +637,23 @@
       height: 16px;
       fill: #ffffff;
       opacity: 0.9;
+    }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      .recognition-card { padding: 16px 14px !important; }
+      .recognition-card img { max-width: 100%; height: auto !important; }
+      main { padding: 20px 12px 32px; }
+      p, li { word-break: break-word; }
     }
   </style>
 </head>
