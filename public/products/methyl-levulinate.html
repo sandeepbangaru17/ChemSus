@@ -46,7 +46,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -605,6 +606,8 @@
         font-size: 13.5px;
       }
     }
+
+    img { max-width: 100%; height: auto; }
 
     @media (max-width: 480px) {
       .hero-content { padding: 0 6px; }
