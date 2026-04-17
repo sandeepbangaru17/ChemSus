@@ -58,7 +58,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -694,6 +695,21 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      main { padding: 20px 12px 32px; }
+      p, li { word-break: break-word; }
+    }
   </style>
 </head>
 
@@ -754,7 +770,7 @@
         <div class="hero-kicker">Strategic Partnerships</div>
         <h1 class="hero-title">Collaboration</h1>
         <p class="hero-subtitle">
-          Partner with us to co-develop sustainable chemistry solutions from bamboo biomass.
+          Partner with us to co-develop sustainable chemistry solutions from lignocellulosic biomass.
         </p>
       </div>
     </section>
