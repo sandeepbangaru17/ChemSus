@@ -130,6 +130,18 @@
       .profile-hero-avatar { width: 56px; height: 56px; font-size: 22px; }
       .profile-hero-name { font-size: 17px; }
     }
+
+    /* Global mobile polish */
+    img { max-width: 100%; }
+    .card { word-break: break-word; }
+
+    @media (max-width: 480px) {
+      .page { padding: 16px 12px 40px; }
+      .card { padding: 18px 14px; }
+      .field input, .field textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .profile-hero { padding: 22px 14px 18px; }
+      .btn-save { font-size: 14px; padding: 11px; }
+    }
   </style>
 </head>
 <body>
