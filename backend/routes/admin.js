@@ -702,5 +702,46 @@ module.exports = function (deps) {
     router.post("/logout", (req, res) => res.json({ ok: true }));
     router.get("/me", requireAdmin, (req, res) => res.json({ loggedIn: true, email: req.adminUser?.email }));
 
+    // ---------------- Analytics ----------------
+    router.get("/analytics/views", requireAdmin, async (req, res) => {
+        try {
+            const days30 = await all(`
+                SELECT date(created_at) AS day, COUNT(*) AS views
+                FROM page_views
+                WHERE created_at >= datetime('now', '-30 days')
+                GROUP BY date(created_at)
+                ORDER BY day ASC
+            `);
+            const months12 = await all(`
+                SELECT strftime('%Y-%m', created_at) AS month, COUNT(*) AS views
+                FROM page_views
+                WHERE created_at >= datetime('now', '-365 days')
+                GROUP BY strftime('%Y-%m', created_at)
+                ORDER BY month ASC
+            `);
+            const total30 = days30.reduce((s, r) => s + r.views, 0);
+            const total365 = months12.reduce((s, r) => s + r.views, 0);
+            res.json({ days30, months12, total30, total365 });
+        } catch (e) {
+            res.status(500).json({ error: 'DB error' });
+        }
+    });
+
+    router.get("/analytics/geo", requireAdmin, async (req, res) => {
+        try {
+            const byCountry = await all(`
+                SELECT country, country_code, COUNT(*) AS views
+                FROM page_views
+                WHERE country != '' AND country NOT IN ('Local', '')
+                GROUP BY country
+                ORDER BY views DESC
+                LIMIT 50
+            `);
+            res.json({ byCountry });
+        } catch (e) {
+            res.status(500).json({ error: 'DB error' });
+        }
+    });
+
     return router;
 };

@@ -400,6 +400,19 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_customer_users_email ON customer_users(email);
+
+    CREATE TABLE IF NOT EXISTS page_views (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      page_path TEXT NOT NULL DEFAULT '',
+      ip TEXT NOT NULL DEFAULT '',
+      country TEXT NOT NULL DEFAULT '',
+      country_code TEXT NOT NULL DEFAULT '',
+      city TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views(created_at);
+    CREATE INDEX IF NOT EXISTS idx_page_views_country ON page_views(country);
   `);
 
   await seed();

@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
 const https = require("https");
+const http = require("http");
 const multer = require("multer");
 const fs = require("fs");
 let nodemailer = null;
@@ -29,6 +30,56 @@ const OTP_HASH_SECRET =
   process.env.OTP_HASH_SECRET || "change_me_for_production";
 
 app.use(express.json({ limit: "2mb" }));
+app.set('trust proxy', true);
+
+// ---------------- Analytics: Geo lookup + page view tracking ----------------
+const _geoCache = new Map();
+const GEO_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+function lookupGeo(ip) {
+  return new Promise((resolve) => {
+    const fallback = { country: '', country_code: '', city: '' };
+    if (!ip || ip === '127.0.0.1' || ip === '::1') {
+      return resolve({ country: 'Local', country_code: 'LOCAL', city: '' });
+    }
+    if (/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/.test(ip)) {
+      return resolve({ country: 'Local', country_code: 'LOCAL', city: '' });
+    }
+    const cached = _geoCache.get(ip);
+    if (cached && Date.now() < cached.expires) return resolve(cached.data);
+
+    const cleanIp = ip.replace(/^::ffff:/, '');
+    const req = http.get(
+      `http://ip-api.com/json/${encodeURIComponent(cleanIp)}?fields=status,country,countryCode,city`,
+      (res) => {
+        let body = '';
+        res.on('data', d => body += d);
+        res.on('end', () => {
+          try {
+            const j = JSON.parse(body);
+            const data = j.status === 'success'
+              ? { country: j.country || '', country_code: j.countryCode || '', city: j.city || '' }
+              : fallback;
+            _geoCache.set(ip, { data, expires: Date.now() + GEO_CACHE_TTL_MS });
+            resolve(data);
+          } catch { resolve(fallback); }
+        });
+      }
+    );
+    req.on('error', () => resolve(fallback));
+    req.setTimeout(3000, () => { req.destroy(); resolve(fallback); });
+  });
+}
+
+async function trackPageView(ip, pagePath) {
+  try {
+    const geo = await lookupGeo(ip);
+    await run(
+      `INSERT INTO page_views(page_path, ip, country, country_code, city) VALUES (?, ?, ?, ?, ?)`,
+      [pagePath, ip, geo.country, geo.country_code, geo.city]
+    );
+  } catch (_) { /* silently ignore */ }
+}
 
 // ---------------- Security Headers ----------------
 app.use((req, res, next) => {
@@ -574,6 +625,24 @@ function buildLocalAuthPayload(user) {
     },
   };
 }
+
+// ---------------- Page-view tracking middleware ----------------
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    const p = req.path;
+    const isHtml = p.endsWith('.html') || p === '/' || p === '';
+    const isAdmin = p.startsWith('/admin');
+    const isApi = p.startsWith('/api');
+    const isAsset = p.startsWith('/assets') || p.startsWith('/products');
+    if (isHtml && !isAdmin && !isApi && !isAsset) {
+      const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+        || req.socket?.remoteAddress
+        || 'unknown';
+      trackPageView(rawIp, p);
+    }
+  }
+  next();
+});
 
 // ---------------- Static ----------------
 app.use("/assets", express.static(path.join(PUBLIC, "assets")));
