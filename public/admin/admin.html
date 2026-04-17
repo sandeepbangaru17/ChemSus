@@ -104,6 +104,8 @@
     .layout {
       display: flex;
       min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ── Sidebar ── */
@@ -261,9 +263,11 @@
     .main-area {
       margin-left: 0;
       flex: 1;
+      min-width: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
       transition: margin-left 0.3s ease;
     }
 
@@ -348,6 +352,8 @@
     .page-content {
       padding: 28px;
       flex: 1;
+      min-width: 0;
+      overflow-x: hidden;
     }
 
     /* ════════════════════════════════════════
@@ -511,7 +517,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
-      overflow: clip;
+      overflow: hidden;
       margin-bottom: 22px;
     }
 
@@ -772,18 +778,48 @@
     ════════════════════════════════════════ */
     .table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f8fafc;
       border-radius: 10px;
       border: 2px solid var(--border);
     }
 
+    /* Scrollbar styling */
+    .table-wrap::-webkit-scrollbar {
+      height: 5px;
+    }
+    .table-wrap::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
     table {
       width: 100%;
+      min-width: 800px;
       border-collapse: collapse;
       background: var(--card);
     }
 
+    /* Per-section min-widths based on column count */
+    #view-dashboard table { min-width: 700px;  }   /* 6 cols  */
+    #view-products  table { min-width: 900px;  }   /* 8 cols  */
+    #view-shop      table { min-width: 950px;  }   /* 9 cols  */
+    #view-packs     table { min-width: 820px;  }   /* 7 cols  */
+    #view-orders    table { min-width: 1400px; }   /* 14 cols */
+    #view-payments  table { min-width: 950px;  }   /* 9 cols  */
+    #view-samples   table { min-width: 1100px; }   /* 11 cols */
+    #view-contact   table { min-width: 860px;  }   /* 8 cols  */
+    #view-customers table { min-width: 1150px; }   /* 12 cols */
+
     thead th {
-      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      background: #f8fafc;
       font-family: "Montserrat", sans-serif;
       font-size: 11px;
       font-weight: 700;
@@ -797,10 +833,18 @@
     }
 
     tbody td {
-      padding: 12px 14px;
-      border-bottom: 1px solid #f1f5f9;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
       font-size: 13px;
       vertical-align: middle;
+      white-space: nowrap;
+      background: var(--card);
+    }
+
+    /* Allow certain cells to wrap (long text like addresses/notes) */
+    tbody td.wrap {
+      white-space: normal;
+      min-width: 160px;
     }
 
     tbody tr:last-child td {
@@ -811,8 +855,8 @@
       transition: background 0.15s ease;
     }
 
-    tbody tr:hover {
-      background: #f8fafc;
+    tbody tr:hover td {
+      background: #f0f7ff;
     }
 
     /* ── Status tags ── */
@@ -1052,13 +1096,7 @@
         grid-template-columns: 1fr;
       }
 
-      table {
-        min-width: 700px;
-      }
-
-      #view-orders table {
-        min-width: 960px;
-      }
+      #view-orders table { min-width: 1400px; }
     }
 
     @media (max-width: 580px) {
