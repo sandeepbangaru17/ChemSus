@@ -348,7 +348,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -768,6 +769,10 @@
         width: 20px;
         height: 20px;
       }
+
+      .hero {
+        padding-top: 72px;
+      }
     }
 
     @media (min-width: 1051px) {
@@ -1009,6 +1014,19 @@
         opacity: 0;
         pointer-events: none;
       }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; padding-top: 80px; }
+      .hero-title { font-size: 22px; }
+      .hero-subtitle { font-size: 13px; }
+      .hero-cta { flex-direction: column; gap: 10px; }
+      .hero-cta a, .hero-cta button { width: 100%; text-align: center; }
+      main { padding: 16px 12px; }
+      .section { padding: 16px 12px; border-radius: 10px; }
+      .objective-logo img, .objective-logo video { max-width: 100%; }
+      img { max-width: 100%; }
+      p, li { word-break: break-word; }
     }
 
     /* Mobile viewport fix */
