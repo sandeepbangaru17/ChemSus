@@ -33,10 +33,13 @@ This system is intended to replace manual order handling and reduce fake inquiri
 - File uploads for images and PDFs
 - Brochure URL management
 - Change admin email and password from Settings panel
+- **Analytics dashboard** — page views over 30 days / 12 months with charts, and visitor breakdown by country
 
 ### 2.3 System Capabilities
 - Email OTP generation and validation (expiry, rate limiting, one-time use)
-- JWT-based admin session (locally signed, 8-hour TTL)
+- JWT-based admin session (locally signed, 8-hour TTL, stored in `sessionStorage`)
+- Customer sessions stored in `sessionStorage` — auto-cleared on browser/tab close
+- Page-view analytics tracked server-side; geographic lookup via `ip-api.com`
 - Payment receipt upload and review
 - Order status tracking by admin (Processing → Confirmed → Shipped → Delivered → Cancelled)
 - SQLite database with auto-migration on startup
