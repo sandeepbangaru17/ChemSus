@@ -36,7 +36,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0; top: 0;
       z-index: 1002;
@@ -458,6 +459,16 @@
       .meta-row { flex-direction: column; gap: 8px; align-items: flex-start; }
       .sig-row  { flex-direction: column; align-items: flex-start; }
       .sig-right { min-width: unset; width: 100%; text-align: left; }
+    }
+
+    @media (max-width: 480px) {
+      .order-hero h1 { font-size: 20px; }
+      .order-hero { padding: 80px 12px 28px; min-height: 150px; }
+      .order-hero-inner { padding: 0; }
+      .doc-paper { padding: 16px 12px; border-radius: 8px; }
+      .doc-table { font-size: 11px; }
+      img { max-width: 100%; }
+      td, th { word-break: break-word; }
     }
   </style>
 </head>
