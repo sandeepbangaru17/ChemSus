@@ -9,11 +9,27 @@ module.exports = function (deps) {
         sendTransactionalEmail, crypto, verifyCustomerToken
     } = deps;
 
-    function generatePurchaseId() {
+    async function generatePurchaseId() {
         const now = new Date();
-        const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
-        const rand = crypto.randomBytes(3).toString('hex').toUpperCase();
-        return `CS-PND-${ymd}-${rand}`;
+        const month = now.getMonth() + 1; // 1-12
+        const year = now.getFullYear();
+
+        // Indian financial year: April 1 – March 31
+        const fyStart = month >= 4 ? year : year - 1;
+        const fyEnd = fyStart + 1;
+        const fyLabel = `${fyStart}-${String(fyEnd).slice(-2)}`; // e.g. "2026-27"
+
+        const fyStartStr = `${fyStart}-04-01 00:00:00`;
+        const fyEndStr   = `${fyEnd}-04-01 00:00:00`;
+
+        const row = await get(
+            `SELECT COUNT(*) AS cnt FROM orders WHERE created_at >= ? AND created_at < ?`,
+            [fyStartStr, fyEndStr]
+        );
+        const seq    = (row?.cnt || 0) + 1;
+        const seqStr = String(seq).padStart(4, '0');
+
+        return `CST-${fyLabel}-${seqStr}`;
     }
 
     function buildOrderConfirmationEmail(customerName, purchaseId, productname, quantity, totalprice, country) {
@@ -254,7 +270,7 @@ module.exports = function (deps) {
             const subtotal = totalprice;
             totalprice = Math.round(subtotal * (1 + GST_RATE) * 100) / 100;
             const unitprice = totalQty > 0 ? totalprice / totalQty : 0;
-            const purchaseId = generatePurchaseId();
+            const purchaseId = await generatePurchaseId();
             const r = await run(
                 `INSERT INTO orders
           (customername,email,phone,companyName,address,city,region,pincode,country,
@@ -343,7 +359,7 @@ module.exports = function (deps) {
             );
             sendTransactionalEmail(
                 email,
-                `Quotation Ready – ID: ${purchaseId} | ChemSus Technologies`,
+                `Quotation Ready – Ref: ${purchaseId} | ChemSus Technologies`,
                 confHtml,
                 confText
             ).catch(e => console.warn('[ORDER-EMAIL] Confirmation send failed:', e?.message));
