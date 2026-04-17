@@ -100,6 +100,7 @@
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .nav-menu li a {
@@ -542,6 +543,7 @@
 
       .main-wrapper {
         margin-left: 0;
+        width: 100%;
         padding-top: 0;
       }
 
@@ -614,9 +616,12 @@
       .hero-title { font-size: 20px; }
       .hero-subtitle { font-size: 13px; }
       .product-card { padding: 14px 10px; }
+      .content-section { gap: 16px; }
+      .actions { gap: 10px; margin-top: 14px; }
       .lead { font-size: 14px; }
-      .section-title { font-size: 16px; }
-      .btn-primary, .btn-secondary { padding: 12px 16px; font-size: 13px; }
+      .section-title { font-size: 16px; margin: 14px 0 8px; }
+      .features-list { font-size: 13.5px; }
+      .btn-primary, .btn-secondary { padding: 12px 16px; font-size: 13px; min-width: unset; }
       .btn-pubchem { padding: 11px 14px; font-size: 12.5px; white-space: normal; text-align: center; }
       .pubchem-link-container { margin: 16px 0; }
     }
@@ -834,6 +839,10 @@
     }
 
     @media (max-width: 1050px) {
+      body.no-scroll {
+        overflow: hidden;
+      }
+
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
