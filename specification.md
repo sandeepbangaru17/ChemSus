@@ -23,7 +23,7 @@ and provide a smooth checkout experience — without requiring customers to crea
 - **Registered Customer**
   - Signs up with email + password at `/signup.html`
   - Logs in at `/login.html` (password or email OTP)
-  - JWT stored in `localStorage` (`chemsus_customer_token`), 7-day TTL
+  - JWT stored in `sessionStorage` (`chemsus_customer_token`), 7-day TTL; auto-cleared when browser tab is closed
   - Checkout pre-fills from saved profile; skips OTP step
   - Views full order history at `/my-orders.html`
   - Manages profile at `/profile.html`
@@ -116,7 +116,7 @@ and provide a smooth checkout experience — without requiring customers to crea
 ### 4.1 Admin Authentication
 - Admin logs in at `/admin/login.html` with email + password.
 - JWT token issued on successful login (8-hour session).
-- Token stored in `localStorage`, sent as `Authorization: Bearer` header.
+- Token stored in `sessionStorage`, sent as `Authorization: Bearer` header; auto-cleared when browser tab is closed.
 - Admin can change email/password from Settings panel (no server restart needed).
 
 ### 4.2 Product Management
@@ -154,6 +154,17 @@ and provide a smooth checkout experience — without requiring customers to crea
 - Sample requests require email OTP verification before submission.
 - Stored in `sample_requests` table with full applicant details.
 
+### 4.9 Analytics
+- Admin dashboard includes an **Analytics** section showing:
+  - Total page views for the last 30 days and last 12 months (summary cards)
+  - Daily bar chart for the last 30 days
+  - Monthly bar chart for the last 12 months
+  - Country breakdown table with flag emojis, view counts, and % share bars
+- Page views are tracked server-side via middleware — no client-side JS changes required on public pages.
+- Geo lookup uses the free `ip-api.com` API (HTTP, no key required); results cached per IP for 24 hours.
+- Private/local IPs are labeled "Local" and excluded from the country table.
+- Data stored in the `page_views` SQLite table (`page_path`, `ip`, `country`, `country_code`, `city`, `created_at`).
+
 ---
 
 ## 5. Non-Functional Requirements
@@ -164,6 +175,7 @@ and provide a smooth checkout experience — without requiring customers to crea
 - Passwords hashed with scrypt before storage
 - OTP codes hashed with HMAC-SHA256 before storage
 - Receipt upload gated behind order ownership verification
+- Admin and customer sessions stored in `sessionStorage` — auto-cleared on browser/tab close
 
 ---
 
