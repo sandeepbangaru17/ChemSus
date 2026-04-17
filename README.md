@@ -1,6 +1,6 @@
 # ChemSus Technologies — Web Application
 
-A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a **product showcase**, **e-commerce shop**, **order & payment flow with email OTP verification**, **customer accounts**, and a **secure admin dashboard**.
+A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a **product showcase**, **e-commerce shop**, **order & payment flow with email OTP verification**, **customer accounts**, a **secure admin dashboard**, and **built-in page-view analytics with geographic visitor tracking**.
 
 ---
 
@@ -32,6 +32,8 @@ A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a *
   * Customer accounts view
   * Site settings (brochure upload, admin credentials)
   * Change admin email/password from the dashboard
+  * **Analytics** — page views over last 30 days and 12 months with charts, plus visitor breakdown by country (geographic data via ip-api.com)
+* **Session-based auth** — admin and customer sessions are cleared automatically when the browser tab/window is closed (no manual logout required for security)
 
 Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to deploy.
 
@@ -84,7 +86,7 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 ### 🛠️ Admin Dashboard (`/admin/admin.html`)
 
 * **Separate login page** at `/admin/login.html` — email + password (no Supabase)
-* **JWT-protected** — locally signed token, 8-hour session
+* **JWT-protected** — locally signed token, 8-hour session; stored in `sessionStorage` (auto-clears on browser close)
 * Products page CRUD
 * Shop items CRUD
 * Pack pricing CRUD (per product) — includes competitor pricing (USD/INR)
@@ -95,6 +97,7 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 * Customers — view registered customer accounts
 * File uploads — images and PDFs
 * Brochure URL management
+* **Analytics** — sidebar section showing daily/monthly page view charts (Chart.js) and a country breakdown table with flag emojis and share bars
 * **Change admin email/password** without restarting server
 * Fully mobile-responsive with collapsible sidebar
 
@@ -114,8 +117,8 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 * Nodemailer (email OTP via Zoho SMTP)
 
 ### Authentication
-* **Admin**: Local JWT (HMAC-SHA256), credentials in `.env` + DB override, 8-hour TTL
-* **Customers**: Email + password (scrypt hashed), OTP email verification on signup, 7-day JWT sessions
+* **Admin**: Local JWT (HMAC-SHA256), credentials in `.env` + DB override, 8-hour TTL, stored in `sessionStorage`
+* **Customers**: Email + password (scrypt hashed), OTP email verification on signup, 7-day JWT sessions stored in `sessionStorage` (auto-logout on browser close)
 
 ---
 
@@ -208,6 +211,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | `email_otp_sessions` | Email OTP sessions (checkout + signup verification) |
 | `sample_requests` | Sample request form submissions |
 | `contact_messages` | Contact form submissions |
+| `page_views` | Page view analytics — path, IP, country, city, timestamp |
 
 Database auto-migrates on startup — new columns and indexes are added automatically.
 
@@ -252,6 +256,8 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | DELETE | `/api/admin/customers/:id` | Delete customer account |
 | POST | `/api/admin/upload` | Upload site assets |
 | POST | `/api/admin/brochure` | Save brochure URL |
+| GET | `/api/admin/analytics/views` | Page view counts (30 days + 12 months) |
+| GET | `/api/admin/analytics/geo` | Visitor breakdown by country |
 
 ### Customer Auth APIs
 
@@ -325,6 +331,7 @@ Admin panel: `http://localhost:5656/admin/login.html`
 ## Security
 
 * Admin access controlled by **local JWT + HMAC-SHA256 signature**, 8-hour TTL
+* **Sessions stored in `sessionStorage`** — both admin and customer sessions are automatically cleared when the browser tab/window is closed
 * Customer sessions use **JWT with 7-day TTL**, scrypt-hashed passwords
 * Passwords stored as `scrypt` hash with random salt (never plain-text in DB)
 * OTP codes hashed with HMAC-SHA256 before DB storage
