@@ -58,7 +58,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -813,6 +814,25 @@
     .otp-input-wrap .form-input:focus {
       border-color: #16a34a;
       box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      .section { padding: 18px 14px; border-radius: 10px; }
+      .form-input, .form-textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .email-row { flex-direction: column; }
+      .btn-otp { width: 100%; }
+      .otp-input-wrap .form-input { max-width: 100%; letter-spacing: 4px; }
+      p, li { word-break: break-word; }
     }
   </style>
 </head>
