@@ -78,8 +78,11 @@
 
     /* Quotation banner */
     .quotation-banner { background: #f0fdf4; border-top: 1px solid #bbf7d0; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .quotation-banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .btn-quotation { padding: 8px 16px; background: linear-gradient(135deg, #0074c7, #00b8b0); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; white-space: nowrap; }
     .btn-quotation:hover { opacity: 0.88; }
+    .btn-view-quotation { padding: 8px 16px; background: #fff; color: #0074c7; border: 1.5px solid #0074c7; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; white-space: nowrap; }
+    .btn-view-quotation:hover { background: #eff6ff; }
 
     /* Empty state */
     .empty { text-align: center; padding: 60px 20px; }
@@ -375,13 +378,71 @@
                   <span style="font-size:13px;font-weight:600;color:#065f46;">Your Quotation is Ready</span><br>
                   <span style="font-size:12px;color:#047857;">Download the PDF and email it with your PO to <strong>sales@chemsus.in</strong></span>
                 </div>
-                <button class="btn-quotation" onclick="downloadQuotationPDF(window._ordersData[${idx}])">&#8595; Download PDF</button>
+                <div class="quotation-banner-actions">
+                  <button class="btn-view-quotation" onclick="viewQuotation(${idx})">&#128196; View Quotation</button>
+                  <button class="btn-quotation" onclick="downloadQuotationPDF(window._ordersData[${idx}])">&#8595; Download PDF</button>
+                </div>
               </div>
             </div>`;
         }).join('');
 
       } catch (e) {
         container.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>Error loading orders</h3><p>${e.message}</p></div>`;
+      }
+    }
+
+    function viewQuotation(idx) {
+      const o = window._ordersData[idx];
+      if (!o) return;
+
+      const items = o.items && o.items.length > 0
+        ? o.items.map(it => ({
+            name: it.product_name || it.productname || '',
+            packSize: it.pack_size || '',
+            quantity: it.quantity,
+            unitPrice: it.unit_price || it.unitprice || 0,
+            total: it.total_price || it.totalprice || 0
+          }))
+        : [{
+            name: o.productname || '',
+            packSize: '',
+            quantity: o.quantity || 1,
+            unitPrice: o.unitprice || 0,
+            total: o.totalprice || 0
+          }];
+
+      const grandTotal = Number(o.totalprice || 0);
+      const subtotal = items.reduce((s, it) => s + Number(it.total || 0), 0) || grandTotal / 1.18;
+      const gst = grandTotal - subtotal;
+
+      const raw = o.created_at || '';
+      const s = raw.includes('T') ? raw : raw.replace(' ', 'T');
+      const d = new Date(s.endsWith('Z') ? s : s + 'Z');
+      const dateStr = isNaN(d) ? raw : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+      const quotationData = {
+        quotationId: o.purchase_id || ('ORD-' + o.id),
+        date: dateStr,
+        customerName: o.customername || '',
+        companyName: o.companyName || '',
+        address: o.address || '',
+        city: o.city || '',
+        region: o.region || '',
+        pincode: o.pincode || '',
+        country: o.country || '',
+        email: o.email || '',
+        phone: o.phone || '',
+        items,
+        subtotal,
+        gst,
+        grandTotal
+      };
+
+      try {
+        sessionStorage.setItem('quotationData', JSON.stringify(quotationData));
+        window.location.href = 'quotation.html';
+      } catch (e) {
+        alert('Could not open quotation. Please try again.');
       }
     }
 
