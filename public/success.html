@@ -563,8 +563,8 @@
       }
 
       // Show "View My Orders" button for logged-in customers
-      const custToken = localStorage.getItem('chemsus_customer_token');
-      const custExp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const custToken = sessionStorage.getItem('chemsus_customer_token');
+      const custExp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
       if (custToken && (!custExp || Date.now() / 1000 < custExp)) {
         document.getElementById('myOrdersBtn').style.display = '';
       }

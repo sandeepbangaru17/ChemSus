@@ -12,8 +12,8 @@
   const MODAL_ID = 'checkoutGateModal';
 
   function isLoggedIn() {
-    const tok = localStorage.getItem('chemsus_customer_token');
-    const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+    const tok = sessionStorage.getItem('chemsus_customer_token');
+    const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
     return !!tok && (!exp || Date.now() / 1000 < exp);
   }
 

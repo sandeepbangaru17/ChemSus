@@ -1543,13 +1543,13 @@
 
       // Update nav auth link
       (function () {
-        const tok = localStorage.getItem('chemsus_customer_token');
-        const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+        const tok = sessionStorage.getItem('chemsus_customer_token');
+        const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
         const authLink = document.getElementById('authNavLink');
         const profileItem = document.getElementById('profileNavItem');
         if (!authLink) return;
         if (tok && (!exp || Date.now() / 1000 < exp)) {
-          const name = localStorage.getItem('chemsus_customer_name');
+          const name = sessionStorage.getItem('chemsus_customer_name');
           authLink.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
           authLink.href = 'my-orders.html';
           if (profileItem) profileItem.style.display = 'list-item';

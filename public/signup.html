@@ -143,8 +143,8 @@
 
     // Redirect if already logged in
     (function () {
-      const tok = localStorage.getItem('chemsus_customer_token');
-      const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
       if (tok && (!exp || Date.now() / 1000 < exp)) window.location.replace(returnUrl);
     })();
 
@@ -205,8 +205,8 @@
         });
         const d = await r.json();
         if (!r.ok) throw new Error(d.error || 'Verification failed');
-        localStorage.setItem('chemsus_customer_token', d.token);
-        localStorage.setItem('chemsus_customer_token_exp', String(d.expiresAt));
+        sessionStorage.setItem('chemsus_customer_token', d.token);
+        sessionStorage.setItem('chemsus_customer_token_exp', String(d.expiresAt));
         showStep(3);
         setTimeout(() => window.location.replace(returnUrl), 1500);
       } catch (e) {

@@ -250,8 +250,8 @@
 
   <script>
     const API = '/api/customer';
-    const token = localStorage.getItem('chemsus_customer_token');
-    const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+    const token = sessionStorage.getItem('chemsus_customer_token');
+    const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
 
     if (!token || (exp && Date.now() / 1000 > exp)) {
       window.location.replace('login.html?return=profile.html');
@@ -281,7 +281,7 @@
         document.getElementById('profileRegion').value = p.region || '';
         document.getElementById('profilePincode').value = p.pincode || '';
         document.getElementById('profileCountry').value = p.country || 'India';
-        if (p.name) localStorage.setItem('chemsus_customer_name', p.name);
+        if (p.name) sessionStorage.setItem('chemsus_customer_name', p.name);
 
         // Populate hero banner
         const displayName = p.name || 'My Profile';
@@ -326,7 +326,7 @@
           })
         });
         if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'Save failed'); }
-        localStorage.setItem('chemsus_customer_name', name);
+        sessionStorage.setItem('chemsus_customer_name', name);
         showAlert('Profile saved successfully!', 'ok');
       } catch (e) {
         showAlert(e.message);
@@ -336,9 +336,9 @@
     }
 
     function logout() {
-      localStorage.removeItem('chemsus_customer_token');
-      localStorage.removeItem('chemsus_customer_token_exp');
-      localStorage.removeItem('chemsus_customer_name');
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
       window.location.replace('login.html');
     }
 

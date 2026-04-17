@@ -176,8 +176,8 @@
 
     // Redirect if already logged in
     (function () {
-      const tok = localStorage.getItem('chemsus_customer_token');
-      const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
       if (tok && (!exp || Date.now() / 1000 < exp)) {
         window.location.replace(returnUrl);
       }
@@ -203,13 +203,13 @@
     }
 
     function saveToken(token, expiresAt) {
-      localStorage.setItem('chemsus_customer_token', token);
-      localStorage.setItem('chemsus_customer_token_exp', String(expiresAt));
+      sessionStorage.setItem('chemsus_customer_token', token);
+      sessionStorage.setItem('chemsus_customer_token_exp', String(expiresAt));
     }
 
     function onLoginSuccess(data) {
       saveToken(data.token, data.expiresAt);
-      if (data.profile?.name) localStorage.setItem('chemsus_customer_name', data.profile.name);
+      if (data.profile?.name) sessionStorage.setItem('chemsus_customer_name', data.profile.name);
       showAlert('Logged in! Redirecting…', 'ok');
       setTimeout(() => window.location.replace(returnUrl), 800);
     }

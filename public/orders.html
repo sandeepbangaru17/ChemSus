@@ -1351,9 +1351,9 @@
 
     /* ── Customer auth ── */
     function logoutCustomer() {
-      localStorage.removeItem('chemsus_customer_token');
-      localStorage.removeItem('chemsus_customer_token_exp');
-      localStorage.removeItem('chemsus_customer_name');
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
       _customerToken = null;
       _isLoggedIn = false;
       window.location.reload();
@@ -1385,8 +1385,8 @@
       updateCartBadge();
 
       // ── Customer auth detection ──
-      const storedToken = localStorage.getItem('chemsus_customer_token');
-      const storedExp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const storedToken = sessionStorage.getItem('chemsus_customer_token');
+      const storedExp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
       const isValidToken = storedToken && (!storedExp || Date.now() / 1000 < storedExp);
 
       if (isValidToken) {
@@ -1398,14 +1398,14 @@
         document.getElementById('guestBanner').style.display = 'none';
 
         // Show name from localStorage while profile loads
-        const cachedName = localStorage.getItem('chemsus_customer_name');
+        const cachedName = sessionStorage.getItem('chemsus_customer_name');
         if (cachedName) document.getElementById('loggedInName').textContent = cachedName;
 
         // Update sidebar nav link immediately (before async fetch)
         const authNavLink = document.getElementById('authNavLink');
         const profileNavItem = document.getElementById('profileNavItem');
         if (authNavLink) {
-          const name = localStorage.getItem('chemsus_customer_name');
+          const name = sessionStorage.getItem('chemsus_customer_name');
           authNavLink.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
           authNavLink.href = 'my-orders.html';
           if (profileNavItem) profileNavItem.style.display = 'list-item';
@@ -1420,7 +1420,7 @@
             _profile = await pr.json();
             if (_profile.name) {
               document.getElementById('loggedInName').textContent = _profile.name;
-              localStorage.setItem('chemsus_customer_name', _profile.name);
+              sessionStorage.setItem('chemsus_customer_name', _profile.name);
               if (authNavLink) {
                 authNavLink.innerHTML = '<span class="nav-icon">📦</span> My Orders (' + _profile.name + ')';
               }

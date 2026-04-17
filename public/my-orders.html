@@ -154,14 +154,14 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
   <script>
     const API = '/api/customer';
-    const token = localStorage.getItem('chemsus_customer_token');
-    const exp = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+    const token = sessionStorage.getItem('chemsus_customer_token');
+    const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
 
     if (!token || (exp && Date.now() / 1000 > exp)) {
       window.location.replace('login.html?return=my-orders.html');
     }
 
-    const name = localStorage.getItem('chemsus_customer_name');
+    const name = sessionStorage.getItem('chemsus_customer_name');
     if (name) document.getElementById('welcomeName').textContent = 'Hi, ' + name;
 
     function statusBadge(s) {
@@ -424,7 +424,7 @@
           const pr = await fetch(API + '/profile', { headers: { Authorization: 'Bearer ' + token } });
           if (pr.ok) profile = await pr.json();
           if (profile.name) {
-            localStorage.setItem('chemsus_customer_name', profile.name);
+            sessionStorage.setItem('chemsus_customer_name', profile.name);
             document.getElementById('welcomeName').textContent = 'Hi, ' + profile.name;
           }
         } catch { }
@@ -532,9 +532,9 @@
     }
 
     function logout() {
-      localStorage.removeItem('chemsus_customer_token');
-      localStorage.removeItem('chemsus_customer_token_exp');
-      localStorage.removeItem('chemsus_customer_name');
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
       window.location.replace('login.html');
     }
 

@@ -1227,13 +1227,13 @@
 
     /* ── Auth nav link ── */
     (function () {
-      const tok  = localStorage.getItem('chemsus_customer_token');
-      const exp  = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
+      const tok  = sessionStorage.getItem('chemsus_customer_token');
+      const exp  = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
       const auth = document.getElementById('authNavLink');
       const profileItem = document.getElementById('profileNavItem');
       if (!auth) return;
       if (tok && (!exp || Date.now() / 1000 < exp)) {
-        const name = localStorage.getItem('chemsus_customer_name');
+        const name = sessionStorage.getItem('chemsus_customer_name');
         auth.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
         auth.href = 'my-orders.html';
         if (profileItem) profileItem.style.display = 'list-item';
