@@ -45,7 +45,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -498,6 +499,10 @@
       .mobile-toggle {
         display: block;
       }
+
+      .hero {
+        padding-top: 72px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -512,6 +517,18 @@
       .buy-card {
         padding: 20px;
       }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 140px; padding-top: 80px; }
+      .hero-title { font-size: 20px; }
+      .hero-subtitle { font-size: 12px; }
+      .buy-card { padding: 16px 12px; border-radius: 12px; }
+      .buy-title { font-size: 17px; }
+      .actions-row { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .qty-input { width: 80px; }
+      img { max-width: 100%; }
     }
 
     @media (max-width: 1050px) {
