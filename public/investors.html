@@ -58,7 +58,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -757,6 +758,23 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      main { padding: 20px 12px 32px; }
+      p, li, td, th { word-break: break-word; }
+      table { font-size: 13px; }
+      .overflow-x-auto, .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
   </style>
 </head>
 
@@ -829,7 +847,7 @@
       </div>
       <p class="section-intro">
         ChemSus Technologies attracts mission‑aligned funding to translate laboratory breakthroughs into industrially
-        viable, low‑carbon chemical processes built on bamboo biomass.
+        viable, low‑carbon chemical processes built on lignocellulosic biomass.
       </p>
 
       <div class="funding-wrapper">
@@ -858,13 +876,13 @@
 
           <p class="funding-text">
             BIRAC, under its Biotechnology Ignition Grant – North Eastern Region scheme, supports ChemSus Technologies
-            in developing a scalable process to convert bamboo biomass into high‑value specialty chemicals for health
+            in developing a scalable process to convert lignocellulosic biomass into high‑value specialty chemicals for health
             and personal‑care markets.
           </p>
 
           <p class="funding-text"><strong>Key technical objectives:</strong></p>
           <ul class="funding-list">
-            <li>Design and optimization of a robust, modular process for bamboo biomass conversion.</li>
+            <li>Design and optimization of a robust, modular process for lignocellulosic biomass conversion.</li>
             <li>Production of pharmaceutical‑grade calcium levulinate as a nutritional supplement component.</li>
             <li>Development of food and cosmetic preservatives based on levulinic acid and sodium levulinate.</li>
             <li>Establishment of a pilot facility targeting a throughput of approximately 10 kg/day.</li>
@@ -910,7 +928,7 @@
           Project overview
         </h3>
         <p class="subsection-text">
-          The project focuses on transforming abundantly available bamboo biomass from the North‑Eastern region into
+          The project focuses on transforming abundantly available lignocellulosic biomass from the North‑Eastern region into
           value‑added levulinic‑acid derivatives using green‑chemistry routes with minimal waste and solvent
           footprint.
         </p>
