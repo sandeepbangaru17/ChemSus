@@ -242,14 +242,36 @@
 
       doc.autoTable({
         startY: y,
-        head: [['#', 'Product', 'Pack Size', 'Qty', 'Unit Price (INR)', 'Total (INR)']],
+        head: [['SL No.', 'Product', 'Pack Size', 'Qty', 'Rate (INR)', 'Amount (INR)']],
         body: qItems,
         margin: { left: margin, right: margin },
-        headStyles: { fillColor: [0, 116, 199], textColor: 255, fontStyle: 'bold', fontSize: 9 },
-        bodyStyles: { fontSize: 9, textColor: [30, 41, 59] },
+        headStyles: {
+          fillColor: [0, 116, 199], textColor: 255, fontStyle: 'bold', fontSize: 8,
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak', valign: 'middle'
+        },
+        bodyStyles: {
+          fontSize: 8.5, textColor: [30, 41, 59],
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak'
+        },
         alternateRowStyles: { fillColor: [248, 250, 252] },
-        columnStyles: { 0: { cellWidth: 8 }, 3: { halign: 'right' }, 4: { halign: 'right' }, 5: { halign: 'right', fontStyle: 'bold' } },
+        columnStyles: {
+          0: { cellWidth: 18, halign: 'center' },
+          1: { halign: 'left' },
+          2: { cellWidth: 28, halign: 'center' },
+          3: { cellWidth: 16, halign: 'center' },
+          4: { cellWidth: 32, halign: 'right' },
+          5: { cellWidth: 32, halign: 'right', fontStyle: 'bold' }
+        },
         theme: 'grid', tableLineColor: [226, 232, 240], tableLineWidth: 0.2,
+        didParseCell: function (data) {
+          if (data.section === 'head') {
+            if (data.column.index === 0 || data.column.index === 2 || data.column.index === 3) data.cell.styles.halign = 'center';
+            if (data.column.index === 1) data.cell.styles.halign = 'left';
+            if (data.column.index === 4 || data.column.index === 5) data.cell.styles.halign = 'right';
+          }
+        }
       });
       y = doc.lastAutoTable.finalY + 6;
 
@@ -274,36 +296,83 @@
       y += 36;
 
       // Instructions
+      const qid = o.purchase_id || ('ORD-' + o.id);
+      const steps1 = [
+        `1. Attach this Quotation PDF with your Purchase Order (PO) and email both to: sales@chemsus.in \u2014 Ref No. ${qid}`,
+        '2. Our team will send you a Proforma Invoice with bank account details.',
+        '3. Complete 100% advance payment via bank transfer and send the payment receipt to sales@chemsus.in.'
+      ];
+      const boxH1 = 9 + steps1.length * 7;
       doc.setFillColor(239, 246, 255); doc.setDrawColor(191, 219, 254); doc.setLineWidth(0.3);
-      doc.roundedRect(margin, y, pageW - 2 * margin, 44, 2, 2, 'FD');
+      doc.roundedRect(margin, y, pageW - 2 * margin, boxH1, 2, 2, 'FD');
       doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(29, 78, 216);
       doc.text('Next Steps to Complete Your Order:', margin + 4, y + 7);
       doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 64, 175);
-      const qid = o.purchase_id || ('ORD-' + o.id);
-      ['1. Attach this Quotation PDF with your Purchase Order.',
-       `2. Email both documents to: sales@chemsus.in  (mention Quotation ID: ${qid})`,
-       '3. Our team will send you a Proforma Invoice with bank payment details.',
-       '4. Complete the bank transfer and send the payment receipt to sales@chemsus.in.'
-      ].forEach((s, i) => doc.text(s, margin + 4, y + 14 + i * 7));
-      y += 50;
+      steps1.forEach((s, i) => {
+        const lines = doc.splitTextToSize(s, pageW - 2 * margin - 8);
+        doc.text(lines, margin + 4, y + 14 + i * 7);
+      });
+      y += boxH1 + 6;
 
-      // T&C
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(100, 116, 139);
-      doc.text('TERMS & CONDITIONS', margin, y); y += 5;
-      doc.setFont('helvetica', 'normal');
-      ['1. Shipping charges are included in the quoted price for deliveries within India.',
-       '2. For international deliveries, additional shipping charges will be applicable and intimated separately.',
-       '3. Payment via bank transfer against Proforma Invoice issued by ChemSus Technologies Pvt Ltd.',
-       '4. This quotation is valid for 30 days from the date of issue.',
-       '5. Prices are inclusive of 18% GST.'
-      ].forEach(l => { doc.text(l, margin, y); y += 5; });
-      y += 4;
-
-      // Footer
+      // Footer page 1
       doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
       doc.line(margin, y, pageW - margin, y); y += 5;
       doc.setFontSize(8); doc.setTextColor(148, 163, 184);
       doc.text('ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in', pageW / 2, y, { align: 'center' });
+
+      // ── PAGE 2: T&C ──
+      doc.addPage();
+      const ph = doc.internal.pageSize.getHeight();
+      doc.setFillColor(0, 116, 199); doc.rect(0, 0, pageW, 22, 'F');
+      doc.setFillColor(0, 184, 176); doc.rect(0, 22, pageW, 2, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(255, 255, 255);
+      doc.text('ChemSus Technologies Pvt Ltd', margin, 13);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(200, 230, 255);
+      doc.text('Sustainable Specialty Chemicals  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in', margin, 20);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+      doc.text('T & C', pageW - margin, 14, { align: 'right' });
+
+      let ty = 32;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(30, 41, 59);
+      doc.text('Terms & Conditions', pageW / 2, ty, { align: 'center' });
+      const tcHW = doc.getTextWidth('Terms & Conditions');
+      doc.setDrawColor(30, 41, 59); doc.setLineWidth(0.35);
+      doc.line(pageW / 2 - tcHW / 2, ty + 1.5, pageW / 2 + tcHW / 2, ty + 1.5);
+      ty += 10;
+
+      const tcContent = [
+        { title: 'Order to be placed in favour of:', body: 'ChemSus Technologies Pvt Ltd\nHouse No. 555, GNB Road, North Guwahati, Assam \u2013 781030' },
+        { title: 'Validity:', body: 'The prices mentioned in this quotation are valid for 30 days. Revisions may occur due to changes in raw material costs, Government policy, or other reasons beyond our control.' },
+        { title: 'Payment:', body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank account details will be shared upon receipt of Purchase Order.' },
+        { title: 'Delivery:', body: '3\u20134 weeks from receipt of confirmed Purchase Order and advance payment. Partial deliveries may be necessary. We shall not be penalised for delays caused by force majeure events including riots, strikes, Government restrictions, or acts of God.' },
+        { title: 'Taxes:', body: 'GST @ 18% is applicable and included in the quoted price as indicated.' },
+        { title: 'Freight:', body: 'Shipping charges are included in the quoted price for deliveries within India. For international shipments, additional freight charges will be applicable and intimated separately.' },
+        { title: 'Cancellation:', body: 'Order once placed and payment received cannot be cancelled.' },
+      ];
+
+      tcContent.forEach(item => {
+        doc.setFillColor(0, 116, 199);
+        doc.circle(margin + 2, ty - 1, 1.5, 'F');
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+        doc.text(item.title, margin + 7, ty);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(71, 85, 105);
+        const bLines = doc.splitTextToSize(item.body, pageW - 2 * margin - 7);
+        doc.text(bLines, margin + 7, ty + 5);
+        ty += 5 + bLines.length * 4 + 5;
+      });
+
+      // Footer on all pages
+      const totalPages = doc.getNumberOfPages();
+      for (let p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFillColor(0, 116, 199);
+        doc.rect(0, ph - 10, pageW, 10, 'F');
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(200, 230, 255);
+        doc.text(
+          `ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in  |  Page ${p} of ${totalPages}`,
+          pageW / 2, ph - 3.5, { align: 'center' }
+        );
+      }
 
       doc.save('Quotation_' + qid + '.pdf');
     }
@@ -382,7 +451,7 @@
               <div class="card-body">
                 <div class="order-meta">
                   <div class="product">${productLine}</div>
-                  <div class="detail">Qty: ${o.quantity || '—'} &nbsp;|&nbsp; Delivery: ${o.order_status || 'Processing'}</div>
+                  <div class="detail">Qty: ${o.quantity || '—'} &nbsp;|&nbsp; Order Status: ${o.order_status || 'Processing'}</div>
                 </div>
                 <div class="order-right">
                   <div class="order-total">₹${Number(o.totalprice || 0).toLocaleString('en-IN')}</div>
