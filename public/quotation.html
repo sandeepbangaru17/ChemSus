@@ -67,6 +67,7 @@
       text-decoration: none;
     }
     .nav-logo-img { height: 24px; width: auto; }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
     .nav-menu { list-style: none; padding: 8px 0; flex: 1; overflow-y: auto; }
     .nav-menu li a {
       display: block;
@@ -501,8 +502,8 @@
       <li><a href="contact.html">✉️ Contact Us</a></li>
       <li><a href="request-sample.html">🧫 Request Sample</a></li>
       <li class="nav-section-label">Account</li>
-      <li><a href="my-orders.html" id="ordersNavLink">📦 My Orders</a></li>
-      <li><a href="login.html" id="authNavLink">👤 Login / Sign Up</a></li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
   </nav>
 
@@ -604,7 +605,7 @@
           <table class="items-table">
             <thead>
               <tr>
-                <th style="width:30px;">SL</th>
+                <th style="width:38px;" class="c">SL No.</th>
                 <th>Particulars</th>
                 <th style="width:90px;" class="c">HSN Code</th>
                 <th style="width:62px;" class="c">Qty</th>
@@ -640,10 +641,8 @@
           <div class="steps-box">
             <h4>Next Steps to Complete Your Order</h4>
             <ol>
-              <li>Click <strong>"Download PDF"</strong> above to save this quotation.</li>
-              <li>Attach the Quotation PDF along with your <strong>Purchase Order (PO)</strong>.</li>
-              <li>Email both to <span class="eml">sales@chemsus.in</span> — mention Ref No. <strong id="refNoInline">—</strong></li>
-              <li>Our team will issue a <strong>Proforma Invoice</strong> with bank payment details.</li>
+              <li>Download this Quotation PDF, attach it with your <strong>Purchase Order (PO)</strong> and email both to <span class="eml">sales@chemsus.in</span> — mention Ref No. <strong id="refNoInline">—</strong></li>
+              <li>Our team will issue a <strong>Proforma Invoice</strong> with bank account details.</li>
               <li>Complete <strong>100% advance payment</strong> via bank transfer and send the receipt to <span class="eml">sales@chemsus.in</span>.</li>
             </ol>
           </div>
@@ -713,7 +712,7 @@
             <div class="tc-dot"></div>
             <div class="tc-content">
               <div class="tc-title">Payment:</div>
-              <div class="tc-body">100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank details will be shared upon receipt of Purchase Order.</div>
+              <div class="tc-body">100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank account details will be shared upon receipt of Purchase Order.</div>
             </div>
           </div>
 
@@ -856,21 +855,19 @@
     /* ══════════════════════════════════════════════
        PDF GENERATION
     ══════════════════════════════════════════════ */
-    document.getElementById('downloadPdfBtn').addEventListener('click', async function () {
-      if (!Q) return;
-
-      /* Fetch logo → base64 */
-      let logoDataUrl = null;
+    async function fetchLogoDataUrl() {
       try {
         const resp = await fetch('assets/logo.jpg');
         const blob = await resp.blob();
-        logoDataUrl = await new Promise(res => {
+        return await new Promise(res => {
           const r = new FileReader();
           r.onload = () => res(r.result);
           r.readAsDataURL(blob);
         });
-      } catch (_) {}
+      } catch (_) { return null; }
+    }
 
+    async function buildPdfDoc(Q, logoDataUrl) {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pw = doc.internal.pageSize.getWidth();   // 210
@@ -986,7 +983,7 @@
       y += 7;
 
       /* Items table */
-      const tableHead = [['SL', 'Particulars', 'HSN Code', 'Qty', 'Rate (INR)', 'Amount (INR)']];
+      const tableHead = [['SL No.', 'Particulars', 'HSN Code', 'Qty', 'Rate (INR)', 'Amount (INR)']];
       const tableBody = (Q.items || []).map((item, i) => [
         String(i + 1),
         item.name + (item.packSize ? '\nPack: ' + item.packSize : ''),
@@ -1003,21 +1000,34 @@
         margin: { left: ml, right: mr },
         headStyles: {
           fillColor: [0, 116, 199], textColor: 255,
-          fontStyle: 'bold', fontSize: 8, halign: 'center',
-          cellPadding: 4
+          fontStyle: 'bold', fontSize: 8,
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak', valign: 'middle'
         },
-        bodyStyles: { fontSize: 8.5, textColor: [30, 41, 59], cellPadding: 3 },
+        bodyStyles: {
+          fontSize: 8.5, textColor: [30, 41, 59],
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak'
+        },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         columnStyles: {
-          0: { cellWidth: 10, halign: 'center' },
-          2: { cellWidth: 24, halign: 'center' },
-          3: { cellWidth: 12, halign: 'center' },
-          4: { cellWidth: 30, halign: 'right' },
-          5: { cellWidth: 30, halign: 'right', fontStyle: 'bold' }
+          0: { cellWidth: 18, halign: 'center' },
+          1: { halign: 'left' },
+          2: { cellWidth: 26, halign: 'center' },
+          3: { cellWidth: 16, halign: 'center' },
+          4: { cellWidth: 32, halign: 'right' },
+          5: { cellWidth: 32, halign: 'right', fontStyle: 'bold' }
         },
         theme: 'grid',
         tableLineColor: [226, 232, 240],
         tableLineWidth: 0.2,
+        didParseCell: function (data) {
+          if (data.section === 'head') {
+            if (data.column.index === 0 || data.column.index === 3) data.cell.styles.halign = 'center';
+            if (data.column.index === 1) data.cell.styles.halign = 'left';
+            if (data.column.index === 4 || data.column.index === 5) data.cell.styles.halign = 'right';
+          }
+        }
       });
       y = doc.lastAutoTable.finalY + 5;
 
@@ -1060,10 +1070,9 @@
 
       /* Steps box */
       const steps = [
-        '1. Attach this Quotation PDF with your Purchase Order (PO).',
-        '2. Email both to: sales@chemsus.in  \u2014  Ref No. ' + Q.quotationId,
-        '3. Our team will issue a Proforma Invoice with bank payment details.',
-        '4. Complete 100% advance payment via bank transfer and send receipt to sales@chemsus.in.',
+        '1. Download this Quotation PDF, attach with your Purchase Order (PO) and email both to: sales@chemsus.in \u2014 Ref No. ' + Q.quotationId,
+        '2. Our team will issue a Proforma Invoice with bank account details.',
+        '3. Complete 100% advance payment via bank transfer and send receipt to sales@chemsus.in.',
       ];
       const boxH = 9 + steps.length * 5.5;
       doc.setFillColor(239, 246, 255); doc.setDrawColor(191, 219, 254); doc.setLineWidth(0.3);
@@ -1125,7 +1134,7 @@
         { title: 'Validity:',
           body: 'The prices mentioned in this quotation are valid for 30 days. Revisions may occur due to changes in raw material costs, Government policy, or other reasons beyond our control.' },
         { title: 'Payment:',
-          body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank details will be shared upon receipt of Purchase Order.' },
+          body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank account details will be shared upon receipt of Purchase Order.' },
         { title: 'Delivery:',
           body: '3\u20134 weeks from receipt of confirmed Purchase Order and advance payment. While every effort will be made to dispatch in full, partial deliveries may be necessary. We shall not be penalised for delays caused by force majeure events including riots, strikes, Government restrictions, or acts of God.' },
         { title: 'Taxes:',
@@ -1166,8 +1175,36 @@
       /* ── Stamp footers on every page ── */
       drawAllFooters(doc, doc.getNumberOfPages());
 
+      return doc;
+    }
+
+    document.getElementById('downloadPdfBtn').addEventListener('click', async function () {
+      if (!Q) return;
+      const logoDataUrl = await fetchLogoDataUrl();
+      const doc = await buildPdfDoc(Q, logoDataUrl);
       doc.save('Quotation_' + Q.quotationId + '.pdf');
     });
+
+    /* Auto-send quotation PDF as email attachment on first load */
+    if (Q && Q.orderId && Q.email && !sessionStorage.getItem('quotation_pdf_sent_' + Q.orderId)) {
+      (async () => {
+        try {
+          const logoDataUrl = await fetchLogoDataUrl();
+          const doc = await buildPdfDoc(Q, logoDataUrl);
+          const b64 = doc.output('datauristring').split(',')[1];
+          const resp = await fetch('/api/orders/' + Q.orderId + '/send-quotation-pdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pdfBase64: b64, email: Q.email })
+          });
+          if (resp.ok) {
+            sessionStorage.setItem('quotation_pdf_sent_' + Q.orderId, '1');
+          }
+        } catch (e) {
+          console.warn('[PDF-EMAIL] Auto-send failed:', e);
+        }
+      })();
+    }
   </script>
 
   <script>
@@ -1193,10 +1230,17 @@
       const tok  = localStorage.getItem('chemsus_customer_token');
       const exp  = Number(localStorage.getItem('chemsus_customer_token_exp') || 0);
       const auth = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
       if (!auth) return;
       if (tok && (!exp || Date.now() / 1000 < exp)) {
-        auth.innerHTML = '👤 ' + (localStorage.getItem('chemsus_customer_name') || 'My Account');
-        auth.href = 'profile.html';
+        const name = localStorage.getItem('chemsus_customer_name');
+        auth.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        auth.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        auth.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        auth.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
       }
     })();
   </script>
