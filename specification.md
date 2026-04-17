@@ -75,15 +75,35 @@ and provide a smooth checkout experience — without requiring customers to crea
   - **My Orders** and **Continue Shopping** secondary links
 - The quotation document is rendered below the hero with all order details.
 - Customer downloads the PDF, attaches a Purchase Order, and emails to `sales@chemsus.in`.
-- Order confirmation email sent to customer when payment receipt is uploaded.
-- Admin team contacts customer with shipping details.
+- Order confirmation email sent to customer after order placement.
+- Admin team issues a Proforma Invoice after receiving the Purchase Order.
+- Customers can also **View Quotation** directly from `/my-orders.html` — each order card has a **View Quotation** button (alongside Download PDF) that stores the order data in `sessionStorage` and navigates to `/quotation.html` for a full branded view.
+
+#### Quotation Terms & Conditions (current)
+| Term | Value |
+|---|---|
+| **Order in favour of** | ChemSus Technologies Pvt Ltd, House No. 555, GNB Road, North Guwahati, Assam – 781030 |
+| **Validity** | 30 days from quotation date |
+| **Payment** | 100% advance against Proforma Invoice |
+| **Delivery** | 3–4 weeks from confirmed PO and advance payment |
+| **Taxes** | 18% GST included in quoted price |
+| **Freight** | Included for India; additional freight charges for international |
+| **Cancellation** | Orders cannot be cancelled once placed and payment received |
+
+#### Quotation Reference Number Format
+- Format: **`CST-YYYY-YY-NNNN`**
+  - `CST` — ChemSus Technologies prefix (fixed)
+  - `YYYY-YY` — Indian financial year (April 1 – March 31); e.g. `2026-27` for FY 2026–27
+  - `NNNN` — 4-digit zero-padded sequence, increments with each new order placed in that FY and resets to `0001` at the start of a new FY
+- Example: `CST-2026-27-0001` (first order of FY 2026–27), `CST-2026-27-0023` (twenty-third order)
+- Sequence is derived at order-creation time by counting existing orders in the current FY in the `orders` table.
 
 ### 3.5 Customer Accounts
 - Sign up at `/signup.html` — email + password with OTP email verification.
 - Log in at `/login.html` — password login tab or email OTP tab.
 - JWT token (`iss: "chemsus-customer"`) issued on login; 7-day TTL.
 - Profile page at `/profile.html` — edit name, phone, company, delivery address.
-- Order history at `/my-orders.html` — lists all past orders with status and 48-hour payment recovery link.
+- Order history at `/my-orders.html` — lists all past orders with status; each order has a **View Quotation** button (opens quotation page) and **Download PDF** button.
 
 ### 3.6 Guest-to-Customer Upgrade
 - Guest orders are matched to registered accounts by email.
@@ -115,6 +135,8 @@ and provide a smooth checkout experience — without requiring customers to crea
 - Admin can view all orders with full customer details.
 - Admin can filter by payment status and delivery status.
 - Admin can update delivery status: Processing → Confirmed → Shipped → Delivered → Cancelled.
+- Admin can update payment status: PENDING → PROFORMA_SENT → PAYMENT_RECEIVED → CONFIRMED → FAILED.
+- Admin can download a quotation PDF for any order directly from the Orders table.
 - Admin can delete orders (also deletes associated payments and receipts).
 
 ### 4.6 Payments Management
@@ -163,3 +185,6 @@ and provide a smooth checkout experience — without requiring customers to crea
 - Top section: "Order Placed!" hero with success badge, ref number chip, and action buttons.
 - Action buttons: Download Quotation PDF (primary), View Quotation (scroll), My Orders, Continue Shopping.
 - Quotation document rendered below the hero; PDF generated client-side via jsPDF.
+- **Letterhead**: gradient blue background (`#005fa3 → #0074c7 → #0098a0`) with teal bottom border (`#00b8b0`); ChemSus logo displayed alongside the company name.
+- **Document footer strip**: solid ChemSus blue (`#0074c7`) with white text.
+- **PDF letterhead**: logo fetched at download time and embedded via `addImage()`; teal accent strip below the blue header bar; GSTIN/PAN/CIN shown in the header; solid blue footer bar on both pages.
