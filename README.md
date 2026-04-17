@@ -20,7 +20,7 @@ A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a *
 
 * Public website for **products, shop, and company info**
 * **Customer accounts** — sign up with email + password, OTP email verification
-* **Order placement** — Buy Now and Cart flows with OTP-verified checkout
+* **Order placement** — Buy Now and Cart flows with OTP-verified checkout; each order gets a unique quotation reference in the format `CST-YYYY-YY-NNNN` (Indian FY-based, auto-incrementing)
 * **UPI payment receipt upload**
 * **Admin dashboard** — Full control for the designated admin (director@chemsus.in):
   * Products page management (CRUD)
@@ -72,13 +72,13 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 | `/login.html` | Customer login (password or OTP) |
 | `/signup.html` | Customer registration with email verification |
 | `/profile.html` | Customer profile & delivery address |
-| `/my-orders.html` | Customer order history |
+| `/my-orders.html` | Customer order history with View Quotation and Download PDF per order |
 | `/collaboration.html` | Collaboration info |
 | `/recognitions.html` | Awards & recognitions |
 | `/investors.html` | Investor information |
 | `/contact.html` | Contact details |
 | `/request-sample.html` | Sample request form (with email OTP) |
-| `/quotation.html` | Order Placed page — download/view quotation PDF |
+| `/quotation.html` | Order Placed page — download/view quotation PDF (ref format: `CST-YYYY-YY-NNNN`) |
 | `/thankyou.html` | Thank you / confirmation page |
 
 ### 🛠️ Admin Dashboard (`/admin/admin.html`)
@@ -236,6 +236,7 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | DELETE | `/api/admin/pack-pricing/:id` | Delete pack |
 | GET | `/api/admin/orders` | List all orders |
 | PUT | `/api/admin/orders/:id/status` | Update order delivery status |
+| PUT | `/api/admin/orders/:id/payment-status` | Update order payment status |
 | DELETE | `/api/admin/orders/:id` | Delete order |
 | DELETE | `/api/admin/orders` | Bulk delete orders |
 | GET | `/api/admin/payments` | List payments |
