@@ -46,7 +46,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -585,6 +586,20 @@
       .section {
         padding: 22px 18px;
       }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; padding-top: 80px; }
+      .hero-title { font-size: 22px; }
+      .hero-subtitle { font-size: 13px; }
+      .section { padding: 18px 14px; border-radius: 10px; }
+      .form-input, .form-textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .order-summary { padding: 14px 14px 16px; }
+      .summary-total { font-size: 16px; }
+      .btn-submit { font-size: 14px; padding: 12px; }
+      .otp-actions { flex-direction: column; }
+      .otp-input { min-width: unset; width: 100%; }
+      img { max-width: 100%; }
     }
 
     html {
