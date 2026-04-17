@@ -47,7 +47,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -726,6 +727,19 @@
       .buy-card {
         padding: 20px
       }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 140px; }
+      .hero-title { font-size: 20px; }
+      .hero-subtitle { font-size: 12px; }
+      .buy-card { padding: 16px 12px; border-radius: 12px; }
+      .buy-title { font-size: 17px; }
+      .actions-row { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .qty-input { width: 80px; }
+      .qty-pack-select { min-width: unset; width: 100%; }
+      img { max-width: 100%; }
     }
 
     @media (max-width: 1050px) {
