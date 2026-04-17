@@ -46,7 +46,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -879,6 +880,23 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media(max-width:480px) {
+      .hero { min-height: 150px; height: auto; }
+      .hero-title { font-size: 22px; }
+      .hero-subtitle { font-size: 13px; }
+      .products-grid { grid-template-columns: 1fr; gap: 14px; }
+      .product-card { padding: 16px; }
+      .product-image { height: 150px; }
+      .product-name { font-size: 15px; }
+      .product-actions { flex-direction: column; gap: 8px; }
+      .product-actions .btn-buy, .product-actions .btn-cart { width: 100%; text-align: center; }
+      main { padding: 16px 10px 32px; }
+      p, li { word-break: break-word; }
+    }
   </style>
 </head>
 
@@ -946,7 +964,7 @@
         <h2>Our Products</h2>
       </div>
       <p class="section-intro" id="sectionIntro">
-        High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume
+        High-purity, pharmaceutical-grade chemicals derived from sustainable lignocellulosic biomass. Contact sales for volume
         pricing and custom specifications.
       </p>
 
@@ -1447,7 +1465,7 @@
       });
 
       intro.textContent =
-        `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.`;
+        `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable lignocellulosic biomass. Contact sales for volume pricing and custom specifications.`;
       syncUI();
     }
 
