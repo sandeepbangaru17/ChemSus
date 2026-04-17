@@ -192,7 +192,7 @@ async function sendOtpEmail(email, otp) {
   }
 }
 
-async function sendTransactionalEmail(to, subject, html, text) {
+async function sendTransactionalEmail(to, subject, html, text, attachments) {
   const transporter = getOtpTransporter();
   const from = (
     process.env.OTP_EMAIL_FROM ||
@@ -206,7 +206,9 @@ async function sendTransactionalEmail(to, subject, html, text) {
     return { mode: "dev" };
   }
   try {
-    await transporter.sendMail({ from, to, subject, html, text: text || "" });
+    const mailOpts = { from, to, subject, html, text: text || "" };
+    if (attachments && attachments.length) mailOpts.attachments = attachments;
+    await transporter.sendMail(mailOpts);
     return { mode: "smtp" };
   } catch (err) {
     console.warn(`[EMAIL] Send failed to ${to}: ${err?.message || err}`);

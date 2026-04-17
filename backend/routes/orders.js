@@ -74,11 +74,9 @@ module.exports = function (deps) {
     <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
       <p style="margin:0;font-size:14px;font-weight:600;color:#1d4ed8;">Next Steps</p>
       <ol style="margin:10px 0 0;padding-left:18px;font-size:13px;color:#1e40af;line-height:1.8;">
-        <li>Download your <strong>Quotation PDF</strong> from the order confirmation page on our website.</li>
-        <li>Attach the Quotation PDF along with your <strong>Purchase Order</strong>.</li>
-        <li>Email both documents to <a href="mailto:sales@chemsus.in" style="color:#0074c7;">sales@chemsus.in</a></li>
-        <li>Our team will review and send you a <strong>Proforma Invoice</strong> with bank payment details.</li>
-        <li>Complete the bank transfer and send the payment receipt to sales@chemsus.in.</li>
+        <li>You will receive your <strong>Quotation PDF</strong> as an attachment in a follow-up email shortly. Download it, attach with your <strong>Purchase Order (PO)</strong> and email both to <a href="mailto:sales@chemsus.in" style="color:#0074c7;">sales@chemsus.in</a> — Ref No. <strong>${purchaseId}</strong></li>
+        <li>Our team will review and send you a <strong>Proforma Invoice</strong> with bank account details.</li>
+        <li>Complete 100% advance payment via bank transfer and send the receipt to sales@chemsus.in.</li>
       </ol>
     </div>
 
@@ -91,7 +89,7 @@ module.exports = function (deps) {
   <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:16px;">&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</p>
 </div>`;
 
-        const text = `Dear ${customerName},\n\nThank you for your order with ChemSus Technologies! Your quotation has been generated.\n\nQuotation ID: ${purchaseId}\n\nProduct: ${productname}\nQuantity: ${quantity}\nQuoted Amount (incl. 18% GST): Rs.${amountFormatted}\n${shippingNote}\n\nNEXT STEPS:\n1. Download your Quotation PDF from the order confirmation page.\n2. Attach the Quotation PDF along with your Purchase Order.\n3. Email both to sales@chemsus.in\n4. Our team will send you a Proforma Invoice with bank payment details.\n5. Complete the bank transfer and send the receipt to sales@chemsus.in.\n\nNeed help? Contact sales@chemsus.in or +91 84868 77575\n\nThank you,\nChemSus Technologies Pvt Ltd`;
+        const text = `Dear ${customerName},\n\nThank you for your order with ChemSus Technologies! Your quotation has been generated.\n\nQuotation ID: ${purchaseId}\n\nProduct: ${productname}\nQuantity: ${quantity}\nQuoted Amount (incl. 18% GST): Rs.${amountFormatted}\n${shippingNote}\n\nNEXT STEPS:\n1. You will receive your Quotation PDF as an attachment in a follow-up email shortly. Download it, attach with your Purchase Order (PO) and email both to sales@chemsus.in — Ref No. ${purchaseId}\n2. Our team will send you a Proforma Invoice with bank account details.\n3. Complete 100% advance payment via bank transfer and send the receipt to sales@chemsus.in.\n\nNeed help? Contact sales@chemsus.in or +91 84868 77575\n\nThank you,\nChemSus Technologies Pvt Ltd`;
 
         return { html, text };
     }
@@ -368,6 +366,42 @@ module.exports = function (deps) {
         } catch (e) {
             console.error("Order creation error:", e);
             res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.post('/orders/:id/send-quotation-pdf', async (req, res) => {
+        try {
+            const orderId = parseInt(req.params.id, 10);
+            if (!orderId || isNaN(orderId)) return res.status(400).json({ error: 'Invalid order id' });
+
+            const { pdfBase64, email } = req.body || {};
+            if (!pdfBase64 || !email) return res.status(400).json({ error: 'Missing pdfBase64 or email' });
+
+            const order = await get('SELECT id, email, purchase_id FROM orders WHERE id=?', [orderId]);
+            if (!order) return res.status(404).json({ error: 'Order not found' });
+
+            if (normalizeEmail(order.email) !== normalizeEmail(email)) {
+                return res.status(403).json({ error: 'Email mismatch' });
+            }
+
+            const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+
+            await sendTransactionalEmail(
+                order.email,
+                `Quotation PDF – ${order.purchase_id} | ChemSus Technologies`,
+                `<p>Dear Customer,</p><p>Please find your Quotation PDF attached for order <strong>${order.purchase_id}</strong>.</p><p>Thank you,<br>ChemSus Technologies Pvt Ltd</p>`,
+                `Dear Customer,\n\nPlease find your Quotation PDF attached for order ${order.purchase_id}.\n\nThank you,\nChemSus Technologies Pvt Ltd`,
+                [{
+                    filename: `Quotation_${order.purchase_id}.pdf`,
+                    content: pdfBuffer,
+                    contentType: 'application/pdf'
+                }]
+            );
+
+            res.json({ ok: true });
+        } catch (e) {
+            console.error('[QUOTATION-PDF-EMAIL] Error:', e);
+            res.status(500).json({ error: 'Failed to send email', details: String(e) });
         }
     });
 
