@@ -110,6 +110,22 @@
       /* Keep Profile, Shop, Logout — hide Shop on very small screens */
       .topbar-right a[href="shop.html"] { display: none; }
     }
+
+    @media (max-width: 480px) {
+      .page { padding: 16px 10px 40px; }
+      .page-title { font-size: 20px; }
+      .card-header { padding: 12px 14px; }
+      .card-body { padding: 12px 14px; }
+      .order-id { font-size: 13px; }
+      .order-total { font-size: 16px; }
+      .pay-banner { padding: 10px 14px; flex-direction: column; align-items: flex-start; }
+      .quotation-banner { padding: 10px 14px; flex-direction: column; align-items: flex-start; }
+      .quotation-banner-actions { flex-direction: column; width: 100%; }
+      .btn-quotation, .btn-view-quotation { width: 100%; text-align: center; }
+      .order-card { word-break: break-word; }
+    }
+
+    img { max-width: 100%; }
   </style>
 </head>
 <body>
