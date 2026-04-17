@@ -44,7 +44,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -485,6 +486,19 @@
       .cart-container {
         padding: 20px 12px;
       }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; padding-top: 80px; }
+      .hero-title { font-size: 24px; }
+      .hero-subtitle { font-size: 13px; }
+      .cart-container { padding: 14px 10px; border-radius: 10px; }
+      .cart-summary { padding: 16px; max-width: 100%; }
+      .summary-total { font-size: 16px; }
+      .checkout-btn { font-size: 14px; padding: 12px; }
+      /* Also hide unit price column on very small screens */
+      .cart-table th:nth-child(2), .cart-table td:nth-child(2) { display: none; }
+      img { max-width: 100%; }
     }
 
     @media (max-width: 1050px) {
