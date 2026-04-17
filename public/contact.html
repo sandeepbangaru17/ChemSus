@@ -47,7 +47,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -402,6 +403,10 @@
       .mobile-toggle {
         display: block;
       }
+
+      .hero {
+        padding-top: 72px;
+      }
     }
 
     @media (max-width: 900px) {
@@ -424,6 +429,17 @@
       .hero-title {
         font-size: 24px;
       }
+
+      .section { padding: 22px 14px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 20px; }
+      .contact-card { padding: 16px 14px; gap: 20px; }
+      .contact-form input, .contact-form textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .highlight-btn { font-size: 13px; padding: 8px 14px; word-break: break-all; }
+      img { max-width: 100%; }
     }
 
     /* === WhatsApp QR Floating Widget === */
