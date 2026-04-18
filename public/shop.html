@@ -1353,7 +1353,7 @@
         const safeSubtitle = escapeHtml(item.subtitle);
 
         let badgeHTML = '';
-        if (item.showBadge && item.badge && item.badge !== 'Free Sample Available') {
+        if (item.showBadge && item.badge && item.badge.toLowerCase() !== 'free sample available') {
           badgeHTML = `<span class="product-badge">${escapeHtml(item.badge)}</span>`;
         }
 
