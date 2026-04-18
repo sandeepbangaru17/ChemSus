@@ -1243,6 +1243,8 @@
               <span class="nav-icon">✉️</span> Contact Messages
               <span class="badge-count" id="sidebarContactBadge">0</span>
             </a></li>
+          <li><a data-view="view-collab-notify" onclick="switchView('view-collab-notify')">
+              <span class="nav-icon">🔔</span> Collab Notify</a></li>
           <li><a data-view="view-customers" onclick="switchView('view-customers')">
               <span class="nav-icon">👥</span> Customers
               <span class="badge-count" id="sidebarCustomerBadge"></span>
@@ -1971,6 +1973,40 @@
           </div>
 
           <!-- ══════════════════════════════════
+               COLLAB NOTIFY VIEW
+          ══════════════════════════════════ -->
+          <div id="view-collab-notify" class="view">
+            <div class="section-header">
+              <div class="section-title-group">
+                <h2 class="section-title">🔔 Collaboration Notify List</h2>
+                <p class="section-sub">Emails registered for collaboration portal launch notification</p>
+              </div>
+              <div class="section-actions">
+                <button class="btn secondary sm" onclick="loadCollabNotify()">🔄 Refresh</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body" style="padding:0;">
+                <div class="table-wrap" style="border:none;border-radius:0;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>Registered At</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="collabNotifyTbody">
+                      <tr><td colspan="4" class="table-empty"><div class="empty-icon">🔔</div>Loading…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══════════════════════════════════
                CUSTOMERS VIEW
           ══════════════════════════════════ -->
           <div id="view-customers" class="view">
@@ -2226,6 +2262,7 @@
       'view-payments': { title: 'Payments', sub: 'Receipts and payment status' },
       'view-samples': { title: 'Samples Requested', sub: 'Sample requests from website visitors' },
       'view-contact': { title: 'Contact Messages', sub: 'Messages from the Contact Us page' },
+      'view-collab-notify': { title: 'Collab Notify', sub: 'Emails waiting for collaboration portal launch' },
       'view-customers': { title: 'Customers', sub: 'Registered customer accounts' },
       'view-settings': { title: 'Settings', sub: 'Site configuration' },
       'view-analytics': { title: 'Analytics', sub: 'Page views and visitor geography' },
@@ -2255,6 +2292,7 @@
       if (id === 'view-payments') refreshPayments();
       if (id === 'view-samples') loadSamples();
       if (id === 'view-contact') loadContactMessages();
+      if (id === 'view-collab-notify') loadCollabNotify();
       if (id === 'view-customers') loadCustomers();
       if (id === 'view-settings') loadBrochure();
       if (id === 'view-analytics') loadAnalytics();
@@ -3147,6 +3185,40 @@
       try {
         await api(`/admin/contact-messages/${id}`, { method: 'DELETE' });
         await loadContactMessages();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    /* ════ COLLAB NOTIFY ════ */
+    async function loadCollabNotify() {
+      const tbody = document.getElementById('collabNotifyTbody');
+      tbody.innerHTML = '<tr><td colspan="4" class="table-empty"><div class="empty-icon">🔔</div>Loading…</td></tr>';
+      try {
+        const rows = await api('/admin/collab-notify');
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="4" class="table-empty"><div class="empty-icon">🔔</div>No entries yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.id}</td>
+            <td><a href="mailto:${escapeHtml(r.email)}" style="color:var(--accent);">${escapeHtml(r.email)}</a></td>
+            <td style="white-space:nowrap;">${r.created_at ? r.created_at.slice(0, 16).replace('T', ' ') : ''}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn danger sm" onclick="deleteCollabNotify(${r.id})">Delete</button>
+              </div>
+            </td>
+          </tr>`).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="4" class="table-empty" style="color:red;">Error: ${escapeHtml(e.message || String(e))}</td></tr>`;
+      }
+    }
+
+    async function deleteCollabNotify(id) {
+      if (!confirm('Remove this email from the notify list?')) return;
+      try {
+        await api(`/admin/collab-notify/${id}`, { method: 'DELETE' });
+        await loadCollabNotify();
       } catch (e) { alert('Error: ' + e.message); }
     }
 

@@ -2,7 +2,7 @@ const express = require('express');
 
 module.exports = function (deps) {
     const router = express.Router();
-    const { all } = deps;
+    const { all, run, get, normalizeEmail } = deps;
 
     router.get("/brochure", async (req, res) => {
         try {
@@ -155,6 +155,23 @@ module.exports = function (deps) {
     router.get("/test", (req, res) =>
         res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
     );
+
+    router.post("/collab-notify", async (req, res) => {
+        try {
+            const raw = String(req.body?.email || '').trim();
+            if (!raw) return res.status(400).json({ error: "Email is required." });
+            const email = normalizeEmail(raw);
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                return res.status(400).json({ error: "Invalid email address." });
+            const existing = await get(`SELECT id FROM collab_notify WHERE email=?`, [email]);
+            if (existing) return res.json({ ok: true, message: "Already registered." });
+            await run(`INSERT INTO collab_notify (email) VALUES (?)`, [email]);
+            res.json({ ok: true });
+        } catch (e) {
+            console.error("collab-notify error:", e);
+            res.status(500).json({ error: "Failed to save. Please try again." });
+        }
+    });
 
     return router;
 };

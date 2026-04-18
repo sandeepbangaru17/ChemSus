@@ -1352,14 +1352,9 @@
         const safeName = escapeHtml(item.name);
         const safeSubtitle = escapeHtml(item.subtitle);
 
-        // Dynamic badge from API - restricted to Calcium Levulinate for "Free Sample Available"
         let badgeHTML = '';
-        if (item.showBadge && item.badge) {
-          if (item.badge === 'Free Sample Available' && item.name !== 'Calcium Levulinate') {
-            // Skip showing the badge if it's "Free Sample" and not Calcium Levulinate
-          } else {
-            badgeHTML = `<span class="product-badge">${escapeHtml(item.badge)}</span>`;
-          }
+        if (item.showBadge && item.badge && item.badge !== 'Free Sample Available') {
+          badgeHTML = `<span class="product-badge">${escapeHtml(item.badge)}</span>`;
         }
 
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;

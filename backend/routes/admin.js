@@ -743,5 +743,25 @@ module.exports = function (deps) {
         }
     });
 
+    router.get("/collab-notify", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(`SELECT id, email, created_at FROM collab_notify ORDER BY created_at DESC`);
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: 'DB error' });
+        }
+    });
+
+    router.delete("/collab-notify/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = parseInt(req.params.id, 10);
+            if (!id) return res.status(400).json({ error: 'Invalid id' });
+            await run(`DELETE FROM collab_notify WHERE id=?`, [id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: 'DB error' });
+        }
+    });
+
     return router;
 };

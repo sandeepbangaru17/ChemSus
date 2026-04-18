@@ -710,6 +710,59 @@
       main { padding: 20px 12px 32px; }
       p, li { word-break: break-word; }
     }
+
+    /* NOTIFY MODAL */
+    .notify-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .notify-modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 36px 32px 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+    .notify-modal h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 20px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .notify-modal p {
+      font-size: 14px;
+      color: #4a5568;
+      margin-bottom: 20px;
+    }
+    .notify-modal input[type="email"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .notify-modal input[type="email"]:focus { border-color: var(--accent); }
+    .notify-modal-msg { font-size: 13px; min-height: 18px; margin-bottom: 12px; }
+    .notify-modal-close {
+      position: absolute;
+      top: 12px; right: 16px;
+      background: none; border: none;
+      font-size: 20px; cursor: pointer;
+      color: #718096;
+      line-height: 1;
+    }
+    .notify-modal-close:hover { color: #1a202c; }
   </style>
 </head>
 
@@ -989,7 +1042,45 @@
     });
 
     function notifyInterest() {
-      alert('Thank you for your interest! We will notify you when the collaboration portal launches.');
+      document.getElementById('notifyModal').style.display = 'flex';
+      document.getElementById('notifyEmail').value = '';
+      document.getElementById('notifyMsg').textContent = '';
+      document.getElementById('notifyEmail').focus();
+    }
+
+    function closeNotifyModal() {
+      document.getElementById('notifyModal').style.display = 'none';
+    }
+
+    async function submitNotify() {
+      const email = document.getElementById('notifyEmail').value.trim();
+      const msg = document.getElementById('notifyMsg');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.style.color = '#e53e3e';
+        msg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+      const btn = document.getElementById('notifySubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      try {
+        const res = await fetch('/api/collab-notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Request failed');
+        msg.style.color = '#2f855a';
+        msg.textContent = 'Thank you! We will notify you when the collaboration portal launches.';
+        btn.textContent = 'Done';
+        setTimeout(closeNotifyModal, 2500);
+      } catch (e) {
+        msg.style.color = '#e53e3e';
+        msg.textContent = e.message || 'Something went wrong. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Notify Me';
+      }
     }
 
     // Shared cart badge updater
@@ -1030,7 +1121,17 @@
     })();
   </script>
 
-  <!-- Supabase & Auth -->
+  <!-- Notify Me Modal -->
+  <div id="notifyModal" class="notify-modal-overlay" onclick="if(event.target===this)closeNotifyModal()">
+    <div class="notify-modal">
+      <button class="notify-modal-close" onclick="closeNotifyModal()" aria-label="Close">&times;</button>
+      <h3>Get Notified When Live</h3>
+      <p>Enter your email and we'll let you know when the collaboration portal launches.</p>
+      <input type="email" id="notifyEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitNotify()">
+      <div id="notifyMsg" class="notify-modal-msg"></div>
+      <button id="notifySubmitBtn" class="notify-btn" style="margin-top:0;width:100%;" onclick="submitNotify()">Notify Me</button>
+    </div>
+  </div>
 </body>
 
 </html>

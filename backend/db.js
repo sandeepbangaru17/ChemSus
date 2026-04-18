@@ -413,6 +413,14 @@ async function initDb() {
 
     CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views(created_at);
     CREATE INDEX IF NOT EXISTS idx_page_views_country ON page_views(country);
+
+    CREATE TABLE IF NOT EXISTS collab_notify (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL UNIQUE,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_collab_notify_email ON collab_notify(email);
   `);
 
   await seed();
