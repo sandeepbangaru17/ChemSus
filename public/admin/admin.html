@@ -1244,7 +1244,8 @@
               <span class="badge-count" id="sidebarContactBadge">0</span>
             </a></li>
           <li><a data-view="view-collab-notify" onclick="switchView('view-collab-notify')">
-              <span class="nav-icon">🔔</span> Collab Notify</a></li>
+              <span class="nav-icon">🔔</span> Collab Notify
+              <span class="badge-count" id="sidebarCollabNotifyBadge"></span></a></li>
           <li><a data-view="view-customers" onclick="switchView('view-customers')">
               <span class="nav-icon">👥</span> Customers
               <span class="badge-count" id="sidebarCustomerBadge"></span>
@@ -2427,14 +2428,15 @@
     /* ════ DASHBOARD ════ */
     async function loadDashboard() {
       try {
-        const [products, shopitems, orders, payments, samples, contacts, customers] = await Promise.allSettled([
+        const [products, shopitems, orders, payments, samples, contacts, customers, collabNotify] = await Promise.allSettled([
           api('/admin/products-page'),
           api('/admin/shop-items'),
           api('/admin/orders'),
           api('/admin/payments'),
           api('/admin/sample-requests'),
           api('/admin/contact-messages'),
-          api('/admin/customers')
+          api('/admin/customers'),
+          api('/admin/collab-notify')
         ]);
 
         const p = products.value || [];
@@ -2460,6 +2462,9 @@
         document.getElementById('sidebarSampleBadge').textContent = sm.length;
         document.getElementById('sidebarContactBadge').textContent = unreadContact;
         document.getElementById('sidebarCustomerBadge').textContent = cu.length > 0 ? cu.length : '';
+        const cn = collabNotify.value || [];
+        const collabBadge = document.getElementById('sidebarCollabNotifyBadge');
+        if (collabBadge) collabBadge.textContent = cn.length > 0 ? cn.length : '';
 
         // Recent 5 orders
         const tb = document.getElementById('dashRecentOrders');
@@ -3189,11 +3194,19 @@
     }
 
     /* ════ COLLAB NOTIFY ════ */
+    function toIST(utcStr) {
+      if (!utcStr) return '';
+      const d = new Date(utcStr.includes('T') ? utcStr : utcStr.replace(' ', 'T') + 'Z');
+      return d.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).replace(',', '');
+    }
+
     async function loadCollabNotify() {
       const tbody = document.getElementById('collabNotifyTbody');
       tbody.innerHTML = '<tr><td colspan="4" class="table-empty"><div class="empty-icon">🔔</div>Loading…</td></tr>';
       try {
         const rows = await api('/admin/collab-notify');
+        const badge = document.getElementById('sidebarCollabNotifyBadge');
+        if (badge) badge.textContent = rows.length > 0 ? rows.length : '';
         if (!rows.length) {
           tbody.innerHTML = '<tr><td colspan="4" class="table-empty"><div class="empty-icon">🔔</div>No entries yet.</td></tr>';
           return;
@@ -3202,7 +3215,7 @@
           <tr>
             <td>${r.id}</td>
             <td><a href="mailto:${escapeHtml(r.email)}" style="color:var(--accent);">${escapeHtml(r.email)}</a></td>
-            <td style="white-space:nowrap;">${r.created_at ? r.created_at.slice(0, 16).replace('T', ' ') : ''}</td>
+            <td style="white-space:nowrap;">${toIST(r.created_at)}</td>
             <td>
               <div class="actions-cell">
                 <button class="btn danger sm" onclick="deleteCollabNotify(${r.id})">Delete</button>
