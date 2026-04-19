@@ -1234,6 +1234,7 @@
             </a></li>
           <li><a data-view="view-payments" onclick="switchView('view-payments')">
               <span class="nav-icon">💳</span> Payments
+              <span class="badge-count" id="sidebarPaymentBadge"></span>
             </a></li>
           <li><a data-view="view-samples" onclick="switchView('view-samples')">
               <span class="nav-icon">🧪</span> Samples Requested
@@ -1878,11 +1879,11 @@
                     <tr>
                       <th>Pay ID</th>
                       <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Payment Ref</th>
                       <th>Status</th>
                       <th>Amount</th>
-                      <th>Rating</th>
                       <th>Receipt</th>
-                      <th>Feedback</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>
@@ -2459,6 +2460,9 @@
         if (document.getElementById('ds-samples')) document.getElementById('ds-samples').textContent = sm.length;
         if (document.getElementById('ds-customers')) document.getElementById('ds-customers').textContent = cu.length;
         document.getElementById('sidebarOrderBadge').textContent = pending > 0 ? pending : '';
+        const pendingPayments = py.filter(p => p.status === 'PENDING').length;
+        const payBadge = document.getElementById('sidebarPaymentBadge');
+        if (payBadge) payBadge.textContent = pendingPayments > 0 ? pendingPayments : '';
         document.getElementById('sidebarSampleBadge').textContent = sm.length;
         document.getElementById('sidebarContactBadge').textContent = unreadContact;
         document.getElementById('sidebarCustomerBadge').textContent = cu.length > 0 ? cu.length : '';
@@ -2798,7 +2802,7 @@
     async function refreshOrders() {
       try {
         ORDERS_CACHE = await api('/admin/orders');
-        const pending = ORDERS_CACHE.filter(x => ['PENDING','VERIFYING'].includes((x.paymentstatus || '').toUpperCase())).length;
+        const pending = ORDERS_CACHE.filter(x => ['PENDING','VERIFYING','PAYMENT_RECEIVED'].includes((x.paymentstatus || '').toUpperCase())).length;
         document.getElementById('sidebarOrderBadge').textContent = pending > 0 ? pending : '';
         applyOrderFilters();
       } catch (e) { showAlert('ostatus', 'err', '❌ Error: ' + (e.message || e)); }
@@ -3019,7 +3023,7 @@
       const rf = document.getElementById('receiptFilter').value;
       const stf = document.getElementById('payStatusFilter').value.toUpperCase();
       const rows = PAY_CACHE.filter(p => {
-        const hay = [p.id, p.orderid, p.customername, p.email, p.phone].join(' ').toLowerCase();
+        const hay = [p.id, p.orderid, p.purchaseid, p.paymentref, p.customername, p.email, p.phone, p.productname].join(' ').toLowerCase();
         const hasR = !!(p.receiptpath || '').trim();
         const okRec = !rf || (rf === 'has' ? hasR : !hasR);
         return (!q || hay.includes(q)) && okRec && (!stf || String(p.status).toUpperCase() === stf);
@@ -3038,15 +3042,15 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><b>#${p.id}</b></td>
-          <td><b>#${p.orderid}</b></td>
+          <td><b>#${p.orderid}</b><br><span style="font-size:11px;color:var(--muted);">${escapeHtml(p.purchaseid || '')}</span></td>
+          <td style="font-size:12px;">${escapeHtml(p.customername || '—')}<br><span style="color:var(--muted);font-size:11px;">${escapeHtml(p.email || '')}</span></td>
+          <td><code style="font-size:12px;background:#f1f5f9;padding:3px 7px;border-radius:5px;">${escapeHtml(p.paymentref || '—')}</code></td>
           <td>${tagHTML(p.status)}</td>
           <td><b>₹${Number(p.amount || 0).toLocaleString('en-IN')}</b></td>
-          <td style="color:#f59e0b;">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</td>
           <td>${rec ? (isPdf
             ? `<a href="${safeR}" target="_blank" class="btn secondary sm">📄 PDF</a>`
             : `<img class="thumb" src="${safeR}" alt="receipt" onclick="openModal('${safeR}')">`)
             : '<span style="color:var(--muted);font-size:12px;">None</span>'}</td>
-          <td style="max-width:180px;font-size:12px;color:var(--muted);">${escapeHtml(p.feedback || '—')}</td>
           <td style="font-size:11px;color:var(--muted);white-space:nowrap;">${escapeHtml(p.createdat || '—')}</td>
           <td>
             <div class="actions-cell">
