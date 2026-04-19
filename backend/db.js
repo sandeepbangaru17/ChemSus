@@ -432,6 +432,8 @@ async function initDb() {
   await migrateCol("orders", "user_id", "TEXT DEFAULT NULL");
   await migrateCol("orders", "order_status", "TEXT NOT NULL DEFAULT 'Processing'");
   await migrateCol("orders", "purchase_id", "TEXT DEFAULT NULL");
+  await migrateCol("orders", "payment_type", "TEXT NOT NULL DEFAULT 'quotation'");
+  await migrateCol("payments", "updated_at", "TEXT NOT NULL DEFAULT (datetime('now'))");
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_purchase_id ON orders(purchase_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
