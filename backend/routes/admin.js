@@ -459,20 +459,22 @@ module.exports = function (deps) {
     router.get("/payments", requireAdmin, async (req, res) => {
         try {
             const rows = await all(
-                `SELECT 
-           p.id, 
-           p.order_id AS orderid, 
-           p.status, 
-           p.amount, 
-           p.rating, 
-           p.receipt_path AS receiptpath, 
+                `SELECT
+           p.id,
+           p.order_id AS orderid,
+           p.payment_ref AS paymentref,
+           p.status,
+           p.amount,
+           p.rating,
+           p.receipt_path AS receiptpath,
            p.feedback,
            p.customername,
            p.email,
            p.phone,
            p.created_at AS createdat,
-           o.productname, 
-           o.totalprice, 
+           o.productname,
+           o.purchase_id AS purchaseid,
+           o.totalprice,
            o.payment_status
          FROM payments p
          LEFT JOIN orders o ON o.id = p.order_id
