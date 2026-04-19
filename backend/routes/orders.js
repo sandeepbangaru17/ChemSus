@@ -6,7 +6,8 @@ module.exports = function (deps) {
         run, get, all,
         normalizeEmail, isValidEmail, isValidPhone, safeNumber,
         purgeOtpSessions, requireUser, clampInt,
-        sendTransactionalEmail, crypto, verifyCustomerToken
+        sendTransactionalEmail, crypto, verifyCustomerToken,
+        receiptUpload, fs
     } = deps;
 
     async function generatePurchaseId() {
@@ -402,6 +403,126 @@ module.exports = function (deps) {
         } catch (e) {
             console.error('[QUOTATION-PDF-EMAIL] Error:', e);
             res.status(500).json({ error: 'Failed to send email', details: String(e) });
+        }
+    });
+
+    // Customer submits direct payment with receipt upload
+    router.post('/payments', receiptUpload.single('receipt'), async (req, res) => {
+        try {
+            const orderId = parseInt(req.body?.orderId, 10);
+            const paymentRef = (req.body?.paymentRef || '').trim();
+            const customername = (req.body?.customername || '').trim();
+            const email = (req.body?.email || '').trim();
+            const phone = (req.body?.phone || '').trim();
+
+            if (!orderId || isNaN(orderId)) {
+                if (req.file) fs.unlink(req.file.path, () => {});
+                return res.status(400).json({ error: 'Invalid order ID' });
+            }
+            if (!paymentRef) {
+                if (req.file) fs.unlink(req.file.path, () => {});
+                return res.status(400).json({ error: 'Payment reference is required' });
+            }
+
+            const order = await get('SELECT id, totalprice, email, customername, phone FROM orders WHERE id=?', [orderId]);
+            if (!order) {
+                if (req.file) fs.unlink(req.file.path, () => {});
+                return res.status(404).json({ error: 'Order not found' });
+            }
+
+            const receiptFilename = req.file ? req.file.filename : '';
+
+            const r = await run(
+                `INSERT INTO payments (order_id, provider, payment_ref, amount, currency, status, receipt_path, customername, email, phone, updated_at)
+                 VALUES (?, 'UPI', ?, ?, 'INR', 'PENDING', ?, ?, ?, ?, datetime('now'))`,
+                [orderId, paymentRef, order.totalprice, receiptFilename,
+                 customername || order.customername, email || order.email, phone || order.phone]
+            );
+
+            await run(
+                `UPDATE orders SET payment_status='PAYMENT_RECEIVED', paymentmode='UPI', updated_at=datetime('now') WHERE id=?`,
+                [orderId]
+            );
+
+            const paymentId = `PAY-${String(r.lastID).padStart(6, '0')}`;
+
+            // Send confirmation email to customer (fire-and-forget)
+            const toEmail = email || order.email;
+            const toName = customername || order.customername || 'Customer';
+            if (toEmail) {
+                const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f3f7fb;font-family:'Open Sans',Arial,sans-serif;">
+  <div style="max-width:580px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#041424 0%,#062a4a 100%);padding:32px 36px 28px;text-align:center;border-bottom:3px solid #00b8b0;">
+      <img src="https://chemsus.in/assets/logo.jpg" alt="ChemSus" style="height:48px;width:48px;border-radius:10px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+      <h1 style="font-family:Montserrat,sans-serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 4px;">Payment Receipt Received</h1>
+      <p style="color:rgba(255,255,255,.7);font-size:13px;margin:0;">ChemSus Technologies Pvt Ltd</p>
+    </div>
+    <!-- Body -->
+    <div style="padding:32px 36px;">
+      <p style="font-size:15px;color:#1f2933;margin:0 0 20px;">Dear <strong>${toName}</strong>,</p>
+      <p style="font-size:14px;color:#475569;line-height:1.7;margin:0 0 24px;">
+        Thank you for your payment! We have received your payment receipt and it is currently under review by our team. Your order will be confirmed within <strong>1 business day</strong>.
+      </p>
+      <!-- Payment ID box -->
+      <div style="background:linear-gradient(135deg,#0074c7,#00b8b0);border-radius:12px;padding:20px 24px;margin:0 0 24px;text-align:center;">
+        <div style="font-size:11px;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;">Your Payment Reference ID</div>
+        <div style="font-family:Montserrat,sans-serif;font-size:28px;font-weight:700;color:#fff;letter-spacing:3px;">${paymentId}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:6px;">Please save this ID for your records</div>
+      </div>
+      <!-- Order details -->
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+        <tr style="background:#f8fafc;">
+          <td style="padding:10px 14px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #f1f5f9;">Order ID</td>
+          <td style="padding:10px 14px;font-size:13px;color:#1f2933;font-weight:700;border-bottom:1px solid #f1f5f9;">#${orderId}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 14px;font-size:13px;color:#64748b;font-weight:600;border-bottom:1px solid #f1f5f9;">Amount Paid</td>
+          <td style="padding:10px 14px;font-size:13px;color:#1f2933;font-weight:700;border-bottom:1px solid #f1f5f9;">₹${Number(order.totalprice || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+        </tr>
+        <tr style="background:#f8fafc;">
+          <td style="padding:10px 14px;font-size:13px;color:#64748b;font-weight:600;">Status</td>
+          <td style="padding:10px 14px;"><span style="background:#fef9c3;color:#854d0e;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Under Review</span></td>
+        </tr>
+      </table>
+      <!-- Next steps -->
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;border-radius:0 10px 10px 0;padding:16px 18px;margin-bottom:24px;">
+        <h4 style="font-family:Montserrat,sans-serif;font-size:13px;color:#16a34a;margin:0 0 10px;">What happens next?</h4>
+        <ul style="margin:0;padding-left:18px;color:#374151;font-size:13px;line-height:1.9;">
+          <li>Our team will verify your payment receipt</li>
+          <li>You will receive an order confirmation email once verified</li>
+          <li>Your order will be dispatched after payment confirmation</li>
+        </ul>
+      </div>
+      <p style="font-size:13px;color:#64748b;line-height:1.6;margin:0;">
+        If you have any questions, please contact us at
+        <a href="mailto:chemsustech@gmail.com" style="color:#0074c7;font-weight:600;">chemsustech@gmail.com</a>
+      </p>
+    </div>
+    <!-- Footer -->
+    <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:18px 36px;text-align:center;">
+      <p style="font-size:12px;color:#94a3b8;margin:0;">© ${new Date().getFullYear()} ChemSus Technologies Pvt Ltd · <a href="https://chemsus.in" style="color:#0074c7;">chemsus.in</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+                sendTransactionalEmail(
+                    toEmail,
+                    `Payment Received – ${paymentId} | ChemSus Technologies`,
+                    emailHtml,
+                    `Dear ${toName},\n\nThank you for your payment. Your Payment ID is ${paymentId}.\n\nWe will verify your receipt within 1 business day and confirm your order.\n\nChemSus Technologies Pvt Ltd`
+                ).catch(err => console.error('[PAYMENT-EMAIL] Failed to send:', err.message));
+            }
+
+            res.json({ paymentId, paymentDbId: r.lastID, paymentRef });
+        } catch (e) {
+            console.error('[PAYMENT] Error:', e);
+            if (req.file) fs.unlink(req.file.path, () => {});
+            res.status(500).json({ error: 'Payment submission failed', details: String(e) });
         }
     });
 
