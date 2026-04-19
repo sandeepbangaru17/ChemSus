@@ -644,6 +644,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// Redirect www to non-www
+app.use((req, res, next) => {
+  if (req.hostname === "www.chemsus.in") {
+    return res.redirect(301, "https://chemsus.in" + req.originalUrl);
+  }
+  next();
+});
+
 // ---------------- Static ----------------
 app.use("/assets", express.static(path.join(PUBLIC, "assets")));
 app.use("/products", express.static(path.join(PUBLIC, "products")));
