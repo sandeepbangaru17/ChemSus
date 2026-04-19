@@ -21,18 +21,20 @@ A full-stack web application for **ChemSus Technologies Pvt Ltd**, featuring a *
 * Public website for **products, shop, and company info**
 * **Customer accounts** — sign up with email + password, OTP email verification
 * **Order placement** — Buy Now and Cart flows with OTP-verified checkout; each order gets a unique quotation reference in the format `CST-YYYY-YY-NNNN` (Indian FY-based, auto-incrementing)
-* **UPI payment receipt upload**
-* **Admin dashboard** — Full control for the designated admin (director@chemsus.in):
+* **Dual payment path** — after confirming an order, the customer chooses *Get Quotation* (PDF emailed, bank transfer) or *Direct Payment* (UPI QR scan on `payment.html`); receipt upload triggers a branded confirmation email with a `PAY-000001`-style Payment ID
+* **Full SEO** — meta descriptions, keywords, canonical URLs, Open Graph, Twitter Cards, JSON-LD structured data on all public pages; `noindex/nofollow` on all private/account pages; `robots.txt` + `sitemap.xml`
+* **Admin dashboard** — Full control for the designated admin:
   * Products page management (CRUD)
   * Shop items CRUD
   * Pack pricing management (with competitor pricing fields)
   * Orders management — listing, filtering, and deletion
-  * Payments and receipt verification
+  * Payments and receipt verification (mark SUCCESS/FAILED)
   * Sample requests and contact messages management
   * Customer accounts view
   * Site settings (brochure upload, admin credentials)
   * Change admin email/password from the dashboard
   * **Analytics** — page views over last 30 days and 12 months with charts, plus visitor breakdown by country (geographic data via ip-api.com)
+  * **Dynamic sidebar badges** — live counts on Orders (pending), Payments (pending), Samples, Contact (unread), Collab Notify, Customers
 * **Session-based auth** — admin and customer sessions are cleared automatically when the browser tab/window is closed (no manual logout required for security)
 
 Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to deploy.
@@ -68,8 +70,9 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 | `/cart.html` | Shopping cart |
 | `/buy.html` | Buy Now / Cart checkout |
 | `/buynow.html` | Direct buy flow |
-| `/orders.html` | Order placement form (with email OTP verification) |
-| `/payment2.html` | UPI payment + receipt upload |
+| `/orders.html` | Order placement form (with email OTP verification) → payment choice modal |
+| `/payment.html` | Direct UPI payment — QR scan, order summary, drag-and-drop receipt upload |
+| `/payment2.html` | Legacy UPI payment page |
 | `/success.html` | Order success confirmation |
 | `/login.html` | Customer login (password or OTP) |
 | `/signup.html` | Customer registration with email verification |
@@ -114,7 +117,7 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 * Node.js + Express.js
 * SQLite3 (auto-migrated on startup)
 * Multer (file uploads)
-* Nodemailer (email OTP via Zoho SMTP)
+* Nodemailer (transactional emails via Gmail SMTP — OTP, order confirmation, quotation PDF, payment receipt confirmation)
 
 ### Authentication
 * **Admin**: Local JWT (HMAC-SHA256), credentials in `.env` + DB override, 8-hour TTL, stored in `sessionStorage`
@@ -176,7 +179,7 @@ cp .env.example .env
 | `ADMIN_PASSWORD` | Admin login password |
 | `LOCAL_AUTH_JWT_SECRET` | Secret for signing admin + customer JWTs |
 | `OTP_HASH_SECRET` | Secret for HMAC-hashing OTP codes |
-| `OTP_SMTP_HOST` | SMTP server (default: smtp.zoho.in) |
+| `OTP_SMTP_HOST` | SMTP server (default: smtp.gmail.com) |
 | `OTP_SMTP_PORT` | SMTP port (default: 587) |
 | `OTP_SMTP_USER` | SMTP username / from address |
 | `OTP_SMTP_PASS` | SMTP password / app password |
@@ -211,6 +214,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | `email_otp_sessions` | Email OTP sessions (checkout + signup verification) |
 | `sample_requests` | Sample request form submissions |
 | `contact_messages` | Contact form submissions |
+| `collab_notify` | Emails registered for collaboration portal launch notification |
 | `page_views` | Page view analytics — path, IP, country, city, timestamp |
 
 Database auto-migrates on startup — new columns and indexes are added automatically.
@@ -254,6 +258,8 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | DELETE | `/api/admin/contact-messages/:id` | Delete contact message |
 | GET | `/api/admin/customers` | List customer accounts |
 | DELETE | `/api/admin/customers/:id` | Delete customer account |
+| GET | `/api/admin/collab-notify` | List collaboration notify registrations |
+| DELETE | `/api/admin/collab-notify/:id` | Delete collab notify entry |
 | POST | `/api/admin/upload` | Upload site assets |
 | POST | `/api/admin/brochure` | Save brochure URL |
 | GET | `/api/admin/analytics/views` | Page view counts (30 days + 12 months) |
@@ -279,7 +285,7 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | POST | `/api/otp/email/send` | Send order verification OTP |
 | POST | `/api/otp/email/verify` | Verify order OTP |
 | POST | `/api/orders` | Place an order |
-| POST | `/api/receipts` | Upload payment receipt |
+| POST | `/api/payments` | Upload UPI payment receipt + send confirmation email |
 | GET | `/api/brochure` | Get brochure URL |
 | GET | `/api/shop-items` | List active shop items |
 | GET | `/api/pack-pricing-all` | Bulk load pack prices |
@@ -287,6 +293,7 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | GET | `/api/products-page` | List active products |
 | POST | `/api/sample-request` | Submit sample request |
 | POST | `/api/contact` | Submit contact form |
+| POST | `/api/collab-notify` | Register email for collaboration portal notification |
 
 ---
 
@@ -324,7 +331,6 @@ http://localhost:5656
 Admin panel: `http://localhost:5656/admin/login.html`
 
 > For production deployment steps (PM2, Nginx, SSL, Cloudflare), see [DEPLOYMENT.md](DEPLOYMENT.md).
-> For payment gateway setup (Razorpay), see [PAYMENT.md](PAYMENT.md).
 
 ---
 
@@ -344,4 +350,4 @@ Admin panel: `http://localhost:5656/admin/login.html`
 
 ## License
 
-© 2025 **ChemSus Technologies Pvt Ltd**. All rights reserved.
+© 2026 **ChemSus Technologies Pvt Ltd**. All rights reserved.
