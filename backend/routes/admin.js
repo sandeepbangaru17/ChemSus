@@ -9,8 +9,50 @@ module.exports = function (deps) {
         ADMIN_EMAIL, ADMIN_PASSWORD,
         buildLocalAccessToken, crypto,
         hashLocalPassword, safeEqualHex,
-        getEffectiveAdminEmail
+        getEffectiveAdminEmail,
+        sendTransactionalEmail
     } = deps;
+
+    const ORDER_STATUS_LABELS = {
+        Processing: 'Processing',
+        Confirmed: 'Confirmed',
+        Shipped: 'Shipped',
+        Delivered: 'Delivered',
+    };
+
+    function buildOrderStatusEmail(customerName, purchaseId, productName, newStatus, email) {
+        const statusMessages = {
+            Processing: { icon: '🔄', text: 'Your order is being processed.', color: '#f59e0b' },
+            Confirmed: { icon: '✅', text: 'Your order has been confirmed and is being prepared.', color: '#059669' },
+            Shipped: { icon: '🚚', text: 'Great news! Your order is on its way.', color: '#0074c7' },
+            Delivered: { icon: '📦', text: 'Your order has been delivered. Thank you for choosing ChemSus!', color: '#7c3aed' },
+        };
+        const info = statusMessages[newStatus] || { icon: '📋', text: `Your order status has been updated to ${newStatus}.`, color: '#64748b' };
+
+        const html = `
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f3f7fb;padding:24px;border-radius:12px;">
+  <div style="background:#fff;border-radius:10px;padding:32px;">
+    <img src="https://chemsus.in/assets/logo.jpg" alt="ChemSus" style="height:44px;margin-bottom:20px;" onerror="this.style.display='none'">
+    <h2 style="color:${info.color};margin:0 0 8px;">${info.icon} Order Update — ${newStatus}</h2>
+    <p style="color:#475569;margin:0 0 24px;">Dear ${customerName}, ${info.text}</p>
+    <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+      <p style="margin:0;font-size:13px;color:#64748b;">Quotation / Order ID</p>
+      <p style="margin:4px 0 0;font-size:20px;font-weight:700;color:#0f172a;letter-spacing:1px;">${purchaseId}</p>
+      <p style="margin:8px 0 0;font-size:13px;color:#1e293b;"><b>Product:</b> ${productName}</p>
+      <p style="margin:4px 0 0;font-size:13px;color:#1e293b;"><b>Status:</b> <span style="color:${info.color};font-weight:700;">${newStatus}</span></p>
+    </div>
+    <div style="font-size:13px;color:#475569;">
+      <p style="margin:0 0 6px;font-weight:600;">Need help?</p>
+      <p style="margin:0;">&#128231; <a href="mailto:sales@chemsus.in" style="color:#0074c7;">sales@chemsus.in</a></p>
+      <p style="margin:4px 0 0;">&#128222; <a href="tel:+918486877575" style="color:#0074c7;">+91 84868 77575</a></p>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:16px;">&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</p>
+</div>`;
+
+        const text = `Dear ${customerName},\n\n${info.text}\n\nOrder ID: ${purchaseId}\nProduct: ${productName}\nStatus: ${newStatus}\n\nNeed help? Contact sales@chemsus.in or +91 84868 77575\n\nChemSus Technologies Pvt Ltd`;
+        return { html, text };
+    }
 
     // ---------------- Admin Login (no auth required) ----------------
     router.post("/login", rateLimiter(15 * 60 * 1000, 10), async (req, res) => {
@@ -426,12 +468,34 @@ module.exports = function (deps) {
         try {
             const id = Number(req.params.id);
             const { order_status } = req.body;
-            if (!order_status) return res.status(400).json({ error: "Status required" });
+            const allowed = Object.keys(ORDER_STATUS_LABELS);
+            if (!order_status || !allowed.includes(order_status))
+                return res.status(400).json({ error: `Status must be one of: ${allowed.join(', ')}` });
+
+            const order = await get(`SELECT customername, email, purchase_id, productname FROM orders WHERE id=?`, [id]);
+            if (!order) return res.status(404).json({ error: "Order not found" });
 
             await run(
                 `UPDATE orders SET order_status=?, updated_at=datetime('now') WHERE id=?`,
                 [order_status, id]
             );
+
+            // Fire-and-forget status change email
+            if (order.email && sendTransactionalEmail) {
+                const { html, text } = buildOrderStatusEmail(
+                    order.customername || 'Customer',
+                    order.purchase_id,
+                    order.productname,
+                    order_status,
+                    order.email
+                );
+                sendTransactionalEmail(
+                    order.email,
+                    `ChemSus Order Update — ${order_status} | ${order.purchase_id}`,
+                    html, text
+                ).catch(() => { });
+            }
+
             res.json({ ok: true });
         } catch (e) {
             res.status(500).json({ error: "DB error", details: String(e.message || e) });
