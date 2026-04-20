@@ -9,6 +9,7 @@ Disallow: /my-orders.html
 Disallow: /orders.html
 Disallow: /buy.html
 Disallow: /buynow.html
+Disallow: /payment.html
 Disallow: /payment2.html
 Disallow: /quotation.html
 Disallow: /request-sample.html
