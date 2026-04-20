@@ -309,5 +309,88 @@ module.exports = function (deps) {
     // ── POST /api/customer/logout ──────────────────────────────
     router.post('/logout', (req, res) => res.json({ ok: true }));
 
+    // ── POST /api/customer/forgot-password ─────────────────────
+    router.post('/forgot-password', LIMIT_AUTH, async (req, res) => {
+        try {
+            const email = normalizeEmail(req.body?.email || '');
+            if (!isValidEmail(email)) return res.status(400).json({ error: 'Valid email required.' });
+
+            // Always respond OK to prevent email enumeration
+            const user = await get('SELECT id, is_verified FROM customer_users WHERE email=?', [email]);
+            if (!user || !user.is_verified) return res.json({ ok: true });
+
+            const otp = generateOtpCode();
+            const challengeId = crypto.randomBytes(16).toString('hex');
+            const otpHash = hashOtp(email, otp, challengeId);
+
+            await run(
+                `INSERT INTO email_otp_sessions (challenge_id, email, otp_hash, expires_at, cooldown_until, max_attempts)
+                 VALUES (?,?,?,?,?,?)`,
+                [challengeId, email, otpHash, otpExpiresAt(OTP_TTL_MIN), cooldownAt(OTP_RESEND_SEC), OTP_MAX_ATTEMPTS]
+            );
+
+            sendTransactionalEmail(
+                email,
+                'Reset your ChemSus password',
+                `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;">
+                  <img src="https://chemsus.in/assets/logo.jpg" alt="ChemSus" style="height:40px;margin-bottom:16px;" onerror="this.style.display='none'">
+                  <h2 style="color:#0074c7;">Password Reset OTP</h2>
+                  <p style="color:#475569;">We received a request to reset your ChemSus account password.</p>
+                  <p style="font-size:32px;font-weight:700;letter-spacing:6px;color:#0f172a;margin:16px 0;">${otp}</p>
+                  <p style="color:#64748b;font-size:13px;">This OTP expires in ${OTP_TTL_MIN} minutes. If you did not request a password reset, ignore this email.</p>
+                </div>`,
+                `Your ChemSus password reset OTP is ${otp}. Expires in ${OTP_TTL_MIN} minutes. If you did not request this, ignore this email.`
+            ).catch(() => { });
+
+            res.json({ ok: true, challengeId, resendInSec: OTP_RESEND_SEC });
+        } catch (e) {
+            console.error('[FORGOT-PASSWORD]', e);
+            res.status(500).json({ error: 'Failed to send reset OTP.' });
+        }
+    });
+
+    // ── POST /api/customer/reset-password ──────────────────────
+    router.post('/reset-password', LIMIT_AUTH, async (req, res) => {
+        try {
+            const { challengeId, otp, newPassword } = req.body || {};
+            const email = normalizeEmail(req.body?.email || '');
+
+            if (!email || !challengeId || !otp || !newPassword)
+                return res.status(400).json({ error: 'All fields are required.' });
+            if (String(newPassword).length < 6)
+                return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+
+            const session = await get(
+                `SELECT * FROM email_otp_sessions
+                 WHERE challenge_id=? AND email=? AND used_at IS NULL
+                   AND datetime(expires_at) > datetime('now')`,
+                [challengeId, email]
+            );
+            if (!session) return res.status(400).json({ error: 'Invalid or expired OTP.' });
+            if (session.attempts >= session.max_attempts)
+                return res.status(429).json({ error: 'Too many attempts. Please request a new OTP.' });
+
+            const expected = hashOtp(email, otp, challengeId);
+            if (expected !== session.otp_hash) {
+                await run('UPDATE email_otp_sessions SET attempts=attempts+1 WHERE id=?', [session.id]);
+                return res.status(400).json({ error: 'Incorrect OTP.' });
+            }
+
+            const saltHex = crypto.randomBytes(16).toString('hex');
+            const hashHex = hashLocalPassword(String(newPassword), saltHex);
+
+            await run(
+                'UPDATE customer_users SET password_salt=?, password_hash=?, is_verified=1, updated_at=datetime("now") WHERE email=?',
+                [saltHex, hashHex, email]
+            );
+            await run('UPDATE email_otp_sessions SET used_at=datetime("now") WHERE id=?', [session.id]);
+
+            res.json({ ok: true });
+        } catch (e) {
+            console.error('[RESET-PASSWORD]', e);
+            res.status(500).json({ error: 'Password reset failed.' });
+        }
+    });
+
     return router;
 };
