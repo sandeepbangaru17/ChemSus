@@ -7,7 +7,10 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "seed": "node seed.js",
-    "reset": "node -e \"require('fs').rmSync('db/chemsus.sqlite',{force:true});\" && node seed.js"
+    "reset": "node -e \"require('fs').rmSync('db/chemsus.sqlite',{force:true});\" && node seed.js",
+    "test": "node --test tests/unit.test.js",
+    "test:api": "node --test tests/api.test.js",
+    "test:all": "node --test tests/unit.test.js && node --test tests/api.test.js"
   },
   "keywords": [
     "chemicals",
