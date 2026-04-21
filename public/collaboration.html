@@ -6,6 +6,32 @@
   <title>Collaboration | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- SEO -->
+  <meta name="description" content="Partner with ChemSus Technologies for research collaboration, joint development and licensing of sustainable biomass-derived specialty chemicals and pharmaceutical APIs.">
+  <meta name="keywords" content="chemistry collaboration, research partnership, biomass chemistry collaboration, green chemistry partnership India, pharmaceutical API collaboration, sustainable chemicals R&D">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chemsus.in/collaboration.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
+  <meta property="og:title" content="Collaboration | ChemSus Technologies Pvt Ltd">
+  <meta property="og:description" content="Partner with ChemSus Technologies for research collaboration, joint development and licensing of sustainable biomass-derived specialty chemicals and APIs.">
+  <meta property="og:url" content="https://chemsus.in/collaboration.html">
+  <meta property="og:image" content="https://chemsus.in/assets/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Collaboration | ChemSus Technologies Pvt Ltd">
+  <meta name="twitter:description" content="Partner with ChemSus Technologies for research collaboration, joint development and licensing of sustainable biomass-derived specialty chemicals and APIs.">
+  <meta name="twitter:image" content="https://chemsus.in/assets/logo.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Collaboration | ChemSus Technologies Pvt Ltd",
+    "url": "https://chemsus.in/collaboration.html",
+    "description": "Partner with ChemSus Technologies for research collaboration and joint development of sustainable biomass-derived specialty chemicals.",
+    "publisher": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="assets/logo.jpg">
 
   <link
@@ -58,7 +84,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -123,10 +150,22 @@
       transition: all 0.2s ease;
     }
 
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
     .nav-menu li a.active,
     .nav-menu li a:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     .search-section {
@@ -458,7 +497,7 @@
     /* === WhatsApp QR Floating Widget === */
     #ib-wa {
       position: fixed;
-      bottom: 95px;
+      bottom: 25px;
       right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -493,7 +532,7 @@
     .download-section {
       width: auto;
       position: fixed;
-      bottom: 25px;
+      bottom: 95px;
       right: 25px;
       z-index: 99998;
     }
@@ -682,6 +721,74 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      main { padding: 20px 12px 32px; }
+      p, li { word-break: break-word; }
+    }
+
+    /* NOTIFY MODAL */
+    .notify-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .notify-modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 36px 32px 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+    .notify-modal h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 20px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .notify-modal p {
+      font-size: 14px;
+      color: #4a5568;
+      margin-bottom: 20px;
+    }
+    .notify-modal input[type="email"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .notify-modal input[type="email"]:focus { border-color: var(--accent); }
+    .notify-modal-msg { font-size: 13px; min-height: 18px; margin-bottom: 12px; }
+    .notify-modal-close {
+      position: absolute;
+      top: 12px; right: 16px;
+      background: none; border: none;
+      font-size: 20px; cursor: pointer;
+      color: #718096;
+      line-height: 1;
+    }
+    .notify-modal-close:hover { color: #1a202c; }
   </style>
 </head>
 
@@ -701,33 +808,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html" class="active">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html" class="active"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -750,7 +849,7 @@
         <div class="hero-kicker">Strategic Partnerships</div>
         <h1 class="hero-title">Collaboration</h1>
         <p class="hero-subtitle">
-          Partner with us to co-develop sustainable chemistry solutions from bamboo biomass.
+          Partner with us to co-develop sustainable chemistry solutions from lignocellulosic biomass.
         </p>
       </div>
     </section>
@@ -888,7 +987,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
 
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
@@ -897,7 +996,7 @@
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
 
-        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank">
           Open WhatsApp
         </a>
@@ -969,7 +1068,45 @@
     });
 
     function notifyInterest() {
-      alert('Thank you for your interest! We will notify you when the collaboration portal launches.');
+      document.getElementById('notifyModal').style.display = 'flex';
+      document.getElementById('notifyEmail').value = '';
+      document.getElementById('notifyMsg').textContent = '';
+      document.getElementById('notifyEmail').focus();
+    }
+
+    function closeNotifyModal() {
+      document.getElementById('notifyModal').style.display = 'none';
+    }
+
+    async function submitNotify() {
+      const email = document.getElementById('notifyEmail').value.trim();
+      const msg = document.getElementById('notifyMsg');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.style.color = '#e53e3e';
+        msg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+      const btn = document.getElementById('notifySubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      try {
+        const res = await fetch('/api/collab-notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Request failed');
+        msg.style.color = '#2f855a';
+        msg.textContent = 'Thank you! We will notify you when the collaboration portal launches.';
+        btn.textContent = 'Done';
+        setTimeout(closeNotifyModal, 2500);
+      } catch (e) {
+        msg.style.color = '#e53e3e';
+        msg.textContent = e.message || 'Something went wrong. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Notify Me';
+      }
     }
 
     // Shared cart badge updater
@@ -989,11 +1126,38 @@
         popup.style.display = "block";
       }
     }
+
+    // Update nav auth link
+    (function () {
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = sessionStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
-  <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
+  <!-- Notify Me Modal -->
+  <div id="notifyModal" class="notify-modal-overlay" onclick="if(event.target===this)closeNotifyModal()">
+    <div class="notify-modal">
+      <button class="notify-modal-close" onclick="closeNotifyModal()" aria-label="Close">&times;</button>
+      <h3>Get Notified When Live</h3>
+      <p>Enter your email and we'll let you know when the collaboration portal launches.</p>
+      <input type="email" id="notifyEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitNotify()">
+      <div id="notifyMsg" class="notify-modal-msg"></div>
+      <button id="notifySubmitBtn" class="notify-btn" style="margin-top:0;width:100%;" onclick="submitNotify()">Notify Me</button>
+    </div>
+  </div>
 </body>
 
 </html>

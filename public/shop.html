@@ -6,6 +6,33 @@
   <title>Shop | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/logo.jpg">
+
+  <!-- SEO -->
+  <meta name="description" content="Buy high-purity specialty chemicals and pharmaceutical APIs online from ChemSus Technologies. Sustainable, biomass-derived chemicals for industrial and pharmaceutical use.">
+  <meta name="keywords" content="buy specialty chemicals, chemicals online India, pharmaceutical APIs buy, sustainable chemicals shop, biomass chemicals purchase, high-purity chemicals">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chemsus.in/shop.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
+  <meta property="og:title" content="Shop Specialty Chemicals | ChemSus Technologies Pvt Ltd">
+  <meta property="og:description" content="Buy high-purity specialty chemicals and pharmaceutical APIs online. Sustainable, biomass-derived chemicals for industrial and pharmaceutical use.">
+  <meta property="og:url" content="https://chemsus.in/shop.html">
+  <meta property="og:image" content="https://chemsus.in/assets/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shop Specialty Chemicals | ChemSus Technologies Pvt Ltd">
+  <meta name="twitter:description" content="Buy high-purity specialty chemicals and pharmaceutical APIs online. Sustainable, biomass-derived chemicals for industrial and pharmaceutical use.">
+  <meta name="twitter:image" content="https://chemsus.in/assets/logo.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "ChemSus Technologies Shop",
+    "url": "https://chemsus.in/shop.html",
+    "description": "Buy high-purity specialty chemicals and pharmaceutical APIs online from ChemSus Technologies.",
+    "seller": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+  }
+  </script>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
     rel="stylesheet">
@@ -46,7 +73,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -88,11 +116,14 @@
       width: auto
     }
 
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
+
     .nav-menu {
       list-style: none;
       padding: 8px 0;
       flex: 1;
-      overflow-y: auto
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .nav-menu li a {
@@ -108,6 +139,17 @@
     .nav-menu li a:hover {
       background: rgba(255, 255, 255, .1);
       border-left-color: var(--accent);
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      padding: 10px 20px 4px;
+      pointer-events: none;
+      user-select: none;
     }
 
     #cart-count {
@@ -278,20 +320,20 @@
       margin-bottom: 24px;
       padding: 10px 14px;
       border-radius: 10px;
-      background: rgba(234, 88, 12, 0.05);
-      border: 1px solid rgba(234, 88, 12, 0.4);
+      background: rgba(0, 116, 199, 0.05);
+      border: 1px solid rgba(0, 116, 199, 0.3);
       display: flex;
       gap: 8px;
       align-items: flex-start;
       font-size: 13px;
-      color: #7c2d12;
+      color: #1e40af;
     }
 
     .info-banner-icon {
       width: 18px;
       height: 18px;
       border-radius: 999px;
-      background: #f97316;
+      background: #0074c7;
       color: #fff;
       display: flex;
       align-items: center;
@@ -377,10 +419,10 @@
     }
 
     .product-label-img {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      padding: 10px;
+      padding: 8px;
     }
 
     .product-emoji {
@@ -486,7 +528,9 @@
       background: #e0ecff;
       color: #1e3a8a;
       font-weight: 600;
-      min-width: 150px;
+      min-width: 120px;
+      max-width: 100%;
+      flex: 1;
       outline: none;
     }
 
@@ -586,12 +630,13 @@
 
     .btn-cart {
       width: 100%;
-      height: 100%;
+      min-height: 48px;
+      padding: 12px 10px;
       background: var(--primary);
       color: #fff;
       border: none;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       font-family: "Montserrat", sans-serif;
       cursor: pointer;
@@ -612,7 +657,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      height: 100%;
+      min-height: 48px;
       background: #f1f5f9;
       border-radius: 10px;
       border: 1px solid #cbd5e1;
@@ -620,14 +665,14 @@
     }
 
     .qty-btn {
-      width: 40px;
-      height: 100%;
+      width: 44px;
+      min-height: 48px;
       background: var(--primary);
       color: #fff;
       border: none;
       cursor: pointer;
       font-weight: 800;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .qty-btn:hover {
@@ -737,17 +782,17 @@
       padding-top: 4px;
     }
 
-    /* Cart Button Icon fix */
-    .btn-cart svg {
-      width: 18px;
-      height: 18px;
-      vertical-align: middle;
-    }
-
     .btn-cart {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-cart svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
     }
 
     @media(max-width:1050px) {
@@ -768,6 +813,10 @@
 
       .mobile-toggle {
         display: block
+      }
+
+      .hero {
+        padding-top: 72px;
       }
 
       body.no-scroll {
@@ -799,6 +848,44 @@
       }
     }
 
+    @media(max-width:600px) {
+      .product-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .product-actions .btn-buy,
+      .product-actions .cart-btn-container {
+        width: 100%;
+        flex: unset;
+      }
+
+      .product-actions .btn-buy,
+      .product-actions .btn-cart {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 10px;
+        font-size: 14px;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .product-actions .cart-btn-container,
+      .product-actions .qty-selector {
+        min-height: 48px;
+        width: 100%;
+      }
+
+      .pack-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .pack-select {
+        width: 100%;
+      }
+    }
+
     @media(max-width:580px) {
       .hero-title {
         font-size: 28px
@@ -807,7 +894,8 @@
       .floating-cart-btn {
         right: 20px;
         bottom: calc(16px + env(safe-area-inset-bottom));
-        padding: 10px 16px
+        padding: 10px 14px;
+        font-size: 13px;
       }
 
       .product-card {
@@ -815,7 +903,7 @@
       }
 
       .product-image {
-        height: 170px
+        height: 180px
       }
     }
 
@@ -864,6 +952,23 @@
       fill: #ffffff;
       opacity: 0.9;
     }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media(max-width:480px) {
+      .hero { min-height: 150px; height: auto; }
+      .hero-title { font-size: 22px; }
+      .hero-subtitle { font-size: 13px; }
+      .products-grid { grid-template-columns: 1fr; gap: 14px; }
+      .product-card { padding: 14px; }
+      .product-image { height: 180px; }
+      .product-title { font-size: 17px; }
+      .product-price { font-size: 20px; }
+      main { padding: 14px 10px 28px; }
+      p, li { word-break: break-word; }
+      .floating-cart-btn { padding: 10px 12px; font-size: 13px; right: 14px; }
+    }
   </style>
 </head>
 
@@ -882,33 +987,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html" class="active">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html" class="active"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search products..."
@@ -939,7 +1036,7 @@
         <h2>Our Products</h2>
       </div>
       <p class="section-intro" id="sectionIntro">
-        High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume
+        High-purity, pharmaceutical-grade chemicals derived from sustainable lignocellulosic biomass. Contact sales for volume
         pricing and custom specifications.
       </p>
 
@@ -1257,8 +1354,12 @@
         if (isInStock) inStockCount++;
 
         // Full form for 5-HMF
-        if (item.name.includes('5-HMF') || item.name === '5-Hydroxymethylfurfural') {
-          item.name = '5-Hydroxymethylfurfural';
+        if (item.name.includes('5-HMF') || item.name.toLowerCase().includes('hydroxymethyl')) {
+          item.name = '5-Hydroxymethyl furfural (HMF)';
+        }
+        // Override Ethyl Levulinate subtitle
+        if (item.name === 'Ethyl Levulinate' || item.name.toLowerCase().includes('ethyl levulinate')) {
+          item.subtitle = 'Bio-based fragrance and flavouring agent';
         }
 
         const card = document.createElement('div');
@@ -1278,14 +1379,9 @@
         const safeName = escapeHtml(item.name);
         const safeSubtitle = escapeHtml(item.subtitle);
 
-        // Dynamic badge from API - restricted to Calcium Levulinate for "Free Sample Available"
         let badgeHTML = '';
-        if (item.showBadge && item.badge) {
-          if (item.badge === 'Free Sample Available' && item.name !== 'Calcium Levulinate') {
-            // Skip showing the badge if it's "Free Sample" and not Calcium Levulinate
-          } else {
-            badgeHTML = `<span class="product-badge">${escapeHtml(item.badge)}</span>`;
-          }
+        if (item.showBadge && item.badge && item.badge.toLowerCase() !== 'free sample available') {
+          badgeHTML = `<span class="product-badge">${escapeHtml(item.badge)}</span>`;
         }
 
         const stockBadgeHTML = `<span class="stock-badge ${isInStock ? 'stock-in' : 'stock-out'}">${isInStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>`;
@@ -1307,7 +1403,7 @@
 
         const disabledInitial = !isInStock || !basePriceInitial;
 
-        const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>`;
+        const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink:0"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg> Add to Cart`;
 
         const LABEL_IMAGES = {
           'Sodium Levulinate': 'assets/sod-label.jpeg',
@@ -1324,7 +1420,8 @@
           'Levulinic Acid (LA)': 'assets/levuli-llabel.jpeg',
           'Delta-aminolevulinic acid (DALA)': 'assets/dala-label.jpeg',
           '5-Hydroxymethylfurfural (5-HMF)': 'assets/5hmf-label.jpeg',
-          '5-Hydroxymethylfurfura': 'assets/5hmf-label.jpeg'
+          '5-Hydroxymethylfurfural': 'assets/5hmf-label.jpeg',
+          '5-Hydroxymethyl furfural (HMF)': 'assets/5hmf-label.jpeg'
         };
 
         const labelImg = LABEL_IMAGES[item.name] || LABEL_IMAGES[raw.name] || 'assets/logo.jpg';
@@ -1436,7 +1533,7 @@
       });
 
       intro.textContent =
-        `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable bamboo biomass. Contact sales for volume pricing and custom specifications.`;
+        `${inStockCount} of ${items.length} products available. High-purity, pharmaceutical-grade chemicals derived from sustainable lignocellulosic biomass. Contact sales for volume pricing and custom specifications.`;
       syncUI();
     }
 
@@ -1465,12 +1562,29 @@
           syncUI();
         }
       });
+
+      // Update nav auth link
+      (function () {
+        const tok = sessionStorage.getItem('chemsus_customer_token');
+        const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+        const authLink = document.getElementById('authNavLink');
+        const profileItem = document.getElementById('profileNavItem');
+        if (!authLink) return;
+        if (tok && (!exp || Date.now() / 1000 < exp)) {
+          const name = sessionStorage.getItem('chemsus_customer_name');
+          authLink.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+          authLink.href = 'my-orders.html';
+          if (profileItem) profileItem.style.display = 'list-item';
+        } else {
+          authLink.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+          authLink.href = 'login.html';
+          if (profileItem) profileItem.style.display = 'none';
+        }
+      })();
     });
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>

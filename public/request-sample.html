@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Request for Sample | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow">
 
   <link rel="icon" type="image/png" href="assets/logo.jpg" />
 
@@ -58,7 +59,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -123,10 +125,22 @@
       transition: all 0.2s ease;
     }
 
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
     .nav-menu li a.active,
     .nav-menu li a:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     /* SEARCH */
@@ -365,13 +379,21 @@
     }
 
     .success-message {
-      background: #dcfce7;
-      color: #166534;
-      padding: 16px;
-      border-radius: 8px;
-      border: 1px solid #bbf7d0;
-      margin-bottom: 20px;
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 20px 24px;
+      border-radius: 12px;
+      border: 2px solid #6ee7b7;
+      margin-bottom: 24px;
       display: none;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      animation: fadeSlideIn 0.4s ease;
+    }
+
+    .success-message::before {
+      content: "✅ ";
     }
 
     footer {
@@ -473,7 +495,7 @@
     /* === WhatsApp QR Floating Widget (UPDATED) === */
     #ib-wa {
       position: fixed;
-      bottom: 95px;
+      bottom: 25px;
       right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -483,7 +505,7 @@
     .download-section {
       width: auto;
       position: fixed;
-      bottom: 25px;
+      bottom: 95px;
       right: 25px;
       z-index: 99998;
     }
@@ -691,51 +713,127 @@
       opacity: 0.9;
     }
 
-    /* Verification Status */
-    .verification-group {
-      margin-top: 10px;
-      display: none;
-    }
-
-    .otp-input-wrap {
+    /* ── Email OTP section ── */
+    .email-row {
       display: flex;
       gap: 10px;
-      margin-top: 8px;
+      align-items: flex-start;
     }
+
+    .email-row .form-input { flex: 1; }
 
     .btn-otp {
       background: var(--accent);
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 12px 16px;
+      border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
-      transition: opacity 0.2s;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      height: 46px;
+      align-self: flex-end;
+    }
+
+    .btn-otp:hover:not(:disabled) {
+      background: var(--primary);
+      transform: translateY(-1px);
     }
 
     .btn-otp:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
     }
 
     .verify-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       font-size: 12px;
       font-weight: 700;
       margin-top: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
     }
 
     .verify-badge.unverified {
-      color: #ef4444;
+      color: #b91c1c;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
 
     .verify-badge.verified {
-      color: #10b981;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+    }
+
+    /* OTP entry card */
+    .verification-group {
+      margin-top: 12px;
+      display: none;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 10px;
+      padding: 14px 16px;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .otp-step-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #15803d;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .otp-input-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .otp-input-wrap .form-input {
+      letter-spacing: 6px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      border-color: #86efac;
+      max-width: 160px;
+    }
+
+    .otp-input-wrap .form-input:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+
+    /* Responsive additions */
+    img { max-width: 100%; }
+
+    @media (max-width: 1050px) {
+      .hero { padding-top: 72px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 22px !important; }
+      .hero-subtitle { font-size: 13px; }
+      .section { padding: 18px 14px; border-radius: 10px; }
+      .form-input, .form-textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .email-row { flex-direction: column; }
+      .btn-otp { width: 100%; }
+      .otp-input-wrap .form-input { max-width: 100%; letter-spacing: 4px; }
+      p, li { word-break: break-word; }
     }
   </style>
 </head>
@@ -756,33 +854,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html" class="active">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html" class="active"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -822,49 +912,52 @@
 
       <div class="form-container">
         <div class="success-message" id="successMessage">
-          Thank you! Your sample request has been prepared on WhatsApp. Please tap <b>Send</b> to submit.
+          Sample request submitted successfully! Our team will reach out to you shortly.
         </div>
+
+        <p style="font-size:12px;color:#94a3b8;margin-bottom:20px;text-align:right;">
+          Fields marked <span style="color:#ef4444;font-weight:700;">*</span> are required
+        </p>
 
         <form id="sampleRequestForm">
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="companyName">Name of the Company</label>
-              <input type="text" id="companyName" class="form-input" name="companyName" required>
+              <label class="form-label" for="companyName">Company Name <span style="color:#ef4444;">*</span></label>
+              <input type="text" id="companyName" class="form-input" name="companyName" placeholder="Your Company Pvt Ltd" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="individualName">Individual Name</label>
-              <input type="text" id="individualName" class="form-input" name="individualName" required>
+              <label class="form-label" for="individualName">Your Full Name <span style="color:#ef4444;">*</span></label>
+              <input type="text" id="individualName" class="form-input" name="individualName" placeholder="First Last" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="email">Email ID</label>
-              <div style="display: flex; gap: 10px;">
-                <input type="email" id="email" class="form-input" name="email" required>
+              <label class="form-label" for="email">Email ID <span style="color:#ef4444;">*</span></label>
+              <div class="email-row">
+                <input type="email" id="email" class="form-input" name="email" placeholder="you@company.com" required>
                 <button type="button" id="sendOtpBtn" class="btn-otp" onclick="handleSendOtp()">Send OTP</button>
               </div>
               <div id="emailVerifyStatus" class="verify-badge unverified">
-                <span>✕ Email Not Verified</span>
+                <span>✕ Not Verified</span>
               </div>
 
               <!-- OTP Verification Section -->
               <div id="otpSection" class="verification-group">
-                <label class="form-label" style="font-size: 12px; margin-top: 8px;">Enter 6-Digit OTP</label>
+                <div class="otp-step-label">📩 Enter the 6-digit OTP sent to your email</div>
                 <div class="otp-input-wrap">
-                  <input type="text" id="otpCode" class="form-input" maxlength="6" placeholder="######"
-                    style="letter-spacing: 4px; text-align: center; font-weight: bold;">
+                  <input type="text" id="otpCode" class="form-input" maxlength="6" placeholder="000000" inputmode="numeric">
                   <button type="button" id="verifyOtpBtn" class="btn-otp" onclick="handleVerifyOtp()">Verify</button>
                 </div>
-                <p id="otpTimer" style="font-size: 11px; color: #64748b; margin-top: 4px;"></p>
+                <p id="otpTimer" style="font-size: 11px; color: #166534; margin-top: 6px;"></p>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="phone">Phone Number *</label>
+              <label class="form-label" for="phone">Phone Number <span style="color:#ef4444;">*</span></label>
               <div style="display:flex; gap:8px;">
                 <input type="text" id="countryCode" class="form-input" name="countryCode" placeholder="+91"
                   style="width: 85px;" required>
-                <input type="tel" id="phone" class="form-input" name="phone" placeholder="Phone Number" required
+                <input type="tel" id="phone" class="form-input" name="phone" placeholder="98765 43210" required
                   style="flex:1;">
               </div>
             </div>
@@ -872,17 +965,17 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="designation">Designation *</label>
-              <input type="text" id="designation" class="form-input" name="designation" required>
+              <label class="form-label" for="designation">Designation <span style="color:#ef4444;">*</span></label>
+              <input type="text" id="designation" class="form-input" name="designation" placeholder="e.g. R&D Manager" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="website">Company Website *</label>
-              <input type="url" id="website" class="form-input" name="website" placeholder="https://" required>
+              <label class="form-label" for="website">Company Website <span style="color:#ef4444;">*</span></label>
+              <input type="url" id="website" class="form-input" name="website" placeholder="https://yourcompany.com" required>
             </div>
           </div>
 
           <div class="form-group full-width">
-            <label class="form-label" for="intendedUse">Intended use of the product</label>
+            <label class="form-label" for="intendedUse">Intended Use of the Product <span style="color:#ef4444;">*</span></label>
             <textarea id="intendedUse" class="form-textarea" name="intendedUse"
               placeholder="Please describe how you plan to use our products (e.g., R&D testing, product formulation, quality evaluation, etc.)"
               required></textarea>
@@ -890,7 +983,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" for="quantity">Anticipated Quantity required *</label>
+              <label class="form-label" for="quantity">Anticipated Quantity Required <span style="color:#ef4444;">*</span></label>
               <select id="quantity" class="form-select" name="quantity" required>
                 <option value="">Select quantity...</option>
                 <option value="100 kg">100 kg</option>
@@ -907,7 +1000,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label" for="timeline">Time Line</label>
+              <label class="form-label" for="timeline">Timeline <span style="color:#ef4444;">*</span></label>
               <select id="timeline" class="form-select" name="timeline" required>
                 <option value="">Select timeline...</option>
                 <option value="immediate">Immediate / Urgent</option>
@@ -920,7 +1013,7 @@
           </div>
 
           <div class="form-group full-width">
-            <label class="form-label" for="orderFrequency">Order Frequency</label>
+            <label class="form-label" for="orderFrequency">Order Frequency <span style="color:#ef4444;">*</span></label>
             <select id="orderFrequency" class="form-select" name="orderFrequency" required>
               <option value="">Select order frequency</option>
               <option value="one-time">One-time evaluation</option>
@@ -995,7 +1088,7 @@
       <div class="body">
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
         <img id="ibWaQr"
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you.?text=Hello%20ChemSus%20Team%2C%0AI%20would%20like%20to%20request%20evaluation%20samples%20of%20your%20sustainable%20specialty%20chemicals.%0APlease%20share%20details.%0AThank%20you."
           alt="WhatsApp QR">
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
           <span style="flex:1;height:1px;background:#ddd;"></span>
@@ -1003,7 +1096,7 @@
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
         <a id="ibWaLink"
-          href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0AI%20would%20like%20to%20request%20evaluation%20samples%20of%20your%20sustainable%20specialty%20chemicals.%0APlease%20share%20details.%0AThank%20you."
           target="_blank" rel="noopener">Open WhatsApp</a>
       </div>
     </div>
@@ -1261,41 +1354,9 @@
 
         if (!res.ok) throw new Error(data.error || "Failed to save request");
 
-        // 2. Open WhatsApp (Secondary Action)
-        const waNumber = "918486877575";
-        const safe = (v) => (v && String(v).trim() ? String(v).trim() : 'N/A');
-        const prettyFrequency = orderFrequency ? orderFrequency.replace(/-/g, ' ') : '';
-
-        const message =
-          `Hello ChemSus Team,
-
-I am interested in ChemSus' sustainable specialty chemicals and would like to request evaluation samples and product information.
-
-Company Profile:
-- Company: ${safe(companyName)}
-- Website: ${safe(website)}
-
-Contact Person:
-- Name: ${safe(individualName)}
-- Designation: ${safe(designation)}
-- Email: ${safe(email)}
-- Phone: ${safe(phone)}
-
-Sample Requirements:
-- Intended use: ${safe(intendedUse)}
-- Quantity: ${safe(quantity)}
-- Timeline: ${safe(timeline)}
-- Order frequency: ${safe(prettyFrequency)}
-
-Kindly share specifications (COA/SDS), pricing, MOQ, and lead times.
-
-Thank you.`;
-
-        const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-        window.open(waUrl, "_blank");
-
         // Show success message
         document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('sampleRequestForm').style.pointerEvents = 'none';
         document.getElementById('sampleRequestForm').style.opacity = '0.5';
         document.getElementById('sampleRequestForm').reset();
         document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
@@ -1306,11 +1367,28 @@ Thank you.`;
         formSubmitBtn.textContent = "Send Sample Request";
       }
     });
+
+    // Update nav auth link
+    (function () {
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = sessionStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>

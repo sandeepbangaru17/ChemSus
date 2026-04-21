@@ -1,500 +1,306 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>ChemSus | Login or Sign Up</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0074c7;
-            --primary-dark: #00508a;
-            --accent: #00b8b0;
-            --bg: #F3F7FB;
-            --ink: #1f2933;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login | ChemSus Technologies</title>
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7; --primary-dark: #00508a; --accent: #00b8b0;
+      --bg: #f3f7fb; --ink: #1f2933; --muted: #64748b; --border: #e2e8f0;
+      --err: #ef4444; --ok: #059669; --ok-bg: #ecfdf5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Open Sans", Arial, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    .logo-wrap { margin-bottom: 28px; }
+    .logo-wrap img { height: 42px; }
 
-        body {
-            font-family: "Open Sans", Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--ink);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .card {
+      background: #fff; border-radius: 18px; box-shadow: 0 12px 40px rgba(15,23,42,.10);
+      padding: 36px 32px 28px; width: 100%; max-width: 420px;
+    }
+    .card-title { font-family: "Montserrat", sans-serif; font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
-        .auth-container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
+    /* Tabs */
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 24px; }
+    .tab { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        .auth-container img {
-            width: 120px;
-            margin-bottom: 20px;
-        }
+    /* Form */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px;
+      font-size: 14px; color: var(--ink); outline: none; transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--primary); }
 
-        .auth-container h2 {
-            font-family: "Montserrat", sans-serif;
-            color: var(--primary-dark);
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
+    .btn-row { display: flex; gap: 8px; margin-top: 6px; }
+    .btn-sm { padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
-        .input-grp {
-            margin-bottom: 16px;
-            text-align: left;
-        }
+    .btn-submit {
+      width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+      font-family: "Montserrat", sans-serif; cursor: pointer; margin-top: 8px; transition: all .2s;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,116,199,.3); }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
-        .input-grp label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #4b5563;
-        }
+    .alert { padding: 11px 14px; border-radius: 9px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .alert.err { background: #fee2e2; color: var(--err); border: 1px solid #fecaca; display: block; }
+    .alert.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #6ee7b7; display: block; }
 
-        .input-grp input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+    .divider { text-align: center; font-size: 12px; color: var(--muted); margin: 16px 0; position: relative; }
+    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: var(--border); }
+    .divider::before { left: 0; } .divider::after { right: 0; }
 
-        .input-grp input:focus {
-            border-color: var(--primary);
-        }
+    .guest-btn {
+      width: 100%; padding: 12px; background: transparent; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer;
+      transition: all .2s; margin-top: 4px;
+    }
+    .guest-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: background 0.2s;
-        }
+    .footer-links { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+    .footer-links a { font-weight: 600; }
 
-        .btn:hover {
-            background: var(--primary-dark);
-        }
+    .otp-status { font-size: 12px; margin-top: 4px; }
+    .otp-status.ok { color: var(--ok); }
+    .otp-status.err { color: var(--err); }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
+    .step { display: none; }
+    .step.active { display: block; }
 
-        .btn-outline:hover {
-            background: #f0f7ff;
-        }
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px 22px; border-radius: 14px; }
+      .card-title { font-size: 19px; }
+    }
 
-        .btn-oauth {
-            background: white;
-            border: 1px solid #d1d5db;
-            color: var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+    @media (max-width: 360px) {
+      body { padding: 16px 12px; }
+      .card { padding: 22px 16px 18px; }
+      .field input { padding: 9px 12px; }
+      .btn-submit { padding: 11px; font-size: 14px; }
+    }
 
-        .btn-oauth:hover {
-            background: #f9fafb;
-        }
-
-        .btn-oauth img {
-            width: 18px;
-            margin: 0;
-        }
-
-        .divider {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .divider span {
-            padding: 0 10px;
-        }
-
-        #msg {
-            margin-bottom: 16px;
-            font-size: 14px;
-            font-weight: 600;
-            min-height: 20px;
-        }
-
-        .msg-err {
-            color: #dc2626;
-        }
-
-        .msg-ok {
-            color: #16a34a;
-        }
-
-        .back-link {
-            margin-top: 20px;
-            display: inline-block;
-            font-size: 13px;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    /* Ensure inputs are full-width on all mobile */
+    @media (max-width: 480px) {
+      .field input { font-size: 16px; /* prevent iOS zoom */ }
+      .btn-row { flex-direction: column; }
+      .btn-row .btn-submit { flex: none; width: 100%; margin-top: 0; }
+      .logo-wrap img { height: 36px; }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="auth-container">
-        <a href="/index.html">
-            <img src="assets/logo.jpg" alt="ChemSus">
-        </a>
-        <h2 id="auth-title">Log In</h2>
 
-        <div id="msg"></div>
+  <div class="logo-wrap">
+    <a href="index.html"><img src="assets/logo.jpg" alt="ChemSus"></a>
+  </div>
 
-        <form id="authForm" onsubmit="handleAuth(event)">
-            <div class="input-grp">
-                <label>Email</label>
-                <input type="email" id="email" required placeholder="you@example.com">
-            </div>
-            <div class="input-grp">
-                <label>Password</label>
-                <input type="password" id="password" required placeholder="••••••••">
-            </div>
-            <button type="submit" class="btn" id="submitBtn">Log In</button>
-            <button type="button" class="btn btn-outline" id="toggleBtn" onclick="toggleMode()">Create an
-                Account</button>
-        </form>
+  <div class="card">
+    <h1 class="card-title">Welcome back</h1>
+    <p class="card-sub">Log in to your ChemSus account</p>
 
-        <div class="divider"><span>OR</span></div>
-
-        <button class="btn btn-oauth" onclick="handleGoogleOAuth()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18px" height="18px">
-                <path fill="#EA4335"
-                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-                <path fill="#4285F4"
-                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-                <path fill="#FBBC05"
-                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-                <path fill="#34A853"
-                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-            </svg>
-            Continue with Google
-        </button>
-
-        <a href="/index.html" class="back-link">← Back to Home</a>
+    <div class="tabs">
+      <div class="tab active" id="tabPwd" onclick="switchTab('pwd')">Password</div>
+      <div class="tab" id="tabOtp" onclick="switchTab('otp')">Login with OTP</div>
     </div>
 
-    <footer
-        style="background:#06121f; color:#cbd5f5; padding: 40px 0 20px; text-align: center; margin-top: 40px; width: 100%;">
-        <div
-            style="max-width:1100px; margin:0 auto; padding: 0 20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:40px; margin-bottom: 30px;">
+    <div id="alertBox" class="alert"></div>
 
-            <!-- Address Section -->
-            <div>
-                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
-                    Registered
-                    Office</h4>
-                <p style="font-size: 14px; line-height: 1.6;">
-                    House No. 555, GNB Road,<br>
-                    North Guwahati, Assam – 781030
-                </p>
-            </div>
+    <!-- ── Password login ── -->
+    <div id="panePwd" class="step active">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="pwdEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="pwdPass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginPassword()">
+      </div>
+      <button class="btn-submit" id="pwdBtn" onclick="loginPassword()">Log In</button>
+      <p style="text-align:right;margin-top:10px;font-size:12px;">
+        <a href="forgot-password.html">Forgot password?</a>
+      </p>
+    </div>
 
-            <div>
-                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">Branch
-                    Office</h4>
-                <p style="font-size: 14px; line-height: 1.6;">
-                    Gavara jaggayyapalem,<br>
-                    BHPV, Visakhapatnam 530012
-                </p>
-            </div>
-
-            <!-- Contact Section -->
-            <div>
-                <h4 style="color:#fff; font-family:'Montserrat',sans-serif; margin-bottom:16px; font-size: 16px;">
-                    Contact</h4>
-                <p style="font-size: 14px; margin-bottom:10px;">
-                    <span style="font-size:16px;">📞</span> <a href="tel:+918486877575"
-                        style="color:#cbd5f5; text-decoration:none;">+91 84868 77575</a>
-                </p>
-                <p style="font-size: 14px;">
-                    <span style="font-size:16px;">✉️</span> <a href="mailto:info@chemsus.in"
-                        style="color:#cbd5f5; text-decoration:none;">info@chemsus.in</a>
-                </p>
-            </div>
-
+    <!-- ── OTP login ── -->
+    <div id="paneOtp" style="display:none;">
+      <!-- Step 1: enter email, send OTP -->
+      <div id="otpStep1" class="step active">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="otpEmail" placeholder="you@example.com" autocomplete="email">
         </div>
-
-        <div
-            style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align:center; font-size: 13px;">
-            &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+        <button class="btn-submit" id="otpSendBtn" onclick="sendLoginOtp()">Send OTP</button>
+      </div>
+      <!-- Step 2: enter OTP -->
+      <div id="otpStep2" class="step">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">OTP sent to <b id="otpEmailDisplay"></b></p>
+        <div class="field">
+          <label>6-digit OTP</label>
+          <input type="text" id="otpCode" placeholder="Enter OTP" inputmode="numeric" maxlength="6"
+            onkeydown="if(event.key==='Enter')verifyLoginOtp()">
         </div>
-    </footer>
+        <div class="btn-row">
+          <button class="btn-sm btn-outline" id="otpResendBtn" onclick="sendLoginOtp(true)">Resend</button>
+          <button class="btn-submit" style="flex:1;margin-top:0;" id="otpVerifyBtn" onclick="verifyLoginOtp()">Verify & Log In</button>
+        </div>
+        <p style="text-align:center;margin-top:10px;font-size:12px;color:var(--muted);" id="otpCountdown"></p>
+      </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/assets/js/supabase-client.js?v=20260228"></script>
-    <script>
-        // Wait for supabaseReady (async config loader in supabase-client.js)
-        async function getClient() {
-            if (window.supabaseReady) return await window.supabaseReady;
-            return window.supabaseClient || null;
-        }
-        let isLogin = true;
+    <div class="divider">or</div>
+    <button class="guest-btn" onclick="continueAsGuest()">Continue as Guest →</button>
+  </div>
 
-        function toggleMode() {
-            isLogin = !isLogin;
-            document.getElementById('auth-title').innerText = isLogin ? 'Log In' : 'Sign Up';
-            document.getElementById('submitBtn').innerText = isLogin ? 'Log In' : 'Sign Up';
-            document.getElementById('toggleBtn').innerText = isLogin ? 'Create an Account' : 'Back to Log In';
-            document.getElementById('msg').innerText = '';
-        }
+  <div class="footer-links">
+    Don't have an account? <a href="signup.html">Sign up</a>
+  </div>
 
-        function showMsg(text, isError) {
-            const el = document.getElementById('msg');
-            el.innerText = text;
-            el.className = isError ? 'msg-err' : 'msg-ok';
-        }
+  <script>
+    const API = '/api/customer';
+    let otpChallengeId = '';
+    let otpCooldownTimer = null;
+    let otpCooldownSec = 0;
+    const returnUrl = new URLSearchParams(location.search).get('return') || 'my-orders.html';
 
-        function isLikelyNetworkError(err) {
-            const msg = String(err?.message || err || '').toLowerCase();
-            return msg.includes('failed to fetch')
-                || msg.includes('networkerror')
-                || msg.includes('connection')
-                || msg.includes('timed out')
-                || msg.includes('fetch');
-        }
+    // Redirect if already logged in
+    (function () {
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        window.location.replace(returnUrl);
+      }
+    })();
 
-        function shouldRetryDirectAuth(err) {
-            const msg = String(err?.message || err || '').toLowerCase();
-            return msg.includes('unable to reach supabase auth')
-                || msg.includes('auth failed (5')
-                || msg.includes('auth failed (404)')
-                || msg.includes('not found')
-                || isLikelyNetworkError(err);
-        }
+    function showAlert(msg, type = 'err') {
+      const el = document.getElementById('alertBox');
+      el.textContent = msg;
+      el.className = 'alert ' + type;
+    }
+    function clearAlert() {
+      const el = document.getElementById('alertBox');
+      el.className = 'alert';
+      el.textContent = '';
+    }
 
-        function storeFallbackSession(session) {
-            try {
-                if (window.chemsusAuthFallback?.writeSession) {
-                    window.chemsusAuthFallback.writeSession(session);
-                    return;
-                }
-                localStorage.setItem('chemsus_supabase_session_fallback', JSON.stringify(session));
-            } catch (e) { }
-        }
+    function switchTab(tab) {
+      document.getElementById('tabPwd').classList.toggle('active', tab === 'pwd');
+      document.getElementById('tabOtp').classList.toggle('active', tab === 'otp');
+      document.getElementById('panePwd').style.display = tab === 'pwd' ? 'block' : 'none';
+      document.getElementById('paneOtp').style.display = tab === 'otp' ? 'block' : 'none';
+      clearAlert();
+    }
 
-        function readFallbackSession() {
-            try {
-                if (window.chemsusAuthFallback?.readSession) {
-                    return window.chemsusAuthFallback.readSession();
-                }
-                return JSON.parse(localStorage.getItem('chemsus_supabase_session_fallback') || 'null');
-            } catch (e) {
-                return null;
-            }
-        }
+    function saveToken(token, expiresAt) {
+      sessionStorage.setItem('chemsus_customer_token', token);
+      sessionStorage.setItem('chemsus_customer_token_exp', String(expiresAt));
+    }
 
-        function normalizeSessionFromPayload(payload, fallbackEmail = '') {
-            if (!payload || typeof payload !== 'object') return null;
-            if (payload.session?.access_token) return payload.session;
-            if (!payload.access_token) return null;
-            const expiresIn = Number(payload.expires_in || 0);
-            const expiresAt = Number(payload.expires_at || 0);
-            return {
-                access_token: payload.access_token,
-                refresh_token: payload.refresh_token || null,
-                token_type: payload.token_type || 'bearer',
-                expires_in: expiresIn,
-                expires_at: expiresAt || (expiresIn ? Math.floor(Date.now() / 1000) + expiresIn : null),
-                user: payload.user || (fallbackEmail ? { email: fallbackEmail } : null)
-            };
-        }
+    function onLoginSuccess(data) {
+      saveToken(data.token, data.expiresAt);
+      if (data.profile?.name) sessionStorage.setItem('chemsus_customer_name', data.profile.name);
+      showAlert('Logged in! Redirecting…', 'ok');
+      setTimeout(() => window.location.replace(returnUrl), 800);
+    }
 
-        async function persistSessionFromPayload(payload, fallbackEmail = '') {
-            const session = normalizeSessionFromPayload(payload, fallbackEmail);
-            if (!session) return null;
-
-            const client = await getClient();
-            if (client?.auth?.setSession && session.access_token && session.refresh_token) {
-                try {
-                    const { data, error } = await client.auth.setSession({
-                        access_token: session.access_token,
-                        refresh_token: session.refresh_token
-                    });
-                    if (!error && data?.session) {
-                        storeFallbackSession(data.session);
-                        return data.session;
-                    }
-                } catch (e) { }
-            }
-
-            storeFallbackSession(session);
-            return session;
-        }
-
-        async function backendPasswordAuth(route, email, password) {
-            const r = await fetch(route, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            let payload = null;
-            try { payload = await r.json(); } catch { payload = null; }
-            if (!r.ok) {
-                const msg = payload?.error || payload?.msg || `Auth failed (${r.status})`;
-                throw new Error(msg);
-            }
-            return payload || {};
-        }
-
-        async function handleAuth(e) {
-            e.preventDefault();
-
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerText = "Please wait...";
-
-            try {
-                if (isLogin) {
-                    try {
-                        const data = await backendPasswordAuth('/api/auth/password-login', email, password);
-                        const session = await persistSessionFromPayload(data, email);
-                        const userEmail = session?.user?.email || data?.user?.email || email;
-                        handleSuccess(userEmail);
-                    } catch (backendErr) {
-                        // Fallback to direct Supabase client only if backend path is unreachable.
-                        const retryDirect = shouldRetryDirectAuth(backendErr);
-                        if (!retryDirect) throw backendErr;
-                        const client = await getClient();
-                        if (!client) throw backendErr;
-                        const { data, error } = await client.auth.signInWithPassword({ email, password });
-                        if (error) throw error;
-                        if (data?.session) storeFallbackSession(data.session);
-                        handleSuccess(data.user.email);
-                    }
-                } else {
-                    try {
-                        const data = await backendPasswordAuth('/api/auth/password-signup', email, password);
-                        showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
-                        const session = await persistSessionFromPayload(data, email);
-                        if (session) {
-                            const userEmail = session?.user?.email || data?.user?.email || email;
-                            setTimeout(() => handleSuccess(userEmail), 1500);
-                        } else {
-                            btn.disabled = false;
-                            btn.innerText = "Sign Up";
-                        }
-                    } catch (backendErr) {
-                        const retryDirect = shouldRetryDirectAuth(backendErr);
-                        if (!retryDirect) throw backendErr;
-                        const client = await getClient();
-                        if (!client) throw backendErr;
-                        const { data, error } = await client.auth.signUp({ email, password });
-                        if (error) throw error;
-                        showMsg("Success! Check your email to confirm if required, or you are now logged in.", false);
-                        if (data.session) {
-                            storeFallbackSession(data.session);
-                            setTimeout(() => handleSuccess(data.user.email), 1500);
-                        } else {
-                            btn.disabled = false;
-                            btn.innerText = "Sign Up";
-                        }
-                    }
-                }
-            } catch (err) {
-                showMsg(err.message, true);
-                btn.disabled = false;
-                btn.innerText = isLogin ? "Log In" : "Sign Up";
-            }
-        }
-
-        async function handleGoogleOAuth() {
-            const client = await getClient();
-            if (!client) { showMsg('Supabase not loaded.', true); return; }
-            try {
-                const { error } = await client.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: window.location.origin + '/login.html'
-                    }
-                });
-                if (error) throw error;
-            } catch (err) {
-                showMsg(err.message, true);
-            }
-        }
-
-        function handleSuccess(email) {
-            const normalizedEmail = String(email || '').trim().toLowerCase();
-            const normalizedAdminEmail = String(window.ADMIN_EMAIL || '').trim().toLowerCase();
-            if (normalizedAdminEmail && normalizedEmail === normalizedAdminEmail) {
-                window.location.href = "/admin/admin.html";
-            } else {
-                window.location.href = "/index.html"; // Or user-orders.html
-            }
-        }
-
-        // Check if already logged in or returning from OAuth
-        document.addEventListener("DOMContentLoaded", async () => {
-            const client = await getClient();
-            let session = null;
-            if (client) {
-                try {
-                    const res = await client.auth.getSession();
-                    session = res?.data?.session || null;
-                } catch (e) { }
-            }
-            if (!session) session = readFallbackSession();
-            if (session) {
-                handleSuccess(session.user.email);
-            }
+    async function loginPassword() {
+      const email = document.getElementById('pwdEmail').value.trim();
+      const password = document.getElementById('pwdPass').value;
+      if (!email || !password) { showAlert('Enter email and password.'); return; }
+      const btn = document.getElementById('pwdBtn');
+      btn.disabled = true; btn.textContent = 'Logging in…';
+      clearAlert();
+      try {
+        const r = await fetch(API + '/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
         });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Login failed');
+        onLoginSuccess(d);
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false; btn.textContent = 'Log In';
+      }
+    }
 
-        // Check for hash OAuth redirect errors
-        window.addEventListener('hashchange', function () {
-            // Supabase OAuth error parsing could be done here if needed
+    async function sendLoginOtp(isResend = false) {
+      const email = (document.getElementById('otpEmail').value || '').trim();
+      if (!email) { showAlert('Enter your email first.'); return; }
+      clearAlert();
+      const btn = document.getElementById('otpSendBtn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const r = await fetch(API + '/send-login-otp', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
         });
-    </script>
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Failed to send OTP');
+        otpChallengeId = d.challengeId;
+        document.getElementById('otpEmailDisplay').textContent = email;
+        document.getElementById('otpStep1').classList.remove('active');
+        document.getElementById('otpStep2').classList.add('active');
+        startOtpCooldown(d.resendInSec || 60);
+        showAlert('OTP sent to ' + email, 'ok');
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false; btn.textContent = isResend ? 'Resend OTP' : 'Send OTP';
+      }
+    }
+
+    function startOtpCooldown(sec) {
+      if (otpCooldownTimer) clearInterval(otpCooldownTimer);
+      otpCooldownSec = sec;
+      const btn = document.getElementById('otpResendBtn');
+      const cd = document.getElementById('otpCountdown');
+      btn.disabled = true;
+      otpCooldownTimer = setInterval(() => {
+        otpCooldownSec--;
+        cd.textContent = otpCooldownSec > 0 ? `Resend in ${otpCooldownSec}s` : '';
+        if (otpCooldownSec <= 0) {
+          clearInterval(otpCooldownTimer);
+          btn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    async function verifyLoginOtp() {
+      const email = (document.getElementById('otpEmail').value || '').trim();
+      const otp = (document.getElementById('otpCode').value || '').trim();
+      if (!otp || otp.length !== 6) { showAlert('Enter the 6-digit OTP.'); return; }
+      clearAlert();
+      const btn = document.getElementById('otpVerifyBtn');
+      btn.disabled = true; btn.textContent = 'Verifying…';
+      try {
+        const r = await fetch(API + '/login-otp', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp, challengeId: otpChallengeId })
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Verification failed');
+        onLoginSuccess(d);
+      } catch (e) {
+        showAlert(e.message);
+        btn.disabled = false; btn.textContent = 'Verify & Log In';
+      }
+    }
+
+    function continueAsGuest() {
+      window.location.href = returnUrl.includes('my-orders') ? 'shop.html' : returnUrl;
+    }
+  </script>
 </body>
-
 </html>

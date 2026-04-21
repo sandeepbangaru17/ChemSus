@@ -6,6 +6,34 @@
   <title>Ethyl Levulinate | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="../assets/logo.jpg" />
+
+  <!-- SEO -->
+  <meta name="description" content="Ethyl Levulinate — a fragrant bio-based ester from ChemSus Technologies used in fragrances, flavors, fuel additives, and as a green solvent.">
+  <meta name="keywords" content="ethyl levulinate, bio-based ester, fragrance chemical, fuel additive, green solvent, renewable chemicals, ChemSus, flavor compound">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chemsus.in/products/ethyl-levulinate.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
+  <meta property="og:title" content="Ethyl Levulinate | ChemSus Technologies Pvt Ltd">
+  <meta property="og:description" content="High-purity ethyl levulinate from renewable biomass. Used in fragrances, flavors, fuel additives, and green solvent applications.">
+  <meta property="og:url" content="https://chemsus.in/products/ethyl-levulinate.html">
+  <meta property="og:image" content="https://chemsus.in/assets/ethyl.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ethyl Levulinate | ChemSus Technologies Pvt Ltd">
+  <meta name="twitter:description" content="High-purity ethyl levulinate from renewable biomass. Used in fragrances, flavors, fuel additives, and green solvent applications.">
+  <meta name="twitter:image" content="https://chemsus.in/assets/ethyl.jpeg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Ethyl Levulinate",
+    "description": "Bio-based ethyl levulinate ester for fragrances, flavors, fuel additives, and green solvent applications.",
+    "brand": { "@type": "Brand", "name": "ChemSus Technologies Pvt Ltd" },
+    "url": "https://chemsus.in/products/ethyl-levulinate.html",
+    "image": "https://chemsus.in/assets/ethyl.jpeg"
+  }
+  </script>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
     rel="stylesheet">
@@ -46,7 +74,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -99,6 +128,7 @@
       padding: 8px 0;
       flex: 1;
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .nav-menu li a {
@@ -114,6 +144,25 @@
     .nav-menu li a:hover {
       background: rgba(255, 255, 255, .1);
       border-left-color: var(--accent);
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      padding: 10px 20px 4px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .nav-icon {
+      margin-right: 6px;
+      font-size: 14px;
+      display: inline-block;
+      width: 18px;
+      text-align: center;
     }
 
     #cart-count {
@@ -512,11 +561,16 @@
 
       .main-wrapper {
         margin-left: 0;
+        width: 100%;
         padding-top: 0;
       }
 
       .mobile-toggle {
         display: block;
+      }
+
+      .hero {
+        padding-top: 72px;
       }
     }
 
@@ -527,7 +581,7 @@
 
       .hero {
         height: auto;
-        padding: 26px 14px
+        padding: 72px 14px 26px;
       }
 
       .hero-title {
@@ -546,25 +600,54 @@
         height: auto;
       }
 
+      .product-image img {
+        max-height: 280px;
+        object-fit: contain;
+      }
+
       .actions {
-        flex-direction: column
+        flex-direction: column;
+        margin-top: 20px;
       }
 
       .btn-primary,
       .btn-secondary {
-        min-width: 100%
+        min-width: 100%;
+        flex: unset;
+        width: 100%;
+      }
+
+      .pubchem-link-container {
+        margin: 24px 0 20px;
       }
 
       .btn-pubchem {
-        padding: 14px 24px;
-        font-size: 14px;
+        padding: 13px 22px;
+        font-size: 13.5px;
       }
+    }
+
+    img { max-width: 100%; height: auto; }
+
+    @media (max-width: 480px) {
+      .hero-content { padding: 0 6px; }
+      .hero-title { font-size: 20px; }
+      .hero-subtitle { font-size: 13px; }
+      .product-card { padding: 14px 10px; }
+      .content-section { gap: 16px; }
+      .actions { gap: 10px; margin-top: 14px; }
+      .lead { font-size: 14px; }
+      .section-title { font-size: 16px; margin: 14px 0 8px; }
+      .features-list { font-size: 13.5px; }
+      .btn-primary, .btn-secondary { padding: 12px 16px; font-size: 13px; min-width: unset; }
+      .btn-pubchem { padding: 11px 14px; font-size: 12.5px; white-space: normal; text-align: center; }
+      .pubchem-link-container { margin: 16px 0; }
     }
 
     /* === WhatsApp QR Floating Widget (UPDATED) === */
     #ib-wa {
       position: fixed;
-      bottom: 95px;
+      bottom: 25px;
       right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -668,7 +751,7 @@
     .download-section {
       width: auto;
       position: fixed;
-      bottom: 25px;
+      bottom: 95px;
       right: 25px;
       z-index: 99998;
     }
@@ -702,6 +785,10 @@
     }
 
     @media (max-width: 1050px) {
+      body.no-scroll {
+        overflow: hidden;
+      }
+
       body.no-scroll .mobile-toggle {
         opacity: 0;
         pointer-events: none;
@@ -740,18 +827,24 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="../about.html">About Us</a></li>
-      <li><a href="../products.html" class="active">Products</a></li>
-      <li><a href="../shop.html">Shop</a></li>
-      <li><a href="../collaboration.html">Collaboration</a></li>
-      <li><a href="../recognitions.html">Recognitions</a></li>
-      <li><a href="../investors.html">Investors</a></li>
-      <li><a href="../cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="../contact.html">Contact us</a></li>
-      <li><a href="../request-sample.html">Request for Sample</a></li>
-      <li><a href="../orders.html">Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="../index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="../about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="../products.html" class="active"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="../shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="../cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="../collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="../recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="../investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="../contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="../request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="../login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="../profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
 
     <div class="search-section">
@@ -951,6 +1044,25 @@
         alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
       }
     });
+
+    // Update nav auth link
+    (function () {
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = sessionStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = '../my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = '../login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
   <div id="ib-wa">
@@ -962,14 +1074,14 @@
       <div class="body">
         <p style="font-size:13px;margin-bottom:10px;">Scan to chat on mobile</p>
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
           <span style="flex:1;height:1px;background:#ddd;"></span>
           <span style="padding:0 10px;font-weight:600;">OR</span>
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
-        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank">Open WhatsApp</a>
       </div>
     </div>

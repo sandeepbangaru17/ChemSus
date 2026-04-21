@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /cart.html
+Disallow: /profile.html
+Disallow: /my-orders.html
+Disallow: /orders.html
+Disallow: /buy.html
+Disallow: /buynow.html
+Disallow: /payment.html
+Disallow: /payment2.html
+Disallow: /quotation.html
+Disallow: /request-sample.html
+Disallow: /success.html
+Disallow: /thankyou.html
+
+Sitemap: https://chemsus.in/sitemap.xml

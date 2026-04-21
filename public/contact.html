@@ -6,6 +6,31 @@
   <title>Contact Us | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- SEO -->
+  <meta name="description" content="Contact ChemSus Technologies for inquiries about specialty chemicals, pharmaceutical APIs, collaborations and bulk orders. Reach out to India's sustainable chemicals supplier.">
+  <meta name="keywords" content="contact ChemSus, chemicals supplier India, specialty chemicals inquiry, pharmaceutical API supplier, sustainable chemicals contact, bulk chemicals order">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chemsus.in/contact.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
+  <meta property="og:title" content="Contact Us | ChemSus Technologies Pvt Ltd">
+  <meta property="og:description" content="Get in touch with ChemSus Technologies for specialty chemicals, pharmaceutical APIs, collaborations and bulk orders.">
+  <meta property="og:url" content="https://chemsus.in/contact.html">
+  <meta property="og:image" content="https://chemsus.in/assets/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact Us | ChemSus Technologies Pvt Ltd">
+  <meta name="twitter:description" content="Get in touch with ChemSus Technologies for specialty chemicals, pharmaceutical APIs, collaborations and bulk orders.">
+  <meta name="twitter:image" content="https://chemsus.in/assets/logo.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Us | ChemSus Technologies Pvt Ltd",
+    "url": "https://chemsus.in/contact.html",
+    "publisher": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="assets/logo.jpg">
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
@@ -47,7 +72,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -110,10 +136,22 @@
       transition: all 0.2s ease;
     }
 
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
     .nav-menu li a.active,
     .nav-menu li a:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     #cart-count {
@@ -390,6 +428,10 @@
       .mobile-toggle {
         display: block;
       }
+
+      .hero {
+        padding-top: 72px;
+      }
     }
 
     @media (max-width: 900px) {
@@ -412,12 +454,23 @@
       .hero-title {
         font-size: 24px;
       }
+
+      .section { padding: 22px 14px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; }
+      .hero-title { font-size: 20px; }
+      .contact-card { padding: 16px 14px; gap: 20px; }
+      .contact-form input, .contact-form textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .highlight-btn { font-size: 13px; padding: 8px 14px; word-break: break-all; }
+      img { max-width: 100%; }
     }
 
     /* === WhatsApp QR Floating Widget === */
     #ib-wa {
       position: fixed;
-      bottom: 95px;
+      bottom: 25px;
       right: 25px;
       z-index: 99999;
       font-family: Arial, sans-serif;
@@ -521,7 +574,7 @@
     .download-section {
       width: auto;
       position: fixed;
-      bottom: 25px;
+      bottom: 95px;
       right: 25px;
       z-index: 99998;
     }
@@ -671,33 +724,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html" class="active">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html">Orders</a></li>
-      <li id="nav-my-orders" style="display:none"><a href="user-orders.html">My Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html" class="active"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -755,24 +800,27 @@
             </p>
 
             <p>
-              <strong>Email:</strong><br>
+              <strong>For sales enquiries:</strong><br>
+              <a href="mailto:sales@chemsus.in" class="highlight-btn">
+                ✉️ sales@chemsus.in
+              </a>
+            </p>
+
+            <p>
+              <strong>For product information:</strong><br>
               <a href="mailto:info@chemsus.in" class="highlight-btn">
                 ✉️ info@chemsus.in
               </a>
             </p>
 
-            <form class="contact-form" action="https://formsubmit.co/chemsustech@gmail.com" method="POST">
+            <form class="contact-form" id="contactForm" onsubmit="submitContactForm(event)">
               <h3>Send Us a Message</h3>
-              <input type="text" name="name" placeholder="Your Name" required>
-              <input type="email" name="email" placeholder="Your Email" required>
-              <input type="text" name="subject" placeholder="Subject" required>
-              <textarea name="message" rows="4" placeholder="Message" required></textarea>
-
-              <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_next" value="https://chemsus.com/thankyou.html">
-
-              <button type="submit" class="highlight-btn">📩 Send Message</button>
+              <input type="text" id="cf-name" placeholder="Your Name" required>
+              <input type="email" id="cf-email" placeholder="Your Email" required>
+              <input type="text" id="cf-subject" placeholder="Subject">
+              <textarea id="cf-message" rows="4" placeholder="Message" required></textarea>
+              <div id="cf-status" style="display:none; padding:10px 14px; border-radius:8px; font-size:14px; margin-bottom:10px;"></div>
+              <button type="submit" class="highlight-btn" id="cf-btn">📩 Send Message</button>
             </form>
           </div>
         </div>
@@ -842,7 +890,7 @@
         <p style="font-size:13px; margin-bottom:10px;">Scan to chat on mobile</p>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+          src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           alt="WhatsApp QR">
 
         <div style="display:flex;align-items:center;margin:12px 0;color:#999;font-size:13px;">
@@ -851,7 +899,7 @@
           <span style="flex:1;height:1px;background:#ddd;"></span>
         </div>
 
-        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%2C%20MOQ%2C%20and%20lead%20times.%0A%0AThank%20you."
+        <a href="https://wa.me/918486877575?text=Hello%20ChemSus%20Team%2C%0A%0AI%20am%20interested%20in%20your%20sustainable%20specialty%20chemicals%20and%20would%20like%20to%20request%20product%20details%20and%2For%20evaluation%20samples.%0APlease%20share%20specifications%2C%20pricing%20and%20lead%20times.%0A%0AThank%20you."
           target="_blank">
           Open WhatsApp
         </a>
@@ -911,6 +959,46 @@
       }
     }
 
+    // Contact form submission
+    async function submitContactForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('cf-btn');
+      const status = document.getElementById('cf-status');
+      const name = document.getElementById('cf-name').value.trim();
+      const email = document.getElementById('cf-email').value.trim();
+      const subject = document.getElementById('cf-subject').value.trim();
+      const message = document.getElementById('cf-message').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      status.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, subject, message })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to send.');
+        status.style.display = 'block';
+        status.style.background = '#dcfce7';
+        status.style.color = '#166534';
+        status.style.border = '1px solid #bbf7d0';
+        status.textContent = '✅ ' + data.message;
+        document.getElementById('contactForm').reset();
+      } catch (err) {
+        status.style.display = 'block';
+        status.style.background = '#fee2e2';
+        status.style.color = '#7f1d1d';
+        status.style.border = '1px solid #fecaca';
+        status.textContent = '❌ ' + (err.message || 'Something went wrong. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '📩 Send Message';
+      }
+    }
+
     // Search Redirect Logic
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -939,11 +1027,28 @@
         alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
       }
     });
+
+    // Update nav auth link
+    (function () {
+      const tok = sessionStorage.getItem('chemsus_customer_token');
+      const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      const link = document.getElementById('authNavLink');
+      const profileItem = document.getElementById('profileNavItem');
+      if (!link) return;
+      if (tok && (!exp || Date.now() / 1000 < exp)) {
+        const name = sessionStorage.getItem('chemsus_customer_name');
+        link.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+        link.href = 'my-orders.html';
+        if (profileItem) profileItem.style.display = 'list-item';
+      } else {
+        link.innerHTML = '<span class="nav-icon">👤</span> Login / Sign Up';
+        link.href = 'login.html';
+        if (profileItem) profileItem.style.display = 'none';
+      }
+    })();
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js"></script>
 </body>
 
 </html>

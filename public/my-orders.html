@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>My Orders | ChemSus Technologies</title>
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7; --primary-dark: #00508a; --accent: #00b8b0;
+      --bg: #f3f7fb; --ink: #1f2933; --muted: #64748b; --border: #e2e8f0;
+      --ok: #059669; --ok-bg: #ecfdf5; --warn: #c2410c; --warn-bg: #fff7ed;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Open Sans", Arial, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Topbar ── */
+    .topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-left img { height: 36px; }
+    .topbar-brand { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-name { font-size: 13px; color: var(--muted); }
+    .btn-sm { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-danger:hover { background: #dc2626; }
+
+    /* ── Page ── */
+    .page { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+    .page-title { font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .page-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+    /* ── Order cards ── */
+    .order-card {
+      background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,23,42,.07);
+      border: 1.5px solid var(--border); margin-bottom: 16px; overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .order-card:hover { box-shadow: 0 6px 24px rgba(15,23,42,.11); }
+    .order-card.can-pay { border-color: #fed7aa; }
+
+    .card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+    .order-id { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; color: #0f172a; }
+    .purchase-id { font-size: 11px; color: var(--primary); font-weight: 600; letter-spacing: .03em; margin-top: 2px; }
+    .order-date { font-size: 12px; color: var(--muted); }
+
+    .card-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+    .order-meta { font-size: 13px; color: var(--ink); }
+    .order-meta .product { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+    .order-meta .detail { color: var(--muted); margin-top: 2px; }
+
+    .order-right { text-align: right; }
+    .order-total { font-family: "Montserrat", sans-serif; font-size: 20px; font-weight: 700; color: var(--primary); }
+    .order-total-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* Status badges */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .badge-pending { background: #fff7ed; color: var(--warn); border: 1px solid #fed7aa; }
+    .badge-verifying { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .badge-success { background: var(--ok-bg); color: var(--ok); border: 1px solid #6ee7b7; }
+    .badge-failed { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
+    .badge-processing { background: #f1f5f9; color: #475569; border: 1px solid var(--border); }
+    .badge-proforma { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-received { background: #fefce8; color: #92400e; border: 1px solid #fde68a; }
+    .badge-confirmed { background: var(--ok-bg); color: var(--ok); border: 1px solid #6ee7b7; }
+
+    /* Pay banner */
+    .pay-banner { background: var(--warn-bg); border-top: 1px solid #fed7aa; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .pay-banner p { font-size: 13px; color: var(--warn); font-weight: 600; }
+    .pay-banner span { font-size: 12px; color: #92400e; font-weight: 400; }
+
+    /* Quotation banner */
+    .quotation-banner { background: #f0fdf4; border-top: 1px solid #bbf7d0; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .quotation-banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-quotation { padding: 8px 16px; background: linear-gradient(135deg, #0074c7, #00b8b0); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; white-space: nowrap; }
+    .btn-quotation:hover { opacity: 0.88; }
+    .btn-view-quotation { padding: 8px 16px; background: #fff; color: #0074c7; border: 1.5px solid #0074c7; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; white-space: nowrap; }
+    .btn-view-quotation:hover { background: #eff6ff; }
+
+    /* Empty state */
+    .empty { text-align: center; padding: 60px 20px; }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty h3 { font-family: "Montserrat", sans-serif; font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .empty p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+    .loader { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 10px 16px; gap: 8px; }
+      .topbar-right { gap: 6px; }
+      .btn-sm { padding: 6px 10px; font-size: 12px; }
+      .page { padding: 24px 14px 48px; }
+    }
+
+    @media (max-width: 520px) {
+      .card-body { grid-template-columns: 1fr; }
+      .order-right { text-align: left; }
+      .topbar-brand { display: none; }
+    }
+
+    @media (max-width: 400px) {
+      .topbar-name { display: none; }
+      /* Keep Profile, Shop, Logout — hide Shop on very small screens */
+      .topbar-right a[href="shop.html"] { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 16px 10px 40px; }
+      .page-title { font-size: 20px; }
+      .card-header { padding: 12px 14px; }
+      .card-body { padding: 12px 14px; }
+      .order-id { font-size: 13px; }
+      .order-total { font-size: 16px; }
+      .pay-banner { padding: 10px 14px; flex-direction: column; align-items: flex-start; }
+      .quotation-banner { padding: 10px 14px; flex-direction: column; align-items: flex-start; }
+      .quotation-banner-actions { flex-direction: column; width: 100%; }
+      .btn-quotation, .btn-view-quotation { width: 100%; text-align: center; }
+      .order-card { word-break: break-word; }
+    }
+
+    img { max-width: 100%; }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html"><img src="assets/logo.jpg" alt="ChemSus"></a>
+      <span class="topbar-brand">My Orders</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-name" id="welcomeName"></span>
+      <a href="profile.html" class="btn-sm btn-outline">My Profile</a>
+      <a href="shop.html" class="btn-sm btn-outline">Shop</a>
+      <button class="btn-sm btn-danger" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <div class="page">
+    <h1 class="page-title">My Orders</h1>
+    <p class="page-sub">Your order history. Pending orders can be paid within 48 hours of placement.</p>
+
+    <div id="orderList"><div class="loader">Loading your orders…</div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    const API = '/api/customer';
+    const token = sessionStorage.getItem('chemsus_customer_token');
+    const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+
+    if (!token || (exp && Date.now() / 1000 > exp)) {
+      window.location.replace('login.html?return=my-orders.html');
+    }
+
+    const name = sessionStorage.getItem('chemsus_customer_name');
+    if (name) document.getElementById('welcomeName').textContent = 'Hi, ' + name;
+
+    function statusBadge(s) {
+      const map = {
+        PENDING: 'badge-pending',
+        PROFORMA_SENT: 'badge-proforma',
+        PAYMENT_RECEIVED: 'badge-received',
+        CONFIRMED: 'badge-confirmed',
+        FAILED: 'badge-failed',
+        VERIFYING: 'badge-verifying',
+        SUCCESS: 'badge-success',
+        PAID: 'badge-success'
+      };
+      const label = {
+        PENDING: 'Quotation Sent',
+        PROFORMA_SENT: 'Proforma Sent',
+        PAYMENT_RECEIVED: 'Payment Received',
+        CONFIRMED: 'Confirmed',
+        FAILED: 'Failed',
+        VERIFYING: 'Verifying',
+        SUCCESS: 'Success',
+        PAID: 'Paid'
+      };
+      return `<span class="badge ${map[s] || 'badge-processing'}">${label[s] || s}</span>`;
+    }
+
+    const fmt = n => Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function downloadQuotationPDF(o) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+      const margin = 18;
+      let y = 0;
+
+      // Header bar
+      doc.setFillColor(0, 116, 199);
+      doc.rect(0, 0, pageW, 28, 'F');
+      doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+      doc.text('ChemSus Technologies Pvt Ltd', margin, 11);
+      doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+      doc.text('Sustainable Chemistry Solutions  |  www.chemsus.in  |  sales@chemsus.in', margin, 19);
+      doc.setFontSize(14); doc.setFont('helvetica', 'bold');
+      doc.text('QUOTATION', pageW - margin, 16, { align: 'right' });
+      y = 36;
+
+      // Quotation meta
+      doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 41, 59);
+      doc.text('Quotation ID:', margin, y); doc.setFont('helvetica', 'bold');
+      doc.text(o.purchase_id || ('ORD-' + o.id), margin + 28, y);
+      doc.setFont('helvetica', 'normal');
+      const dateStr = o.created_at ? new Date(o.created_at.includes('T') ? o.created_at : o.created_at.replace(' ', 'T') + 'Z').toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+      doc.text('Date:', pageW - margin - 42, y); doc.setFont('helvetica', 'bold');
+      doc.text(dateStr, pageW - margin - 28, y);
+      y += 7;
+
+      // Divider
+      doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+      doc.line(margin, y, pageW - margin, y); y += 6;
+
+      // Bill To
+      doc.setFontSize(9); doc.setFont('helvetica', 'bold'); doc.setTextColor(100, 116, 139);
+      doc.text('BILL TO', margin, y); y += 5;
+      doc.setFont('helvetica', 'bold'); doc.setTextColor(30, 41, 59); doc.setFontSize(10);
+      doc.text(o.customername || '', margin, y); y += 5;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(71, 85, 105);
+      if (o.companyName) { doc.text(o.companyName, margin, y); y += 5; }
+      const addrLine = [o.address, o.city, o.region, o.pincode].filter(Boolean).join(', ');
+      if (addrLine) { const w = doc.splitTextToSize(addrLine, 90); doc.text(w, margin, y); y += w.length * 5; }
+      if (o.country) { doc.text(o.country, margin, y); y += 5; }
+      doc.text('Email: ' + (o.email || ''), margin, y); y += 5;
+      doc.text('Phone: ' + (o.phone || ''), margin, y); y += 8;
+
+      // Items table
+      let qItems = o.items && o.items.length > 0
+        ? o.items.map((it, i) => [String(i + 1), it.product_name || it.productname || '', it.pack_size || '—', String(it.quantity), fmt(it.unit_price || it.unitprice), fmt(it.total_price || it.totalprice)])
+        : [['1', o.productname || '—', '—', String(o.quantity || 1), fmt(o.unitprice), fmt(o.totalprice)]];
+
+      doc.autoTable({
+        startY: y,
+        head: [['SL No.', 'Product', 'Pack Size', 'Qty', 'Rate (INR)', 'Amount (INR)']],
+        body: qItems,
+        margin: { left: margin, right: margin },
+        headStyles: {
+          fillColor: [0, 116, 199], textColor: 255, fontStyle: 'bold', fontSize: 8,
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak', valign: 'middle'
+        },
+        bodyStyles: {
+          fontSize: 8.5, textColor: [30, 41, 59],
+          cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
+          overflow: 'linebreak'
+        },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        columnStyles: {
+          0: { cellWidth: 18, halign: 'center' },
+          1: { halign: 'left' },
+          2: { cellWidth: 28, halign: 'center' },
+          3: { cellWidth: 16, halign: 'center' },
+          4: { cellWidth: 32, halign: 'right' },
+          5: { cellWidth: 32, halign: 'right', fontStyle: 'bold' }
+        },
+        theme: 'grid', tableLineColor: [226, 232, 240], tableLineWidth: 0.2,
+        didParseCell: function (data) {
+          if (data.section === 'head') {
+            if (data.column.index === 0 || data.column.index === 2 || data.column.index === 3) data.cell.styles.halign = 'center';
+            if (data.column.index === 1) data.cell.styles.halign = 'left';
+            if (data.column.index === 4 || data.column.index === 5) data.cell.styles.halign = 'right';
+          }
+        }
+      });
+      y = doc.lastAutoTable.finalY + 6;
+
+      // Totals
+      const subtotal = o.items && o.items.length > 0
+        ? o.items.reduce((s, it) => s + (it.total_price || it.totalprice || 0), 0)
+        : Number(o.totalprice || 0) / 1.18;
+      const gst = o.items && o.items.length > 0 ? Number(o.totalprice || 0) - subtotal : Number(o.totalprice || 0) - subtotal;
+      const grand = Number(o.totalprice || 0);
+      const totalsX = pageW - margin - 68;
+      doc.setFillColor(248, 250, 252); doc.roundedRect(totalsX, y, 68, 30, 2, 2, 'F');
+      doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
+      doc.text('Subtotal:', totalsX + 4, y + 8);
+      doc.text('INR ' + fmt(subtotal), totalsX + 64, y + 8, { align: 'right' });
+      doc.text('GST (18%):', totalsX + 4, y + 15);
+      doc.text('INR ' + fmt(gst), totalsX + 64, y + 15, { align: 'right' });
+      doc.setDrawColor(0, 116, 199); doc.setLineWidth(0.4);
+      doc.line(totalsX + 4, y + 18, totalsX + 64, y + 18);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(0, 116, 199);
+      doc.text('Total Payable:', totalsX + 4, y + 26);
+      doc.text('INR ' + fmt(grand), totalsX + 64, y + 26, { align: 'right' });
+      y += 36;
+
+      // Instructions
+      const qid = o.purchase_id || ('ORD-' + o.id);
+      const steps1 = [
+        `1. Attach this Quotation PDF with your Purchase Order (PO) and email both to: sales@chemsus.in \u2014 Ref No. ${qid}`,
+        '2. Our team will send you a Proforma Invoice with bank account details.',
+        '3. Complete 100% advance payment via bank transfer and send the payment receipt to sales@chemsus.in.'
+      ];
+      const boxH1 = 9 + steps1.length * 7;
+      doc.setFillColor(239, 246, 255); doc.setDrawColor(191, 219, 254); doc.setLineWidth(0.3);
+      doc.roundedRect(margin, y, pageW - 2 * margin, boxH1, 2, 2, 'FD');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(29, 78, 216);
+      doc.text('Next Steps to Complete Your Order:', margin + 4, y + 7);
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 64, 175);
+      steps1.forEach((s, i) => {
+        const lines = doc.splitTextToSize(s, pageW - 2 * margin - 8);
+        doc.text(lines, margin + 4, y + 14 + i * 7);
+      });
+      y += boxH1 + 6;
+
+      // Footer page 1
+      doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.3);
+      doc.line(margin, y, pageW - margin, y); y += 5;
+      doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+      doc.text('ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in', pageW / 2, y, { align: 'center' });
+
+      // ── PAGE 2: T&C ──
+      doc.addPage();
+      const ph = doc.internal.pageSize.getHeight();
+      doc.setFillColor(0, 116, 199); doc.rect(0, 0, pageW, 22, 'F');
+      doc.setFillColor(0, 184, 176); doc.rect(0, 22, pageW, 2, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(255, 255, 255);
+      doc.text('ChemSus Technologies Pvt Ltd', margin, 13);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(200, 230, 255);
+      doc.text('Sustainable Specialty Chemicals  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in', margin, 20);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+      doc.text('T & C', pageW - margin, 14, { align: 'right' });
+
+      let ty = 32;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(30, 41, 59);
+      doc.text('Terms & Conditions', pageW / 2, ty, { align: 'center' });
+      const tcHW = doc.getTextWidth('Terms & Conditions');
+      doc.setDrawColor(30, 41, 59); doc.setLineWidth(0.35);
+      doc.line(pageW / 2 - tcHW / 2, ty + 1.5, pageW / 2 + tcHW / 2, ty + 1.5);
+      ty += 10;
+
+      const tcContent = [
+        { title: 'Order to be placed in favour of:', body: 'ChemSus Technologies Pvt Ltd\nHouse No. 555, GNB Road, North Guwahati, Assam \u2013 781030' },
+        { title: 'Validity:', body: 'The prices mentioned in this quotation are valid for 30 days. Revisions may occur due to changes in raw material costs, Government policy, or other reasons beyond our control.' },
+        { title: 'Payment:', body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank account details will be shared upon receipt of Purchase Order.' },
+        { title: 'Delivery:', body: '3\u20134 weeks from receipt of confirmed Purchase Order and advance payment. Partial deliveries may be necessary. We shall not be penalised for delays caused by force majeure events including riots, strikes, Government restrictions, or acts of God.' },
+        { title: 'Taxes:', body: 'GST @ 18% is applicable and included in the quoted price as indicated.' },
+        { title: 'Freight:', body: 'Shipping charges are included in the quoted price for deliveries within India. For international shipments, additional freight charges will be applicable and intimated separately.' },
+        { title: 'Cancellation:', body: 'Order once placed and payment received cannot be cancelled.' },
+      ];
+
+      tcContent.forEach(item => {
+        doc.setFillColor(0, 116, 199);
+        doc.circle(margin + 2, ty - 1, 1.5, 'F');
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+        doc.text(item.title, margin + 7, ty);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(71, 85, 105);
+        const bLines = doc.splitTextToSize(item.body, pageW - 2 * margin - 7);
+        doc.text(bLines, margin + 7, ty + 5);
+        ty += 5 + bLines.length * 4 + 5;
+      });
+
+      // Footer on all pages
+      const totalPages = doc.getNumberOfPages();
+      for (let p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFillColor(0, 116, 199);
+        doc.rect(0, ph - 10, pageW, 10, 'F');
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(200, 230, 255);
+        doc.text(
+          `ChemSus Technologies Pvt Ltd  |  sales@chemsus.in  |  +91 84868 77575  |  www.chemsus.in  |  Page ${p} of ${totalPages}`,
+          pageW / 2, ph - 3.5, { align: 'center' }
+        );
+      }
+
+      doc.save('Quotation_' + qid + '.pdf');
+    }
+
+    function toUtcDate(dt) {
+      if (!dt) return new Date(NaN);
+      // SQLite datetime('now') returns '2024-01-15 10:00:00' — no 'Z', no 'T'
+      // Force UTC so browser doesn't treat it as local time
+      const s = dt.includes('T') ? dt : dt.replace(' ', 'T');
+      return new Date(s.endsWith('Z') ? s : s + 'Z');
+    }
+
+    function fmtDate(dt) {
+      if (!dt) return '—';
+      try { return toUtcDate(dt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }); }
+      catch { return dt; }
+    }
+
+    function timeRemaining(createdAt) {
+      const deadline = toUtcDate(createdAt).getTime() + 48 * 60 * 60 * 1000;
+      const diff = deadline - Date.now();
+      if (diff <= 0) return null;
+      const hrs = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      return hrs > 0 ? `${hrs}h ${mins}m remaining` : `${mins}m remaining`;
+    }
+
+
+    async function loadOrders() {
+      const container = document.getElementById('orderList');
+      try {
+        const r = await fetch(API + '/orders', { headers: { Authorization: 'Bearer ' + token } });
+        if (r.status === 401) { window.location.replace('login.html?return=my-orders.html'); return; }
+        const orders = await r.json();
+
+        if (!orders.length) {
+          container.innerHTML = `<div class="empty">
+            <div class="empty-icon">📦</div>
+            <h3>No orders yet</h3>
+            <p>You haven't placed any orders. Start shopping!</p>
+            <a href="shop.html" class="btn-sm btn-primary" style="display:inline-block;">Browse Products</a>
+          </div>`;
+          return;
+        }
+
+        // Load profile to prefill payment details
+        let profile = {};
+        try {
+          const pr = await fetch(API + '/profile', { headers: { Authorization: 'Bearer ' + token } });
+          if (pr.ok) profile = await pr.json();
+          if (profile.name) {
+            sessionStorage.setItem('chemsus_customer_name', profile.name);
+            document.getElementById('welcomeName').textContent = 'Hi, ' + profile.name;
+          }
+        } catch { }
+
+        // Store orders for PDF generation
+        window._ordersData = orders;
+
+        container.innerHTML = orders.map((o, idx) => {
+          const productLine = o.items && o.items.length > 1
+            ? `${o.items.length} products (${o.items.map(i => i.product_name || i.productname).join(', ')})`
+            : (o.productname || '—');
+          return `
+            <div class="order-card">
+              <div class="card-header">
+                <div>
+                  <div class="order-id">Order #${o.id}</div>
+                  ${o.purchase_id ? `<div class="purchase-id">Quotation: ${o.purchase_id}</div>` : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  ${statusBadge(o.payment_status)}
+                  <span class="order-date">${fmtDate(o.created_at)}</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="order-meta">
+                  <div class="product">${productLine}</div>
+                  <div class="detail">Qty: ${o.quantity || '—'} &nbsp;|&nbsp; Order Status: ${o.order_status || 'Processing'}</div>
+                </div>
+                <div class="order-right">
+                  <div class="order-total">₹${Number(o.totalprice || 0).toLocaleString('en-IN')}</div>
+                  <div class="order-total-sub">incl. 18% GST</div>
+                </div>
+              </div>
+              <div class="quotation-banner">
+                <div>
+                  <span style="font-size:13px;font-weight:600;color:#065f46;">Your Quotation is Ready</span><br>
+                  <span style="font-size:12px;color:#047857;">Download the PDF and email it with your PO to <strong>sales@chemsus.in</strong></span>
+                </div>
+                <div class="quotation-banner-actions">
+                  <button class="btn-view-quotation" onclick="viewQuotation(${idx})">&#128196; View Quotation</button>
+                  <button class="btn-quotation" onclick="downloadQuotationPDF(window._ordersData[${idx}])">&#8595; Download PDF</button>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+      } catch (e) {
+        container.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>Error loading orders</h3><p>${e.message}</p></div>`;
+      }
+    }
+
+    function viewQuotation(idx) {
+      const o = window._ordersData[idx];
+      if (!o) return;
+
+      const items = o.items && o.items.length > 0
+        ? o.items.map(it => ({
+            name: it.product_name || it.productname || '',
+            packSize: it.pack_size || '',
+            quantity: it.quantity,
+            unitPrice: it.unit_price || it.unitprice || 0,
+            total: it.total_price || it.totalprice || 0
+          }))
+        : [{
+            name: o.productname || '',
+            packSize: '',
+            quantity: o.quantity || 1,
+            unitPrice: o.unitprice || 0,
+            total: o.totalprice || 0
+          }];
+
+      const grandTotal = Number(o.totalprice || 0);
+      const subtotal = items.reduce((s, it) => s + Number(it.total || 0), 0) || grandTotal / 1.18;
+      const gst = grandTotal - subtotal;
+
+      const raw = o.created_at || '';
+      const s = raw.includes('T') ? raw : raw.replace(' ', 'T');
+      const d = new Date(s.endsWith('Z') ? s : s + 'Z');
+      const dateStr = isNaN(d) ? raw : d.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+      const quotationData = {
+        quotationId: o.purchase_id || ('ORD-' + o.id),
+        date: dateStr,
+        customerName: o.customername || '',
+        companyName: o.companyName || '',
+        address: o.address || '',
+        city: o.city || '',
+        region: o.region || '',
+        pincode: o.pincode || '',
+        country: o.country || '',
+        email: o.email || '',
+        phone: o.phone || '',
+        items,
+        subtotal,
+        gst,
+        grandTotal
+      };
+
+      try {
+        sessionStorage.setItem('quotationData', JSON.stringify(quotationData));
+        window.location.href = 'quotation.html';
+      } catch (e) {
+        alert('Could not open quotation. Please try again.');
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
+      window.location.replace('login.html');
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

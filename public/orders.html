@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>Orders | ChemSus Technologies Pvt Ltd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="assets/logo.jpg">
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
@@ -46,7 +47,8 @@
       border-right: 3px solid var(--accent);
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       position: fixed;
       left: 0;
       top: 0;
@@ -110,10 +112,22 @@
       transition: all 0.2s ease;
     }
 
-    .nav-menu li a:hover,
-    .nav-menu li a.active {
-      background: rgba(255, 255, 255, 0.1);
+    .nav-menu li.nav-section-label {
+      padding: 14px 20px 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.35);
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-icon { margin-right: 7px; font-size: 13px; opacity: .9; }
+    .nav-menu li a.active,
+    .nav-menu li a:hover {
+      background: linear-gradient(135deg, rgba(0,184,176,.18), rgba(0,116,199,.13));
       border-left-color: var(--accent);
+      font-weight: 600;
     }
 
     #cart-count {
@@ -575,6 +589,20 @@
       }
     }
 
+    @media (max-width: 480px) {
+      .hero { min-height: 160px; padding-top: 80px; }
+      .hero-title { font-size: 22px; }
+      .hero-subtitle { font-size: 13px; }
+      .section { padding: 18px 14px; border-radius: 10px; }
+      .form-input, .form-textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .order-summary { padding: 14px 14px 16px; }
+      .summary-total { font-size: 16px; }
+      .btn-submit { font-size: 14px; padding: 12px; }
+      .otp-actions { flex-direction: column; }
+      .otp-input { min-width: unset; width: 100%; }
+      img { max-width: 100%; }
+    }
+
     html {
       margin: 0;
       padding: 0;
@@ -644,32 +672,25 @@
       <span>ChemSus</span>
     </a>
 
-    <ul class="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="shop.html">Shop</a></li>
-      <li><a href="collaboration.html">Collaboration</a></li>
-      <li><a href="recognitions.html">Recognitions</a></li>
-      <li><a href="investors.html">Investors</a></li>
-      <li><a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a></li>
-      <li><a href="contact.html">Contact us</a></li>
-      <li><a href="request-sample.html">Request for Sample</a></li>
-      <li><a href="orders.html" class="active">Orders</a></li>
+        <ul class="nav-menu">
+      <li class="nav-section-label">Main</li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
+      <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
+      <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li class="nav-section-label">Shop</li>
+      <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
+      <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
+      <li class="nav-section-label">Company</li>
+      <li><a href="collaboration.html"><span class="nav-icon">🤝</span> Collaboration</a></li>
+      <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
+      <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li class="nav-section-label">Support</li>
+      <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
+      <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
+      <li class="nav-section-label">Account</li>
+      <li><a href="login.html" id="authNavLink"><span class="nav-icon">👤</span> Login / Sign Up</a></li>
+      <li id="profileNavItem" style="display:none"><a href="profile.html"><span class="nav-icon">⚙️</span> My Profile</a></li>
     </ul>
-
-
-    <!-- AUTH BUTTON -->
-    <div class="admin-login">
-      <a href="/login.html" id="nav-auth-link">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-        </svg>
-        <span id="nav-auth-text">Log In / Sign Up</span>
-      </a>
-    </div>
-
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..."
@@ -705,6 +726,27 @@
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
 
+        <!-- Auth banner: shown to guests -->
+        <div id="guestBanner" style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:13px;color:#1e40af;">
+            <strong>Have an account?</strong> Log in for faster checkout with saved details and order tracking.
+          </div>
+          <div style="display:flex;gap:8px;">
+            <a href="login.html?return=orders.html" style="padding:7px 14px;border-radius:7px;border:1.5px solid #bfdbfe;font-size:13px;font-weight:600;color:#1d4ed8;text-decoration:none;">Log in</a>
+            <a href="signup.html?return=orders.html" style="padding:7px 14px;border-radius:7px;background:#1d4ed8;font-size:13px;font-weight:600;color:#fff;text-decoration:none;">Sign up</a>
+          </div>
+        </div>
+
+        <!-- Auth banner: shown to logged-in users -->
+        <div id="loggedInBanner" style="display:none;background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:14px 18px;margin-bottom:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:13px;color:#065f46;">
+            <strong id="loggedInName">Logged in</strong> — your saved address will be used.
+            <a href="my-orders.html" style="color:#059669;margin-left:8px;font-weight:600;">My Orders →</a>
+            <a href="profile.html" style="color:#059669;margin-left:8px;font-weight:600;">Edit Profile →</a>
+          </div>
+          <button onclick="logoutCustomer()" style="padding:7px 14px;border-radius:7px;border:1.5px solid #6ee7b7;font-size:13px;font-weight:600;color:#065f46;background:transparent;cursor:pointer;">Log out</button>
+        </div>
+
         <div class="info-banner">
           <div class="info-icon">!</div>
           <div>
@@ -734,13 +776,33 @@
             <span class="summary-row-label">Unit Price per pack</span>
             <span id="summaryUnitPrice" class="summary-row-value">–</span>
           </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Subtotal</span>
+            <span id="summarySubtotal" class="summary-row-value">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">GST (18%)</span>
+            <span id="summaryGst" class="summary-row-value">₹0</span>
+          </div>
           <div class="summary-total">
-            <span>Total:</span>
+            <span>Total (incl. GST):</span>
             <span id="totalAmount">₹0</span>
           </div>
         </div>
 
-        <!-- Checkout form -->
+        <!-- Profile summary card — shown to logged-in users instead of form -->
+        <div id="profileSummary" style="display:none;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 22px;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:#0f172a;">Delivery Details</div>
+            <a href="profile.html" style="font-size:12px;font-weight:600;color:#0074c7;">Edit Profile →</a>
+          </div>
+          <div id="profileSummaryContent" style="font-size:13px;color:#1f2933;line-height:1.7;"></div>
+          <div id="profileIncomplete" style="display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:13px;color:#92400e;">
+            ⚠️ Your profile is incomplete. <a href="profile.html" style="color:#c2410c;font-weight:600;">Complete your profile →</a> before placing an order.
+          </div>
+        </div>
+
+        <!-- Checkout form — shown to guests only -->
         <form id="checkoutForm">
           <div class="form-row">
             <div class="form-group">
@@ -805,7 +867,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn-submit" id="submitBtn">Place Order &amp; Proceed to Payment</button>
+          <button type="submit" class="btn-submit" id="submitBtn">Confirm Order</button>
         </form>
       </section>
     </main>
@@ -858,6 +920,9 @@
 
   <script>
     let API_BASE = '/api';
+    let _customerToken = null;
+    let _isLoggedIn = false;
+    let _profile = {};
 
     async function initBackend() {
       try {
@@ -904,15 +969,7 @@
       const totalEl = document.getElementById('totalAmount');
 
       if (!buyNowDataRaw && !cartItemsRaw) {
-        const mainSection = document.querySelector('.section');
-        mainSection.innerHTML = `
-          <div style="text-align:center; padding:40px 20px;">
-            <div style="font-size:64px; margin-bottom:20px;">🛒</div>
-            <h3 style="font-family:'Montserrat',sans-serif; color:var(--primary-dark); margin-bottom:10px;">No Orders</h3>
-            <p style="color:#6b7280; margin-bottom:24px;">It looks like you haven't placed any orders yet.</p>
-            <a href="shop.html" style="display:inline-block; background:var(--accent); color:white; padding:12px 24px; border-radius:50px; font-weight:600; box-shadow:0 4px 12px rgba(0,184,176,0.25);">Browse Shop</a>
-          </div>
-        `;
+        window.location.replace('shop.html');
         return;
       }
 
@@ -954,9 +1011,14 @@
           unitEl.textContent = '₹' + unitPrice.toLocaleString('en-IN');
         }
 
+        const gstAmount = totalPrice * 0.18;
+        const grandTotal = totalPrice + gstAmount;
+
         productEl.textContent = productName;
-        totalEl.textContent = '₹' + Math.round(totalPrice).toLocaleString('en-IN');
-        sessionStorage.setItem('orderTotal', totalPrice);
+        document.getElementById('summarySubtotal').textContent = '₹' + Math.round(totalPrice).toLocaleString('en-IN');
+        document.getElementById('summaryGst').textContent = '₹' + Math.round(gstAmount).toLocaleString('en-IN');
+        totalEl.textContent = '₹' + Math.round(grandTotal).toLocaleString('en-IN');
+        sessionStorage.setItem('orderTotal', grandTotal);
 
       } catch (e) {
         productEl.textContent = 'Invalid product data';
@@ -1098,24 +1160,37 @@
 
     /* ── Place order ── */
     async function placeBuyNowOrderAndProceed() {
-      const submitBtn = document.getElementById('submitBtn');
+      const submitBtn = document.getElementById(_isLoggedIn ? 'loggedInPlaceBtn' : 'submitBtn');
       const errorMsg = document.getElementById('errorMessage');
       const successMsg = document.getElementById('successMessage');
 
       try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Placing Order...';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Placing Order…'; }
 
-        const customername = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('mobile').value.trim();
-        const address = document.getElementById('address').value.trim();
-        const city = document.getElementById('city').value.trim();
-        const region = document.getElementById('region').value.trim();
-        const pincode = document.getElementById('pincode').value.trim();
-        const companyName = document.getElementById('companyName').value.trim();
-        const country = document.getElementById('country').value.trim();
-        const emailOtpToken = document.getElementById('emailOtpToken').value.trim();
+        let customername, email, phone, address, city, region, pincode, companyName, country, emailOtpToken;
+        if (_isLoggedIn) {
+          customername = _profile.name || '';
+          email        = _profile.email || '';
+          phone        = _profile.phone || '';
+          address      = _profile.address || '';
+          city         = _profile.city || '';
+          region       = _profile.region || '';
+          pincode      = _profile.pincode || '';
+          companyName  = _profile.company_name || '';
+          country      = _profile.country || 'India';
+          emailOtpToken = '';
+        } else {
+          customername  = document.getElementById('fullName').value.trim();
+          email         = document.getElementById('email').value.trim();
+          phone         = document.getElementById('mobile').value.trim();
+          address       = document.getElementById('address').value.trim();
+          city          = document.getElementById('city').value.trim();
+          region        = document.getElementById('region').value.trim();
+          pincode       = document.getElementById('pincode').value.trim();
+          companyName   = document.getElementById('companyName').value.trim();
+          country       = document.getElementById('country').value.trim();
+          emailOtpToken = document.getElementById('emailOtpToken').value.trim();
+        }
 
         const buyNowData = JSON.parse(sessionStorage.getItem('buyNowData'));
         const totalprice = parseFloat(sessionStorage.getItem('orderTotal')) || 0;
@@ -1150,7 +1225,9 @@
           address, city, region, pincode,
           companyName, country,
           items,
-          emailOtpToken
+          ...(_isLoggedIn && _customerToken
+            ? { customerToken: _customerToken }
+            : { emailOtpToken })
         };
 
         const response = await fetch(`${API_BASE}/orders`, {
@@ -1166,28 +1243,80 @@
 
         const result = await response.json();
         sessionStorage.setItem('orderId', result.orderId);
+        if (result.purchaseId) sessionStorage.setItem('purchaseId', result.purchaseId);
+
+        // Build quotation data for the quotation page
+        const rawBuyNow = sessionStorage.getItem('buyNowData');
+        const rawCart = sessionStorage.getItem('cartItems');
+        let qItems = [];
+        let subtotalQ = 0;
+        try {
+          if (rawCart) {
+            const cartArr = JSON.parse(rawCart);
+            for (const ci of cartArr) {
+              const qty = parseFloat(ci.quantity) || 1;
+              const up = parseFloat(ci.price) || 0;
+              const lineTotal = qty * up;
+              subtotalQ += lineTotal;
+              qItems.push({ name: ci.name || '', packSize: ci.packSize || '', quantity: qty, unitPrice: up, total: lineTotal });
+            }
+          } else if (rawBuyNow) {
+            const bd = JSON.parse(rawBuyNow);
+            const qty = parseFloat(bd.quantity) || 1;
+            const up = parseFloat(bd.unitPrice) || 0;
+            const lineTotal = qty * up;
+            subtotalQ = lineTotal;
+            qItems.push({ name: bd.productName || '', packSize: bd.packSize || '', quantity: qty, unitPrice: up, total: lineTotal });
+          }
+        } catch { /* ignore */ }
+        const gstQ = Math.round(subtotalQ * 0.18 * 100) / 100;
+        const grandTotalQ = Math.round((subtotalQ + gstQ) * 100) / 100;
+        const quotationData = {
+          quotationId: result.purchaseId,
+          orderId: result.orderId,
+          date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }),
+          customerName: customername,
+          email: email,
+          phone: phone,
+          companyName: companyName || '',
+          address: address,
+          city: city,
+          region: region,
+          pincode: pincode,
+          country: country || 'India',
+          items: qItems,
+          subtotal: subtotalQ,
+          gst: gstQ,
+          grandTotal: grandTotalQ
+        };
+        sessionStorage.setItem('quotationData', JSON.stringify(quotationData));
 
         errorMsg.style.display = 'none';
-        successMsg.textContent = `✅ Order #${result.orderId} placed successfully! Redirecting to payment...`;
+        const pidDisplay = result.purchaseId ? ` (ID: ${result.purchaseId})` : ` #${result.orderId}`;
+        successMsg.textContent = `✅ Order${pidDisplay} placed! Redirecting...`;
         successMsg.style.display = 'block';
 
         sessionStorage.removeItem('buyNowData');
         sessionStorage.removeItem('cartItems');
 
-        setTimeout(() => { window.location.href = 'payment2.html'; }, 2000);
+        if (_paymentChoice === 'direct') {
+          setTimeout(() => { window.location.href = 'payment.html'; }, 1500);
+        } else {
+          setTimeout(() => { window.location.href = 'quotation.html'; }, 2000);
+        }
 
       } catch (error) {
         console.error('Order failed:', error);
         errorMsg.textContent = `❌ Order failed: ${error.message}`;
         errorMsg.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Place Order & Proceed to Payment';
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Confirm Order'; }
       }
     }
 
-    /* ── Form validation & submit ── */
+    /* ── Form validation & submit (guest only — logged-in users use profile summary button) ── */
     document.getElementById('checkoutForm').addEventListener('submit', function (e) {
       e.preventDefault();
+      if (_isLoggedIn) { showPaymentChoiceModal(); return; }
 
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
@@ -1222,8 +1351,18 @@
         timestamp: new Date().toISOString()
       }));
 
-      placeBuyNowOrderAndProceed();
+      showPaymentChoiceModal();
     });
+
+    /* ── Customer auth ── */
+    function logoutCustomer() {
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
+      _customerToken = null;
+      _isLoggedIn = false;
+      window.location.reload();
+    }
 
     /* ── Cart badge ── */
     function updateCartBadge() {
@@ -1249,20 +1388,308 @@
       await initBackend();
       loadOrderData();
       updateCartBadge();
-      updateSendOtpButton();
 
-      document.getElementById('sendOtpBtn').addEventListener('click', sendEmailOtp);
-      document.getElementById('verifyOtpBtn').addEventListener('click', verifyEmailOtp);
-      document.getElementById('email').addEventListener('input', () => {
-        resetOtpState();
-        setOtpStatus('');
-      });
+      // ── Customer auth detection ──
+      const storedToken = sessionStorage.getItem('chemsus_customer_token');
+      const storedExp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+      const isValidToken = storedToken && (!storedExp || Date.now() / 1000 < storedExp);
+
+      if (isValidToken) {
+        _customerToken = storedToken;
+        _isLoggedIn = true;
+
+        // Show logged-in banner
+        document.getElementById('loggedInBanner').style.display = 'flex';
+        document.getElementById('guestBanner').style.display = 'none';
+
+        // Show name from localStorage while profile loads
+        const cachedName = sessionStorage.getItem('chemsus_customer_name');
+        if (cachedName) document.getElementById('loggedInName').textContent = cachedName;
+
+        // Update sidebar nav link immediately (before async fetch)
+        const authNavLink = document.getElementById('authNavLink');
+        const profileNavItem = document.getElementById('profileNavItem');
+        if (authNavLink) {
+          const name = sessionStorage.getItem('chemsus_customer_name');
+          authNavLink.innerHTML = '<span class="nav-icon">📦</span> ' + (name ? 'My Orders (' + name + ')' : 'My Orders');
+          authNavLink.href = 'my-orders.html';
+          if (profileNavItem) profileNavItem.style.display = 'list-item';
+        }
+
+        // Load profile and show summary instead of form
+        try {
+          const pr = await fetch('/api/customer/profile', {
+            headers: { Authorization: 'Bearer ' + storedToken }
+          });
+          if (pr.ok) {
+            _profile = await pr.json();
+            if (_profile.name) {
+              document.getElementById('loggedInName').textContent = _profile.name;
+              sessionStorage.setItem('chemsus_customer_name', _profile.name);
+              if (authNavLink) {
+                authNavLink.innerHTML = '<span class="nav-icon">📦</span> My Orders (' + _profile.name + ')';
+              }
+            }
+          }
+        } catch { /* non-fatal */ }
+
+        // Check if profile is complete enough to place order
+        const profileComplete = _profile.name && _profile.phone && _profile.address &&
+          _profile.city && _profile.region && _profile.pincode;
+
+        // Hide the checkout form; show the profile summary card instead
+        document.getElementById('checkoutForm').style.display = 'none';
+        document.getElementById('profileSummary').style.display = 'block';
+
+        if (profileComplete) {
+          const lines = [
+            '<strong>' + (_profile.name || '') + '</strong>',
+            _profile.email || '',
+            _profile.phone || '',
+            _profile.company_name ? _profile.company_name : null,
+            _profile.address || '',
+            [_profile.city, _profile.region, _profile.pincode].filter(Boolean).join(', '),
+            _profile.country || ''
+          ].filter(Boolean).join('<br>');
+          document.getElementById('profileSummaryContent').innerHTML = lines;
+
+          // Add the Place Order button directly below summary
+          const placeBtn = document.createElement('button');
+          placeBtn.type = 'button';
+          placeBtn.className = 'btn-submit';
+          placeBtn.id = 'loggedInPlaceBtn';
+          placeBtn.style.marginTop = '20px';
+          placeBtn.textContent = 'Confirm Order';
+          placeBtn.onclick = function () { showPaymentChoiceModal(); };
+          document.getElementById('profileSummary').appendChild(placeBtn);
+        } else {
+          document.getElementById('profileSummaryContent').innerHTML =
+            '<span style="color:#64748b">No delivery details saved yet.</span>';
+          document.getElementById('profileIncomplete').style.display = 'block';
+        }
+      } else {
+        // Guest — show login/signup prompt
+        document.getElementById('guestBanner').style.display = 'flex';
+        document.getElementById('loggedInBanner').style.display = 'none';
+        updateSendOtpButton();
+        document.getElementById('sendOtpBtn').addEventListener('click', sendEmailOtp);
+        document.getElementById('verifyOtpBtn').addEventListener('click', verifyEmailOtp);
+        document.getElementById('email').addEventListener('input', () => {
+          resetOtpState();
+          setOtpStatus('');
+        });
+      }
+    });
+  </script>
+
+  <!-- Payment Choice Modal -->
+  <style>
+    #paymentChoiceModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(4, 20, 36, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #paymentChoiceModal.pcm-open { display: flex; }
+    .pcm-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 32px 28px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 32px 80px rgba(0, 116, 199, 0.22), 0 8px 24px rgba(0,0,0,0.18);
+      animation: pcmSlideIn 0.28s cubic-bezier(.34,1.56,.64,1) both;
+      position: relative;
+    }
+    @keyframes pcmSlideIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .pcm-top-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #0074c7, #00b8b0);
+      border-radius: 20px 20px 0 0;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+    }
+    .pcm-close-x {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #94a3b8;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .pcm-close-x:hover { background: #f1f5f9; color: #475569; }
+    .pcm-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .pcm-icon-wrap {
+      width: 48px; height: 48px; min-width: 48px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #0074c7, #00b8b0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px rgba(0, 116, 199, 0.3);
+    }
+    .pcm-title {
+      font-family: Montserrat, sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: #041424; margin: 0 0 3px; line-height: 1.25;
+    }
+    .pcm-subtitle {
+      font-size: 13px; color: #64748b; margin: 0; line-height: 1.5;
+    }
+    .pcm-divider {
+      height: 1px;
+      background: linear-gradient(90deg, #dde8f3 0%, transparent 100%);
+      margin: 20px 0;
+    }
+    .pcm-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .pcm-opt {
+      border-radius: 15px;
+      padding: 22px 14px 18px;
+      cursor: pointer;
+      text-align: center;
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      line-height: 1.3;
+      border: none;
+      outline: none;
+    }
+    .pcm-opt:focus-visible { outline: 2px solid #0074c7; outline-offset: 2px; }
+    .pcm-opt:hover { transform: translateY(-4px); }
+    .pcm-opt:active { transform: translateY(0); }
+    .pcm-opt-icon {
+      display: block; font-size: 30px; margin-bottom: 9px;
+    }
+    .pcm-opt-name { display: block; }
+    .pcm-opt-desc {
+      display: block;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 11.5px; font-weight: 400;
+      line-height: 1.45; margin-top: 7px;
+    }
+    .pcm-opt-quotation {
+      background: #F3F7FB;
+      border: 2px solid #0074c7;
+      color: #0074c7;
+    }
+    .pcm-opt-quotation:hover {
+      background: #e6f1fb;
+      box-shadow: 0 8px 24px rgba(0, 116, 199, 0.2);
+    }
+    .pcm-opt-quotation .pcm-opt-desc { color: #4a6b8a; }
+    .pcm-opt-direct {
+      background: linear-gradient(145deg, #0074c7 0%, #00b8b0 100%);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 116, 199, 0.35);
+    }
+    .pcm-opt-direct:hover {
+      box-shadow: 0 10px 32px rgba(0, 116, 199, 0.5);
+      background: linear-gradient(145deg, #005fa8 0%, #009e97 100%);
+    }
+    .pcm-opt-direct .pcm-opt-desc { opacity: 0.88; }
+    .pcm-cancel {
+      width: 100%; padding: 12px;
+      border: 1.5px solid #e2eaf3;
+      background: transparent;
+      color: #94a3b8;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Open Sans', sans-serif;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .pcm-cancel:hover { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
+    @media (max-width: 480px) {
+      .pcm-card { padding: 30px 18px 22px; border-radius: 16px; }
+      .pcm-options { grid-template-columns: 1fr; gap: 10px; }
+      .pcm-opt { padding: 18px 14px; }
+      .pcm-title { font-size: 16px; }
+    }
+  </style>
+
+  <div id="paymentChoiceModal">
+    <div class="pcm-card">
+      <div class="pcm-top-bar"></div>
+      <button class="pcm-close-x" id="cancelChoiceModal" aria-label="Close">&times;</button>
+      <div class="pcm-header">
+        <div class="pcm-icon-wrap">🛒</div>
+        <div>
+          <h3 class="pcm-title">How would you like to proceed?</h3>
+          <p class="pcm-subtitle">Both options confirm your order — choose your preferred method.</p>
+        </div>
+      </div>
+      <div class="pcm-divider"></div>
+      <div class="pcm-options">
+        <button id="chooseQuotation" class="pcm-opt pcm-opt-quotation">
+          <span class="pcm-opt-icon">📄</span>
+          <span class="pcm-opt-name">Get Quotation</span>
+          <span class="pcm-opt-desc">Receive a quotation PDF &amp; pay via bank transfer or invoice</span>
+        </button>
+        <button id="chooseDirect" class="pcm-opt pcm-opt-direct">
+          <span class="pcm-opt-icon">📱</span>
+          <span class="pcm-opt-name">Direct Payment</span>
+          <span class="pcm-opt-desc">Pay instantly via UPI / QR scan — fast &amp; secure</span>
+        </button>
+      </div>
+      <button class="pcm-cancel" id="cancelChoiceModalBottom">Not now, go back</button>
+    </div>
+  </div>
+
+  <script>
+    let _paymentChoice = 'quotation';
+
+    function showPaymentChoiceModal() {
+      document.getElementById('paymentChoiceModal').classList.add('pcm-open');
+    }
+    function hidePaymentChoiceModal() {
+      document.getElementById('paymentChoiceModal').classList.remove('pcm-open');
+    }
+
+    document.getElementById('chooseQuotation').addEventListener('click', function () {
+      _paymentChoice = 'quotation';
+      hidePaymentChoiceModal();
+      placeBuyNowOrderAndProceed();
+    });
+
+    document.getElementById('chooseDirect').addEventListener('click', function () {
+      _paymentChoice = 'direct';
+      hidePaymentChoiceModal();
+      placeBuyNowOrderAndProceed();
+    });
+
+    document.getElementById('cancelChoiceModal').addEventListener('click', hidePaymentChoiceModal);
+    document.getElementById('cancelChoiceModalBottom').addEventListener('click', hidePaymentChoiceModal);
+
+    document.getElementById('paymentChoiceModal').addEventListener('click', function (e) {
+      if (e.target === this) hidePaymentChoiceModal();
     });
   </script>
 
   <!-- Supabase & Auth -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/supabase-client.js?v=20260228"></script>
 </body>
 
 </html>

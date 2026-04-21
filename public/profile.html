@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>My Profile | ChemSus Technologies</title>
+  <link rel="icon" type="image/png" href="assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0074c7; --primary-dark: #00508a; --accent: #00b8b0;
+      --bg: #f3f7fb; --ink: #1f2933; --muted: #64748b; --border: #e2e8f0;
+      --ok: #059669; --ok-bg: #ecfdf5; --err: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Open Sans", Arial, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-left img { height: 36px; }
+    .topbar-brand { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-sm { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; display: inline-block; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border) !important; color: var(--muted); }
+    .btn-outline:hover { border-color: var(--primary) !important; color: var(--primary); text-decoration: none; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-danger:hover { background: #dc2626; }
+
+    .page { max-width: 680px; margin: 0 auto; padding: 36px 20px 60px; }
+    .page-title { font-family: "Montserrat", sans-serif; font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,23,42,.07); border: 1.5px solid var(--border); padding: 28px; }
+
+    .alert { padding: 11px 14px; border-radius: 9px; font-size: 13px; margin-bottom: 18px; display: none; }
+    .alert.err { background: #fee2e2; color: var(--err); border: 1px solid #fecaca; display: block; }
+    .alert.ok  { background: var(--ok-bg); color: var(--ok); border: 1px solid #6ee7b7; display: block; }
+
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .field input, .field textarea {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+      border-radius: 9px; font-size: 14px; color: var(--ink); outline: none;
+      transition: border-color .2s; font-family: inherit;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--primary); }
+    .field input:disabled { background: #f8fafc; color: var(--muted); cursor: not-allowed; }
+    .field textarea { resize: vertical; min-height: 80px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 10px 16px; gap: 8px; }
+      .topbar-right { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+      .btn-sm { padding: 6px 10px; font-size: 12px; }
+      .page { padding: 24px 14px 48px; }
+    }
+
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+      .topbar-brand { display: none; }
+    }
+
+    @media (max-width: 400px) {
+      /* Hide "Shop" and "My Orders" links at very small widths to save topbar space */
+      .topbar-right a[href="shop.html"],
+      .topbar-right a[href="my-orders.html"] { display: none; }
+    }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin: 24px 0 14px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-save {
+      width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+      font-family: "Montserrat", sans-serif; cursor: pointer; margin-top: 8px; transition: all .2s;
+    }
+    .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,116,199,.3); }
+    .btn-save:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .verified-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--ok); background: var(--ok-bg); border: 1px solid #6ee7b7; border-radius: 50px; padding: 3px 10px; margin-left: 8px; }
+
+    /* Profile hero banner */
+    .profile-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 60%, #003a6e 100%);
+      padding: 32px 20px 28px;
+      text-align: center;
+    }
+    .profile-hero-avatar {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: rgba(255,255,255,.18); border: 2.5px solid rgba(255,255,255,.45);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px; font-size: 28px; font-weight: 700;
+      color: #fff; font-family: "Montserrat", sans-serif;
+    }
+    .profile-hero-name {
+      font-family: "Montserrat", sans-serif; font-size: 20px; font-weight: 700;
+      color: #fff; margin-bottom: 4px;
+    }
+    .profile-hero-email { font-size: 13px; color: rgba(255,255,255,.72); }
+
+    /* Footer */
+    .site-footer {
+      background: #06121f; color: #cbd5e1; padding: 32px 20px 18px;
+      margin-top: 48px; text-align: center;
+    }
+    .site-footer-grid {
+      max-width: 860px; margin: 0 auto 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 28px; text-align: left;
+    }
+    .site-footer-col h4 {
+      color: #fff; font-family: "Montserrat", sans-serif;
+      font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em;
+    }
+    .site-footer-col p { font-size: 12px; line-height: 1.7; }
+    .site-footer-col a { color: #cbd5e1; }
+    .site-footer-col a:hover { color: #fff; }
+    .site-footer-copy {
+      border-top: 1px solid rgba(255,255,255,.08); padding-top: 14px;
+      font-size: 11px; color: #94a3b8;
+    }
+
+    @media (max-width: 400px) {
+      .profile-hero-avatar { width: 56px; height: 56px; font-size: 22px; }
+      .profile-hero-name { font-size: 17px; }
+    }
+
+    /* Global mobile polish */
+    img { max-width: 100%; }
+    .card { word-break: break-word; }
+
+    @media (max-width: 480px) {
+      .page { padding: 16px 12px 40px; }
+      .card { padding: 18px 14px; }
+      .field input, .field textarea { font-size: 16px; /* prevent iOS zoom */ }
+      .profile-hero { padding: 22px 14px 18px; }
+      .btn-save { font-size: 14px; padding: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html"><img src="assets/logo.jpg" alt="ChemSus"></a>
+      <span class="topbar-brand">My Profile</span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html" class="btn-sm btn-outline">Home</a>
+      <a href="my-orders.html" class="btn-sm btn-outline">My Orders</a>
+      <a href="shop.html" class="btn-sm btn-outline">Shop</a>
+      <button class="btn-sm btn-danger" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <!-- Profile hero banner -->
+  <div class="profile-hero">
+    <div class="profile-hero-avatar" id="heroAvatar">?</div>
+    <div class="profile-hero-name" id="heroName">Your Profile</div>
+    <div class="profile-hero-email" id="heroEmail"></div>
+  </div>
+
+  <div class="page">
+    <h1 class="page-title">My Profile</h1>
+    <p class="page-sub">Your saved details are used for every order — no re-entry needed.</p>
+
+    <div id="alertBox" class="alert"></div>
+
+    <div class="card">
+      <div class="section-label">Account</div>
+      <div class="field">
+        <label>Email <span class="verified-badge">✓ Verified</span></label>
+        <input type="email" id="profileEmail" disabled>
+      </div>
+
+      <div class="section-label">Personal Details</div>
+      <div class="form-row">
+        <div class="field">
+          <label>Full Name *</label>
+          <input type="text" id="profileName" placeholder="Your full name">
+        </div>
+        <div class="field">
+          <label>Mobile Number *</label>
+          <input type="tel" id="profilePhone" placeholder="10-digit mobile" maxlength="10" pattern="[0-9]{10}">
+        </div>
+      </div>
+      <div class="field">
+        <label>Company Name (Optional)</label>
+        <input type="text" id="profileCompany" placeholder="Your company name">
+      </div>
+
+      <div class="section-label">Delivery Address</div>
+      <div class="field">
+        <label>Full Address *</label>
+        <textarea id="profileAddress" placeholder="Street address, building name, etc."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>City *</label>
+          <input type="text" id="profileCity" placeholder="e.g., Visakhapatnam">
+        </div>
+        <div class="field">
+          <label>Region / State *</label>
+          <input type="text" id="profileRegion" placeholder="e.g., Andhra Pradesh">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Pincode *</label>
+          <input type="text" id="profilePincode" placeholder="6-digit pincode" maxlength="6" pattern="[0-9]{6}">
+        </div>
+        <div class="field">
+          <label>Country *</label>
+          <input type="text" id="profileCountry" placeholder="India" value="India">
+        </div>
+      </div>
+
+      <button class="btn-save" id="saveBtn" onclick="saveProfile()">Save Profile</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="site-footer-col">
+        <h4>Registered Office</h4>
+        <p>House No. 555, GNB Road,<br>North Guwahati, Assam – 781030</p>
+      </div>
+      <div class="site-footer-col">
+        <h4>Branch Office</h4>
+        <p>Gavara jaggayyapalem,<br>BHPV, Visakhapatnam 530012</p>
+      </div>
+      <div class="site-footer-col">
+        <h4>Contact</h4>
+        <p>
+          📞 <a href="tel:+918486877575">+91 84868 77575</a><br>
+          ✉️ <a href="mailto:info@chemsus.in">info@chemsus.in</a>
+        </p>
+      </div>
+    </div>
+    <div class="site-footer-copy">
+      &copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    const API = '/api/customer';
+    const token = sessionStorage.getItem('chemsus_customer_token');
+    const exp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+
+    if (!token || (exp && Date.now() / 1000 > exp)) {
+      window.location.replace('login.html?return=profile.html');
+    }
+
+    function showAlert(msg, type = 'err') {
+      const el = document.getElementById('alertBox');
+      el.textContent = msg; el.className = 'alert ' + type;
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function clearAlert() {
+      const el = document.getElementById('alertBox');
+      el.className = 'alert'; el.textContent = '';
+    }
+
+    async function loadProfile() {
+      try {
+        const r = await fetch(API + '/profile', { headers: { Authorization: 'Bearer ' + token } });
+        if (r.status === 401) { window.location.replace('login.html?return=profile.html'); return; }
+        const p = await r.json();
+        document.getElementById('profileEmail').value  = p.email || '';
+        document.getElementById('profileName').value   = p.name || '';
+        document.getElementById('profilePhone').value  = p.phone || '';
+        document.getElementById('profileCompany').value = p.company_name || '';
+        document.getElementById('profileAddress').value = p.address || '';
+        document.getElementById('profileCity').value   = p.city || '';
+        document.getElementById('profileRegion').value = p.region || '';
+        document.getElementById('profilePincode').value = p.pincode || '';
+        document.getElementById('profileCountry').value = p.country || 'India';
+        if (p.name) sessionStorage.setItem('chemsus_customer_name', p.name);
+
+        // Populate hero banner
+        const displayName = p.name || 'My Profile';
+        const initial = displayName.trim().charAt(0).toUpperCase();
+        document.getElementById('heroAvatar').textContent = initial;
+        document.getElementById('heroName').textContent = displayName;
+        document.getElementById('heroEmail').textContent = p.email || '';
+      } catch (e) {
+        showAlert('Failed to load profile: ' + e.message);
+      }
+    }
+
+    async function saveProfile() {
+      clearAlert();
+      const name    = document.getElementById('profileName').value.trim();
+      const phone   = document.getElementById('profilePhone').value.trim();
+      const address = document.getElementById('profileAddress').value.trim();
+      const city    = document.getElementById('profileCity').value.trim();
+      const region  = document.getElementById('profileRegion').value.trim();
+      const pincode = document.getElementById('profilePincode').value.trim();
+      const country = document.getElementById('profileCountry').value.trim();
+
+      if (!name)    { showAlert('Full name is required.'); return; }
+      if (!phone || phone.length !== 10 || isNaN(phone)) { showAlert('Enter a valid 10-digit mobile number.'); return; }
+      if (!address) { showAlert('Full address is required.'); return; }
+      if (!city)    { showAlert('City is required.'); return; }
+      if (!region)  { showAlert('Region/State is required.'); return; }
+      if (!pincode || pincode.length !== 6 || isNaN(pincode)) { showAlert('Enter a valid 6-digit pincode.'); return; }
+      if (!country) { showAlert('Country is required.'); return; }
+
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+
+      try {
+        const r = await fetch(API + '/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({
+            name, phone,
+            company_name: document.getElementById('profileCompany').value.trim(),
+            address, city, region, pincode, country
+          })
+        });
+        if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'Save failed'); }
+        sessionStorage.setItem('chemsus_customer_name', name);
+        showAlert('Profile saved successfully!', 'ok');
+      } catch (e) {
+        showAlert(e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Save Profile';
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('chemsus_customer_token');
+      sessionStorage.removeItem('chemsus_customer_token_exp');
+      sessionStorage.removeItem('chemsus_customer_name');
+      window.location.replace('login.html');
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>
