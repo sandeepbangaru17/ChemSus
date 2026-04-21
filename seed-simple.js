@@ -32,7 +32,7 @@ async function seed() {
     // Insert shop items
     console.log('📦 Inserting shop items...');
     const items = [
-      { name: 'Calcium Levulinate', subtitle: 'Pharma-grade nutritional supplement', features: '["High bioavailability","Pharma & nutraceutical use","Clean-label"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/calcium-levulinate.html', image: 'assets/cl.jpeg' },
+      { name: 'Calcium Levulinate Dihydrate', subtitle: 'Pharma-grade nutritional supplement', features: '["High bioavailability","Pharma & nutraceutical use","Clean-label"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/calcium-levulinate.html', image: 'assets/cl.jpeg' },
       { name: 'Sodium Levulinate', subtitle: 'Natural preservative & stabilizer', features: '["COSMOS/ECOCERT friendly","Skin-conditioning","Water soluble"]', stockStatus: 'in-stock', badge: 'Free sample available', showBadge: 1, moreLink: 'products/sodium-levulinate.html', image: 'assets/sl.jpeg' },
       { name: 'Levulinic Acid', subtitle: 'Versatile platform chemical', features: '["Green chemistry platform","Polymers & fuels","Pharma intermediate"]', stockStatus: 'in-stock', badge: 'Free sample available', showBadge: 1, moreLink: 'products/levulinic-acid.html', image: 'assets/la.jpeg' },
       { name: '5-HMF', subtitle: 'Bio-based intermediate', features: '["High reactivity","Resins & coatings","Sustainable building block"]', stockStatus: 'in-stock', badge: '', showBadge: 0, moreLink: 'products/5-hmf.html', image: 'assets/5hmf.jpeg' },
@@ -65,7 +65,7 @@ async function seed() {
     // Insert pack pricing
     console.log('💰 Inserting pack pricing...');
     const packPricing = [
-      // Calcium Levulinate
+      // Calcium Levulinate Dihydrate
       [insertedIds[0], '100 g', 36.3, 7336, 2000, 1],
       [insertedIds[0], '500 g', 116.8, 10735, 7000, 2],
       [insertedIds[0], '1 kg', 203, 18658, 10000, 3],
@@ -109,7 +109,7 @@ async function seed() {
     // Insert products page items
     console.log('📄 Inserting products page items...');
     const products = [
-      ['Calcium Levulinate', 'Premium pharmaceutical-grade calcium salt', 'assets/cl.jpeg', 'products/calcium-levulinate.html'],
+      ['Calcium Levulinate Dihydrate', 'Premium pharmaceutical-grade calcium salt', 'assets/cl.jpeg', 'products/calcium-levulinate.html'],
       ['Sodium Levulinate', 'Natural preservative for cosmetics', 'assets/sl.jpeg', 'products/sodium-levulinate.html'],
       ['Levulinic Acid', 'Versatile platform chemical', 'assets/la.jpeg', 'products/levulinic-acid.html'],
       ['5-HMF', 'High-purity pharmaceutical intermediate', 'assets/5hmf.jpeg', 'products/5-hmf.html'],

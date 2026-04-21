@@ -17,7 +17,7 @@ INSERT INTO site_settings (key, value) VALUES ('brochure_url', 'assets/brochure.
 -- PRODUCTS PAGE
 -- ============================================
 INSERT INTO products_page (name, description, image, link, is_active, sort_order) VALUES
-('Calcium Levulinate', 'Premium pharmaceutical-grade calcium salt for nutraceutical applications with superior bioavailability.', 'assets/cl.jpeg', 'products/calcium-levulinate.html', 1, 1),
+('Calcium Levulinate Dihydrate', 'Premium pharmaceutical-grade calcium salt for nutraceutical applications with superior bioavailability.', 'assets/cl.jpeg', 'products/calcium-levulinate.html', 1, 1),
 ('Sodium Levulinate', 'Natural preservative and humectant for cosmetics and personal care products. COSMOS/ECOCERT friendly.', 'assets/sl.jpeg', 'products/sodium-levulinate.html', 1, 2),
 ('Levulinic Acid', 'Versatile platform chemical for pharmaceuticals, polymers, and green chemistry applications.', 'assets/la.jpeg', 'products/levulinic-acid.html', 1, 3),
 ('5-HMF', 'High-purity 5-hydroxymethylfurfural for research, polymer synthesis, and pharmaceutical intermediates.', 'assets/chemical1.avif', 'products/5-hmf.html', 1, 4),
@@ -29,9 +29,9 @@ INSERT INTO products_page (name, description, image, link, is_active, sort_order
 -- SHOP ITEMS
 -- ============================================
 
--- 1. Calcium Levulinate
+-- 1. Calcium Levulinate Dihydrate
 INSERT INTO shop_items (name, subtitle, features_json, price, stockStatus, showBadge, badge, moreLink, image, is_active, sort_order) VALUES
-('Calcium Levulinate', 
+('Calcium Levulinate Dihydrate', 
  'Pharma-grade nutritional supplement', 
  '["High bioavailability", "Pharma & nutraceutical use", "Clean-label", "Superior calcium source", "Easy to formulate"]',
  2000, 
@@ -133,11 +133,11 @@ INSERT INTO shop_items (name, subtitle, features_json, price, stockStatus, showB
 
 -- Use shop item names to resolve IDs
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
-((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '100 g', 36.3, 7336, 2000, 1, 1),
-((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '500 g', 116.8, 10735, 7000, 1, 2),
-((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '1 kg', 203, 18658, 10000, 1, 3),
-((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '2 kg', 0, 0, 19000, 1, 4),
-((SELECT id FROM shop_items WHERE name='Calcium Levulinate'), '5 kg', 0, 0, 42500, 1, 5);
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate Dihydrate'), '100 g', 36.3, 7336, 2000, 1, 1),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate Dihydrate'), '500 g', 116.8, 10735, 7000, 1, 2),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate Dihydrate'), '1 kg', 203, 18658, 10000, 1, 3),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate Dihydrate'), '2 kg', 0, 0, 19000, 1, 4),
+((SELECT id FROM shop_items WHERE name='Calcium Levulinate Dihydrate'), '5 kg', 0, 0, 42500, 1, 5);
 
 INSERT INTO pack_pricing (shop_item_id, pack_size, biofm_usd, biofm_inr, our_price, is_active, sort_order) VALUES
 ((SELECT id FROM shop_items WHERE name='Sodium Levulinate'), '100 g', 26, 2390, 2000, 1, 1),
