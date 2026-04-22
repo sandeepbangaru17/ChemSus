@@ -5,12 +5,14 @@ module.exports = function (deps) {
     const {
         run, get, all, requireAdmin,
         adminUpload, deleteReceiptFile,
-        rateLimiter, normalizeEmail,
+        rateLimiter, normalizeEmail, isValidEmail,
         ADMIN_EMAIL, ADMIN_PASSWORD,
         buildLocalAccessToken, crypto,
         hashLocalPassword, safeEqualHex,
         getEffectiveAdminEmail,
-        sendTransactionalEmail
+        sendTransactionalEmail,
+        generateOtpCode, hashOtp, purgeOtpSessions,
+        OTP_TTL_MIN, OTP_MAX_ATTEMPTS, OTP_RESEND_SEC
     } = deps;
 
     const ORDER_STATUS_LABELS = {
@@ -54,23 +56,151 @@ module.exports = function (deps) {
         return { html, text };
     }
 
-    // ---------------- Admin Login (no auth required) ----------------
+    // ---------------- Admin Login Step 1: Send OTP ----------------
+    router.post("/login/send-otp", rateLimiter(15 * 60 * 1000, 5), async (req, res) => {
+        try {
+            await purgeOtpSessions();
+            const email = normalizeEmail(req.body?.email || "");
+            if (!isValidEmail(email)) {
+                return res.status(400).json({ error: "Invalid email format." });
+            }
+
+            const effectiveEmail = await getEffectiveAdminEmail();
+            if (!effectiveEmail) {
+                return res.status(503).json({ error: "Admin credentials not configured." });
+            }
+            if (email !== effectiveEmail) {
+                return res.status(401).json({ error: "Email not authorized for admin access." });
+            }
+
+            const otp = generateOtpCode();
+            const challengeId = crypto.randomUUID();
+            const hash = hashOtp(email, otp, challengeId);
+
+            await run(
+                `INSERT INTO email_otp_sessions
+                 (email, challenge_id, otp_hash, attempts, max_attempts, expires_at, cooldown_until)
+                 VALUES (?, ?, ?, 0, ?, datetime('now', ?), datetime('now', ?))`,
+                [
+                    email, challengeId, hash,
+                    Number(OTP_MAX_ATTEMPTS || 5),
+                    `+${Number(OTP_TTL_MIN || 10)} minutes`,
+                    `+${Number(OTP_RESEND_SEC || 60)} seconds`,
+                ]
+            );
+
+            const html = `
+<div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#f3f7fb;padding:24px;border-radius:12px;">
+  <div style="background:#fff;border-radius:10px;padding:32px;text-align:center;">
+    <img src="https://chemsus.in/assets/logo.jpg" alt="ChemSus" style="height:48px;margin-bottom:16px;" onerror="this.style.display='none'">
+    <h2 style="color:#00508a;margin:0 0 8px;font-family:Arial,sans-serif;">Admin Login OTP</h2>
+    <p style="color:#475569;margin:0 0 24px;font-size:14px;">Use this OTP to complete your ChemSus admin login. Do not share it with anyone.</p>
+    <div style="background:#f0f7ff;border:2px dashed #0074c7;border-radius:12px;padding:20px 32px;margin:0 auto 24px;display:inline-block;">
+      <p style="margin:0;font-size:11px;color:#64748b;letter-spacing:0.1em;text-transform:uppercase;">One-Time Password</p>
+      <p style="margin:8px 0 0;font-size:40px;font-weight:800;letter-spacing:14px;color:#00508a;font-family:monospace;">${otp}</p>
+    </div>
+    <p style="color:#94a3b8;font-size:12px;margin:0;">Expires in ${Number(OTP_TTL_MIN || 10)} minutes. If you did not request this, your account may be under threat — change credentials immediately.</p>
+  </div>
+</div>`;
+            const text = `ChemSus Admin Login OTP: ${otp}\nExpires in ${Number(OTP_TTL_MIN || 10)} minutes. Do not share this code.`;
+
+            await sendTransactionalEmail(email, "ChemSus Admin Login — One-Time Password", html, text);
+
+            return res.json({ ok: true, challengeId, expiresInMin: Number(OTP_TTL_MIN || 10) });
+        } catch (e) {
+            console.error("[ADMIN-OTP-SEND]", e);
+            return res.status(500).json({ error: "Failed to send OTP. Check server email configuration." });
+        }
+    });
+
+    // ---------------- Admin Login Step 2: Verify OTP ----------------
+    router.post("/login/verify-otp", rateLimiter(15 * 60 * 1000, 20), async (req, res) => {
+        try {
+            await purgeOtpSessions();
+            const email = normalizeEmail(req.body?.email || "");
+            const challengeId = String(req.body?.challengeId || "").trim();
+            const otp = String(req.body?.otp || "").replace(/\s/g, "");
+
+            if (!isValidEmail(email) || !challengeId || !otp) {
+                return res.status(400).json({ error: "Missing required fields." });
+            }
+
+            const row = await get(
+                `SELECT * FROM email_otp_sessions WHERE challenge_id=? AND email=?`,
+                [challengeId, email]
+            );
+            if (!row) return res.status(400).json({ error: "Invalid or expired OTP session." });
+            if (row.verified_at) return res.status(400).json({ error: "This OTP was already verified." });
+
+            const expiresMs = new Date(row.expires_at + "Z").getTime();
+            if (Date.now() > expiresMs) return res.status(400).json({ error: "OTP expired. Request a new one." });
+            if (Number(row.attempts) >= Number(row.max_attempts)) {
+                return res.status(429).json({ error: "Maximum OTP attempts exceeded. Request a new OTP." });
+            }
+
+            const expectedHash = hashOtp(email, otp, challengeId);
+            if (expectedHash !== row.otp_hash) {
+                await run(
+                    `UPDATE email_otp_sessions SET attempts=attempts+1, updated_at=datetime('now') WHERE id=?`,
+                    [row.id]
+                );
+                const remaining = Number(row.max_attempts) - Number(row.attempts) - 1;
+                return res.status(400).json({
+                    error: `Incorrect OTP.${remaining > 0 ? ` ${remaining} attempt(s) remaining.` : " No attempts left — request a new OTP."}`
+                });
+            }
+
+            const verificationToken = crypto.randomUUID();
+            await run(
+                `UPDATE email_otp_sessions
+                 SET verified_at=datetime('now'),
+                     verification_token=?,
+                     token_expires_at=datetime('now', '+5 minutes'),
+                     updated_at=datetime('now')
+                 WHERE id=?`,
+                [verificationToken, row.id]
+            );
+
+            return res.json({ ok: true, verificationToken });
+        } catch (e) {
+            console.error("[ADMIN-OTP-VERIFY]", e);
+            return res.status(500).json({ error: "OTP verification failed." });
+        }
+    });
+
+    // ---------------- Admin Login Step 3: Password + verificationToken ----------------
     router.post("/login", rateLimiter(15 * 60 * 1000, 10), async (req, res) => {
         try {
             const emailOrUsername = normalizeEmail(req.body?.email || req.body?.username || "");
             const password = String(req.body?.password || "");
+            const verificationToken = String(req.body?.verificationToken || "").trim();
 
-            // Get effective admin email (DB override or env)
+            if (!verificationToken) {
+                return res.status(400).json({ error: "OTP verification required before login." });
+            }
+
             const effectiveEmail = await getEffectiveAdminEmail();
             if (!effectiveEmail) {
                 return res.status(503).json({ error: "Admin credentials not configured on server" });
             }
-
             if (emailOrUsername !== effectiveEmail) {
                 return res.status(401).json({ error: "Invalid credentials" });
             }
 
-            // Check DB-stored hashed password first, then fall back to env plain-text
+            // Validate OTP verification token (must be verified and not expired)
+            const otpRow = await get(
+                `SELECT * FROM email_otp_sessions WHERE verification_token=? AND email=?`,
+                [verificationToken, emailOrUsername]
+            );
+            if (!otpRow || !otpRow.verified_at) {
+                return res.status(401).json({ error: "OTP verification required. Please complete OTP verification first." });
+            }
+            const tokenExpMs = new Date((otpRow.token_expires_at || "") + "Z").getTime();
+            if (isNaN(tokenExpMs) || Date.now() > tokenExpMs) {
+                return res.status(401).json({ error: "OTP session expired. Please restart the login process." });
+            }
+
+            // Check password
             let isPasswordMatch = false;
             const dbPassRow = await get(`SELECT value FROM site_settings WHERE key='admin_password_hash'`);
             if (dbPassRow?.value) {
@@ -90,12 +220,14 @@ module.exports = function (deps) {
                 return res.status(401).json({ error: "Invalid credentials" });
             }
 
+            // Invalidate OTP session after successful login (one-time use)
+            await run(
+                `UPDATE email_otp_sessions SET token_expires_at=datetime('now', '-1 minute'), updated_at=datetime('now') WHERE id=?`,
+                [otpRow.id]
+            );
+
             const tokenData = buildLocalAccessToken(effectiveEmail, 0);
-            return res.json({
-                ok: true,
-                token: tokenData.accessToken,
-                expiresAt: tokenData.expSec
-            });
+            return res.json({ ok: true, token: tokenData.accessToken, expiresAt: tokenData.expSec });
         } catch (e) {
             console.error("[ADMIN-LOGIN]", e);
             return res.status(500).json({ error: "Login failed" });
