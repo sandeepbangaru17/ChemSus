@@ -17,3 +17,22 @@ Disallow: /success.html
 Disallow: /thankyou.html
 
 Sitemap: https://chemsus.in/sitemap.xml
+
+# AI crawlers — see llms.txt for structured content summary
+# https://chemsus.in/llms.txt
+
+# Explicitly allow major AI crawlers
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
