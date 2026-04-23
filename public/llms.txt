@@ -1,0 +1,78 @@
+# ChemSus Technologies Pvt Ltd
+
+> Sustainable specialty chemicals from renewable lignocellulosic biomass — made in India.
+
+ChemSus Technologies Pvt Ltd is an Indian startup producing high-purity biomass-derived platform chemicals for pharmaceutical, agricultural, cosmetic, and industrial applications. All chemicals are produced from renewable lignocellulosic feedstocks (rice straw, sugarcane bagasse, wood chips) using green chemistry processes.
+
+## Company
+
+- **Legal Name:** ChemSus Technologies Pvt Ltd
+- **Website:** https://chemsus.in
+- **Email:** info@chemsus.in
+- **Phone:** +91 84868 77575
+- **Registered Office:** House No. 555, GNB Road, North Guwahati, Assam – 781030, India
+- **Branch Office:** Gavara Jaggayyapalem, BHPV, Visakhapatnam – 530012, Andhra Pradesh, India
+
+## Products
+
+ChemSus supplies the following high-purity chemicals for R&D and industrial use in India:
+
+### Levulinic Acid (CAS 123-76-2)
+- Molecular Formula: C5H8O3 | MW: 116.12 g/mol
+- IUPAC: 4-oxopentanoic acid
+- Uses: precursor to 5-ALA herbicide, bioplasticizers, gamma-valerolactone (GVL), skin-conditioning in cosmetics, pharmaceuticals
+- Page: https://chemsus.in/products/levulinic-acid.html
+
+### 5-Hydroxymethylfurfural / 5-HMF (CAS 67-47-0)
+- Molecular Formula: C6H6O3 | MW: 126.11 g/mol
+- IUPAC: (5-hydroxymethyl)furan-2-carbaldehyde
+- Uses: precursor to FDCA for bio-PEF plastic, specialty polymers, pharmaceuticals, antifungal agents
+- Page: https://chemsus.in/products/5-hmf.html
+
+### 5-Aminolevulinic Acid / DALA (CAS 106-60-5)
+- Molecular Formula: C5H9NO3 | MW: 131.13 g/mol
+- IUPAC: 5-amino-4-oxopentanoic acid
+- Uses: photodynamic therapy (PDT), biodegradable herbicide, plant growth regulator, porphyrin biosynthesis
+- Page: https://chemsus.in/products/dala.html
+
+### Sodium Levulinate (CAS 19856-23-6)
+- Molecular Formula: C5H7NaO3 | MW: 138.10 g/mol
+- IUPAC: sodium 4-oxopentanoate
+- Uses: cosmetic preservative booster, food flavour enhancer, skin-conditioning agent, pharmaceutical excipient
+- Page: https://chemsus.in/products/sodium-levulinate.html
+
+### Calcium Levulinate Dihydrate (CAS 5743-49-7)
+- Molecular Formula: C10H14CaO6·2H2O | MW: 306.32 g/mol
+- IUPAC: calcium bis(4-oxopentanoate) dihydrate
+- Uses: pharmaceutical calcium supplement (injectable), food calcium fortification, nutraceuticals, veterinary medicine
+- Page: https://chemsus.in/products/calcium-levulinate.html
+
+### Ethyl Levulinate (CAS 539-88-8)
+- Molecular Formula: C7H12O3 | MW: 144.17 g/mol
+- IUPAC: ethyl 4-oxopentanoate
+- Uses: fragrance (fruity notes), biodiesel additive, green solvent, chemical intermediate
+- Page: https://chemsus.in/products/ethyl-levulinate.html
+
+### Methyl Levulinate (CAS 624-45-3)
+- Molecular Formula: C6H10O3 | MW: 130.14 g/mol
+- IUPAC: methyl 4-oxopentanoate
+- Uses: green solvent, plasticizer, fragrance, fuel additive, chemical intermediate for GVL
+- Page: https://chemsus.in/products/methyl-levulinate.html
+
+## Key Pages
+
+- Home: https://chemsus.in/
+- All Products: https://chemsus.in/products.html
+- Shop / Order: https://chemsus.in/shop.html
+- About Us: https://chemsus.in/about.html
+- Contact: https://chemsus.in/contact.html
+- Collaborations: https://chemsus.in/collaboration.html
+- Recognitions & Awards: https://chemsus.in/recognitions.html
+
+## About the Technology
+
+ChemSus uses acid-catalysed hydrolysis and dehydration of cellulosic biomass to produce platform chemicals. This approach upcycles agricultural waste (rice straw, sugarcane bagasse) into high-value specialty chemicals, replacing petroleum feedstocks with renewable alternatives. The process is aligned with green chemistry principles: atom economy, renewable feedstocks, biodegradable products.
+
+## Sitemap
+
+https://chemsus.in/sitemap.xml

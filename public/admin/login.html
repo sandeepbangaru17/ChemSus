@@ -4,196 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChemSus Admin Login</title>
-  <link rel="icon" type="image/png" href="../assets/logo.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #0074c7;
-      --primary-dark: #00508a;
-      --accent: #00b8b0;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Open Sans", Arial, sans-serif;
-      background:
-        radial-gradient(circle at 15% 15%, rgba(0,184,176,0.15), transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(0,116,199,0.15), transparent 40%),
-        linear-gradient(135deg, #e8f1f8 0%, #d0dde9 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .card {
-      background: rgba(255,255,255,0.97);
-      border-radius: 22px;
-      box-shadow: 0 12px 40px rgba(15,23,42,0.14);
-      padding: 44px 40px 36px;
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-    }
-    .logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
-      object-fit: contain;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 28px rgba(0,116,199,0.2);
-    }
-    h2 {
-      font-family: "Montserrat", sans-serif;
-      font-size: 22px;
-      color: var(--primary-dark);
-      margin-bottom: 4px;
-    }
-    .sub {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 28px;
-    }
-    .field {
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    .field label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .input-wrap {
-      position: relative;
-    }
-    .input-wrap input {
-      width: 100%;
-      height: 48px;
-      padding: 0 44px 0 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .field input {
-      width: 100%;
-      height: 48px;
-      padding: 0 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .field input:focus,
-    .input-wrap input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0,116,199,0.12);
-    }
-    .toggle-eye {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #94a3b8;
-      padding: 4px;
-      display: flex;
-      align-items: center;
-    }
-    .toggle-eye:hover { color: var(--primary); }
-    .btn {
-      width: 100%;
-      height: 48px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      font-family: "Montserrat", sans-serif;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 16px rgba(0,116,199,0.3);
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,116,199,0.35); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    #status {
-      margin-top: 14px;
-      font-size: 13px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      display: none;
-      text-align: left;
-    }
-    #status.err { display: block; background: #fee2e2; color: #7f1d1d; border-left: 4px solid #ef4444; }
-    .back {
-      display: inline-block;
-      margin-top: 20px;
-      font-size: 13px;
-      color: var(--primary);
-      text-decoration: none;
-    }
-    .back:hover { text-decoration: underline; }
-
-    @media (max-width: 480px) {
-      .card {
-        padding: 32px 24px 28px;
-        border-radius: 16px;
-      }
-      h2 { font-size: 19px; }
-    }
-
-    @media (max-width: 360px) {
-      .card {
-        padding: 24px 16px 20px;
-      }
-      .field input, .input-wrap input {
-        height: 44px;
-        font-size: 13px;
-      }
-      .btn { height: 44px; font-size: 14px; }
-    }
-  </style>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="../assets/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"></noscript>
+  <style>:root{--primary:#0074c7;--primary-dark:#00508a;--accent:#00b8b0;--success:#059669}*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Open Sans",Arial,sans-serif;background:radial-gradient(circle at 15% 15%,rgba(0,184,176,0.15),transparent 40%),radial-gradient(circle at 85% 85%,rgba(0,116,199,0.15),transparent 40%),linear-gradient(135deg,#e8f1f8 0%,#d0dde9 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.card{background:rgba(255,255,255,0.97);border-radius:22px;box-shadow:0 12px 40px rgba(15,23,42,0.14);padding:44px 40px 36px;width:100%;max-width:430px;text-align:center}.logo{width:68px;height:68px;border-radius:16px;object-fit:contain;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,116,199,0.2)}h2{font-family:"Montserrat",sans-serif;font-size:21px;color:var(--primary-dark);margin-bottom:4px}.sub{color:#64748b;font-size:13px;margin-bottom:28px;line-height:1.5}.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px}.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-family:"Montserrat",sans-serif;font-size:12px;font-weight:700;color:#94a3b8;background:#fff;transition:all 0.3s;position:relative;z-index:1}.step-dot.active{border-color:var(--primary);color:#fff;background:var(--primary);box-shadow:0 0 0 4px rgba(0,116,199,0.15)}.step-dot.done{border-color:var(--success);color:#fff;background:var(--success)}.step-dot.done::after{content:'✓';font-size:14px}.step-dot.done .step-num{display:none}.step-line{flex:1;height:2px;background:#e2e8f0;max-width:40px;transition:background 0.3s}.step-line.done{background:var(--success)}.step-panel{display:none}.step-panel.active{display:block}.field{margin-bottom:16px;text-align:left}.field label{display:block;font-size:11.5px;font-weight:700;color:var(--primary-dark);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em}.field input{width:100%;height:48px;padding:0 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;font-family:"Open Sans",Arial,sans-serif}.field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,116,199,0.12)}.input-wrap{position:relative}.input-wrap input{padding-right:44px}.toggle-eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;padding:4px;display:flex;align-items:center}.toggle-eye:hover{color:var(--primary)}.otp-boxes{display:flex;gap:8px;justify-content:center;margin:4px 0 8px}.otp-box{width:48px;height:56px;border:2px solid #e2e8f0;border-radius:10px;font-size:22px;font-weight:700;font-family:"Montserrat",sans-serif;text-align:center;outline:none;color:var(--primary-dark);transition:border-color 0.2s,box-shadow 0.2s}.otp-box:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,116,199,0.12)}.otp-box.filled{border-color:var(--primary);background:#f0f7ff}.btn{width:100%;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:"Montserrat",sans-serif;cursor:pointer;margin-top:8px;transition:all 0.2s;box-shadow:0 4px 16px rgba(0,116,199,0.3)}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,116,199,0.35)}.btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;box-shadow:none}.status{margin-top:12px;font-size:13px;padding:10px 14px;border-radius:8px;display:none;text-align:left}.status.err{display:block;background:#fee2e2;color:#7f1d1d;border-left:4px solid #ef4444}.status.ok{display:block;background:#dcfce7;color:#14532d;border-left:4px solid #22c55e}.hint{font-size:12px;color:#94a3b8;margin-top:10px;line-height:1.5}.hint b{color:var(--primary-dark)}.resend-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px}.resend-btn{background:none;border:none;cursor:pointer;color:var(--primary);font-size:13px;font-weight:600;padding:0;text-decoration:underline}.resend-btn:disabled{color:#94a3b8;cursor:not-allowed;text-decoration:none}#resendTimer{font-size:13px;color:#94a3b8}.back-link{display:inline-block;margin-top:18px;font-size:13px;color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:none;font-family:"Open Sans",Arial,sans-serif}.back-link:hover{text-decoration:underline}.email-badge{display:inline-block;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:20px;padding:4px 14px;font-size:13px;color:var(--primary-dark);font-weight:600;margin-bottom:18px}@media (max-width:480px){.card{padding:32px 22px 28px;border-radius:16px}h2{font-size:19px}.otp-box{width:42px;height:50px;font-size:20px}.otp-boxes{gap:6px}}@media (max-width:360px){.card{padding:24px 14px 20px}.otp-box{width:36px;height:44px;font-size:18px}}</style>
 </head>
 <body>
   <div class="card">
-    <img src="../assets/logo.jpg" alt="ChemSus" class="logo" onerror="this.style.display='none'">
-    <h2>Admin Login</h2>
-    <p class="sub">ChemSus Admin Panel — Restricted Access</p>
+    <img src="../assets/logo.webp" alt="ChemSus" class="logo" onerror="this.style.display='none'">
+    <h2>Admin Access</h2>
+    <p class="sub" id="cardSub">Secure login with email OTP + password</p>
 
-    <form onsubmit="doLogin(event)">
+    <!-- Step indicator -->
+    <div class="steps">
+      <div class="step-dot active" id="dot1"><span class="step-num">1</span></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2"><span class="step-num">2</span></div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3"><span class="step-num">3</span></div>
+    </div>
+
+    <!-- Step 1: Email -->
+    <div class="step-panel active" id="step1">
       <div class="field">
-        <label>Email</label>
-        <input type="email" id="adminEmail" required placeholder="Enter admin email" autocomplete="username">
+        <label>Admin Email</label>
+        <input type="email" id="adminEmail" placeholder="Enter admin email" autocomplete="username" required>
       </div>
+      <button class="btn" id="sendOtpBtn" onclick="sendOtp()">Send OTP</button>
+      <div class="status" id="status1"></div>
+      <p class="hint">An OTP will be sent to your registered admin email address.</p>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div class="step-panel" id="step2">
+      <div class="email-badge" id="emailBadge"></div>
       <div class="field">
-        <label>Password</label>
+        <label>One-Time Password</label>
+        <div class="otp-boxes" id="otpBoxes">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="0">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="4">
+          <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="5">
+        </div>
+      </div>
+      <button class="btn" id="verifyOtpBtn" onclick="verifyOtp()">Verify OTP</button>
+      <div class="status" id="status2"></div>
+      <div class="resend-row">
+        <span id="resendTimer"></span>
+        <button class="resend-btn" id="resendBtn" onclick="resendOtp()" disabled>Resend OTP</button>
+      </div>
+      <button class="back-link" onclick="goToStep(1)">← Change email</button>
+    </div>
+
+    <!-- Step 3: Password -->
+    <div class="step-panel" id="step3">
+      <div class="email-badge" id="emailBadge3"></div>
+      <p style="font-size:13px;color:#059669;margin-bottom:16px;font-weight:600;">✅ OTP verified successfully</p>
+      <div class="field">
+        <label>Admin Password</label>
         <div class="input-wrap">
-          <input type="password" id="adminPass" required placeholder="Enter password" autocomplete="current-password">
-          <button type="button" class="toggle-eye" onclick="togglePassword()" id="eyeBtn" title="Show/Hide password">
+          <input type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password" required>
+          <button type="button" class="toggle-eye" onclick="togglePassword()" title="Show/hide password">
             <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
             </svg>
           </button>
         </div>
       </div>
-      <button type="submit" class="btn" id="loginBtn">🔐 Sign In</button>
-    </form>
+      <button class="btn" id="loginBtn" onclick="doLogin()">Sign In to Admin Panel</button>
+      <div class="status" id="status3"></div>
+      <p class="hint" style="margin-top:12px;">OTP session expires in <b>5 minutes</b>. Complete login promptly.</p>
+    </div>
 
-    <div id="status"></div>
-    <a href="../index.html" class="back">← Back to Site</a>
+    <a href="../index.html" class="back-link" style="display:block;margin-top:18px;">← Back to Site</a>
   </div>
 
   <script>
-    // If already logged in, go straight to dashboard
+    // State
+    let adminEmail = '';
+    let challengeId = '';
+    let verificationToken = '';
+    let resendInterval = null;
+
+    // If already logged in, redirect
     (function () {
       const token = sessionStorage.getItem('chemsus_admin_token');
       const exp = Number(sessionStorage.getItem('chemsus_admin_token_exp') || 0);
@@ -202,6 +100,232 @@
       }
     })();
 
+    // --- Step navigation ---
+    function goToStep(n) {
+      [1, 2, 3].forEach(i => {
+        document.getElementById('step' + i).classList.toggle('active', i === n);
+      });
+      updateStepDots(n);
+      if (n === 2) { focusFirstOtpBox(); startResendTimer(60); }
+      if (n === 3) { setTimeout(() => document.getElementById('adminPass').focus(), 100); }
+    }
+
+    function updateStepDots(current) {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.classList.remove('active', 'done');
+        if (i < current) dot.classList.add('done');
+        else if (i === current) dot.classList.add('active');
+      }
+      for (let i = 1; i <= 2; i++) {
+        const line = document.getElementById('line' + i);
+        line.classList.toggle('done', i < current);
+      }
+    }
+
+    // --- OTP box interactions ---
+    function setupOtpBoxes() {
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, idx) => {
+        box.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/\D/g, '');
+          e.target.value = val ? val[val.length - 1] : '';
+          e.target.classList.toggle('filled', !!e.target.value);
+          if (e.target.value && idx < boxes.length - 1) boxes[idx + 1].focus();
+        });
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !box.value && idx > 0) {
+            boxes[idx - 1].focus();
+            boxes[idx - 1].value = '';
+            boxes[idx - 1].classList.remove('filled');
+          }
+          if (e.key === 'Enter') verifyOtp();
+        });
+        box.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          [...text].forEach((ch, i) => {
+            if (boxes[i]) { boxes[i].value = ch; boxes[i].classList.add('filled'); }
+          });
+          const nextEmpty = [...boxes].findIndex(b => !b.value);
+          (nextEmpty !== -1 ? boxes[nextEmpty] : boxes[5]).focus();
+        });
+      });
+    }
+
+    function focusFirstOtpBox() {
+      setTimeout(() => document.querySelector('.otp-box').focus(), 100);
+    }
+
+    function getOtpValue() {
+      return [...document.querySelectorAll('.otp-box')].map(b => b.value).join('');
+    }
+
+    function clearOtpBoxes() {
+      document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
+    }
+
+    // --- Resend timer ---
+    function startResendTimer(seconds) {
+      clearInterval(resendInterval);
+      const btn = document.getElementById('resendBtn');
+      const timer = document.getElementById('resendTimer');
+      btn.disabled = true;
+      let remaining = seconds;
+      timer.textContent = `Resend in ${remaining}s`;
+      resendInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(resendInterval);
+          timer.textContent = '';
+          btn.disabled = false;
+        } else {
+          timer.textContent = `Resend in ${remaining}s`;
+        }
+      }, 1000);
+    }
+
+    // --- Show status ---
+    function showStatus(id, msg, type) {
+      const el = document.getElementById(id);
+      el.className = 'status ' + type;
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function clearStatus(id) {
+      const el = document.getElementById(id);
+      el.style.display = 'none';
+    }
+
+    // --- Step 1: Send OTP ---
+    async function sendOtp() {
+      const email = document.getElementById('adminEmail').value.trim();
+      if (!email) return;
+      adminEmail = email;
+
+      const btn = document.getElementById('sendOtpBtn');
+      clearStatus('status1');
+      btn.disabled = true;
+      btn.textContent = 'Sending OTP…';
+
+      try {
+        const r = await fetch('/api/admin/login/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Failed to send OTP');
+        challengeId = data.challengeId;
+        document.getElementById('emailBadge').textContent = email;
+        document.getElementById('emailBadge3').textContent = email;
+        clearOtpBoxes();
+        goToStep(2);
+      } catch (err) {
+        showStatus('status1', '❌ ' + (err.message || 'Failed to send OTP'), 'err');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send OTP';
+      }
+    }
+
+    // --- Resend OTP ---
+    async function resendOtp() {
+      clearStatus('status2');
+      clearOtpBoxes();
+      const btn = document.getElementById('resendBtn');
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/admin/login/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: adminEmail })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Failed to resend OTP');
+        challengeId = data.challengeId;
+        showStatus('status2', '✅ New OTP sent to ' + adminEmail, 'ok');
+        startResendTimer(60);
+        focusFirstOtpBox();
+      } catch (err) {
+        showStatus('status2', '❌ ' + (err.message || 'Failed to resend OTP'), 'err');
+        btn.disabled = false;
+      }
+    }
+
+    // --- Step 2: Verify OTP ---
+    async function verifyOtp() {
+      const otp = getOtpValue();
+      if (otp.length !== 6) {
+        showStatus('status2', '❌ Please enter all 6 digits of the OTP.', 'err');
+        return;
+      }
+      const btn = document.getElementById('verifyOtpBtn');
+      clearStatus('status2');
+      btn.disabled = true;
+      btn.textContent = 'Verifying…';
+
+      try {
+        const r = await fetch('/api/admin/login/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: adminEmail, challengeId, otp })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'OTP verification failed');
+        verificationToken = data.verificationToken;
+        clearInterval(resendInterval);
+        goToStep(3);
+      } catch (err) {
+        showStatus('status2', '❌ ' + (err.message || 'OTP verification failed'), 'err');
+        clearOtpBoxes();
+        focusFirstOtpBox();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Verify OTP';
+      }
+    }
+
+    // --- Step 3: Login with password ---
+    async function doLogin() {
+      const password = document.getElementById('adminPass').value;
+      if (!password) return;
+
+      const btn = document.getElementById('loginBtn');
+      clearStatus('status3');
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+
+      try {
+        const r = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: adminEmail, password, verificationToken })
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Login failed');
+        sessionStorage.setItem('chemsus_admin_token', data.token);
+        sessionStorage.setItem('chemsus_admin_token_exp', String(data.expiresAt || 0));
+        window.location.href = '/admin/admin.html';
+      } catch (err) {
+        showStatus('status3', '❌ ' + (err.message || 'Login failed'), 'err');
+        document.getElementById('adminPass').value = '';
+        document.getElementById('adminPass').focus();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In to Admin Panel';
+      }
+    }
+
+    // --- Keyboard: Enter key on email input ---
+    document.getElementById('adminEmail').addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendOtp();
+    });
+    document.getElementById('adminPass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // --- Password show/hide ---
     function togglePassword() {
       const input = document.getElementById('adminPass');
       const icon = document.getElementById('eyeIcon');
@@ -212,34 +336,8 @@
         : '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>';
     }
 
-    async function doLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('adminEmail').value.trim();
-      const password = document.getElementById('adminPass').value;
-      const btn = document.getElementById('loginBtn');
-      const st = document.getElementById('status');
-      st.style.display = 'none';
-      btn.disabled = true;
-      btn.textContent = 'Signing in...';
-      try {
-        const r = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.error || 'Login failed');
-        sessionStorage.setItem('chemsus_admin_token', data.token);
-        sessionStorage.setItem('chemsus_admin_token_exp', String(data.expiresAt || 0));
-        window.location.href = '/admin/admin.html';
-      } catch (err) {
-        st.className = 'err';
-        st.textContent = '❌ ' + (err.message || 'Login failed');
-        st.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = '🔐 Sign In';
-      }
-    }
+    // Init OTP box behavior
+    setupOtpBoxes();
   </script>
 </body>
 </html>
