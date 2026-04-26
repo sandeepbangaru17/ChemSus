@@ -101,6 +101,7 @@ and provide a smooth checkout experience — without requiring customers to crea
 ### 3.5 Customer Accounts
 - Sign up at `/signup.html` — email + password with OTP email verification.
 - Log in at `/login.html` — password login tab or email OTP tab.
+- **Forgot Password** at `/forgot-password.html` — OTP sent to registered email; after verification, customer sets a new password (`POST /api/customer/forgot-password` + `POST /api/customer/reset-password`).
 - JWT token (`iss: "chemsus-customer"`) issued on login; 7-day TTL.
 - Profile page at `/profile.html` — edit name, phone, company, delivery address.
 - Order history at `/my-orders.html` — lists all past orders with status; each order has a **View Quotation** button (opens quotation page) and **Download PDF** button.
@@ -114,8 +115,11 @@ and provide a smooth checkout experience — without requiring customers to crea
 ## 4. Admin Requirements
 
 ### 4.1 Admin Authentication
-- Admin logs in at `/admin/login.html` with email + password.
-- JWT token issued on successful login (8-hour session).
+- Admin logs in at `/admin/login.html` via a 3-step flow:
+  1. Enter email → OTP is sent to the admin email address (`POST /api/admin/login/send-otp`)
+  2. Enter OTP → verified server-side (`POST /api/admin/login/verify-otp`)
+  3. Enter password → JWT issued on success (`POST /api/admin/login`)
+- JWT token valid for 8-hour session.
 - Token stored in `sessionStorage`, sent as `Authorization: Bearer` header; auto-cleared when browser tab is closed.
 - Admin can change email/password from Settings panel (no server restart needed).
 
