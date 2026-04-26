@@ -16,6 +16,7 @@ This system is intended to replace manual order handling and reduce fake inquiri
 - Product ordering through website (Buy Now and Cart flows)
 - Secure checkout with email OTP verification (guest flow — no account required)
 - Optional customer accounts: sign up with email + password, log in via password or email OTP
+- **Forgot Password** — OTP-based password reset flow (`/forgot-password.html`)
 - Profile management: update name, phone, company, delivery address
 - Order history: view past orders, track status, resume 48-hour payment window
 - UPI payment with receipt upload (receipt ownership verified via auth token)
@@ -23,7 +24,7 @@ This system is intended to replace manual order handling and reduce fake inquiri
 - Sample request form with email OTP verification
 
 ### 2.2 Admin Features
-- Separate admin login at `/admin/login.html` (email + password)
+- Separate admin login at `/admin/login.html` (3-step: OTP verification + password)
 - Full CRUD for Products, Shop Items, and Pack Pricing
 - Orders management — view, filter, update delivery status, delete
 - Payments management — view receipts, approve/reject, delete
@@ -42,6 +43,7 @@ This system is intended to replace manual order handling and reduce fake inquiri
 - Page-view analytics tracked server-side; geographic lookup via `ip-api.com`
 - Payment receipt upload and review
 - Order status tracking by admin (Processing → Confirmed → Shipped → Delivered → Cancelled)
+- **Automated email notifications** to customer when admin updates order delivery status
 - SQLite database with auto-migration on startup
 
 ### 2.4 Platform Support
@@ -59,8 +61,8 @@ The following features are **not included in the current scope**:
 - Multi-currency payments
 - International shipping
 - Inventory management
-- Automated email notifications on order status changes (admin status updates do not trigger emails)
-- Forgot Password / password reset flow for customer accounts
+- Refund management (still out of scope)
+- Multi-currency payments
 
 ---
 
