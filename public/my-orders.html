@@ -34,6 +34,15 @@
     <div id="orderList"><div class="loader">Loading your orders…</div></div>
   </div>
 
+  <footer style="background:#06121f;color:#cbd5f5;padding:24px 20px;text-align:center;margin-top:40px;">
+    <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:18px 32px;font-size:13px;margin-bottom:14px;">
+      <span>House No. 555, GNB Road, Guwahati, Assam – 781030</span>
+      <span>✉️ <a href="mailto:info@chemsus.in" style="color:#cbd5f5;text-decoration:none;">info@chemsus.in</a></span>
+      <span>📞 <a href="tel:+918486877575" style="color:#cbd5f5;text-decoration:none;">+91 84868 77575</a></span>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;font-size:12px;">&copy; 2025 ChemSus Technologies Pvt Ltd. All rights reserved.</div>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
   <script>
@@ -225,7 +234,7 @@
       ty += 10;
 
       const tcContent = [
-        { title: 'Order to be placed in favour of:', body: 'ChemSus Technologies Pvt Ltd\nHouse No. 555, GNB Road, North Guwahati, Assam \u2013 781030' },
+        { title: 'Order to be placed in favour of:', body: 'ChemSus Technologies Pvt Ltd\nHouse No. 555, GNB Road, Guwahati, Assam \u2013 781030' },
         { title: 'Validity:', body: 'The prices mentioned in this quotation are valid for 30 days. Revisions may occur due to changes in raw material costs, Government policy, or other reasons beyond our control.' },
         { title: 'Payment:', body: '100% payment against Proforma Invoice. Orders will be processed only after receipt of full advance payment. Proforma Invoice with bank account details will be shared upon receipt of Purchase Order.' },
         { title: 'Delivery:', body: '3\u20134 weeks from receipt of confirmed Purchase Order and advance payment. Partial deliveries may be necessary. We shall not be penalised for delays caused by force majeure events including riots, strikes, Government restrictions, or acts of God.' },

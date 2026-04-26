@@ -82,7 +82,7 @@ and provide a smooth checkout experience — without requiring customers to crea
 #### Quotation Terms & Conditions (current)
 | Term | Value |
 |---|---|
-| **Order in favour of** | ChemSus Technologies Pvt Ltd, House No. 555, GNB Road, North Guwahati, Assam – 781030 |
+| **Order in favour of** | ChemSus Technologies Pvt Ltd, House No. 555, GNB Road, Guwahati, Assam – 781030 |
 | **Validity** | 30 days from quotation date |
 | **Payment** | 100% advance against Proforma Invoice |
 | **Delivery** | 3–4 weeks from confirmed PO and advance payment |
