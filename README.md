@@ -47,10 +47,10 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 
 * Register with email + password (OTP email verification)
 * Log in via password or email OTP
+* **Forgot Password** — OTP-based password reset flow at `/forgot-password.html`
 * Profile management — name, phone, company, delivery address (with branded profile hero page)
 * Order history with payment status tracking
 * Guest checkout also supported (no account required)
-* **Note:** Password reset ("Forgot Password") is not yet implemented — planned for a future release
 
 ### 📧 Email OTP (Checkout & Verification)
 
@@ -78,6 +78,7 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 | `/signup.html` | Customer registration with email verification |
 | `/profile.html` | Customer profile & delivery address |
 | `/my-orders.html` | Customer order history with View Quotation and Download PDF per order |
+| `/forgot-password.html` | OTP-based customer password reset |
 | `/collaboration.html` | Collaboration info |
 | `/recognitions.html` | Awards & recognitions |
 | `/investors.html` | Investor information |
@@ -147,7 +148,7 @@ ChemSus/
 │   │   │   └── checkout-gate.js   # Cart & checkout flow logic
 │   │   ├── uploads/          # Admin-uploaded product images
 │   │   └── receipts/         # Customer payment receipts
-│   ├── products/             # Individual product detail pages (8 products)
+│   ├── products/             # Individual product detail pages (7 products)
 │   ├── index.html            # Home page
 │   ├── login.html            # Customer login
 │   ├── signup.html           # Customer registration
@@ -227,7 +228,9 @@ Database auto-migrates on startup — new columns and indexes are added automati
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/admin/login` | Admin login |
+| POST | `/api/admin/login/send-otp` | Step 1 — Send OTP to admin email |
+| POST | `/api/admin/login/verify-otp` | Step 2 — Verify OTP code |
+| POST | `/api/admin/login` | Step 3 — Complete login with password, receive JWT |
 | POST | `/api/admin/change-credentials` | Update admin email/password |
 | GET | `/api/admin/me` | Check admin session |
 | GET | `/api/admin/products-page` | List products |
@@ -277,6 +280,9 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | GET | `/api/customer/profile` | Get profile (requires auth) |
 | PUT | `/api/customer/profile` | Update profile (requires auth) |
 | GET | `/api/customer/orders` | Get order history (requires auth) |
+| POST | `/api/customer/logout` | Logout (clears session server-side) |
+| POST | `/api/customer/forgot-password` | Send password reset OTP |
+| POST | `/api/customer/reset-password` | Reset password with OTP token |
 
 ### Public APIs
 
