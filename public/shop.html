@@ -484,23 +484,23 @@
         const cartIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink:0"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg> Add to Cart`;
 
         const LABEL_IMAGES = {
-          'Sodium Levulinate': 'assets/sod-label.webp',
-          'Methyl Levulinate': 'assets/methyl-label.webp',
-          'Ethyl Levulinate': 'assets/ethyl-label.webp',
-          'Calcium Levulinate Dihydrate': 'assets/cal-label.webp',
-          'DALA': 'assets/dala-label.webp',
-          '5-Aminolevulinic acid hydrochloride': 'assets/dala-label.webp',
-          '5-HMF': 'assets/5hmf-label.webp',
-          'Levulinic Acid': 'assets/levuli-llabel.webp',
-          'Calcium Levulinate Dihydrate (CL)': 'assets/cal-label.webp',
-          'Sodium Levulinate (SL)': 'assets/sod-label.webp',
-          'Ethyl Levulinate (EL)': 'assets/ethyl-label.webp',
-          'Methyl Levulinate (ML)': 'assets/methyl-label.webp',
-          'Levulinic Acid (LA)': 'assets/levuli-llabel.webp',
-          'Delta-aminolevulinic acid (DALA)': 'assets/dala-label.webp',
-          '5-Hydroxymethylfurfural (5-HMF)': 'assets/5hmf-label.webp',
-          '5-Hydroxymethylfurfural': 'assets/5hmf-label.webp',
-          '5-Hydroxymethyl furfural (HMF)': 'assets/5hmf-label.webp'
+          'Levulinic Acid': 'assets/product-labels/la-label.png',
+          'Levulinic Acid (LA)': 'assets/product-labels/la-label.png',
+          'Sodium Levulinate': 'assets/product-labels/sl-label.png',
+          'Sodium Levulinate (SL)': 'assets/product-labels/sl-label.png',
+          'Methyl Levulinate': 'assets/product-labels/ml-label.png',
+          'Methyl Levulinate (ML)': 'assets/product-labels/ml-label.png',
+          'Ethyl Levulinate': 'assets/product-labels/el-label.png',
+          'Ethyl Levulinate (EL)': 'assets/product-labels/el-label.png',
+          'Calcium Levulinate Dihydrate': 'assets/product-labels/cld-label.png',
+          'Calcium Levulinate Dihydrate (CL)': 'assets/product-labels/cld-label.png',
+          '5-Aminolevulinic acid hydrochloride': 'assets/product-labels/5aah-label.png',
+          'DALA': 'assets/product-labels/5aah-label.png',
+          'Delta-aminolevulinic acid (DALA)': 'assets/product-labels/5aah-label.png',
+          '5-HMF': 'assets/product-labels/5hmf-label.png',
+          '5-Hydroxymethylfurfural': 'assets/product-labels/5hmf-label.png',
+          '5-Hydroxymethylfurfural (5-HMF)': 'assets/product-labels/5hmf-label.png',
+          '5-Hydroxymethyl furfural (HMF)': 'assets/product-labels/5hmf-label.png'
         };
 
         function resolveLabelImg(name, fallbackName) {
@@ -510,13 +510,13 @@
           }
           // Partial case-insensitive match as last resort
           const lower = candidates[0].toLowerCase();
-          if (lower.includes('calcium')) return 'assets/cal-label.webp';
-          if (lower.includes('sodium levulinate')) return 'assets/sod-label.webp';
-          if (lower.includes('ethyl levulinate')) return 'assets/ethyl-label.webp';
-          if (lower.includes('methyl levulinate')) return 'assets/methyl-label.webp';
-          if (lower.includes('levulinic acid')) return 'assets/levuli-llabel.webp';
-          if (lower.includes('dala') || lower.includes('aminolevulinic')) return 'assets/dala-label.webp';
-          if (lower.includes('hmf') || lower.includes('hydroxymethyl')) return 'assets/5hmf-label.webp';
+          if (lower.includes('calcium')) return 'assets/product-labels/cld-label.png';
+          if (lower.includes('sodium levulinate')) return 'assets/product-labels/sl-label.png';
+          if (lower.includes('ethyl levulinate')) return 'assets/product-labels/el-label.png';
+          if (lower.includes('methyl levulinate')) return 'assets/product-labels/ml-label.png';
+          if (lower.includes('levulinic acid')) return 'assets/product-labels/la-label.png';
+          if (lower.includes('dala') || lower.includes('aminolevulinic')) return 'assets/product-labels/5aah-label.png';
+          if (lower.includes('hmf') || lower.includes('hydroxymethyl')) return 'assets/product-labels/5hmf-label.png';
           return 'assets/logo.webp';
         }
         const labelImg = resolveLabelImg(item.name, raw.name);
