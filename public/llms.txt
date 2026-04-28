@@ -29,10 +29,10 @@ ChemSus supplies the following high-purity chemicals for R&D and industrial use 
 - Uses: precursor to FDCA for bio-PEF plastic, specialty polymers, pharmaceuticals, antifungal agents
 - Page: https://chemsus.in/products/5-hmf.html
 
-### 5-Aminolevulinic Acid / DALA (CAS 106-60-5)
-- Molecular Formula: C5H9NO3 | MW: 131.13 g/mol
-- IUPAC: 5-amino-4-oxopentanoic acid
-- Uses: photodynamic therapy (PDT), biodegradable herbicide, plant growth regulator, porphyrin biosynthesis
+### 5-Aminolevulinic Acid Hydrochloride (CAS 5451-09-2)
+- Molecular Formula: C5H10ClNO3 | MW: 167.59 g/mol
+- IUPAC: 5-amino-4-oxopentanoic acid hydrochloride
+- Uses: photodynamic therapy (PDT), oncology API (photosensitiser prodrug), biodegradable herbicide, plant growth regulator, porphyrin biosynthesis
 - Page: https://chemsus.in/products/dala.html
 
 ### Sodium Levulinate (CAS 19856-23-6)
