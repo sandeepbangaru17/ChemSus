@@ -421,6 +421,24 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_collab_notify_email ON collab_notify(email);
+
+    CREATE TABLE IF NOT EXISTS distributor_applications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      applicant_type TEXT NOT NULL DEFAULT 'company',
+      full_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      company_name TEXT NOT NULL DEFAULT '',
+      region TEXT NOT NULL,
+      industry_background TEXT NOT NULL,
+      years_experience TEXT NOT NULL,
+      experience_description TEXT NOT NULL,
+      interest_description TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'new',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_distributor_applications_status ON distributor_applications(status);
   `);
 
   await seed();

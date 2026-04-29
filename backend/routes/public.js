@@ -156,6 +156,58 @@ module.exports = function (deps) {
         res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
     );
 
+    router.post("/distributor-application", async (req, res) => {
+        try {
+            const {
+                applicant_type,
+                full_name,
+                email: rawEmail,
+                phone,
+                company_name,
+                region,
+                industry_background,
+                years_experience,
+                experience_description,
+                interest_description
+            } = req.body || {};
+
+            const email = deps.normalizeEmail(rawEmail);
+
+            if (!full_name || !full_name.trim())
+                return res.status(400).json({ error: "Full name is required." });
+            if (!deps.isValidEmail(email))
+                return res.status(400).json({ error: "Valid email is required." });
+            if (!phone || !phone.trim())
+                return res.status(400).json({ error: "Phone number is required." });
+            if (!region || !region.trim())
+                return res.status(400).json({ error: "Region of interest is required." });
+            if (!industry_background || !industry_background.trim())
+                return res.status(400).json({ error: "Industry background is required." });
+            if (!years_experience || !years_experience.trim())
+                return res.status(400).json({ error: "Years of experience is required." });
+            if (!experience_description || !experience_description.trim())
+                return res.status(400).json({ error: "Experience description is required." });
+            if (!interest_description || !interest_description.trim())
+                return res.status(400).json({ error: "Interest description is required." });
+
+            const type = (applicant_type === 'individual') ? 'individual' : 'company';
+
+            await deps.run(
+                `INSERT INTO distributor_applications
+                 (applicant_type, full_name, email, phone, company_name, region, industry_background, years_experience, experience_description, interest_description)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [type, full_name.trim(), email, phone.trim(), (company_name || '').trim(),
+                 region.trim(), industry_background.trim(), years_experience.trim(),
+                 experience_description.trim(), interest_description.trim()]
+            );
+
+            res.json({ ok: true, message: "Your distributorship application has been submitted. We will get back to you soon!" });
+        } catch (e) {
+            console.error("Distributor application error:", e);
+            res.status(500).json({ error: "Failed to submit application. Please try again." });
+        }
+    });
+
     router.post("/collab-notify", async (req, res) => {
         try {
             const raw = String(req.body?.email || '').trim();
