@@ -12,6 +12,8 @@
   <meta name="keywords" content="levulinic acid India, 5-HMF supplier India, DALA aminolevulinic acid, sodium levulinate, calcium levulinate dihydrate, ethyl levulinate, methyl levulinate, sustainable specialty chemicals, biomass-derived chemicals, green chemistry India, ChemSus Technologies">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://chemsus.in/">
+  <link rel="preload" href="assets/vid-logo.mp4" as="video" type="video/mp4">
+  <link rel="preload" href="assets/logo.webp" as="image" fetchpriority="high">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
   <meta property="og:title" content="ChemSus Technologies | Buy Levulinic Acid, 5-HMF, DALA & More — India">
@@ -127,13 +129,13 @@
 <body>
   <div id="chemIntro" aria-hidden="true">
     <div class="intro-bg-video-wrapper">
-      <video class="intro-bg-video" autoplay muted loop playsinline preload="metadata">
+      <video class="intro-bg-video" autoplay muted loop playsinline preload="auto">
         <source src="assets/vid-logo.mp4" type="video/mp4">
       </video>
     </div>
     <div class="intro-overlay"></div>
     <div class="chem-intro-content">
-      <img src="assets/logo.webp" alt="ChemSus Logo" class="chem-intro-logo" width="86" height="114">
+      <img src="assets/logo.webp" alt="ChemSus Logo" class="chem-intro-logo" width="86" height="114" fetchpriority="high">
       <h1 class="chem-intro-title">Chem<span>Sus</span></h1>
       <p class="chem-intro-subtitle">Renewable Biomass to Chemistry</p>
     </div>
@@ -399,13 +401,18 @@
       document.body.classList.remove('no-scroll');
     }
 
+    const PRODUCT_KEYWORDS = ['levulinic', 'sodium levulinate', 'methyl levulinate', 'ethyl levulinate',
+      'calcium levulinate', 'hmf', 'hydroxymethyl', 'furfural', 'dala', 'aminolevulinic', '5-hmf', '5-aah'];
+
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      const query = document.getElementById('siteSearchInput').value.trim().toLowerCase();
+      const raw = document.getElementById('siteSearchInput').value.trim();
+      const query = raw.toLowerCase();
       if (!query) return;
 
-      if (query.includes('product') || query.includes('shop')) {
-        window.location.href = 'products.html';
+      const isProductSearch = PRODUCT_KEYWORDS.some(k => query.includes(k));
+      if (isProductSearch || query.includes('product') || query.includes('shop')) {
+        window.location.href = 'shop.html?q=' + encodeURIComponent(raw);
       } else if (query.includes('recognition') || query.includes('award')) {
         window.location.href = 'recognitions.html';
       } else if (query.includes('investor') || query.includes('funding')) {
@@ -425,7 +432,7 @@
       } else if (query.includes('admin') || query.includes('login')) {
         window.location.href = '/admin/admin.html';
       } else {
-        alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders, admin.');
+        window.location.href = 'shop.html?q=' + encodeURIComponent(raw);
       }
     });
 
