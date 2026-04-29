@@ -444,6 +444,7 @@
         card.className = `product-card ${!isInStock ? 'out-of-stock' : ''}`;
         card.setAttribute('data-name', item.name);
         card.setAttribute('data-item-id', item.id);
+        card.setAttribute('data-search', [item.name, item.subtitle, ...item.features].join(' ').toLowerCase());
 
         const pricingTable = PRODUCT_PRICING[item.id] || null;
         const packOptions = pricingTable ? Object.keys(pricingTable) : [];
@@ -632,13 +633,33 @@
       syncUI();
     }
 
+    function filterProducts(q) {
+      const grid = document.getElementById('productsGrid');
+      const intro = document.getElementById('sectionIntro');
+      if (!grid) return;
+      const term = q.trim().toLowerCase();
+      const cards = grid.querySelectorAll('.product-card');
+      let visible = 0;
+      cards.forEach(card => {
+        const searchText = card.getAttribute('data-search') || '';
+        const match = !term || searchText.includes(term);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      if (term && intro) {
+        intro.textContent = visible === 0
+          ? `No products match "${q}". Try: levulinic, HMF, DALA, methyl, ethyl, sodium, calcium.`
+          : `${visible} product${visible !== 1 ? 's' : ''} found for "${q}".`;
+      }
+    }
+
     document.getElementById('siteSearchForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      const q = document.getElementById('siteSearchInput').value.trim().toLowerCase();
-      if (!q) return;
-      if (q.includes('cart')) window.location.href = 'cart.html';
-      else if (q.includes('product') || q.includes('shop')) window.location.href = 'products.html';
-      else window.location.href = 'index.html';
+      filterProducts(document.getElementById('siteSearchInput').value);
+    });
+
+    document.getElementById('siteSearchInput').addEventListener('input', function () {
+      filterProducts(this.value);
     });
 
     window.toggleSidebar = toggleSidebar;
@@ -650,6 +671,11 @@
       await renderProducts();
       saveCart();
       syncUI();
+      const urlQ = new URLSearchParams(window.location.search).get('q');
+      if (urlQ) {
+        document.getElementById('siteSearchInput').value = urlQ;
+        filterProducts(urlQ);
+      }
       window.addEventListener('storage', function (e) {
         if (e.key === 'chemsusCart') {
           cart = JSON.parse(localStorage.getItem('chemsusCart')) || [];
