@@ -439,6 +439,16 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_distributor_applications_status ON distributor_applications(status);
+
+    CREATE TABLE IF NOT EXISTS callback_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT NOT NULL,
+      page TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'new',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_callback_requests_status ON callback_requests(status);
   `);
 
   await seed();
