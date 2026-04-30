@@ -225,5 +225,42 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Callback Request ----------------
+    router.post("/callback", async (req, res) => {
+        try {
+            const { phone: rawPhone, page } = req.body || {};
+            const phone = String(rawPhone || '').trim().replace(/[\s\-().+]/g, '');
+            if (!phone || !/^[0-9]{10,15}$/.test(phone)) {
+                return res.status(400).json({ error: "Valid phone number required (10–15 digits)." });
+            }
+            const safePage = String(page || '').trim().slice(0, 200);
+            await deps.run(
+                `INSERT INTO callback_requests (phone, page) VALUES (?, ?)`,
+                [phone, safePage]
+            );
+            sendCallbackWhatsApp(phone, safePage);
+            res.json({ ok: true });
+        } catch (e) {
+            console.error("Callback request error:", e);
+            res.status(500).json({ error: "Failed to save. Please try again." });
+        }
+    });
+
     return router;
 };
+
+function sendCallbackWhatsApp(phone, page) {
+    const adminPhone = process.env.ADMIN_WHATSAPP_PHONE;
+    const apiKey = process.env.CALLMEBOT_APIKEY;
+    if (!adminPhone || !apiKey) return;
+
+    const text = `ChemSus Callback Request%0APhone: ${phone}%0APage: ${page || '/'}`;
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(adminPhone)}&text=${text}&apikey=${encodeURIComponent(apiKey)}`;
+
+    const https = require('https');
+    https.get(url, (resp) => {
+        resp.resume();
+    }).on('error', (e) => {
+        console.error('CallMeBot WhatsApp error:', e.message);
+    });
+}
