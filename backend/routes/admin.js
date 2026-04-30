@@ -961,5 +961,83 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Distributor Applications ----------------
+    router.get("/distributor-applications", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(`SELECT * FROM distributor_applications ORDER BY created_at DESC`);
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.patch("/distributor-applications/:id/status", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            const { status } = req.body || {};
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            const allowed = ['new', 'reviewing', 'contacted', 'approved', 'rejected'];
+            if (!allowed.includes(status)) return res.status(400).json({ error: "Invalid status" });
+            await run(`UPDATE distributor_applications SET status=? WHERE id=?`, [status, id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.delete("/distributor-applications/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM distributor_applications WHERE id=?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM distributor_applications`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='distributor_applications'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    // ---------------- Callback Requests ----------------
+    router.get("/callback-requests", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(`SELECT * FROM callback_requests ORDER BY created_at DESC`);
+            res.json({ ok: true, rows });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.patch("/callback-requests/:id/status", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            const { status } = req.body || {};
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            const allowed = ['new', 'called', 'done'];
+            if (!allowed.includes(status)) return res.status(400).json({ error: "Invalid status" });
+            await run(`UPDATE callback_requests SET status=? WHERE id=?`, [status, id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.delete("/callback-requests/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM callback_requests WHERE id=?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM callback_requests`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='callback_requests'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
     return router;
 };

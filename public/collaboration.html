@@ -70,6 +70,7 @@
       <li><a href="collaboration.html" class="active"><span class="nav-icon">🤝</span> Collaboration</a></li>
       <li><a href="recognitions.html"><span class="nav-icon">🏆</span> Recognitions</a></li>
       <li><a href="investors.html"><span class="nav-icon">💼</span> Investors</a></li>
+      <li><a href="distributorship.html"><span class="nav-icon">🚚</span> Distributorship</a></li>
       <li class="nav-section-label">Support</li>
       <li><a href="contact.html"><span class="nav-icon">✉️</span> Contact us</a></li>
       <li><a href="request-sample.html"><span class="nav-icon">🧫</span> Request Sample</a></li>
@@ -321,6 +322,8 @@
         window.location.href = 'request-sample.html';
       } else if (query.includes('order') || query.includes('orders')) {
         window.location.href = 'orders.html';
+      } else if (q.includes('distribut')) {
+        window.location.href = 'distributorship.html';
       } else {
         alert('No matching page. Try: home, about, products, shop, collaboration, recognitions, investors, contact, sample, orders.');
       }
@@ -417,6 +420,7 @@
       <button id="notifySubmitBtn" class="notify-btn" style="margin-top:0;width:100%;" onclick="submitNotify()">Notify Me</button>
     </div>
   </div>
+<script src="/assets/callback-widget.js"></script>
 </body>
 
 </html>

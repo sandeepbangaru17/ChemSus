@@ -156,6 +156,58 @@ module.exports = function (deps) {
         res.json({ ok: true, apiBase: "/api", backendURL: req.headers.host })
     );
 
+    router.post("/distributor-application", async (req, res) => {
+        try {
+            const {
+                applicant_type,
+                full_name,
+                email: rawEmail,
+                phone,
+                company_name,
+                region,
+                industry_background,
+                years_experience,
+                experience_description,
+                interest_description
+            } = req.body || {};
+
+            const email = deps.normalizeEmail(rawEmail);
+
+            if (!full_name || !full_name.trim())
+                return res.status(400).json({ error: "Full name is required." });
+            if (!deps.isValidEmail(email))
+                return res.status(400).json({ error: "Valid email is required." });
+            if (!phone || !phone.trim())
+                return res.status(400).json({ error: "Phone number is required." });
+            if (!region || !region.trim())
+                return res.status(400).json({ error: "Region of interest is required." });
+            if (!industry_background || !industry_background.trim())
+                return res.status(400).json({ error: "Industry background is required." });
+            if (!years_experience || !years_experience.trim())
+                return res.status(400).json({ error: "Years of experience is required." });
+            if (!experience_description || !experience_description.trim())
+                return res.status(400).json({ error: "Experience description is required." });
+            if (!interest_description || !interest_description.trim())
+                return res.status(400).json({ error: "Interest description is required." });
+
+            const type = (applicant_type === 'individual') ? 'individual' : 'company';
+
+            await deps.run(
+                `INSERT INTO distributor_applications
+                 (applicant_type, full_name, email, phone, company_name, region, industry_background, years_experience, experience_description, interest_description)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [type, full_name.trim(), email, phone.trim(), (company_name || '').trim(),
+                 region.trim(), industry_background.trim(), years_experience.trim(),
+                 experience_description.trim(), interest_description.trim()]
+            );
+
+            res.json({ ok: true, message: "Your distributorship application has been submitted. We will get back to you soon!" });
+        } catch (e) {
+            console.error("Distributor application error:", e);
+            res.status(500).json({ error: "Failed to submit application. Please try again." });
+        }
+    });
+
     router.post("/collab-notify", async (req, res) => {
         try {
             const raw = String(req.body?.email || '').trim();
@@ -173,5 +225,42 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Callback Request ----------------
+    router.post("/callback", async (req, res) => {
+        try {
+            const { phone: rawPhone, page } = req.body || {};
+            const phone = String(rawPhone || '').trim().replace(/[\s\-().+]/g, '');
+            if (!phone || !/^[0-9]{10,15}$/.test(phone)) {
+                return res.status(400).json({ error: "Valid phone number required (10–15 digits)." });
+            }
+            const safePage = String(page || '').trim().slice(0, 200);
+            await deps.run(
+                `INSERT INTO callback_requests (phone, page) VALUES (?, ?)`,
+                [phone, safePage]
+            );
+            sendCallbackWhatsApp(phone, safePage);
+            res.json({ ok: true });
+        } catch (e) {
+            console.error("Callback request error:", e);
+            res.status(500).json({ error: "Failed to save. Please try again." });
+        }
+    });
+
     return router;
 };
+
+function sendCallbackWhatsApp(phone, page) {
+    const adminPhone = process.env.ADMIN_WHATSAPP_PHONE;
+    const apiKey = process.env.CALLMEBOT_APIKEY;
+    if (!adminPhone || !apiKey) return;
+
+    const text = `ChemSus Callback Request%0APhone: ${phone}%0APage: ${page || '/'}`;
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(adminPhone)}&text=${text}&apikey=${encodeURIComponent(apiKey)}`;
+
+    const https = require('https');
+    https.get(url, (resp) => {
+        resp.resume();
+    }).on('error', (e) => {
+        console.error('CallMeBot WhatsApp error:', e.message);
+    });
+}
