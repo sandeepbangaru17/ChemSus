@@ -71,9 +71,11 @@
     if (!el) return;
     const hasWA = !!document.getElementById('ib-wa');
     const hasBrochure = !!document.querySelector('.download-section');
+    const hasFloatingCart = !!document.querySelector('.floating-cart-btn');
     let levels = 0;
     if (hasWA) levels++;
     if (hasBrochure) levels++;
+    if (hasFloatingCart) levels++;
     const isMobile = window.innerWidth <= 580;
     const fabSize = isMobile ? 50 : FAB_SIZE;
     const right = isMobile ? 20 : FAB_RIGHT;
