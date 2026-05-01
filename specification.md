@@ -158,7 +158,22 @@ and provide a smooth checkout experience — without requiring customers to crea
 - Sample requests require email OTP verification before submission.
 - Stored in `sample_requests` table with full applicant details.
 
-### 4.9 Analytics
+### 4.9 Callback Requests Management
+- Admin can view all callback requests submitted via the callback widget on public pages.
+- Admin can update status: `new` → `called` → `done`.
+- Admin can delete callback request records.
+
+### 4.10 Bulk Order Enquiries Management
+- Admin can view all bulk order enquiries submitted via `/bulk-order.html`.
+- Admin can update status: `new` → `contacted` → `quoted` → `done`.
+- Admin can delete bulk order enquiry records.
+
+### 4.11 Distributor Applications Management
+- Admin can view all distributor / channel partner applications submitted via `/distributorship.html`.
+- Admin can update status: `new` → `reviewing` → `contacted` → `approved` → `rejected`.
+- Admin can delete distributor application records.
+
+### 4.12 Analytics
 - Admin dashboard includes an **Analytics** section showing:
   - Total page views for the last 30 days and last 12 months (summary cards)
   - Daily bar chart for the last 30 days

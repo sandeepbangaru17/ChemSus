@@ -86,6 +86,8 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 | `/request-sample.html` | Sample request form (with email OTP) |
 | `/quotation.html` | Order Placed page — download/view quotation PDF (ref format: `CST-YYYY-YY-NNNN`) |
 | `/thankyou.html` | Thank you / confirmation page |
+| `/bulk-order.html` | Bulk order request form |
+| `/distributorship.html` | Distributorship / channel partner information and application form |
 
 ### 🛠️ Admin Dashboard (`/admin/admin.html`)
 
@@ -103,6 +105,9 @@ Built with **Node.js + Express + SQLite** — lightweight, fast, and easy to dep
 * Brochure URL management
 * **Analytics** — sidebar section showing daily/monthly page view charts (Chart.js) and a country breakdown table with flag emojis and share bars
 * **Change admin email/password** without restarting server
+* Callback requests — view, update status (new / called / done), delete
+* Distributor applications — view, update status (new / reviewing / contacted / approved / rejected), delete
+* Bulk orders — view, update status (new / contacted / quoted / done), delete
 * Fully mobile-responsive with collapsible sidebar
 
 ---
@@ -148,7 +153,7 @@ ChemSus/
 │   │   │   └── checkout-gate.js   # Cart & checkout flow logic
 │   │   ├── uploads/          # Admin-uploaded product images
 │   │   └── receipts/         # Customer payment receipts
-│   ├── products/             # Individual product detail pages (7 products)
+│   ├── products/             # Individual product detail pages (8 products)
 │   ├── index.html            # Home page
 │   ├── login.html            # Customer login
 │   ├── signup.html           # Customer registration
@@ -217,6 +222,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | `contact_messages` | Contact form submissions |
 | `collab_notify` | Emails registered for collaboration portal launch notification |
 | `page_views` | Page view analytics — path, IP, country, city, timestamp |
+| `callback_requests` | Callback request submissions from the callback widget |
+| `bulk_orders` | Bulk order enquiries submitted via `/bulk-order.html` |
+| `distributor_applications` | Distributorship / channel partner application form submissions |
 
 Database auto-migrates on startup — new columns and indexes are added automatically.
 
@@ -263,6 +271,15 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | DELETE | `/api/admin/customers/:id` | Delete customer account |
 | GET | `/api/admin/collab-notify` | List collaboration notify registrations |
 | DELETE | `/api/admin/collab-notify/:id` | Delete collab notify entry |
+| GET | `/api/admin/callback-requests` | List callback requests |
+| PATCH | `/api/admin/callback-requests/:id/status` | Update callback status |
+| DELETE | `/api/admin/callback-requests/:id` | Delete callback request |
+| GET | `/api/admin/bulk-orders` | List bulk order enquiries |
+| PATCH | `/api/admin/bulk-orders/:id/status` | Update bulk order status |
+| DELETE | `/api/admin/bulk-orders/:id` | Delete bulk order enquiry |
+| GET | `/api/admin/distributor-applications` | List distributor applications |
+| PATCH | `/api/admin/distributor-applications/:id/status` | Update distributor application status |
+| DELETE | `/api/admin/distributor-applications/:id` | Delete distributor application |
 | POST | `/api/admin/upload` | Upload site assets |
 | POST | `/api/admin/brochure` | Save brochure URL |
 | GET | `/api/admin/analytics/views` | Page view counts (30 days + 12 months) |
@@ -300,6 +317,9 @@ Database auto-migrates on startup — new columns and indexes are added automati
 | POST | `/api/sample-request` | Submit sample request |
 | POST | `/api/contact` | Submit contact form |
 | POST | `/api/collab-notify` | Register email for collaboration portal notification |
+| POST | `/api/callback` | Submit callback request |
+| POST | `/api/bulk-order` | Submit bulk order enquiry |
+| POST | `/api/distributor-application` | Submit distributorship application |
 
 ---
 

@@ -1039,5 +1039,44 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Bulk Orders ----------------
+    router.get("/bulk-orders", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(`SELECT * FROM bulk_orders ORDER BY created_at DESC`);
+            res.json({ ok: true, rows });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.patch("/bulk-orders/:id/status", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            const { status } = req.body || {};
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            const allowed = ['new', 'contacted', 'quoted', 'done'];
+            if (!allowed.includes(status)) return res.status(400).json({ error: "Invalid status" });
+            await run(`UPDATE bulk_orders SET status=? WHERE id=?`, [status, id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
+    router.delete("/bulk-orders/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM bulk_orders WHERE id=?`, [id]);
+            const remaining = await get(`SELECT COUNT(*) AS c FROM bulk_orders`);
+            if ((remaining?.c || 0) === 0) {
+                await run(`DELETE FROM sqlite_sequence WHERE name='bulk_orders'`);
+            }
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error", details: String(e) });
+        }
+    });
+
     return router;
 };

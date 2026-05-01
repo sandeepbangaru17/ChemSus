@@ -35,6 +35,9 @@ This system is intended to replace manual order handling and reduce fake inquiri
 - Brochure URL management
 - Change admin email and password from Settings panel
 - **Analytics dashboard** — page views over 30 days / 12 months with charts, and visitor breakdown by country
+- Callback requests management — view, update status (new / called / done), delete
+- Bulk order enquiries management — view, update status (new / contacted / quoted / done), delete
+- Distributor applications management — view, update status (new / reviewing / contacted / approved / rejected), delete
 
 ### 2.3 System Capabilities
 - Email OTP generation and validation (expiry, rate limiting, one-time use)
