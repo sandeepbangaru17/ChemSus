@@ -449,6 +449,23 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_callback_requests_status ON callback_requests(status);
+
+    CREATE TABLE IF NOT EXISTS bulk_orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      company TEXT NOT NULL DEFAULT '',
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      product TEXT NOT NULL,
+      quantity TEXT NOT NULL,
+      timeline TEXT NOT NULL DEFAULT '',
+      destination TEXT NOT NULL DEFAULT '',
+      notes TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'new',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_bulk_orders_status ON bulk_orders(status);
   `);
 
   await seed();
