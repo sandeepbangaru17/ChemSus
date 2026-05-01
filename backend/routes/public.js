@@ -225,6 +225,30 @@ module.exports = function (deps) {
         }
     });
 
+    // ---------------- Bulk Order Enquiry ----------------
+    router.post("/bulk-order", async (req, res) => {
+        try {
+            const { name, company, email: rawEmail, phone, product, quantity, timeline, destination, notes } = req.body || {};
+            const email = deps.normalizeEmail(rawEmail);
+            if (!name || !name.trim()) return res.status(400).json({ error: "Name is required." });
+            if (!deps.isValidEmail(email)) return res.status(400).json({ error: "Valid email is required." });
+            if (!phone || !phone.trim()) return res.status(400).json({ error: "Phone is required." });
+            if (!product || !product.trim()) return res.status(400).json({ error: "Product is required." });
+            if (!quantity || !quantity.trim()) return res.status(400).json({ error: "Quantity is required." });
+            await deps.run(
+                `INSERT INTO bulk_orders (name, company, email, phone, product, quantity, timeline, destination, notes)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [name.trim(), (company || '').trim(), email, phone.trim(),
+                 product.trim(), quantity.trim(), (timeline || '').trim(),
+                 (destination || '').trim(), (notes || '').trim()]
+            );
+            res.json({ ok: true });
+        } catch (e) {
+            console.error("Bulk order error:", e);
+            res.status(500).json({ error: "Failed to submit. Please try again." });
+        }
+    });
+
     // ---------------- Callback Request ----------------
     router.post("/callback", async (req, res) => {
         try {
