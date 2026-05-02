@@ -63,7 +63,7 @@
     .search-form{position:relative}
     .search-input{width:100%;padding:8px 32px 8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.5);background:rgba(0,0,0,0.2);color:#fff;font-size:12.5px;outline:none}
     .search-input::placeholder{color:#d1d5db}
-    .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#fff;pointer-events:none}
+    .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#fff;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
 
     /* ── Layout ── */
     .main-wrapper{margin-left:0;width:100%;flex:1;min-height:100vh;display:flex;flex-direction:column;transition:margin-left 0.3s ease}
@@ -190,11 +190,11 @@
     <div class="search-section">
       <form class="search-form" id="siteSearchForm">
         <input type="search" id="siteSearchInput" class="search-input" placeholder="Search pages..." aria-label="Search pages">
-        <span class="search-icon">
+        <button type="submit" class="search-icon" aria-label="Search">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
           </svg>
-        </span>
+        </button>
       </form>
     </div>
   </nav>
@@ -209,6 +209,13 @@
     </section>
 
     <main>
+
+      <!-- Invite paragraph -->
+      <div class="info-section">
+        <p class="content-text">ChemSus Technologies Pvt. Ltd. invites dynamic distributors and channel partners to collaborate in expanding the reach of its innovative, sustainable chemical solutions across India and international markets. With a strong foundation in green chemistry and advanced process technologies, ChemSus offers a growing portfolio of high-quality, eco-friendly products catering to pharmaceuticals, specialty chemicals, personal care, and industrial applications.</p>
+        <p class="content-text">We seek partners with strong market presence, technical understanding, and a commitment to sustainability to join us in delivering value-driven products to diverse industries. As a ChemSus distributor, you will benefit from competitive margins, technical support, consistent supply, and association with a forward-looking company focused on environmentally responsible innovation.</p>
+        <p class="content-text" style="margin-bottom:0;">Interested organizations/individuals are encouraged to connect with us by filling the below given form to explore mutually beneficial opportunities.</p>
+      </div>
 
       <!-- Why distribute -->
       <div class="info-section">
@@ -274,13 +281,6 @@
             Delta-Aminolevulinic Acid (DALA)
           </li>
         </ul>
-      </div>
-
-      <!-- Invite paragraph -->
-      <div class="info-section">
-        <p class="content-text">ChemSus Technologies Pvt. Ltd. invites dynamic distributors and channel partners to collaborate in expanding the reach of its innovative, sustainable chemical solutions across India and international markets. With a strong foundation in green chemistry and advanced process technologies, ChemSus offers a growing portfolio of high-quality, eco-friendly products catering to pharmaceuticals, specialty chemicals, personal care, and industrial applications.</p>
-        <p class="content-text">We seek partners with strong market presence, technical understanding, and a commitment to sustainability to join us in delivering value-driven products to diverse industries. As a ChemSus distributor, you will benefit from competitive margins, technical support, consistent supply, and association with a forward-looking company focused on environmentally responsible innovation.</p>
-        <p class="content-text" style="margin-bottom:0;">Interested organisations and individuals are encouraged to connect with us by filling the form below to explore mutually beneficial opportunities.</p>
       </div>
 
       <!-- Application form -->
