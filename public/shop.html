@@ -504,7 +504,7 @@
           '5-Hydroxymethylfurfural': 'assets/product-labels/5hmf-label.webp',
           '5-Hydroxymethylfurfural (5-HMF)': 'assets/product-labels/5hmf-label.webp',
           '5-Hydroxymethyl furfural (HMF)': 'assets/product-labels/5hmf-label.webp',
-          'Disodium Succinate Hexahydrate': 'assets/logo.webp'
+          'Disodium Succinate Hexahydrate': 'assets/product-labels/dsh-label.webp'
         };
 
         function resolveLabelImg(name, fallbackName) {
@@ -521,7 +521,7 @@
           if (lower.includes('levulinic acid')) return 'assets/product-labels/la-label.webp';
           if (lower.includes('dala') || lower.includes('aminolevulinic')) return 'assets/product-labels/5aah-label.webp';
           if (lower.includes('hmf') || lower.includes('hydroxymethyl')) return 'assets/product-labels/5hmf-label.webp';
-          if (lower.includes('disodium') || lower.includes('succinate')) return 'assets/logo.webp';
+          if (lower.includes('disodium') || lower.includes('succinate')) return 'assets/product-labels/dsh-label.webp';
           return 'assets/logo.webp';
         }
         const labelImg = resolveLabelImg(item.name, raw.name);
