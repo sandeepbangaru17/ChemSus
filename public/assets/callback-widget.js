@@ -118,27 +118,26 @@
     }
 
     btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.textContent = 'Opening…';
 
-    try {
-      const res = await fetch('/api/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, page: window.location.pathname })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
-      msg.textContent = "Thanks! We'll call you back shortly.";
-      msg.className = 'ok';
-      input.value = '';
-      setTimeout(cbClose, 3000);
-    } catch (e) {
-      msg.textContent = e.message || 'Something went wrong. Please try again.';
-      msg.className = 'err';
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Call Me';
-    }
+    // Save to DB (best-effort, don't block WhatsApp open)
+    fetch('/api/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, page: window.location.pathname })
+    }).catch(() => {});
+
+    // Open WhatsApp with pre-filled message
+    const waText = encodeURIComponent('Hi, I would like to request a callback. My number is ' + phone);
+    window.open('https://wa.me/918486877575?text=' + waText, '_blank');
+
+    msg.textContent = "WhatsApp opened! Just tap Send to request your callback.";
+    msg.className = 'ok';
+    input.value = '';
+    setTimeout(cbClose, 4000);
+
+    btn.disabled = false;
+    btn.textContent = 'Call Me';
   };
 
   // Allow Enter key to submit
