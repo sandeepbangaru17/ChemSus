@@ -306,6 +306,24 @@ module.exports = function (deps) {
         }
     });
 
+    // ── GET /api/customer/bulk-orders ─────────────────────────
+    router.get('/bulk-orders', requireCustomer, async (req, res) => {
+        try {
+            const rows = await all(
+                `SELECT id, name, company, email, phone, product, quantity,
+                        timeline, destination, notes, status, created_at
+                 FROM bulk_orders
+                 WHERE customer_id=?
+                 ORDER BY id DESC`,
+                [req.customerId]
+            );
+            res.json(rows);
+        } catch (e) {
+            console.error('[CUSTOMER-BULK-ORDERS]', e);
+            res.status(500).json({ error: 'Failed to load bulk order enquiries.' });
+        }
+    });
+
     // ── POST /api/customer/logout ──────────────────────────────
     router.post('/logout', (req, res) => res.json({ ok: true }));
 

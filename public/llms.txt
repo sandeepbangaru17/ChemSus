@@ -59,6 +59,12 @@ ChemSus supplies the following high-purity chemicals for R&D and industrial use 
 - Uses: green solvent, plasticizer, fragrance, fuel additive, chemical intermediate for GVL
 - Page: https://chemsus.in/products/methyl-levulinate.html
 
+### Disodium Succinate Hexahydrate (CAS 6106-21-4)
+- Molecular Formula: C4H4Na2O4·6H2O | MW: 270.14 g/mol
+- IUPAC: disodium butanedioate hexahydrate
+- Uses: food flavour enhancer (umami, E363), buffering agent, pharmaceutical excipient, cosmetic humectant, fermentation media component
+- Page: https://chemsus.in/products/disodium-succinate.html
+
 ## Key Pages
 
 - Home: https://chemsus.in/
