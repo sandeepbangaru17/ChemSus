@@ -197,6 +197,7 @@ async function seed() {
     await run(`INSERT INTO site_settings(key,value) VALUES ('brochure_url','assets/brochure.pdf')`);
     console.log("✅ Seeded brochure_url");
   }
+  await run(`INSERT OR IGNORE INTO site_settings(key,value) VALUES ('brochure_enabled','0')`);
 }
 
 async function initDb() {
