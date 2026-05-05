@@ -69,18 +69,29 @@
   function positionWidget() {
     const el = document.getElementById('cb-widget');
     if (!el) return;
-    const hasWA = !!document.getElementById('ib-wa');
-    const hasBrochure = !!document.querySelector('.download-section');
+    const waEl = document.getElementById('ib-wa');
+    const brochureEl = document.querySelector('.download-section');
     const hasFloatingCart = !!document.querySelector('.floating-cart-btn');
-    let levels = 0;
-    if (hasWA) levels++;
-    if (hasBrochure) levels++;
-    if (hasFloatingCart) levels++;
     const isMobile = window.innerWidth <= 580;
     const fabSize = isMobile ? 50 : FAB_SIZE;
     const right = isMobile ? 20 : FAB_RIGHT;
+
+    // Stack order from bottom to top: Brochure → Callback → WhatsApp
+    let level = 0;
+
+    if (brochureEl && brochureEl.style.display !== 'none') {
+      brochureEl.style.bottom = BASE_BOTTOM + 'px';
+      level++;
+    }
+    if (hasFloatingCart) level++;
+
     el.style.right = right + 'px';
-    el.style.bottom = (BASE_BOTTOM + levels * (fabSize + FAB_GAP)) + 'px';
+    el.style.bottom = (BASE_BOTTOM + level * (fabSize + FAB_GAP)) + 'px';
+    level++;
+
+    if (waEl) {
+      waEl.style.bottom = (BASE_BOTTOM + level * (fabSize + FAB_GAP)) + 'px';
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -156,6 +167,7 @@
           el.style.display = 'none';
         });
       }
+      positionWidget();
     })
     .catch(function () {});
 })();
