@@ -146,4 +146,16 @@
       cbSubmit();
     }
   });
+
+  // Brochure button visibility
+  fetch('/api/brochure-status')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (!data.enabled) {
+        document.querySelectorAll('.download-section, .download-btn').forEach(function (el) {
+          el.style.display = 'none';
+        });
+      }
+    })
+    .catch(function () {});
 })();
