@@ -970,6 +970,9 @@
               </div>
             </div>
             <div class="card">
+              <div class="card-header">
+                <div class="card-title"><span class="ct-icon">📦</span> Bulk Order Enquiries</div>
+              </div>
               <div class="card-body" style="padding:0;">
                 <div class="table-wrap" style="border:none;border-radius:0;">
                   <table>
@@ -2319,7 +2322,7 @@
 
     async function updateDistributorStatus(id, status) {
       try {
-        await api(`/admin/distributor-applications/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+        await api(`/admin/distributor-applications/${id}/status`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
         await loadDistributors();
       } catch (e) { alert('Error: ' + e.message); }
     }
@@ -2377,7 +2380,7 @@
 
     async function updateCallbackStatus(id, status) {
       try {
-        await api(`/admin/callback-requests/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+        await api(`/admin/callback-requests/${id}/status`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
         await loadCallbacks();
       } catch (e) { alert('Error: ' + e.message); }
     }
@@ -2411,9 +2414,9 @@
           tbody.innerHTML = '<tr><td colspan="13" class="table-empty"><div class="empty-icon">📦</div>No bulk order enquiries yet.</td></tr>';
           return;
         }
-        tbody.innerHTML = rows.map(r => `
+        tbody.innerHTML = rows.map((r, i) => `
           <tr>
-            <td>${r.id}</td>
+            <td>${i + 1}</td>
             <td>${BO_STATUS_TAGS[r.status] || escapeHtml(r.status)}</td>
             <td style="font-weight:600;">${escapeHtml(r.name)}</td>
             <td style="color:var(--muted);">${escapeHtml(r.company || '—')}</td>
@@ -2444,7 +2447,7 @@
 
     async function updateBulkOrderStatus(id, status) {
       try {
-        await api(`/admin/bulk-orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+        await api(`/admin/bulk-orders/${id}/status`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
         await loadBulkOrders();
       } catch (e) { alert('Error: ' + e.message); }
     }
@@ -2468,7 +2471,7 @@
           tbody.innerHTML = '<tr><td colspan="12" class="table-empty"><div class="empty-icon">👥</div>No registered customers yet.</td></tr>';
           return;
         }
-        tbody.innerHTML = rows.map(c => {
+        tbody.innerHTML = rows.map((c, i) => {
           const verified = c.is_verified
             ? '<span class="tag active">Yes</span>'
             : '<span class="tag inactive">No</span>';
@@ -2477,7 +2480,7 @@
           const joined = c.created_at ? new Date(c.created_at).toLocaleDateString('en-IN') : '—';
           const lastLogin = c.last_login_at ? new Date(c.last_login_at).toLocaleDateString('en-IN') : 'Never';
           return `<tr>
-            <td>${c.id}</td>
+            <td>${i + 1}</td>
             <td>${escapeHtml(c.name || '—')}</td>
             <td>${escapeHtml(c.email)}</td>
             <td>${escapeHtml(c.phone || '—')}</td>

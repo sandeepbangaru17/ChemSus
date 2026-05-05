@@ -158,13 +158,16 @@
     }
   });
 
-  // Brochure button visibility
+  // Brochure button visibility — hide immediately to prevent flash, show only if enabled
+  document.querySelectorAll('.download-section, .download-btn').forEach(function (el) {
+    el.style.display = 'none';
+  });
   fetch('/api/brochure-status')
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      if (!data.enabled) {
+      if (data.enabled) {
         document.querySelectorAll('.download-section, .download-btn').forEach(function (el) {
-          el.style.display = 'none';
+          el.style.display = '';
         });
       }
       positionWidget();

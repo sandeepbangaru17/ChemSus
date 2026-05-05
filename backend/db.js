@@ -480,9 +480,11 @@ async function initDb() {
   await migrateCol("orders", "purchase_id", "TEXT DEFAULT NULL");
   await migrateCol("orders", "payment_type", "TEXT NOT NULL DEFAULT 'quotation'");
   await migrateCol("payments", "updated_at", "TEXT NOT NULL DEFAULT (datetime('now'))");
+  await migrateCol("bulk_orders", "customer_id", "INTEGER DEFAULT NULL");
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_purchase_id ON orders(purchase_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
+  try { await run("CREATE INDEX IF NOT EXISTS idx_bulk_orders_customer ON bulk_orders(customer_id)"); } catch (_) { }
 
   console.log("✅ SQLite ready with pack_pricing table");
 }

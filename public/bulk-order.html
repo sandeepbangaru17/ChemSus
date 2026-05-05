@@ -363,9 +363,15 @@
       btn.innerHTML = '⏳ Sending…';
 
       try {
+        const bulkTok = sessionStorage.getItem('chemsus_customer_token');
+        const bulkExp = Number(sessionStorage.getItem('chemsus_customer_token_exp') || 0);
+        const bulkHeaders = { 'Content-Type': 'application/json' };
+        if (bulkTok && (!bulkExp || Date.now() / 1000 < bulkExp)) {
+          bulkHeaders['Authorization'] = 'Bearer ' + bulkTok;
+        }
         const res = await fetch('/api/bulk-order', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: bulkHeaders,
           body: JSON.stringify({ name, company, email, phone, product, quantity, timeline, destination, notes })
         });
         const data = await res.json();

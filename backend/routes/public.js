@@ -244,12 +244,23 @@ module.exports = function (deps) {
             if (!phone || !phone.trim()) return res.status(400).json({ error: "Phone is required." });
             if (!product || !product.trim()) return res.status(400).json({ error: "Product is required." });
             if (!quantity || !quantity.trim()) return res.status(400).json({ error: "Quantity is required." });
+
+            // Optionally link to logged-in customer
+            let customerId = null;
+            const authHeader = req.headers.authorization || '';
+            if (authHeader.startsWith('Bearer ')) {
+                try {
+                    const payload = deps.verifyCustomerToken(authHeader.slice(7));
+                    if (payload && payload.sub) customerId = payload.sub;
+                } catch (_) { /* guest — ignore */ }
+            }
+
             await deps.run(
-                `INSERT INTO bulk_orders (name, company, email, phone, product, quantity, timeline, destination, notes)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                `INSERT INTO bulk_orders (name, company, email, phone, product, quantity, timeline, destination, notes, customer_id)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [name.trim(), (company || '').trim(), email, phone.trim(),
                  product.trim(), quantity.trim(), (timeline || '').trim(),
-                 (destination || '').trim(), (notes || '').trim()]
+                 (destination || '').trim(), (notes || '').trim(), customerId]
             );
             res.json({ ok: true });
         } catch (e) {
