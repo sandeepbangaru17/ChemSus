@@ -13,6 +13,15 @@ module.exports = function (deps) {
         }
     });
 
+    router.get("/brochure-status", async (req, res) => {
+        try {
+            const row = await get(`SELECT value FROM site_settings WHERE key='brochure_enabled'`, []);
+            res.json({ enabled: row?.value === '1' });
+        } catch (e) {
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
     router.get("/products-page", async (req, res) => {
         try {
             const rows = await all(
