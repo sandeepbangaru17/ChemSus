@@ -325,6 +325,20 @@ module.exports = function (deps) {
         }
     });
 
+    router.post("/brochure-toggle", requireAdmin, async (req, res) => {
+        try {
+            const enabled = req.body?.enabled ? '1' : '0';
+            await run(
+                `INSERT INTO site_settings (key, value) VALUES ('brochure_enabled', ?)
+         ON CONFLICT(key) DO UPDATE SET value=excluded.value`,
+                [enabled]
+            );
+            res.json({ ok: true, enabled: enabled === '1' });
+        } catch (e) {
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
     router.get("/products-page", requireAdmin, async (req, res) => {
         try {
             const rows = await all(
