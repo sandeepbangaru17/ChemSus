@@ -76,11 +76,11 @@
     const fabSize = isMobile ? 50 : FAB_SIZE;
     const right = isMobile ? 20 : FAB_RIGHT;
 
-    // Stack order from bottom to top: Brochure → Callback → WhatsApp
+    // Stack order from bottom to top: WhatsApp → Callback → Brochure
     let level = 0;
 
-    if (brochureEl && brochureEl.style.display !== 'none') {
-      brochureEl.style.bottom = BASE_BOTTOM + 'px';
+    if (waEl) {
+      waEl.style.bottom = BASE_BOTTOM + 'px';
       level++;
     }
     if (hasFloatingCart) level++;
@@ -89,8 +89,8 @@
     el.style.bottom = (BASE_BOTTOM + level * (fabSize + FAB_GAP)) + 'px';
     level++;
 
-    if (waEl) {
-      waEl.style.bottom = (BASE_BOTTOM + level * (fabSize + FAB_GAP)) + 'px';
+    if (brochureEl && brochureEl.style.display !== 'none') {
+      brochureEl.style.bottom = (BASE_BOTTOM + level * (fabSize + FAB_GAP)) + 'px';
     }
   }
 
