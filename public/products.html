@@ -455,7 +455,7 @@
         const desc = escapeHtml(product.description || 'No description available.');
         const fallbackImg = safeUrl(product.image || 'assets/logo.webp');
         const extraImgs = PRODUCT_GALLERY[product.link] || [];
-        const galImgs = extraImgs.length > 0 ? extraImgs : [fallbackImg];
+        const galImgs = extraImgs.length > 0 ? [...extraImgs, fallbackImg] : [fallbackImg];
         const showArrows = galImgs.length > 1;
         const dotsHtml = galImgs.length > 1
           ? galImgs.map((_, i) => `<span class="card-gal-dot${i === 0 ? ' active' : ''}"></span>`).join('')
