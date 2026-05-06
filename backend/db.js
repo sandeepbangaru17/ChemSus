@@ -486,6 +486,9 @@ async function initDb() {
   try { await run("CREATE INDEX IF NOT EXISTS idx_orders_order_status ON orders(order_status)"); } catch (_) { }
   try { await run("CREATE INDEX IF NOT EXISTS idx_bulk_orders_customer ON bulk_orders(customer_id)"); } catch (_) { }
 
+  // Data fix: correct truncated product name in shop_items
+  try { await run(`UPDATE shop_items SET name='5-Hydroxymethylfurfural' WHERE id=4 AND name='5-Hydroxymethylfurfura'`); } catch (_) { }
+
   console.log("✅ SQLite ready with pack_pricing table");
 }
 

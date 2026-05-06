@@ -12,6 +12,7 @@
   <meta name="keywords" content="ChemSus Technologies, about us, sustainable chemistry company, green chemicals India, lignocellulosic biomass chemistry, eco-friendly chemicals">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://chemsus.in/about.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
   <meta property="og:title" content="About Us | ChemSus Technologies Pvt Ltd">
@@ -25,11 +26,54 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About ChemSus Technologies Pvt Ltd",
-    "url": "https://chemsus.in/about.html",
-    "description": "Innovating at the intersection of chemistry and sustainability to provide highly efficient and eco-friendly specialty chemicals and pharmaceutical APIs.",
-    "publisher": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "name": "About ChemSus Technologies Pvt Ltd",
+        "url": "https://chemsus.in/about.html",
+        "description": "Innovating at the intersection of chemistry and sustainability to provide highly efficient and eco-friendly specialty chemicals and pharmaceutical APIs.",
+        "publisher": { "@type": "Organization", "@id": "https://chemsus.in/#organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://chemsus.in/#organization",
+        "name": "ChemSus Technologies Pvt Ltd",
+        "legalName": "ChemSus Technologies Pvt Ltd",
+        "url": "https://chemsus.in",
+        "logo": "https://chemsus.in/assets/logo.webp",
+        "image": "https://chemsus.in/assets/logo.webp",
+        "description": "Indian startup producing high-purity specialty chemicals and pharmaceutical APIs from renewable lignocellulosic biomass — levulinic acid, 5-HMF, DALA, sodium levulinate, calcium levulinate, ethyl levulinate, methyl levulinate, disodium succinate hexahydrate.",
+        "email": "info@chemsus.in",
+        "telephone": "+918486877575",
+        "foundingLocation": { "@type": "Place", "name": "Assam, India" },
+        "areaServed": "IN",
+        "address": [
+          {
+            "@type": "PostalAddress",
+            "streetAddress": "House No. 555, GNB Road",
+            "addressLocality": "North Guwahati",
+            "addressRegion": "Assam",
+            "postalCode": "781030",
+            "addressCountry": "IN"
+          },
+          {
+            "@type": "PostalAddress",
+            "streetAddress": "Gavara Jaggayyapalem, BHPV",
+            "addressLocality": "Visakhapatnam",
+            "addressRegion": "Andhra Pradesh",
+            "postalCode": "530012",
+            "addressCountry": "IN"
+          }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+918486877575",
+          "contactType": "customer service",
+          "email": "info@chemsus.in",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      }
+    ]
   }
   </script>
 

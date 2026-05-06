@@ -12,6 +12,7 @@
   <meta name="keywords" content="specialty chemicals products, pharmaceutical APIs, high-purity intermediates, biomass-derived chemicals, sustainable chemical products, lignocellulose chemicals">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://chemsus.in/products.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
   <meta property="og:title" content="Products | ChemSus Technologies Pvt Ltd">
@@ -25,11 +26,32 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "Products | ChemSus Technologies Pvt Ltd",
-    "url": "https://chemsus.in/products.html",
-    "description": "High-purity specialty chemicals and pharmaceutical APIs derived from lignocellulosic biomass.",
-    "publisher": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "name": "Products | ChemSus Technologies Pvt Ltd",
+        "url": "https://chemsus.in/products.html",
+        "description": "High-purity specialty chemicals and pharmaceutical APIs derived from lignocellulosic biomass.",
+        "publisher": { "@type": "Organization", "name": "ChemSus Technologies Pvt Ltd", "url": "https://chemsus.in" }
+      },
+      {
+        "@type": "ItemList",
+        "name": "ChemSus Product Catalog",
+        "description": "Specialty chemicals from renewable lignocellulosic biomass for pharmaceutical, food, cosmetic, and industrial applications.",
+        "url": "https://chemsus.in/products.html",
+        "numberOfItems": 8,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "url": "https://chemsus.in/products/levulinic-acid.html", "name": "Levulinic Acid (CAS 123-76-2)" },
+          { "@type": "ListItem", "position": 2, "url": "https://chemsus.in/products/5-hmf.html", "name": "5-Hydroxymethylfurfural / 5-HMF (CAS 67-47-0)" },
+          { "@type": "ListItem", "position": 3, "url": "https://chemsus.in/products/dala.html", "name": "5-Aminolevulinic Acid Hydrochloride (CAS 5451-09-2)" },
+          { "@type": "ListItem", "position": 4, "url": "https://chemsus.in/products/sodium-levulinate.html", "name": "Sodium Levulinate (CAS 19856-23-6)" },
+          { "@type": "ListItem", "position": 5, "url": "https://chemsus.in/products/calcium-levulinate.html", "name": "Calcium Levulinate Dihydrate (CAS 5743-49-7)" },
+          { "@type": "ListItem", "position": 6, "url": "https://chemsus.in/products/ethyl-levulinate.html", "name": "Ethyl Levulinate (CAS 539-88-8)" },
+          { "@type": "ListItem", "position": 7, "url": "https://chemsus.in/products/methyl-levulinate.html", "name": "Methyl Levulinate (CAS 624-45-3)" },
+          { "@type": "ListItem", "position": 8, "url": "https://chemsus.in/products/disodium-succinate.html", "name": "Disodium Succinate Hexahydrate (CAS 6106-21-4)" }
+        ]
+      }
+    ]
   }
   </script>
 
@@ -257,56 +279,56 @@
           id: 1,
           name: '5-Hydroxymethyl furfural (HMF)',
           description: 'No description available.',
-          image: 'assets/product_page_images/chemical1.avif',
+          image: 'assets/product_page_images/chemical1.webp',
           link: 'products/5-hmf.html'
         },
         {
           id: 2,
           name: 'Calcium Levulinate Dihydrate',
           description: 'Calcium supplement.',
-          image: 'assets/product_page_images/chemical2.png',
+          image: 'assets/product_page_images/chemical2.webp',
           link: 'products/calcium-levulinate.html'
         },
         {
           id: 3,
           name: 'Sodium Levulinate (SL)',
           description: 'Natural preservatives and skin toner in cosmetics.',
-          image: 'assets/product_page_images/chemical3.jpg',
+          image: 'assets/product_page_images/chemical3.webp',
           link: 'products/sodium-levulinate.html'
         },
         {
           id: 4,
           name: 'Ethyl Levulinate (EL)',
           description: 'Bio-based fragrance and flavouring agent.',
-          image: 'assets/product_page_images/chemical4.jpeg',
+          image: 'assets/product_page_images/chemical4.webp',
           link: 'products/ethyl-levulinate.html'
         },
         {
           id: 5,
           name: 'Methyl Levulinate (ML)',
           description: 'Sustainable solvent and chemical intermediate.',
-          image: 'assets/product_page_images/chemical5.jpeg',
+          image: 'assets/product_page_images/chemical5.webp',
           link: 'products/methyl-levulinate.html'
         },
         {
           id: 6,
           name: 'Levulinic Acid (LA)',
           description: 'No description available.',
-          image: 'assets/product_page_images/chemical6.jpeg',
+          image: 'assets/product_page_images/chemical6.webp',
           link: 'products/levulinic-acid.html'
         },
         {
           id: 7,
           name: '5-Aminolevulinic acid hydrochloride',
           description: 'Oncology API for both therapeutic and diagnostic applications.',
-          image: 'assets/product_page_images/dala.jpg',
+          image: 'assets/product_page_images/dala.webp',
           link: 'products/dala.html'
         },
         {
           id: 8,
           name: 'Disodium Succinate Hexahydrate',
           description: 'Bio-based buffering agent and flavor enhancer.',
-          image: 'assets/product_page_images/DSS.png',
+          image: 'assets/product_page_images/DSS.webp',
           link: 'products/disodium-succinate.html'
         }
       ];
@@ -441,7 +463,7 @@
         card.innerHTML = `
           <div class="card-gallery" data-idx="0">
             ${showArrows ? `<button class="card-gal-prev" onclick="cardGalNav(event,this,-1)">&#8249;</button>` : ''}
-            <img src="${galImgs[0]}" alt="${name}" onclick="openCardLightbox(event,this)">
+            <img src="${galImgs[0]}" alt="${name}" onerror="this.src='assets/logo.webp'" onclick="openCardLightbox(event,this)">
             ${showArrows ? `<button class="card-gal-next" onclick="cardGalNav(event,this,1)">&#8250;</button>` : ''}
             ${dotsHtml ? `<div class="card-gal-dots">${dotsHtml}</div>` : ''}
           </div>
