@@ -20,6 +20,7 @@ module.exports = function (deps) {
         Confirmed: 'Confirmed',
         Shipped: 'Shipped',
         Delivered: 'Delivered',
+        Cancelled: 'Cancelled',
     };
 
     function buildOrderStatusEmail(customerName, purchaseId, productName, newStatus, email) {
@@ -28,6 +29,7 @@ module.exports = function (deps) {
             Confirmed: { icon: '✅', text: 'Your order has been confirmed and is being prepared.', color: '#059669' },
             Shipped: { icon: '🚚', text: 'Great news! Your order is on its way.', color: '#0074c7' },
             Delivered: { icon: '📦', text: 'Your order has been delivered. Thank you for choosing ChemSus!', color: '#7c3aed' },
+            Cancelled: { icon: '❌', text: 'Your order has been cancelled. Please contact us if you have any questions.', color: '#dc2626' },
         };
         const info = statusMessages[newStatus] || { icon: '📋', text: `Your order status has been updated to ${newStatus}.`, color: '#64748b' };
 
