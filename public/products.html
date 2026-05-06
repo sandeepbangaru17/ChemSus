@@ -279,56 +279,56 @@
           id: 1,
           name: '5-Hydroxymethyl furfural (HMF)',
           description: 'No description available.',
-          image: 'assets/product_page_images/chemical1.avif',
+          image: 'assets/product_page_images/chemical1.webp',
           link: 'products/5-hmf.html'
         },
         {
           id: 2,
           name: 'Calcium Levulinate Dihydrate',
           description: 'Calcium supplement.',
-          image: 'assets/product_page_images/chemical2.png',
+          image: 'assets/product_page_images/chemical2.webp',
           link: 'products/calcium-levulinate.html'
         },
         {
           id: 3,
           name: 'Sodium Levulinate (SL)',
           description: 'Natural preservatives and skin toner in cosmetics.',
-          image: 'assets/product_page_images/chemical3.jpg',
+          image: 'assets/product_page_images/chemical3.webp',
           link: 'products/sodium-levulinate.html'
         },
         {
           id: 4,
           name: 'Ethyl Levulinate (EL)',
           description: 'Bio-based fragrance and flavouring agent.',
-          image: 'assets/product_page_images/chemical4.jpeg',
+          image: 'assets/product_page_images/chemical4.webp',
           link: 'products/ethyl-levulinate.html'
         },
         {
           id: 5,
           name: 'Methyl Levulinate (ML)',
           description: 'Sustainable solvent and chemical intermediate.',
-          image: 'assets/product_page_images/chemical5.jpeg',
+          image: 'assets/product_page_images/chemical5.webp',
           link: 'products/methyl-levulinate.html'
         },
         {
           id: 6,
           name: 'Levulinic Acid (LA)',
           description: 'No description available.',
-          image: 'assets/product_page_images/chemical6.jpeg',
+          image: 'assets/product_page_images/chemical6.webp',
           link: 'products/levulinic-acid.html'
         },
         {
           id: 7,
           name: '5-Aminolevulinic acid hydrochloride',
           description: 'Oncology API for both therapeutic and diagnostic applications.',
-          image: 'assets/product_page_images/dala.jpg',
+          image: 'assets/product_page_images/dala.webp',
           link: 'products/dala.html'
         },
         {
           id: 8,
           name: 'Disodium Succinate Hexahydrate',
           description: 'Bio-based buffering agent and flavor enhancer.',
-          image: 'assets/product_page_images/DSS.png',
+          image: 'assets/product_page_images/DSS.webp',
           link: 'products/disodium-succinate.html'
         }
       ];
@@ -454,8 +454,7 @@
         const name = escapeHtml(product.name || '');
         const desc = escapeHtml(product.description || 'No description available.');
         const fallbackImg = safeUrl(product.image || 'assets/logo.webp');
-        const extraImgs = PRODUCT_GALLERY[product.link] || [];
-        const galImgs = extraImgs.length > 0 ? [...extraImgs, fallbackImg] : [fallbackImg];
+        const galImgs = [fallbackImg, ...(PRODUCT_GALLERY[product.link] || [])];
         const showArrows = galImgs.length > 1;
         const dotsHtml = galImgs.length > 1
           ? galImgs.map((_, i) => `<span class="card-gal-dot${i === 0 ? ' active' : ''}"></span>`).join('')
