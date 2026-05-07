@@ -942,21 +942,21 @@ app.get('/blogs', async (req, res) => {
       : '<div class="blog-empty">No blog posts yet. Check back soon.</div>';
 
     const ogExtra = `<meta property="og:type" content="website">
-<meta property="og:title" content="Blog | ChemSus Technologies">
+<meta property="og:title" content="Blogs and Updates | ChemSus Technologies">
 <meta property="og:description" content="In-depth articles on bio-based specialty chemicals, calcium levulinate, sodium levulinate, and sustainable chemistry.">
 <meta property="og:url" content="https://chemsus.in/blogs">`;
 
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(`<!DOCTYPE html>
 <html lang="en">
-${blogHead('Blog | ChemSus Technologies', 'Explore ChemSus Technologies blog — in-depth articles on bio-based specialty chemicals, levulinic acid derivatives, and sustainable formulation science.', 'https://chemsus.in/blogs', ogExtra)}
+${blogHead('Blogs and Updates | ChemSus Technologies', 'Explore ChemSus Technologies blogs and updates — in-depth articles on bio-based specialty chemicals, levulinic acid derivatives, and sustainable formulation science.', 'https://chemsus.in/blogs', ogExtra)}
 <body>
 ${blogPageNav(true)}
 <div class="main-wrapper" id="mainWrapper">
   <section class="hero">
     <div class="hero-content">
       <div class="hero-kicker">ChemSus Technologies</div>
-      <h1 class="hero-title">Blog</h1>
+      <h1 class="hero-title">Blogs and Updates</h1>
       <p class="hero-subtitle">Insights on bio-based specialty chemicals &amp; sustainable formulation science</p>
     </div>
   </section>
@@ -1022,11 +1022,11 @@ ${blogPageNav(false)}
     </div>
   </section>
   <main>
-    <a href="/blogs" class="blog-back">← Back to Blog</a>
+    <a href="/blogs" class="blog-back">← Back to Blogs and Updates</a>
     <article class="blog-article">${blog.content}</article>
     <div class="blog-actions">
       ${ctaBlock}
-      <a href="/blogs" class="blog-back-btn">← Back to All Articles</a>
+      <a href="/blogs" class="blog-back-btn">← Back to Blogs and Updates</a>
     </div>
   </main>
   ${BLOG_FOOTER_HTML}
