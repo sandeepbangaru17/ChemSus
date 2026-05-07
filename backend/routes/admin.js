@@ -1094,5 +1094,88 @@ module.exports = function (deps) {
         }
     });
 
+    // ── Blog CRUD ──────────────────────────────────────────────────
+    router.get("/blogs", requireAdmin, async (req, res) => {
+        try {
+            const rows = await all(
+                `SELECT id, slug, title, excerpt, is_published, published_at, created_at, updated_at FROM blogs ORDER BY id DESC`
+            );
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
+    router.get("/blogs/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            const row = await get(`SELECT * FROM blogs WHERE id=?`, [id]);
+            if (!row) return res.status(404).json({ error: "Not found" });
+            res.json(row);
+        } catch (e) {
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
+    function cleanSlug(s) {
+        return String(s || '').toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    router.post("/blogs", requireAdmin, async (req, res) => {
+        try {
+            const { title, slug, excerpt, content, product_link, meta_description, is_published } = req.body || {};
+            if (!title || !slug) return res.status(400).json({ error: "Title and slug are required" });
+            const slugClean = cleanSlug(slug);
+            if (!slugClean) return res.status(400).json({ error: "Invalid slug" });
+            const pub = is_published ? 1 : 0;
+            const r = await run(
+                `INSERT INTO blogs (slug, title, excerpt, content, product_link, meta_description, is_published, published_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ${pub ? "datetime('now')" : 'NULL'})`,
+                [slugClean, String(title), String(excerpt || ''), String(content || ''), String(product_link || ''), String(meta_description || ''), pub]
+            );
+            res.json({ ok: true, id: r.lastID });
+        } catch (e) {
+            if (String(e.message || e).includes('UNIQUE')) return res.status(409).json({ error: "Slug already exists" });
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
+    router.put("/blogs/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            const { title, slug, excerpt, content, product_link, meta_description, is_published } = req.body || {};
+            if (!title || !slug) return res.status(400).json({ error: "Title and slug are required" });
+            const slugClean = cleanSlug(slug);
+            if (!slugClean) return res.status(400).json({ error: "Invalid slug" });
+            const pub = is_published ? 1 : 0;
+            const existing = await get(`SELECT is_published, published_at FROM blogs WHERE id=?`, [id]);
+            if (!existing) return res.status(404).json({ error: "Not found" });
+            let publishedAt = existing.published_at;
+            if (pub && !existing.is_published) publishedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            if (!pub) publishedAt = null;
+            await run(
+                `UPDATE blogs SET slug=?, title=?, excerpt=?, content=?, product_link=?, meta_description=?, is_published=?, published_at=?, updated_at=datetime('now') WHERE id=?`,
+                [slugClean, String(title), String(excerpt || ''), String(content || ''), String(product_link || ''), String(meta_description || ''), pub, publishedAt, id]
+            );
+            res.json({ ok: true });
+        } catch (e) {
+            if (String(e.message || e).includes('UNIQUE')) return res.status(409).json({ error: "Slug already exists" });
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
+    router.delete("/blogs/:id", requireAdmin, async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id) return res.status(400).json({ error: "Invalid ID" });
+            await run(`DELETE FROM blogs WHERE id=?`, [id]);
+            res.json({ ok: true });
+        } catch (e) {
+            res.status(500).json({ error: "DB error" });
+        }
+    });
+
     return router;
 };
