@@ -54,7 +54,7 @@
     .sidebar-overlay.active{display:block;opacity:1}
     .nav-logo{display:inline-flex;align-items:center;gap:8px;font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
     .nav-logo-img{height:24px;width:auto}
-    .nav-menu{list-style:none;padding:8px 0;flex:1;overflow-y:auto}
+    .nav-menu{list-style:none;padding:8px 0;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
     .nav-menu li a{display:block;color:#fff;padding:10px 20px;font-size:13.5px;border-left:3px solid transparent;transition:all 0.2s ease}
     .nav-menu li.nav-section-label{padding:14px 20px 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;pointer-events:none;user-select:none}
     .nav-icon{margin-right:7px;font-size:13px;opacity:.9}
@@ -172,6 +172,7 @@
       <li><a href="index.html"><span class="nav-icon">🏠</span> Home</a></li>
       <li><a href="about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
       <li><a href="products.html"><span class="nav-icon">🧪</span> Products</a></li>
+      <li><a href="/blogs"><span class="nav-icon">📝</span> Blogs and Updates</a></li>
       <li class="nav-section-label">Shop</li>
       <li><a href="shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
       <li><a href="cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
