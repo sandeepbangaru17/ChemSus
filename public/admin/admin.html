@@ -115,6 +115,13 @@
             </a></li>
         </ul>
 
+        <div class="sidebar-section-label">Content</div>
+        <ul class="sidebar-menu">
+          <li><a data-view="view-blogs" onclick="switchView('view-blogs')">
+              <span class="nav-icon">📝</span> Blogs
+            </a></li>
+        </ul>
+
         <div class="sidebar-section-label">System</div>
         <ul class="sidebar-menu">
           <li><a data-view="view-settings" onclick="switchView('view-settings')">
@@ -1046,6 +1053,97 @@
           </div>
 
           <!-- ══════════════════════════════════
+               BLOGS VIEW
+          ══════════════════════════════════ -->
+          <div id="view-blogs" class="view">
+            <div class="section-header">
+              <div class="section-title-group">
+                <div class="section-title">📝 Blog Posts</div>
+                <div class="section-sub">Create and manage blog articles displayed at /blog</div>
+              </div>
+              <div class="section-actions">
+                <button class="btn primary sm" onclick="openBlogForm()">+ New Blog</button>
+                <button class="btn secondary sm" onclick="loadBlogs()">🔄 Refresh</button>
+                <button class="btn secondary sm" onclick="window.open('/blog','_blank')">🔗 View Blog</button>
+              </div>
+            </div>
+
+            <!-- Blog form (hidden by default) -->
+            <div id="blogFormCard" class="card" style="display:none;margin-bottom:22px;">
+              <div class="card-header">
+                <div class="card-title"><span class="ct-icon">✏️</span> <span id="blogFormTitle">New Blog Post</span></div>
+                <button class="btn secondary sm" onclick="closeBlogForm()">✕ Cancel</button>
+              </div>
+              <div class="card-body">
+                <input type="hidden" id="blogEditId">
+                <div class="form-grid cols-2">
+                  <div class="field">
+                    <label>Title *</label>
+                    <input type="text" id="blogTitle" placeholder="Blog post title">
+                  </div>
+                  <div class="field">
+                    <label>Slug * <span style="font-weight:400;text-transform:none;font-size:11px;">(URL: /blog/your-slug)</span></label>
+                    <input type="text" id="blogSlug" placeholder="e.g. calcium-levulinate">
+                  </div>
+                </div>
+                <div class="field" style="margin-bottom:14px;">
+                  <label>Excerpt / Summary</label>
+                  <textarea id="blogExcerpt" rows="2" placeholder="Short description shown on the blog listing page"></textarea>
+                </div>
+                <div class="field" style="margin-bottom:14px;">
+                  <label>Meta Description <span style="font-weight:400;text-transform:none;font-size:11px;">(for SEO, ~155 chars)</span></label>
+                  <input type="text" id="blogMetaDesc" placeholder="SEO meta description">
+                </div>
+                <div class="field" style="margin-bottom:14px;">
+                  <label>Product Link <span style="font-weight:400;text-transform:none;font-size:11px;">(optional, e.g. /products/calcium-levulinate.html)</span></label>
+                  <input type="text" id="blogProductLink" placeholder="/products/calcium-levulinate.html">
+                </div>
+                <div class="field" style="margin-bottom:14px;">
+                  <label>Content <span style="font-weight:400;text-transform:none;font-size:11px;">(HTML)</span></label>
+                  <textarea id="blogContent" rows="18" style="font-family:monospace;font-size:13px;" placeholder="<p>Your blog content in HTML...</p>"></textarea>
+                </div>
+                <div class="field" style="margin-bottom:18px;">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:13px;font-weight:600;">
+                    <input type="checkbox" id="blogPublished" style="width:16px;height:16px;">
+                    Publish immediately
+                  </label>
+                </div>
+                <div class="btn-row">
+                  <button class="btn primary" onclick="saveBlog()">💾 Save Blog</button>
+                  <button class="btn secondary" onclick="closeBlogForm()">Cancel</button>
+                </div>
+                <div id="blogAlert" class="alert"></div>
+              </div>
+            </div>
+
+            <!-- Blogs table -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><span class="ct-icon">📋</span> All Blogs</div>
+              </div>
+              <div class="card-body" style="padding:0;">
+                <div class="table-wrap" style="border:none;border-radius:0;">
+                  <table style="min-width:800px;">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Status</th>
+                        <th>Published</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="blogsTable">
+                      <tr><td colspan="6" class="table-empty">Loading…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══════════════════════════════════
                SETTINGS VIEW
           ══════════════════════════════════ -->
           <div id="view-settings" class="view">
@@ -1276,6 +1374,7 @@
       'view-customers': { title: 'Customers', sub: 'Registered customer accounts' },
       'view-settings': { title: 'Settings', sub: 'Site configuration' },
       'view-analytics': { title: 'Analytics', sub: 'Page views and visitor geography' },
+      'view-blogs': { title: 'Blogs', sub: 'Manage blog posts at /blog' },
     };
 
     function switchView(id) {
@@ -1309,6 +1408,7 @@
       if (id === 'view-customers') loadCustomers();
       if (id === 'view-settings') loadBrochure();
       if (id === 'view-analytics') loadAnalytics();
+      if (id === 'view-blogs') loadBlogs();
     }
 
     /* ════ AUTH ════ */
@@ -2672,6 +2772,142 @@
         </tr>`;
       }).join('');
     }
+
+    /* ════ BLOGS ════ */
+    let _blogs = [];
+
+    async function loadBlogs() {
+      const tbody = document.getElementById('blogsTable');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="6" class="table-empty">Loading…</td></tr>';
+      try {
+        _blogs = await api('/admin/blogs');
+        if (!_blogs.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="table-empty"><div class="empty-icon">📝</div>No blog posts yet. Click "New Blog" to create one.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = _blogs.map(b => {
+          const pub = b.is_published
+            ? '<span class="tag active">Published</span>'
+            : '<span class="tag inactive">Draft</span>';
+          const date = b.published_at ? b.published_at.slice(0, 10) : '—';
+          return `<tr>
+            <td>${b.id}</td>
+            <td class="wrap" style="max-width:280px;">${escapeHtml(b.title)}</td>
+            <td><code style="font-size:12px;">/blog/${escapeHtml(b.slug)}</code></td>
+            <td>${pub}</td>
+            <td>${date}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn secondary sm" onclick="editBlog(${b.id})">✏️ Edit</button>
+                <button class="btn secondary sm" onclick="window.open('/blog/${escapeHtml(b.slug)}','_blank')">🔗 View</button>
+                <button class="btn danger sm" onclick="deleteBlog(${b.id}, '${escapeHtml(b.title).replace(/'/g,'\\'+'\\'')}')">🗑️</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">Error loading blogs: ${escapeHtml(String(e.message || e))}</td></tr>`;
+      }
+    }
+
+    function openBlogForm(blogId) {
+      document.getElementById('blogFormCard').style.display = '';
+      document.getElementById('blogEditId').value = '';
+      document.getElementById('blogFormTitle').textContent = 'New Blog Post';
+      document.getElementById('blogTitle').value = '';
+      document.getElementById('blogSlug').value = '';
+      document.getElementById('blogExcerpt').value = '';
+      document.getElementById('blogMetaDesc').value = '';
+      document.getElementById('blogProductLink').value = '';
+      document.getElementById('blogContent').value = '';
+      document.getElementById('blogPublished').checked = false;
+      document.getElementById('blogAlert').className = 'alert';
+      document.getElementById('blogAlert').textContent = '';
+      document.getElementById('blogFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function editBlog(id) {
+      try {
+        const b = await api(`/admin/blogs/${id}`);
+        document.getElementById('blogFormCard').style.display = '';
+        document.getElementById('blogEditId').value = b.id;
+        document.getElementById('blogFormTitle').textContent = 'Edit Blog Post';
+        document.getElementById('blogTitle').value = b.title || '';
+        document.getElementById('blogSlug').value = b.slug || '';
+        document.getElementById('blogExcerpt').value = b.excerpt || '';
+        document.getElementById('blogMetaDesc').value = b.meta_description || '';
+        document.getElementById('blogProductLink').value = b.product_link || '';
+        document.getElementById('blogContent').value = b.content || '';
+        document.getElementById('blogPublished').checked = !!b.is_published;
+        document.getElementById('blogAlert').className = 'alert';
+        document.getElementById('blogAlert').textContent = '';
+        document.getElementById('blogFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {
+        alert('Failed to load blog: ' + (e.message || e));
+      }
+    }
+
+    function closeBlogForm() {
+      document.getElementById('blogFormCard').style.display = 'none';
+    }
+
+    async function saveBlog() {
+      const alertEl = document.getElementById('blogAlert');
+      alertEl.className = 'alert';
+      alertEl.textContent = '';
+      const id = document.getElementById('blogEditId').value;
+      const body = {
+        title: document.getElementById('blogTitle').value.trim(),
+        slug: document.getElementById('blogSlug').value.trim(),
+        excerpt: document.getElementById('blogExcerpt').value.trim(),
+        meta_description: document.getElementById('blogMetaDesc').value.trim(),
+        product_link: document.getElementById('blogProductLink').value.trim(),
+        content: document.getElementById('blogContent').value,
+        is_published: document.getElementById('blogPublished').checked,
+      };
+      if (!body.title || !body.slug) {
+        alertEl.className = 'alert err';
+        alertEl.textContent = 'Title and slug are required.';
+        return;
+      }
+      try {
+        if (id) {
+          await api(`/admin/blogs/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        } else {
+          await api('/admin/blogs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        }
+        alertEl.className = 'alert ok';
+        alertEl.textContent = id ? 'Blog updated successfully.' : 'Blog created successfully.';
+        setTimeout(() => { closeBlogForm(); loadBlogs(); }, 900);
+      } catch (e) {
+        alertEl.className = 'alert err';
+        alertEl.textContent = e.message || 'Failed to save blog.';
+      }
+    }
+
+    async function deleteBlog(id, title) {
+      if (!confirm(`Delete blog post "${title}"? This cannot be undone.`)) return;
+      try {
+        await api(`/admin/blogs/${id}`, { method: 'DELETE' });
+        loadBlogs();
+      } catch (e) {
+        alert('Delete failed: ' + (e.message || e));
+      }
+    }
+
+    // Auto-generate slug from title
+    document.addEventListener('DOMContentLoaded', () => {
+      const titleEl = document.getElementById('blogTitle');
+      const slugEl = document.getElementById('blogSlug');
+      if (titleEl && slugEl) {
+        titleEl.addEventListener('input', () => {
+          if (!document.getElementById('blogEditId').value) {
+            slugEl.value = titleEl.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          }
+        });
+      }
+    });
 
     window.addEventListener('load', async () => { await boot(); });
 
