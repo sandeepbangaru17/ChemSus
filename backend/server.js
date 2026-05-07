@@ -761,7 +761,7 @@ function blogPageNav(isBlogActive) {
       <li><a href="/index.html"><span class="nav-icon">🏠</span> Home</a></li>
       <li><a href="/about.html"><span class="nav-icon">ℹ️</span> About Us</a></li>
       <li><a href="/products.html"><span class="nav-icon">🧪</span> Products</a></li>
-      <li><a href="/blog"${activeClass}><span class="nav-icon">📝</span> Blogs</a></li>
+      <li><a href="/blogs"${activeClass}><span class="nav-icon">📝</span> Blogs</a></li>
       <li class="nav-section-label">Shop</li>
       <li><a href="/shop.html"><span class="nav-icon">🛍️</span> Shop</a></li>
       <li><a href="/cart.html"><span class="nav-icon">🛒</span> Cart <span id="cart-count">0</span></a></li>
@@ -882,7 +882,7 @@ const BLOG_SCRIPT = `
       else if (q.includes('about') || q.includes('company')) window.location.href = '/about.html';
       else if (q.includes('collab') || q.includes('partner')) window.location.href = '/collaboration.html';
       else if (q.includes('sample')) window.location.href = '/request-sample.html';
-      else if (q.includes('blog')) window.location.href = '/blog';
+      else if (q.includes('blog')) window.location.href = '/blogs';
       else window.location.href = '/shop.html?q=' + encodeURIComponent(q);
     });
     (function() {
@@ -923,10 +923,10 @@ ${BLOG_CSS}
 </head>`;
 }
 
-app.get('/blog', async (req, res) => {
+app.get('/blogs', async (req, res) => {
   try {
     const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
-    trackPageView(rawIp, '/blog');
+    trackPageView(rawIp, '/blogs');
     const blogs = await all(`SELECT id, slug, title, excerpt, published_at FROM blogs WHERE is_published=1 ORDER BY id DESC`);
 
     const cards = blogs.length
@@ -934,9 +934,9 @@ app.get('/blog', async (req, res) => {
           const date = b.published_at ? new Date(b.published_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
           return `<div class="blog-card">
             ${date ? `<div class="blog-card-meta">📅 ${date}</div>` : ''}
-            <h2><a href="/blog/${escapeAttr(b.slug)}">${escapeAttr(b.title)}</a></h2>
+            <h2><a href="/blogs/${escapeAttr(b.slug)}">${escapeAttr(b.title)}</a></h2>
             <p>${escapeAttr(b.excerpt)}</p>
-            <a href="/blog/${escapeAttr(b.slug)}" class="blog-read-more">Read Article →</a>
+            <a href="/blogs/${escapeAttr(b.slug)}" class="blog-read-more">Read Article →</a>
           </div>`;
         }).join('')
       : '<div class="blog-empty">No blog posts yet. Check back soon.</div>';
@@ -944,12 +944,12 @@ app.get('/blog', async (req, res) => {
     const ogExtra = `<meta property="og:type" content="website">
 <meta property="og:title" content="Blog | ChemSus Technologies">
 <meta property="og:description" content="In-depth articles on bio-based specialty chemicals, calcium levulinate, sodium levulinate, and sustainable chemistry.">
-<meta property="og:url" content="https://chemsus.in/blog">`;
+<meta property="og:url" content="https://chemsus.in/blogs">`;
 
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(`<!DOCTYPE html>
 <html lang="en">
-${blogHead('Blog | ChemSus Technologies', 'Explore ChemSus Technologies blog — in-depth articles on bio-based specialty chemicals, levulinic acid derivatives, and sustainable formulation science.', 'https://chemsus.in/blog', ogExtra)}
+${blogHead('Blog | ChemSus Technologies', 'Explore ChemSus Technologies blog — in-depth articles on bio-based specialty chemicals, levulinic acid derivatives, and sustainable formulation science.', 'https://chemsus.in/blogs', ogExtra)}
 <body>
 ${blogPageNav(true)}
 <div class="main-wrapper" id="mainWrapper">
@@ -978,7 +978,7 @@ ${BLOG_SCRIPT}
   }
 });
 
-app.get('/blog/:slug', async (req, res) => {
+app.get('/blogs/:slug', async (req, res) => {
   try {
     const slug = String(req.params.slug || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
     if (!slug) return res.status(404).send('Not found');
@@ -986,7 +986,7 @@ app.get('/blog/:slug', async (req, res) => {
     if (!blog) return res.status(404).send('Blog post not found');
 
     const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
-    trackPageView(rawIp, `/blog/${slug}`);
+    trackPageView(rawIp, `/blogs/${slug}`);
 
     const date = blog.published_at ? new Date(blog.published_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
     const schemaDate = blog.published_at ? new Date(blog.published_at).toISOString() : new Date().toISOString();
@@ -1000,17 +1000,17 @@ app.get('/blog/:slug', async (req, res) => {
     const ogExtra = `<meta property="og:type" content="article">
 <meta property="og:title" content="${escapeAttr(blog.title)}">
 <meta property="og:description" content="${escapeAttr(blog.meta_description || blog.excerpt)}">
-<meta property="og:url" content="https://chemsus.in/blog/${escapeAttr(blog.slug)}">
+<meta property="og:url" content="https://chemsus.in/blogs/${escapeAttr(blog.slug)}">
 <meta property="og:site_name" content="ChemSus Technologies Pvt Ltd">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeAttr(blog.title)}">
 <meta name="twitter:description" content="${escapeAttr(blog.meta_description || blog.excerpt)}">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"${escapeAttr(blog.title)}","description":"${escapeAttr(blog.meta_description || blog.excerpt)}","url":"https://chemsus.in/blog/${escapeAttr(blog.slug)}","datePublished":"${schemaDate}","dateModified":"${modDate}","publisher":{"@type":"Organization","name":"ChemSus Technologies Pvt Ltd","url":"https://chemsus.in"},"author":{"@type":"Organization","name":"ChemSus Technologies Pvt Ltd"}}<\/script>`;
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"${escapeAttr(blog.title)}","description":"${escapeAttr(blog.meta_description || blog.excerpt)}","url":"https://chemsus.in/blogs/${escapeAttr(blog.slug)}","datePublished":"${schemaDate}","dateModified":"${modDate}","publisher":{"@type":"Organization","name":"ChemSus Technologies Pvt Ltd","url":"https://chemsus.in"},"author":{"@type":"Organization","name":"ChemSus Technologies Pvt Ltd"}}<\/script>`;
 
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(`<!DOCTYPE html>
 <html lang="en">
-${blogHead(escapeAttr(blog.title) + ' | ChemSus Technologies', escapeAttr(blog.meta_description || blog.excerpt), 'https://chemsus.in/blog/' + escapeAttr(blog.slug), ogExtra)}
+${blogHead(escapeAttr(blog.title) + ' | ChemSus Technologies', escapeAttr(blog.meta_description || blog.excerpt), 'https://chemsus.in/blogs/' + escapeAttr(blog.slug), ogExtra)}
 <body>
 ${blogPageNav(false)}
 <div class="main-wrapper" id="mainWrapper">
@@ -1022,11 +1022,11 @@ ${blogPageNav(false)}
     </div>
   </section>
   <main>
-    <a href="/blog" class="blog-back">← Back to Blog</a>
+    <a href="/blogs" class="blog-back">← Back to Blog</a>
     <article class="blog-article">${blog.content}</article>
     <div class="blog-actions">
       ${ctaBlock}
-      <a href="/blog" class="blog-back-btn">← Back to All Articles</a>
+      <a href="/blogs" class="blog-back-btn">← Back to All Articles</a>
     </div>
   </main>
   ${BLOG_FOOTER_HTML}
