@@ -923,6 +923,9 @@ ${BLOG_CSS}
 </head>`;
 }
 
+app.get('/blog', (req, res) => res.redirect(301, '/blogs'));
+app.get('/blog/:slug', (req, res) => res.redirect(301, `/blogs/${req.params.slug}`));
+
 app.get('/blogs', async (req, res) => {
   try {
     const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
@@ -1038,6 +1041,46 @@ ${BLOG_SCRIPT}
   } catch (e) {
     console.error('[BLOG-DETAIL]', e);
     res.status(500).send('Server error');
+  }
+});
+
+// ---------------- Dynamic Sitemap ----------------
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const blogs = await all(`SELECT slug, updated_at FROM blogs WHERE is_published=1 ORDER BY published_at DESC`);
+    const staticUrls = [
+      { loc: 'https://chemsus.in/', lastmod: '2026-05-07', changefreq: 'weekly', priority: '1.0' },
+      { loc: 'https://chemsus.in/about.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.8' },
+      { loc: 'https://chemsus.in/products.html', lastmod: '2026-05-07', changefreq: 'weekly', priority: '0.9' },
+      { loc: 'https://chemsus.in/shop.html', lastmod: '2026-05-07', changefreq: 'weekly', priority: '0.9' },
+      { loc: 'https://chemsus.in/collaboration.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://chemsus.in/recognitions.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://chemsus.in/investors.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://chemsus.in/contact.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.8' },
+      { loc: 'https://chemsus.in/products/levulinic-acid.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/5-hmf.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/dala.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/sodium-levulinate.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/methyl-levulinate.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/ethyl-levulinate.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/calcium-levulinate.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/products/disodium-succinate.html', lastmod: '2026-05-07', changefreq: 'monthly', priority: '0.9' },
+      { loc: 'https://chemsus.in/blogs', lastmod: '2026-05-07', changefreq: 'weekly', priority: '0.8' },
+    ];
+    const blogUrls = blogs.map(b => ({
+      loc: `https://chemsus.in/blogs/${b.slug}`,
+      lastmod: (b.updated_at || '2026-05-07').slice(0, 10),
+      changefreq: 'monthly',
+      priority: '0.7'
+    }));
+    const allUrls = [...staticUrls, ...blogUrls];
+    const urlEntries = allUrls.map(u =>
+      `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
+    ).join('\n');
+    res.set('Content-Type', 'application/xml; charset=utf-8');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}\n</urlset>`);
+  } catch (e) {
+    res.status(500).send('Sitemap generation failed');
   }
 });
 
