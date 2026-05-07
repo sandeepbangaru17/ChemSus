@@ -668,7 +668,7 @@ a{text-decoration:none;color:inherit}
 .sidebar-overlay.active{display:block;opacity:1}
 .nav-logo{display:inline-flex;align-items:center;gap:8px;font-family:"Montserrat",sans-serif;font-weight:700;font-size:16px;letter-spacing:.02em;white-space:nowrap;color:#fff;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
 .nav-logo-img{height:24px;width:auto}
-.nav-menu{list-style:none;padding:8px 0;flex:1;overflow-y:auto;overscroll-behavior:contain}
+.nav-menu{list-style:none;padding:8px 0;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .nav-menu li a{display:block;color:#fff;padding:10px 20px;font-size:13.5px;border-left:3px solid transparent;transition:all .2s ease}
 .nav-menu li a.active,.nav-menu li a:hover{background:rgba(255,255,255,.1);border-left-color:var(--accent)}
 .nav-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:10px 20px 4px;pointer-events:none;user-select:none}
