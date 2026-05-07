@@ -467,6 +467,23 @@ async function initDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_bulk_orders_status ON bulk_orders(status);
+
+    CREATE TABLE IF NOT EXISTS blogs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL UNIQUE,
+      title TEXT NOT NULL,
+      excerpt TEXT NOT NULL DEFAULT '',
+      content TEXT NOT NULL DEFAULT '',
+      product_link TEXT NOT NULL DEFAULT '',
+      meta_description TEXT NOT NULL DEFAULT '',
+      is_published INTEGER NOT NULL DEFAULT 0,
+      published_at TEXT DEFAULT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug);
+    CREATE INDEX IF NOT EXISTS idx_blogs_published ON blogs(is_published);
   `);
 
   await seed();
@@ -488,6 +505,107 @@ async function initDb() {
 
   // Data fix: correct truncated product name in shop_items
   try { await run(`UPDATE shop_items SET name='5-Hydroxymethylfurfural' WHERE id=4 AND name='5-Hydroxymethylfurfura'`); } catch (_) { }
+
+  // Seed blog posts on first run
+  try {
+    const blogCount = await get(`SELECT COUNT(*) AS c FROM blogs`);
+    if ((blogCount?.c || 0) === 0) {
+      const blog1Content = `<p>Calcium supplementation is a foundational requirement across human nutrition, animal health, and specialty chemical applications. While traditional calcium salts such as carbonate, citrate, and gluconate have dominated the market for decades, emerging formulation needs are driving interest toward more versatile and functionally efficient alternatives. Calcium levulinate, an organic calcium salt derived from levulinic acid, is gaining attention as a promising ingredient offering a balanced combination of solubility, formulation flexibility, and bioavailability.</p>
+<h2>What is Calcium Levulinate?</h2>
+<p>Calcium levulinate is the calcium salt of levulinic acid, a bio-based platform molecule derived from biomass. Its organic structure enables improved compatibility with aqueous systems and modern formulations compared to many conventional inorganic calcium salts. The compound can be produced with high purity and consistency, making it suitable for applications ranging from veterinary nutrition to food fortification and specialty chemical uses.</p>
+<h2>Key Applications</h2>
+<h3>1. Veterinary and Animal Nutrition</h3>
+<p>Calcium levulinate is particularly attractive for veterinary formulations where rapid dispersion and consistent delivery of calcium are important. It can be used in:</p>
+<ul><li>Liquid calcium supplements for dairy and livestock</li><li>Mineral premixes for feed formulations</li><li>Nutritional support formulations during high-demand phases such as growth and lactation</li></ul>
+<p>Its good solubility allows easy incorporation into oral liquid systems and improves handling in premix manufacturing.</p>
+<h3>2. Food and Nutraceutical Applications</h3>
+<p>In food systems, calcium levulinate can serve as a fortifying agent in:</p>
+<ul><li>Functional beverages</li><li>Nutritional powders</li><li>Fortified foods and specialty diets</li></ul>
+<p>Its relatively neutral taste profile and dispersibility help minimize common formulation challenges such as chalkiness or sedimentation associated with traditional calcium salts.</p>
+<h3>3. Specialty Chemical and Industrial Uses</h3>
+<p>Beyond nutrition, calcium levulinate can also be used as:</p>
+<ul><li>A precursor for levulinate-based chemicals</li><li>An intermediate in green chemistry applications</li><li>A component in biodegradable material systems</li></ul>
+<p>Its bio-based origin aligns with sustainability-driven product development.</p>
+<h2>Advantages Over Conventional Calcium Supplements</h2>
+<h3>1. Improved Formulation Flexibility</h3>
+<p>Compared to calcium carbonate, which is poorly soluble, calcium levulinate offers significantly better dispersibility in aqueous systems. This makes it easier to formulate stable liquid products without sedimentation issues.</p>
+<h3>2. Balanced Calcium Content</h3>
+<p>While salts like calcium gluconate have very high solubility but low calcium content, calcium levulinate provides a balanced profile—offering moderate elemental calcium content with good solubility. This allows formulators to achieve desired calcium levels without excessively increasing dosage.</p>
+<h3>3. Better Organoleptic Properties</h3>
+<p>Calcium carbonate often imparts a chalky texture, and calcium citrate can introduce acidity. Calcium levulinate, in contrast, has a milder sensory impact, making it suitable for applications where taste and mouthfeel are critical.</p>
+<h3>4. Organic and Bio-Based Origin</h3>
+<p>Derived from biomass-based levulinic acid, calcium levulinate supports the transition toward sustainable and renewable chemical ingredients. This provides an added advantage for manufacturers targeting green or eco-friendly product positioning.</p>
+<h2>Bioavailability Considerations</h2>
+<p>Bioavailability is a key factor in evaluating any calcium supplement. While highly soluble salts like calcium gluconate are often associated with good absorption, they suffer from low calcium density. On the other hand, poorly soluble salts like carbonate may have limited dissolution under certain conditions.</p>
+<p>Calcium levulinate occupies a balanced position:</p>
+<ul><li>Its organic salt structure supports effective dissolution in aqueous environments</li><li>Moderate solubility enables availability without rapid precipitation</li><li>It provides a reasonable elemental calcium concentration, improving efficiency of delivery</li></ul>
+<p>This combination makes calcium levulinate a practical choice for formulations requiring both functional performance and effective calcium delivery, especially in liquid and semi-liquid systems.</p>
+<h2>Positioning Calcium Levulinate in the Market</h2>
+<p>Calcium levulinate is not intended to replace traditional bulk calcium sources such as calcium carbonate in cost-sensitive, high-volume applications. Instead, it is best positioned as:</p>
+<ul><li>A premium formulation ingredient</li><li>A functional additive for advanced nutritional systems</li><li>A specialty calcium source for differentiated products</li></ul>
+<p>Its value lies in enabling better product performance, cleaner formulations, and alignment with sustainability trends.</p>
+<h2>Conclusion</h2>
+<p>As formulation requirements evolve across nutrition and specialty chemical industries, calcium levulinate represents a compelling alternative to conventional calcium salts. With its combination of solubility, balanced calcium content, improved formulation behavior, and bio-based origin, it offers a forward-looking solution for manufacturers seeking both performance and differentiation.</p>
+<p>For companies developing next-generation veterinary supplements, functional foods, or specialty formulations, calcium levulinate provides an opportunity to move beyond traditional limitations and create products that meet modern expectations of efficiency, quality, and sustainability.</p>`;
+
+      const blog2Content = `<p>Sodium levulinate is rapidly emerging as a preferred ingredient in clean-label formulations across cosmetics, personal care, and even certain food-contact applications. Derived from renewable biomass, it represents a shift toward sustainable chemistry without compromising functionality.</p>
+<h2>What is Sodium Levulinate?</h2>
+<p>Levulinic acid, the parent molecule, is obtained from lignocellulosic biomass such as agricultural residues (corn cobs, bagasse, wood). Neutralization of levulinic acid yields sodium levulinate—a mild, multifunctional preservative.</p>
+<p>This bio-origin gives sodium levulinate a strong position in the green chemistry and circular economy ecosystem.</p>
+<h2>Key Applications</h2>
+<h3>1. Cosmetics &amp; Personal Care</h3>
+<ul><li>Preservative in creams, lotions, shampoos</li><li>Effective in mild and sensitive-skin formulations</li><li>Often used in combination systems (e.g., with sodium anisate)</li></ul>
+<h3>2. Food &amp; Beverage (Limited Use)</h3>
+<ul><li>Functions as a flavoring agent and antimicrobial stabilizer</li><li>Compatible with clean-label trends</li></ul>
+<h3>3. Pharmaceutical &amp; Topical Formulations</h3>
+<ul><li>Used in dermatological products</li><li>Acts as a buffering and stabilizing agent</li></ul>
+<h3>4. Industrial &amp; Specialty Chemicals</h3>
+<ul><li>Intermediate in bio-based formulations</li><li>Component in green solvents and coatings</li></ul>
+<h2>Advantages Over Conventional Preservatives</h2>
+<ol>
+<li><strong>Natural &amp; Bio-Based Origin:</strong> Unlike parabens or formaldehyde-releasing preservatives, sodium levulinate is derived from renewable biomass, aligning with sustainability goals.</li>
+<li><strong>Mildness &amp; Skin Compatibility:</strong> It is non-irritating compared to many synthetic preservatives and is ideal for baby care and sensitive-skin products.</li>
+<li><strong>Broad-Spectrum Support (in Blends):</strong> While not always fully broad-spectrum alone, it works synergistically with other mild preservatives and enables paraben-free and phenoxyethanol-free systems.</li>
+<li><strong>Regulatory &amp; Consumer Acceptance:</strong> It is accepted in natural and organic-certified formulations and is increasingly preferred by clean beauty brands.</li>
+<li><strong>Biodegradability:</strong> It breaks down easily in the environment and has a lower ecological footprint compared to conventional preservatives.</li>
+</ol>
+<h2>What Makes Sodium Levulinate Unique?</h2>
+<ol>
+<li><strong>Platform Molecule Derivative:</strong> It originates from levulinic acid, a top bio-based platform chemical, making it part of a broader biorefinery value chain.</li>
+<li><strong>Non-Food Biomass Utilization:</strong> It is produced from agricultural waste and not from food crops, supporting waste-to-wealth strategies.</li>
+<li><strong>Dual Functionality:</strong> It acts as both preservative and pH adjuster, enhancing formulation stability.</li>
+<li><strong>Alignment with Future Chemical Industry:</strong> It fits into carbon-neutral and circular economy frameworks, compatible with green solvent and bio-based polymer ecosystems.</li>
+</ol>
+<h2>Comparison with Other Natural Preservatives</h2>
+<div class="blog-table-wrap"><table class="blog-table"><thead><tr><th>Property</th><th>Sodium Levulinate</th><th>Sodium Benzoate</th><th>Potassium Sorbate</th></tr></thead><tbody><tr><td>Source</td><td>Biomass-derived</td><td>Petro/Bio</td><td>Petro/Bio</td></tr><tr><td>Skin Mildness</td><td>High</td><td>Moderate</td><td>Moderate</td></tr><tr><td>pH Range</td><td>Broad (4–8)</td><td>Acidic only</td><td>Acidic only</td></tr><tr><td>Biodegradability</td><td>Excellent</td><td>Good</td><td>Good</td></tr><tr><td>Clean-label appeal</td><td>Very high</td><td>Moderate</td><td>Moderate</td></tr></tbody></table></div>
+<h2>Market Outlook</h2>
+<p>With increasing demand for paraben-free products, sustainable ingredients, and bio-based chemicals, sodium levulinate is positioned as a next-generation preservative, especially in premium and eco-conscious product lines.</p>
+<p>For companies working on biomass-to-chemicals (like levulinic acid platforms), sodium levulinate is more than just a product—it is a gateway molecule into high-value markets, such as clean beauty, green pharmaceuticals, and sustainable materials.</p>`;
+
+      await run(
+        `INSERT OR IGNORE INTO blogs (slug, title, excerpt, content, product_link, meta_description, is_published, published_at) VALUES (?, ?, ?, ?, ?, ?, 1, datetime('now'))`,
+        [
+          'calcium-levulinate',
+          'Calcium Levulinate: A Next-Generation Organic Calcium Ingredient for Modern Formulations',
+          'Discover why calcium levulinate is emerging as a preferred calcium salt for veterinary, food, and specialty chemical formulations — offering superior solubility, balanced calcium content, and bio-based origin.',
+          blog1Content,
+          '/products/calcium-levulinate.html',
+          'Calcium levulinate — a bio-based organic calcium salt with improved solubility and formulation flexibility for veterinary nutrition, food fortification, and specialty chemicals.'
+        ]
+      );
+      await run(
+        `INSERT OR IGNORE INTO blogs (slug, title, excerpt, content, product_link, meta_description, is_published, published_at) VALUES (?, ?, ?, ?, ?, ?, 1, datetime('now'))`,
+        [
+          'sodium-levulinate',
+          'Sodium Levulinate: A Bio-Based Preservative Shaping the Future of Clean Formulations',
+          'Sodium levulinate is redefining clean-label preservation in cosmetics, personal care, and food applications. Explore its bio-based origin, dual functionality, and growing market adoption.',
+          blog2Content,
+          '/products/sodium-levulinate.html',
+          'Sodium levulinate — a bio-based, mild, biodegradable preservative from renewable biomass. Ideal for clean-label cosmetics, personal care, and pharmaceutical formulations.'
+        ]
+      );
+    }
+  } catch (_) { /* blogs table may not exist on very old DBs — migration will create it */ }
 
   console.log("✅ SQLite ready with pack_pricing table");
 }
