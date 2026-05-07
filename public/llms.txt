@@ -74,6 +74,19 @@ ChemSus supplies the following high-purity chemicals for R&D and industrial use 
 - Contact: https://chemsus.in/contact.html
 - Collaborations: https://chemsus.in/collaboration.html
 - Recognitions & Awards: https://chemsus.in/recognitions.html
+- Blogs and Updates: https://chemsus.in/blogs
+
+## Blogs and Updates
+
+ChemSus publishes in-depth technical articles on bio-based specialty chemicals, formulation science, and sustainable chemistry. Articles are available at https://chemsus.in/blogs.
+
+### Calcium Levulinate: A Next-Generation Organic Calcium Ingredient for Modern Formulations
+- URL: https://chemsus.in/blogs/calcium-levulinate
+- Summary: Covers the properties, bioavailability advantages, and pharmaceutical/nutraceutical applications of calcium levulinate dihydrate as a bio-based calcium source.
+
+### Sodium Levulinate: A Bio-Based Preservative Shaping the Future of Clean Formulations
+- URL: https://chemsus.in/blogs/sodium-levulinate
+- Summary: Covers sodium levulinate's role as a multifunctional cosmetic preservative booster, its mechanism of action, and clean-label formulation benefits.
 
 ## About the Technology
 
