@@ -2801,7 +2801,7 @@
               <div class="actions-cell">
                 <button class="btn secondary sm" onclick="editBlog(${b.id})">✏️ Edit</button>
                 <button class="btn secondary sm" onclick="window.open('/blog/${escapeHtml(b.slug)}','_blank')">🔗 View</button>
-                <button class="btn danger sm" onclick="deleteBlog(${b.id}, '${escapeHtml(b.title).replace(/'/g,'\\'+'\\'')}')">🗑️</button>
+                <button class="btn danger sm" onclick="deleteBlog(${b.id}, '${escapeHtml(b.title).replace(/'/g, "\\'")}')">🗑️</button>
               </div>
             </td>
           </tr>`;
